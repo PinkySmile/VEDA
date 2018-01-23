@@ -1,0 +1,1146 @@
+void audioMenu()
+{
+    printMenuBackground();
+
+    disableMenus();
+    enableMenus(11, 12);
+    
+    fill(122);
+    noStroke();
+    rect(0,0,12*32,3*32);
+    if (musicLoaded) {
+        noStroke();
+        fill(125);
+        rect(100, 23, 200, 20);
+        fill(150);
+        rect(101, 24, 198, 18);
+        fill(175);
+        rect(102, 25, 196, 16);
+        fill(200);
+        rect(103, 26, 194, 14);
+        fill(215);
+        rect(104, 27, 192, 12);
+        fill(235);
+        rect(105, 28, 190, 10);
+        fill(255);
+        rect(106, 29, 188, 8);
+  
+        //Bouton
+        fill(125, 0, 0);
+        rect(90+2*musicVolume, 13, 20, 40);
+        fill(150, 0, 0);
+        rect(91+2*musicVolume, 14, 18, 38);
+        fill(165, 0, 0);
+        rect(92+2*musicVolume, 15, 16, 36);
+        fill(185, 0, 0);
+        rect(93+2*musicVolume, 16, 14, 34);
+        fill(200, 0, 0);
+        rect(94+2*musicVolume, 17, 12, 32);
+        fill(220, 0, 0);
+        rect(95+2*musicVolume, 18, 10, 30);
+        fill(235, 0, 0);
+        rect(96+2*musicVolume, 19, 8, 28);
+        fill(255, 0, 0);
+        rect(97+2*musicVolume, 20, 6, 26);
+        
+        textSize(20);
+        fill(255);
+        text(musicVolume+"%",320,43);
+        
+        fill(255);
+        fill(125);
+        rect(100, 73, 200, 20);
+        fill(150);
+        rect(101, 74, 198, 18);
+        fill(175);
+        rect(102, 75, 196, 16);
+        fill(200);
+        rect(103, 76, 194, 14);
+        fill(215);
+        rect(104, 77, 192, 12);
+        fill(235);
+        rect(105, 78, 190, 10);
+        fill(255);
+        rect(106, 79, 188, 8);
+  
+        //Bouton
+        fill(125, 0, 0);
+        rect(90+2*SFXVolume, 63, 20, 40);
+        fill(150, 0, 0);
+        rect(91+2*SFXVolume, 64, 18, 38);
+        fill(165, 0, 0);
+        rect(92+2*SFXVolume, 65, 16, 36);
+        fill(185, 0, 0);
+        rect(93+2*SFXVolume, 66, 14, 34);
+        fill(200, 0, 0);
+        rect(94+2*SFXVolume, 67, 12, 32);
+        fill(220, 0, 0);
+        rect(95+2*SFXVolume, 68, 10, 30);
+        fill(235, 0, 0);
+        rect(96+2*SFXVolume, 69, 8, 28);
+        fill(255, 0, 0);
+        rect(97+2*SFXVolume, 70, 6, 26);
+        
+        textSize(20);
+        fill(255);
+        text(SFXVolume+"%",320,93);
+    } else {
+        textSize(20);
+        if(compareStrings(language,"fr")) {
+            text("Désactivé",100,37);
+            text("Désactivé",100,87);
+        } else {
+            text("Disabled",100,37);
+            text("Disabled",100,87);
+        }
+    }
+    textSize(25);
+    if (compareStrings(language, "yolo"))
+        textSize(random(1, 50));
+    if (!musicLoaded)
+        fill(255, 0, 0);
+    else
+        fill(255, 255, 255);
+    text("Music : ", 10, 40);
+    text("SFX   : ", 10, 90);
+    try {
+        for (int i = 0 ; i < Musics.length ; i++)
+            Musics[i].setGain(-50+50*musicVolume/100+baseGain[i]);
+    }
+    catch(Exception e) {}
+}
+
+void optionsMenu()
+{
+    printMenuBackground();
+    disableMenus();
+    textSize(15);
+    fill(122);
+    rect(0,0,288,58);
+    fill(255);
+    if (compareStrings(language, "yolo"))
+        textSize(random(1, 50));
+    text("Camera scrolling disabled : ",10,25,200,200);
+    menuContent[25] = camScrollingDisabled+"";
+    enableMenus(12,12);
+    enableMenus(24,25); 
+}
+
+void languageMenu()
+{
+    printMenuBackground();
+
+    disableMenus();
+    enableMenus(9, 12);
+    enableMenus(17, 17);
+}
+
+void inGame()
+{
+    if(inCutscene)
+        camMoving = true;
+    if(oldSecond != second()) {
+        oldSecond = second();
+        playTime++;
+    }
+    if(!camMoving)
+        a++;
+    if (a == 120 && !camMoving) {
+        new saveEverything(true,true,false);
+        a = 0;
+    }
+    if(inCutscene && !inDialog)
+        if(doCommand(cutscenesCommands[commandID]))
+            commandID++;
+    if(!camMoving) {
+        if(energyReloadBuffer >= 150 && energy < 10*energyMax)
+            energy = energy + 2;
+        else
+            energyReloadBuffer++;
+        for(int i = 0 ; i < characterPointsBuffer.length ; i++) {
+            if(characterPointToGo[i][0] == 0 && characterPointToGo[i][1] == 0)
+                characterPointsBuffer[i]++;
+            else if(findPath(i,characterPointToGo[i][0],characterPointToGo[i][1])) {
+                characterPointToGo[i][0] = 0;
+                characterPointToGo[i][1] = 0;
+            }
+            if(characterPointsBuffer[i] >= 200 && int(random(0,100)) == 1) {
+                characterDir[i] = int(random(0,4));
+                characterPointsBuffer[i] = 0;
+            }
+            else if(characterPointsBuffer[i] >= 300) {
+                int temp = int(random(0,4));
+                characterPointsBuffer[i] = 0;
+                if(temp == 0) {
+                    characterPointToGo[i][0] = characterX[i];
+                    characterPointToGo[i][1] = characterY[i]-16;
+                } else if(temp == 1) {
+                    characterPointToGo[i][0] = characterX[i];
+                    characterPointToGo[i][1] = characterY[i]+16;
+                } else if(temp == 2) {
+                    characterPointToGo[i][0] = characterX[i]-16;
+                    characterPointToGo[i][1] = characterY[i];
+                } else {
+                    characterPointToGo[i][0] = characterX[i]+16;
+                    characterPointToGo[i][1] = characterY[i];
+                }
+            }
+        }
+    }
+    printLevel();
+    printCharacters();
+    try {
+        if (!musicDisabled) {
+            Musics[3].pause();
+            Musics[3].rewind();
+        }
+    }
+    catch(Exception e) {
+        e.printStackTrace();
+        error("Error 1",e);
+    }
+    volume = 70;
+    deathBuffer = 0;
+    menu = 0;
+    if (music == "EpicBattle" && !Music.isPlaying() && !addingChar) {
+        Music.pause();
+        Music.rewind();
+        Music = Musics[6];
+        Music.setLoopPoints(0, Music.length());
+        Music.loop();
+    }
+    if (music == "eugrt" && !Music.isPlaying() && !addingChar) {
+        Music.pause();
+        Music.rewind();
+        Music = Musics[11];
+        Music.setLoopPoints(100, Music.length());
+        Music.loop();
+    }
+    try {
+        if (!musicDisabled) {
+            try {
+                for (int i = 0 ; i < Musics.length ; i++)
+                    Musics[i].setGain(-50+50*musicVolume/100+baseGain[i]);
+            } catch(Exception e) {}
+            try {
+                Musics[0].pause();
+                Musics[0].rewind();
+            }
+            catch(Exception e) {
+                e.printStackTrace();
+                error("Error 2",e);
+            }
+        }
+    }
+    catch(Exception e) {
+        e.printStackTrace();
+        error("Error 3",e);
+    }
+    //buffer pour la détéction de quand le joueur reste immobile
+    if(!camMoving) {
+        if (statusBuffer == 10) {
+            statusBuffer = 0;
+            status = "static";
+        }
+        if (status == "moving")
+            statusBuffer = statusBuffer + 1;
+        else
+            statusBuffer = 0;
+    }
+    //Mort si tu sort de l'écran
+    //if (playerX+camPosX <= -16 || playerX+camPosX >= width+16 || playerY+camPosY <= -32 || playerY+camPosY >= height+32)
+    //    life = 0;
+    
+    
+    //buffer pour l'animation du mouvement
+    if (status == "static") {
+        animation = 1;
+        chara[0] = 0;
+    } else
+        chara[0] = 1;
+    if(direction == "up")
+        chara[1] = 0;
+    else if (direction == "down")
+        chara[1] = 1;
+    else if (direction == "left")
+        chara[1] = 2;
+    else
+        chara[1] = 3;
+    if (status == "moving" && animation >= 3)
+        animation = 1;
+        
+    //Affichage du perso
+    try {
+        int temp = 0;
+        if (character == "female")
+            temp = 1;
+        if (compareStrings(language, "yolo") && animation == 2)
+            image(character_image[4][4][4][4], 0, 0);
+        if (hitBuffer % 2 == 0)
+            image(character_image[temp][chara[0]][chara[1]][animation-1], playerX+camPosX, playerY+camPosY);
+    }
+    catch(Exception e) {
+        e.printStackTrace();
+        try {
+            image(glitched_character, playerX+camPosX, playerY+camPosY);
+        }
+        catch(Exception f) {
+            f.printStackTrace();
+            error("Can't find file "+character+"_character_"+status+"_"+direction+"_"+animation+".png",e);
+        }
+    }
+    printUpperLayer();
+
+    //Dialogues
+    if (dialogText != null) {
+        dialogPrinted = "";
+        try {
+            image(xywt, 0, height-100);
+        }
+        catch(Exception e) {
+            e.printStackTrace();
+        }
+        if (dialogLetters < dialogText.length()-1 && !dialogEnd && !stickDialog && dialogLetters < theDialogEnd) {
+            dialogLetters++;
+            if(dialogText.charAt(dialogLetters) == '§') {
+                //selectedAnswer = 0;
+                //answers = new String[4];
+                //cases = new int[4][2];
+                int _temp = dialogLetters + 1;
+                String command = "";
+                while(dialogText.charAt(_temp) != '§') {
+                    command = command + dialogText.charAt(_temp);
+                    _temp++;
+                }
+                println("Found command "+command);
+                dialogLetters--;
+                dialogEnd = true;
+                if(command.startsWith("battle")) {
+                    battleType = int(subString(command,6,command.length()-1));
+                    if(battleType >= 0 && battleType <= 5)
+                        goInBattle = true;
+                } else if(command.startsWith("kill")) {
+                    if(compareStrings(subString(command,4,command.length()-1),"c"))
+                        dialogDeathBuffer = -1;
+                    else if(compareStrings(subString(command,4,command.length()-1),"ca")) {
+                        playerX = 10100;
+                        playerY = 10100;
+                        //camMove(true,10100,10100);
+                    } else
+                        dialogDeathBuffer = int(subString(command,4,command.length()-1));
+                } else if(command.startsWith("clear")) {
+                    stickDialog = true;
+                    dialogEnd = false;
+                } else if(command.startsWith("cutscene")) {
+                    inCutscene = true;
+                    commandID = cutsceneStart[int(subString(command,8,command.length()-1))];
+                    inDialog = false;
+                    dialogText = null;
+                    dialogEnd = false;
+                } else if(command.startsWith("answer")) {
+                    int _temp_ = 7;
+                    int __temp = 6;
+                    int ___temp = 0;
+                    for(int i = 0 ; i < answers.length ; i++) {
+                        if(__temp < command.length() && command.charAt(__temp) == '\'') {
+                            __temp++;
+                            _temp_ = __temp;
+                            while(command.charAt(__temp) != '\'')
+                                __temp++;
+                            answers[i] = subString(command,_temp_,__temp-1);
+                            __temp++;
+                        }
+                    }
+                    _temp++;
+                    while(_temp < dialogText.length()-1 && dialogText.charAt(_temp) == '(') {
+                        println("Found beginning of an answer at "+_temp);
+                        int temp__ = _temp+1;
+                        int temp = 0;
+                        _temp++;
+                        while(_temp < dialogText.length()-1 && dialogText.charAt(_temp) != ')')
+                            _temp++;
+                        _temp++;
+                        temp = _temp;
+                        println("Found end of the answer ID at "+_temp+" : "+subString(dialogText,temp__,temp-2));
+                        println("Shearching the end");
+                        while(_temp < dialogText.length()-1 && dialogText.charAt(_temp) != '(')
+                            _temp++;
+                        if(_temp < dialogText.length()-1)
+                            ___temp = _temp-1;
+                        else
+                            ___temp = _temp;
+                        println("Found end of an answer at "+_temp);
+                        println("Answer "+int(subString(dialogText,temp__,temp-2))+" has "+temp+" as beginning and "+(_temp-1)+" as ending --> "+subString(dialogText,temp,___temp));
+                        cases[int(subString(dialogText,temp__,temp-2))][0] = temp;
+                        cases[int(subString(dialogText,temp__,temp-2))][1] = ___temp;
+                        dialogEnd = false;
+                    }
+                }
+            }
+        } else if(!stickDialog)
+            dialogEnd = true;
+        dialogPrinted = subString(dialogText,dialogStart,dialogLetters);
+        textSize(15);
+        if (compareStrings(language, "yolo"))
+            textSize(random(1, 50));
+        fill(255);
+        boolean activated = false;
+        text(dialogPrinted, 10, height-90, width-20, 80);
+        for(int i = 0 ; i < answers.length ; i++)
+            if(answers[i] != null) {
+                text(answers[i], 30+i*width/4, height-30, width/4, 80);
+                activated = true;
+            }
+        if(activated) {
+            noStroke();
+            fill(255);
+            triangle(10+selectedAnswer*width/4,height-20,10+selectedAnswer*width/4,height-30,20+selectedAnswer*width/4,height-25);
+        }
+    }
+    //Déplacement de la caméra lors de la sortie de l'écran
+    if(!inCutscene) {
+        int camGoToX = playerX+8;
+        int camGoToY = playerY+17;
+        if(playerX < 0)
+            camGoToX -= width;
+        if(playerY < 0)
+            camGoToY -= height;
+        camGoToX = -camGoToX + (camGoToX % width);
+        camGoToY = -camGoToY + (camGoToY % height);
+        camMoving = !camMove(camScrollingDisabled,camGoToX,camGoToY);
+    }
+    float hours = floor(playTime/3600);
+    float minutes = floor((playTime-hours*3600)/60);
+    float seconds = playTime-hours*3600-minutes*60;
+    textSize(15);
+    text("Play time : "+int(hours)+":"+transformInt(int(minutes),2)+":"+transformInt(int(seconds),2),width-140,15);
+}
+
+void gameover()
+{
+    try {
+        if(inCutscene && !inDialog)
+            if(doCommand(cutscenesCommands[commandID]))
+                commandID++;
+        try {
+            if (!musicDisabled)
+                for (int i = 0 ; i < Musics.length ; i++)
+                    Musics[i].setGain(-50+50*musicVolume/100+baseGain[i]);
+        }
+        catch(Exception e) {}
+        if (!Musics[0].isPlaying() && deathBuffer >= 50 && !compareStrings(language, "yolo")) {
+            menu = 1;
+            cursorBuffer = 30;
+            textTyped = "";
+            oldCommands = "";
+        }
+        deathBuffer = deathBuffer + 1;
+        if (!musicDisabled) {
+            try {
+                for (int i = 0 ; i < Musics.length ; i++)
+                    Musics[i].setGain(-50+50*musicVolume/100+baseGain[i]);
+            } catch(Exception e) {}
+            try {
+                Musics[0].play();
+            }
+            catch(Exception e) {
+                e.printStackTrace();
+                error("Error 4",e);
+            }
+        }
+    }
+    catch(Exception e) {
+        e.printStackTrace();
+        error("Error 5",e);
+    }
+    if (compareStrings(language, "yolo"))
+        try {
+            if (deathBuffer >= 300) {
+                menu = -12;
+                glitchPrint(true);
+            }
+        }
+        catch(Exception e) {
+            e.printStackTrace();
+            mdrdbar.setLoopPoints(mdrdbar.position(), mdrdbar.position()+50);
+            mdrdbar.loop();
+            menu = -12;
+            glitchPrint(true);
+        }
+    if (volume != 0)
+        volume = volume - 1;
+    for (int j = 0; j <= width/16; j++) {
+        for (int k = 0; k <= height/16; k++) {
+            if (!(j >= 13 && j <= 24 && k >= 12 && k <= 16)) {
+                try {
+                    image(gameover_font, j*16, k*16);
+                }
+                catch(Exception e) {
+                    e.printStackTrace();
+                    error("Error 6",e);
+                }
+            }
+        }
+    }
+    try {
+        image(gameover, 208, 192);
+        if (compareStrings(language, "yolo"))
+            image(godEater, random(-10, width-16), random(-10, height-16));
+    }
+    catch(Exception e) {
+        e.printStackTrace();
+        error("Error 7",e);
+    }
+}
+
+void inventory()
+{
+      image(inventoryFrame, 0, 0);
+      textSize(20);
+      if (compareStrings(language, "yolo"))
+          textSize(random(1, 50));
+      color balaic;
+      if (nameColor == 3)
+          balaic = color(255, 0, 0);
+      else if (nameColor == 2)
+          balaic = color(255, 255, 0);
+      else if (nameColor == 1)
+          balaic = color(0, 255, 0);
+      else if (nameColor == 0)
+          balaic = color(int(random(0, 256)), int(random(0, 256)), int(random(0, 256)));
+      else
+          balaic = 255;
+      fill(balaic);
+      text(name, width-220, 30);
+      fill(255);
+      if (compareStrings(language, "fr"))
+          text("PV : "+life+"/"+lifeMax*10, width-220, 60);
+      else if (compareStrings(language, "en"))
+          text("HP : "+life+"/"+lifeMax*10, width-220, 60);
+      else if (compareStrings(language, "de"))
+          text("HP : "+life+"/"+lifeMax*10, width-220, 60);
+      else
+          text("??/??", width-220, 60);
+      if (compareStrings(language, "fr"))
+          text("Energie : "+energy+"/"+energyMax*10, width-220, 90);
+      else if (compareStrings(language, "en"))
+          text("Energy : "+energy+"/"+energyMax*10, width-220, 90);
+      else if (compareStrings(language, "de"))
+          text("Energie : "+energy+"/"+energyMax*10, width-220, 90);
+      else
+          text("??/??", width-220, 60);
+      for (int i = 0; i < items.length; i++)
+          if (compareStrings(language, "yolo"))
+              glitchPrint(true);
+      for (int i = 0; i < items.length; i++) {
+          quan = "x"+itemsQuantity[i];
+          if (compareStrings(quan, "x0"))
+              items[i] = 0;
+          item = "Item "+items[i];
+          if (items[i] != 0)
+              try {
+                  item = itemNames[items[i]-1]+"";
+              } catch(Exception e) {}
+          if (compareStrings(item+"","null"));
+              item = "Item "+items[i];
+          if (compareStrings(quan, "x-1"))
+              quan = "";
+          else if (compareStrings(quan, "x0"))
+              quan = "@░¶½█▓";
+          if (items[i] == 0 && !compareStrings(language, "yolo")) {
+              item = "";
+              quan = "";
+          } else if (items[i] == 0)
+              item = "e̷̲̦̖͉̘͊ͩ͌̓ͫr̹̤̳̾͑͗͛̚͠r̬̖̱o̢͇̹̠̼͎̰ͯ͋ͥ̾r̸͔̘̥͎̘̩";
+          text(item, 60, 30+39*i);
+          text(quan, 350, 30+39*i);
+      }
+}
+
+void lvlCreator()
+{
+    printLevel();
+    if(upperLayerShown)
+        printUpperLayer();
+    printCharacters();
+    disableMenus();
+    if(!buttonsDisabled) {
+        enableMenus(16, 16);
+        enableMenus(20, 21);
+    }
+    if (music == "EpicBattle" && !Music.isPlaying() && !addingChar) {
+        Music.pause();
+        Music.rewind();
+        Music = Musics[6];
+        Music.setLoopPoints(0, Music.length());
+        Music.loop();
+    }
+    if (music == "eugrt" && !Music.isPlaying() && !addingChar) {
+        Music.pause();
+        Music.rewind();
+        Music = Musics[11];
+        Music.setLoopPoints(100, Music.length());
+        Music.loop();
+    }
+    fill(0);
+    textSize(15);
+    float temp = zoomLevel;
+    float _temp = (1+temp/20);
+    text("x : "+round(mouseX/_temp-camPosX)+"   y : "+round(mouseY/_temp-camPosY),width-130,15);
+    text("Zoom : "+round((1+temp/20)*100)+"%",2,15);
+    if(replaceMode)
+        text("Mode remplacement : actif",100,15);
+    else
+        text("Mode remplacement : inactif",100,15);
+    if(upperLayerShown)
+        text("Couche supérieur affiché",2,30);
+    else
+        text("Couche supérieur cachée",2,30);
+    if(savedMessageShown) {
+        savingBuffer++;
+        text("Sauvegardé !",width/2-50,height/2-5);
+    }
+    if(savingBuffer > 100) {
+        savingBuffer = 0;
+        savedMessageShown = false;
+    }
+    if(gridShown) {
+        stroke(0);
+        float _temps = zoomLevel;
+        float tempo = 1+_temps/20;
+        int loops = 0;
+        for(float i = (16 - camPosX % 16)*tempo ; i <= width && loops <= 150 ; i += 16*tempo) {
+            line(i,0,i,height);
+            loops++;
+        }
+        for(float j = (16 - camPosX % 16)*tempo ; j <= height && loops <= 300; j += 16*tempo) {
+            line(0,j,width,j);
+            loops++;
+        }
+    }
+}
+
+void mainMenu()
+{
+    printMenuBackground();
+    disableMenus();
+    enableMenus(0, 4);
+
+    //Affichage des stats
+    String texts[] = new String[5];
+    if (compareStrings(language, "fr")) {
+        texts[0] = "Progression : ";
+        texts[1] = "Vie : ";
+    } else if (compareStrings(language, "en")) {
+        texts[0] = "Progress : ";
+        texts[1] = "Life : ";
+    } else if (compareStrings(language, "de")) {
+        texts[0] = "Progression : ";
+        texts[1] = "Leben : ";
+    } else {
+        texts[0] = "";
+        texts[1] = "";
+    }
+    fill(122);
+    noStroke();
+    rect(width-128, 0, 150, 65);
+    fill(255);
+    textSize(15);
+    text(name, width-128, 20);
+    text(texts[0]+progress+"%", width-128, 40);
+    text(texts[1]+life+"/"+lifeMax*10, width-128, 60);
+
+    //Affichage de la version
+    textSize(10);
+    if (compareStrings(language, "yolo"))
+        textSize(random(1, 50));
+    fill(255);
+    text("v"+version, 1, height-2);
+    try {
+        for (int i = 0 ; i < Musics.length ; i++)
+            Musics[i].setGain(-50+50*musicVolume/100+baseGain[i]);
+    } catch(Exception e) {}
+}
+
+void objMenu()
+{
+    try {
+        for (int j=0; j<=height; j = j+16) {
+            for (int i=0; i<=width; i = i+16) {
+                noStroke();
+                fill(0);
+                image(blue_sky, i, j);
+            }
+        }
+    }
+    catch(Exception e) {
+        for (int j=0; j<=height; j = j+16) {
+            for (int i=0; i<=width; i = i+16) {
+                noStroke();
+                fill(0);
+                image(glitched_texture, i, j);
+            }
+        }
+    }
+    disableMenus();
+    enableMenus(22, 22);
+    int x = 4;
+    int y = 4;
+    for (int i = floor((width-8)/24)*floor((height-50)/24)*menuPosition; i <= textures.length-2; i++) {
+        if (x >= width - 20) {
+            x = 4;
+            y = y + 24;
+        }
+        if (y <= height - 50 - 24) {
+            try {
+                image(textures[i+2], x, y);
+                if((i >= 7 && i <= 9) || i == 11)
+                    image(textures[0], x, y);
+                if(i == 12 || i == 13)
+                    image(redCross, x, y);
+            }
+            catch(Exception e) {
+                image(glitched_texture, x, y);
+            }
+            stroke(0);
+            noFill();
+            rect(x-1,y-1,17,17);
+        }
+        x = x + 24;
+    }
+    try {
+      image(textures[1+selectedObject],10,height-26);
+      if(selectedObject <= 10 && selectedObject >= 8 || selectedObject == 12) {
+          image(textures[0],10,height-26);
+      }
+      if(selectedObject == 13 || selectedObject == 14) {
+          image(redCross,10,height-26);
+      }
+    } catch(Exception e) {
+        image(glitched_texture,10,height-26);
+    }
+    if (music == "EpicBattle" && !Music.isPlaying() && !addingChar) {
+        Music.pause();
+        Music.rewind();
+        Music = Musics[6];
+        Music.setLoopPoints(0, Music.length());
+        Music.loop();
+    }
+    if (music == "eugrt" && !Music.isPlaying() && !addingChar) {
+        Music.pause();
+        Music.rewind();
+        Music = Musics[11];
+        Music.setLoopPoints(100, Music.length());
+        Music.loop();
+    }
+}
+
+void charObj()
+{
+    dirBuffer++;
+    if(dirBuffer >= 120) {
+        dirBuffer = 0;
+        dir++;
+        if(dir == 4)
+            dir = 0;
+    }
+    try {
+        for (int j=0; j<=height; j = j+16) {
+            for (int i=0; i<=width; i = i+16) {
+                noStroke();
+                fill(0);
+                image(blue_sky, i, j);
+            }
+        }
+    }
+    catch(Exception e) {
+        for (int j=0; j<=height; j = j+16) {
+            for (int i=0; i<=width; i = i+16) {
+                noStroke();
+                fill(0);
+                image(glitched_texture, i, j);
+            }
+        }
+    }
+    disableMenus();
+    enableMenus(22, 22);
+    int x = 4;
+    int y = 4;
+    int maxi = 0;
+    for (int i = floor((width-8)/16)*floor((height-50)/32)*menuPosition; i <= characterTextures.length; i++) {
+        if (x >= width - 20) {
+            x = 4;
+            y = y + 32;
+        }
+        if (y <= height - 50 - 32) {
+            maxi = i;
+            try {
+                image(characterTextures[i][0][dir][0], x, y);
+            }
+            catch(Exception e) {
+                image(glitched_character, x, y);
+            }
+        }
+        x = x + 16;
+    }
+    println(maxi);
+}
+
+void achievements()
+{
+    printMenuBackground();
+    disableMenus();
+    enableMenus(24,24);
+    
+    if(lastMenu == 0 || lastMenu == 1) {
+        if (music == "EpicBattle" && !Music.isPlaying() && !addingChar) {
+            Music.pause();
+            Music.rewind();
+            Music = Musics[6];
+            Music.setLoopPoints(0, Music.length());
+            Music.loop();
+        }
+        if (music == "eugrt" && !Music.isPlaying() && !addingChar) {
+            Music.pause();
+            Music.rewind();
+            Music = Musics[11];
+            Music.setLoopPoints(100, Music.length());
+            Music.loop();
+        }
+    }
+    
+    noStroke();
+    fill(0);
+    rect(48,0,width-96,height);
+    fill(150);
+    rect(32,0,16,height);
+    rect(width-48,0,16,height);
+    for(int i = 0 ; i < nbOfAchievementsLoaded ; i++) {
+        if(i != nbOfAchievementsLoaded-1) {
+            stroke(150);
+            line(128,90*i+achievementMenuPos+56+45,width-128,90*i+achievementMenuPos+56+45);
+            noStroke();
+        }
+        if(achievementsGot[i]) {
+            fill(150);
+            try {
+                rect(135-achievementImage[i].width/2, 90*i+achievementMenuPos+56-achievementImage[i].height/2, achievementImage[i].width, achievementImage[i].height);
+                image(achievementImage[i], 135-achievementImage[i].width/2, 90*i+achievementMenuPos+56-achievementImage[i].height/2);
+            }
+            catch(Exception e) {
+                e.printStackTrace();
+            }
+            textSize(20);
+            if (compareStrings(language, "yolo"))
+                textSize(random(1, 50));
+            fill(255);
+            try {
+                text(achievements[i], 200, 90*i+achievementMenuPos+56);
+            }
+            catch(Exception e) {
+                e.printStackTrace();
+            }
+            textSize(12);
+            if (compareStrings(language, "yolo"))
+                textSize(random(1, 50));
+            try {
+                text(achievementsContent[i], 200, 90*i+achievementMenuPos+70, 260, height);
+            }
+            catch(Exception e) {
+              e.printStackTrace();
+            }
+        } else {
+            try {
+                image(locked, 135-locked.width/2, 90*i+achievementMenuPos+56-locked.height/2);
+            } 
+            catch(Exception e) {
+                e.printStackTrace();
+            }
+            fill(255);
+            textSize(20);
+            if (compareStrings(language, "yolo"))
+                textSize(random(1, 50));
+            try {
+                text("????????", 200, 90*i+achievementMenuPos+56);
+            }
+            catch(Exception e) {
+                e.printStackTrace();
+            }
+            textSize(12);
+            if (compareStrings(language, "yolo"))
+                textSize(random(1, 50));
+            text("??????????????????????????????????????", 200, 90*i+achievementMenuPos+70, 260, height);
+        }
+    }
+}
+
+void battle()
+{
+    int an = 0;
+    if(compareStrings(language,"fr"))
+        an = JOptionPane.showOptionDialog(null,"Battle started.","",JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE,null,new String[]{"Gagner", "Perdre"},"default");
+    else
+        an = JOptionPane.showOptionDialog(null,"Battle started.","",JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE,null,new String[]{"Win", "Loose"},"default");
+    if(an == 0) {
+        menu = 0;
+        inDialog = false;
+        dialogText = null;
+        dialogEnd = false;
+        dialogBox(dialogs[fightingCharacter][399][1]);
+    } else {
+        menu = 0;
+        inDialog = false;
+        dialogText = null;
+        dialogEnd = false;
+        dialogBox(dialogs[fightingCharacter][399][0]);
+    }
+}
+
+void controls()
+{
+    int xPos = 0;
+    int yPos = 0;
+    printMenuBackground();
+    disableMenus();
+    for (int k = 0; k < keys.length; k++) {
+        textSize(15);
+        if (compareStrings(language, "yolo"))
+            textSize(random(1, 50));
+        noStroke();
+        fill(122);
+        rect(xPos * 192, yPos * 32, 192, 32);
+        
+        String keyName = findKey(keys[k]);
+        int current_color = 150;
+        int textColor = color(0, 255, 0);
+        if (mouseX > 115 + xPos * 192 && mouseX < 186 + xPos * 192 && mouseY > yPos * 32 + 5 && mouseY < yPos * 32 + 25 || k == changingKey) {
+            textColor = 0;
+            current_color += 100;
+        }
+        if (k == changingKey)
+            keyName = "Press a key";
+        fill(current_color-150);
+        rect(115 + xPos * 192, yPos * 32 + 5, 71, 20);
+        fill(current_color-125);
+        rect(115 + xPos * 192+1, yPos * 32 + 5+1, 71-2, 20-2);
+        fill(current_color-100);
+        rect(115 + xPos * 192+2, yPos * 32 + 5+2, 71-4, 20-4);
+        fill(current_color-80);
+        rect(115 + xPos * 192+3, yPos * 32 + 5+3, 71-6, 20-6);
+        fill(current_color-60);
+        rect(115 + xPos * 192+4, yPos * 32 + 5+4, 71-8, 20-8);
+        fill(current_color-40);
+        rect(115 + xPos * 192+5, yPos * 32 + 5+5, 71-10, 20-10);
+        fill(current_color-25);
+        rect(115 + xPos * 192+6, yPos * 32 + 5+6, 71-12, 20-12);
+        fill(current_color-10);
+        rect(115 + xPos * 192+7, yPos * 32 + 5+7,71-14, 20-14);
+        fill(current_color);
+        rect(115 + xPos * 192+8, yPos * 32 + 5+8, 71-16, 20-16);
+        if (textColor == color(0, 255, 0))
+            fill(0);
+        else
+            fill(255);
+        text(keyUsage[k], 10 + xPos * 192, yPos * 32 + 20);
+        for (int i = 0; i < keys.length; i++)
+            if (keys[k] == 0 || keys[k] != -1 && k != i && keys[k] == keys[i])
+                textColor = color(255, 0, 0);
+        if (k == changingKey)
+            textSize(12);
+        fill(textColor);
+        text(keyName, 120 + xPos * 192, yPos * 32 + 20);
+        if (yPos * 32 > height - 128) {
+            yPos = -1;
+            xPos++;
+        }
+        yPos++;
+    }
+    enableMenus(11, 12);
+}
+
+void shell()
+{
+    if(inCutscene && !inDialog)
+        if(doCommand(cutscenesCommands[commandID]))
+            commandID++;
+    try {
+        background(0);
+        if (!musicDisabled) {
+            if (!Musics[0].isPlaying())
+                Musics[0].loop();
+            Musics[3].play();
+        }
+    }
+    catch(Exception e) {
+        e.printStackTrace();
+        error("Error 8",e);
+    }
+    String ah = "> ";
+    cursor = "";
+    fill(255);
+    //Affichage du "gameover.exe" et des commandes inscrites
+    if (musicDisabled || Musics[3].position() >= 270)
+        ah = ah + "g";
+    if (musicDisabled || Musics[3].position() >= 430)
+        ah = ah + "a";
+    if (musicDisabled || Musics[3].position() >= 590)
+        ah = ah + "m";
+    if (musicDisabled || Musics[3].position() >= 750)
+        ah = ah + "e";
+    if (musicDisabled || Musics[3].position() >= 900)
+        ah = ah + "o";
+    if (musicDisabled || Musics[3].position() >= 1050)
+        ah = ah + "v";
+    if (musicDisabled || Musics[3].position() >= 1250)
+        ah = ah + "e";
+    if (musicDisabled || Musics[3].position() >= 1680)
+        ah = ah + "r";
+    if (musicDisabled || Musics[3].position() >= 2300)
+        ah = ah + ".exe";
+    if (cursorBuffer >= 60)
+        cursorBuffer = 0;
+    if (cursorBuffer >= 30 && (musicDisabled || Musics[3].position() >= 2300)) {
+        ah = ah + "\n> ";
+        cursor = "_";
+    } else if (cursorBuffer >= 30 && (musicDisabled || Musics[3].position() <= 2300))
+        cursor = "_";
+    if ((musicDisabled || Musics[3].position() >= 2300) && cursorBuffer < 30)
+        ah = ah + "\n> ";
+    String j = "";
+    int _temp = 0;
+    int temp = 0;
+    char tyu;
+    for (int i = 0; i <= (j = ah+oldCommands+textTyped+cursor).length()-2; i++) {
+        tyu = j.charAt(i);
+        if (int(tyu) == 10)
+            _temp = _temp + 1;
+    }
+    for (int i = 1; i <= _temp - 18; i++)
+        temp = temp + 1;
+    textSize(15);
+    if (compareStrings(language, "yolo"))
+        textSize(random(1, 50));
+    if (compareStrings(language, "yolo"))
+        ah = "> What have you done !.lvl";
+    text(ah+oldCommands+textTyped+cursor, 10, 20-24*temp-temp/4.45);
+    cursorBuffer++;
+    if (compareStrings(language, "yolo") && cursorBuffer == 50) {
+        try {
+            mdrdbar.pause();
+        }
+        catch(Exception e) {
+            e.printStackTrace();
+        }
+        error("Can't find file \"What have you done !.lvl\"", null);
+    }
+}
+
+void drawLife()
+{
+    if (life > 10*lifeMax) 
+        life = 10*lifeMax;
+    lifeBuffer = life;
+    //Affichage des coeurs
+    if (menu == 0 && !dead && !inDialog) {
+        int x = 0;
+        int y = 0;
+        int h = 0;
+        int b = 0;
+        for (int i = 1 ; i <= lifeMax ; i++) {
+            if (lifeBuffer <= 10 && lifeBuffer >= 0)
+                life_image = hearts[h][(10-lifeBuffer)];
+            else if (lifeBuffer >= 10)
+                life_image = hearts[h][0];
+            else
+                life_image = hearts[h][10];
+            try {
+                image(life_image, x, height-15-y);
+                image(hearts[h][10], x, height-15-y);
+            }
+            catch(Exception e) {
+                e.printStackTrace();
+                if (!errorDisplayed)
+                    errorMsg("Error 9", SFX[0], e);
+            }
+            if (b == 0)
+                x = x + 15;
+            if (b == 1) {
+                h++;
+                if (h == hearts.length) {
+                    h = 0;
+                    x += 15;
+                }
+            }
+            if (x >= 15*10) {
+                x = 0;
+                y += 15;
+            }
+            if (b == 0 && y >= 3*15) {
+                h++;
+                y = 0;
+            } 
+            if (h == hearts.length && b == 0) {
+                x = 0;
+                b = 1;
+                h = 0;
+                y = y + hearts.length * 15;
+            }
+            lifeBuffer = lifeBuffer - 10;
+        }
+    }
+}
+
+void drawNRJ()
+{
+    if (energy > 10*energyMax) 
+        energy = 10*energyMax;
+    energyBuffer = energy;
+    //Affichage des éclairs
+    if (menu == 0 && !dead && !inDialog) {
+        int x = 0;
+        int y = 0;
+        int h = 0;
+        int b = 0;
+        for (int i = 1 ; i <= energyMax ; i++) {
+            if (energyBuffer <= 10 && energyBuffer >= 0)
+                energy_image = thunderbolts[h][(10-energyBuffer)];
+            else if (energyBuffer >= 10)
+                energy_image = thunderbolts[h][0];
+            else
+                energy_image = thunderbolts[h][10];
+            try {
+                image(energy_image, width-x-14, height-15-y);
+                image(thunderbolts[h][10], width-x-14, height-15-y);
+            }
+            catch(Exception e) {
+                e.printStackTrace();
+                if (!errorDisplayed)
+                    errorMsg("Error 9", SFX[0], e);
+            }
+            if (b == 0)
+                x = x + 15;
+            if (b == 1) {
+                h++;
+                if (h == thunderbolts.length) {
+                    h = 0;
+                    x += 15;
+                }
+            }
+            if (x >= 15*10) {
+                x = 0;
+                y += 15;
+            }
+            if (b == 0 && y >= 3*15) {
+                h++;
+                y = 0;
+            } 
+            if (h == thunderbolts.length && b == 0) {
+                x = 0;
+                b = 1;
+                h = 0;
+                y = y + thunderbolts.length * 15;
+            }
+            energyBuffer = energyBuffer - 10;
+        }
+    }
+}

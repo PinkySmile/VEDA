@@ -1,0 +1,53 @@
+characters = {
+	{
+		id = 0,
+		name = "Alexandre",
+		type = "BOSS",
+		base_life = 100,
+		sprite_id = 4,
+		battle_type = 0,
+		x_pos = 160,
+		y_pos = 160,
+		attack = 100,
+		resistance = 100,
+		power_name = "",
+		power_desc_en = "Can control N.E.M.s"
+		power_desc_fr = "Peut controler les N.E.M.s"
+		power_id = 0,
+		weapon_name_fr = "Pistolet",
+		weapon_name_en = "Gun",
+		weapon_id = 0
+	},
+	{
+		id = 1,
+		name = "1-12-5-24-7-19",
+		type = "ALLY",
+		base_life = 10,
+		sprite_id = 1,
+		x_pos = -10000,
+		y_pos = -10000,
+		attack = 0,
+		resistance = 0,
+		power_name = "Respawn",
+		power_id = 1,
+		weapon_name_fr = "",
+		weapon_name_en = "",
+		weapon_id = 0
+	},
+	{
+		id = 2,
+		name = "15-4-25-19-19-5-5",
+		type = "ALLY",
+		base_life = 10,
+		sprite_id = 0,
+		x_pos = -10000,
+		y_pos = -10000,
+		attack = 0,
+		resistance = 0,
+		power_name = "Respawn",
+		power_id = 1,
+		weapon_name_fr = "",
+		weapon_name_en = "",
+		weapon_id = 0
+	}
+}

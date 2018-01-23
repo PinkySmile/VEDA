@@ -1,0 +1,15 @@
+character_1 = {
+	id = 0,
+	name = "",
+	type = "†/NPC/BOSS",
+	base_life = 20 ∞,
+	sprite_id = 0,
+	x_pos = 0,
+	y_pos= 0,
+	attack = 1,
+	resistance = 1,
+	power_name = "",
+	power_id = 0,
+	weapon_name = "",
+	weapon_id = 0
+}
