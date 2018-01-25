@@ -6,7 +6,7 @@ boolean loadLevel(String levelName, int floorNbr)
         objects = new int[maxNbOfObjectsPerLevel];
         posObjectX = new int[maxNbOfObjectsPerLevel];
         posObjectY = new int[maxNbOfObjectsPerLevel];
-        levelPath = "levels/" + levelName;
+        levelPath = "data/levels/" + levelName;
         path = levelPath + "/level/floor" + floorNbr + ".lvl";
         BufferedReader bufferedReader = createReader(path);
         String line;

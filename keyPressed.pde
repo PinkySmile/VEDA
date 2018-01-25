@@ -411,7 +411,6 @@ void keyPressed()
             flag = true;
     if (!flag)
         pressedKeysCode[findSpace()] = keyCode;
-    char buffer = 0;
     if(key == 27)
         key = 255;
     if(key == '²' && menu == 7) {
@@ -540,32 +539,9 @@ void keyPressed()
                                 }
                                 dialogLetters--;
                                 dialogEnd = true;
-                                if(command.startsWith("battle")) {
-                                    battleType = int(subString(command,6,command.length()-1));
-                                    menu = 11;
-                                } else if(command.startsWith("kill")) {
-                                    characters[int(subString(command,4,command.length()-1))] = false;
-                                } else if(command.startsWith("clear")) {
-                                    stickDialog = true;
-                                    dialogEnd = false;
-                                } else if(command.startsWith("cutscene")) {
-                                    inCutscene = true;
-                                    commandID = cutsceneStart[int(subString(command,8,command.length()-1))];
-                                } else if(command.startsWith("answer")) {
-                                    answers = new String[4];
-                                    int __temp = 6;
-                                    int _temp_ = 7;
-                                    for(int i = 0 ; i < answers.length ; i++) {
-                                        if(__temp < command.length() && command.charAt(__temp) == '\'') {
-                                            __temp++;
-                                            _temp_ = __temp;
-                                            while(command.charAt(__temp) != '\'')
-                                                __temp++;
-                                            answers[i] = subString(command,_temp_,__temp-1);
-                                            __temp++;
-                                        }
-                                    }
-                                }
+                                execDialogCommand(command, _temp);
+                                if (command.startsWith("answer"))
+                                    break;
                             }
                         }
                     }
