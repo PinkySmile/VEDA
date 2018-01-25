@@ -7,11 +7,9 @@ void loadDialogs(String path) {
             for(int j = 0 ; j < dialogs[i].length ; j++)
                 for(int k = 0 ; k < dialogs[i][j].length ; k++)
                     dialogs[i][j][k] = "";
-        file = new File(path);
-        if(!file.exists())
-          file = new File("data/dialogs_en");
-        FileReader fileReader = new FileReader(file);
-        BufferedReader bufferedReader = new BufferedReader(fileReader);
+        BufferedReader bufferedReader = createReader(path);
+        if (bufferedReader == null)
+            bufferedReader = createReader("data/dialogs_en");
         String line;
         while((line = bufferedReader.readLine()) != null) {
             if(line.charAt(0) == '{') {
@@ -35,7 +33,6 @@ void loadDialogs(String path) {
             }
         }
         bufferedReader.close();
-        fileReader.close();
     } catch(Exception e) {
         e.printStackTrace();
         errorMsg("Error 18",SFX[1],e);

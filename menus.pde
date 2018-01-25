@@ -586,7 +586,7 @@ void lvlCreator()
     textSize(15);
     float temp = zoomLevel;
     float _temp = (1+temp/20);
-    text("x : "+round(mouseX/_temp-camPosX)+"   y : "+round(mouseY/_temp-camPosY),width-130,15);
+    text("x:"+round(mouseX/_temp-camPosX)+" y:"+round(mouseY/_temp-camPosY),width-130,15);
     text("Zoom : "+round((1+temp/20)*100)+"%",2,15);
     if(replaceMode)
         text("Mode remplacement : actif",100,15);
@@ -643,12 +643,12 @@ void mainMenu()
     }
     fill(122);
     noStroke();
-    rect(width-128, 0, 150, 65);
+    rect(width - 160, 0, 160, 65);
     fill(255);
     textSize(15);
-    text(name, width-128, 20);
-    text(texts[0]+progress+"%", width-128, 40);
-    text(texts[1]+life+"/"+lifeMax*10, width-128, 60);
+    text(name, width - 160, 20);
+    text(texts[0] + progress + "%", width - 160, 40);
+    text(texts[1] + life + "/"+lifeMax*10, width - 160, 60);
 
     //Affichage de la version
     textSize(10);
@@ -745,8 +745,8 @@ void charObj()
             dir = 0;
     }
     try {
-        for (int j=0; j<=height; j = j+16) {
-            for (int i=0; i<=width; i = i+16) {
+        for (int j = 0; j <= height; j += 16) {
+            for (int i = 0; i <= width; i += 16) {
                 noStroke();
                 fill(0);
                 image(blue_sky, i, j);
@@ -754,8 +754,8 @@ void charObj()
         }
     }
     catch(Exception e) {
-        for (int j=0; j<=height; j = j+16) {
-            for (int i=0; i<=width; i = i+16) {
+        for (int j = 0; j <= height; j += 16) {
+            for (int i = 0; i <= width; i += 16) {
                 noStroke();
                 fill(0);
                 image(glitched_texture, i, j);
@@ -767,7 +767,7 @@ void charObj()
     int x = 4;
     int y = 4;
     int maxi = 0;
-    for (int i = floor((width-8)/16)*floor((height-50)/32)*menuPosition; i <= characterTextures.length; i++) {
+    for (int i = floor((width - 8) / 16) * floor((height - 50) / 32) * menuPosition; i <= characterTextures.length; i++) {
         if (x >= width - 20) {
             x = 4;
             y = y + 32;
@@ -811,21 +811,21 @@ void achievements()
     
     noStroke();
     fill(0);
-    rect(48,0,width-96,height);
+    rect(48, 0, width - 96, height);
     fill(150);
-    rect(32,0,16,height);
-    rect(width-48,0,16,height);
+    rect(32, 0, 16, height);
+    rect(width - 48, 0, 16, height);
     for(int i = 0 ; i < nbOfAchievementsLoaded ; i++) {
         if(i != nbOfAchievementsLoaded-1) {
             stroke(150);
-            line(128,90*i+achievementMenuPos+56+45,width-128,90*i+achievementMenuPos+56+45);
+            line(128, 90 * i + achievementMenuPos + 56 + 45, width - 128, 90 * i + achievementMenuPos + 56 + 45);
             noStroke();
         }
         if(achievementsGot[i]) {
             fill(150);
             try {
-                rect(135-achievementImage[i].width/2, 90*i+achievementMenuPos+56-achievementImage[i].height/2, achievementImage[i].width, achievementImage[i].height);
-                image(achievementImage[i], 135-achievementImage[i].width/2, 90*i+achievementMenuPos+56-achievementImage[i].height/2);
+                rect(135 - achievementImage[i].width / 2, 90 * i + achievementMenuPos + 56 - achievementImage[i].height / 2, achievementImage[i].width, achievementImage[i].height);
+                image(achievementImage[i], 135 - achievementImage[i].width / 2, 90 * i + achievementMenuPos + 56 - achievementImage[i].height / 2);
             }
             catch(Exception e) {
                 e.printStackTrace();
@@ -835,7 +835,7 @@ void achievements()
                 textSize(random(1, 50));
             fill(255);
             try {
-                text(achievements[i], 200, 90*i+achievementMenuPos+56);
+                text(achievements[i], 170, 90 * i + achievementMenuPos + 56);
             }
             catch(Exception e) {
                 e.printStackTrace();
@@ -844,14 +844,14 @@ void achievements()
             if (compareStrings(language, "yolo"))
                 textSize(random(1, 50));
             try {
-                text(achievementsContent[i], 200, 90*i+achievementMenuPos+70, 260, height);
+                text(achievementsContent[i], 170, 90 * i + achievementMenuPos + 70, 330, height);
             }
             catch(Exception e) {
               e.printStackTrace();
             }
         } else {
             try {
-                image(locked, 135-locked.width/2, 90*i+achievementMenuPos+56-locked.height/2);
+                image(locked, 135 - locked.width / 2, 90 * i + achievementMenuPos + 56 - locked.height / 2);
             } 
             catch(Exception e) {
                 e.printStackTrace();
@@ -861,7 +861,7 @@ void achievements()
             if (compareStrings(language, "yolo"))
                 textSize(random(1, 50));
             try {
-                text("????????", 200, 90*i+achievementMenuPos+56);
+                text("?????????", 170, 90 * i + achievementMenuPos + 56);
             }
             catch(Exception e) {
                 e.printStackTrace();
@@ -869,7 +869,7 @@ void achievements()
             textSize(12);
             if (compareStrings(language, "yolo"))
                 textSize(random(1, 50));
-            text("??????????????????????????????????????", 200, 90*i+achievementMenuPos+70, 260, height);
+            text("??????????????????????????????????????", 170, 90 * i + achievementMenuPos + 70, 260, height);
         }
     }
 }

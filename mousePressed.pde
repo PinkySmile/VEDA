@@ -178,7 +178,7 @@ void mousePressed()
                 } else if (i == 12) {   //boutton "save"
                     saveSettings();
                     changingKey = -1;
-                    loadDialogs("data/dialogs_"+language);
+                    loadDialogs(levelPath + "/dialogs/" + language + ".txt");
                     loadAchievements();
                     menu = -1;
                 } else if (i == 13) {   //boutton "Controles"
@@ -277,8 +277,8 @@ void mousePressed()
             posObjectY[slot] = round(calc2);
         }
         if(menu == 8) {
-            if(mouseY <= height-74) {
-                selectedObject = floor(mouseX/24) + floor(mouseY/24) * floor((width-8)/24) + floor((width-8)/24)*floor((height-50)/24)*menuPosition + 1;
+            if(mouseY <= height - 74) {
+                selectedObject = floor(mouseX / 24) + floor(mouseY / 24) * floor((width - 8) / 24) + floor((width - 8) / 24) * floor((height - 50) / 24) * menuPosition + 1;
                 if(selectedObject == 8) {
                     Music.pause();
                     Music = Musics[2];

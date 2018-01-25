@@ -443,7 +443,7 @@ void keyPressed()
             if(menu == 8 || menu == 9) {
                 if(keyCode == 37 && menuPosition > 0)
                     menuPosition--;
-                else if(keyCode == 39)
+                else if(keyCode == 39 && menuPosition < (textures.length) / (floor(mouseX / 24) + floor(mouseY / 24) * floor((width - 8) / 24) + floor((width - 8) / 24) * floor((height - 50) / 24)))
                     menuPosition++;
             }
             if(inDialog && !dead && (menu == 0 || menu == 1)) {
@@ -748,7 +748,7 @@ void keyPressed()
                         cd = null;
                     } else {
                         try {
-                            textFont(Arial);
+                            textFont(FreeMono);
                         } catch(Exception e) {
                             e.printStackTrace();
                         }
@@ -777,8 +777,8 @@ void keyPressed()
                 }
             }
             //*************************************"Invite de commandes"**********************************************
-            if ((musicDisabled || Musics[3].position() >= 2300) && ','+key != 52 && ','+key != 65579 && key+'"' != 44 && key != 0)
-                textTyped = textTyped+key;
+            if ((musicDisabled || Musics[3].position() >= 2300) && ',' + key != 52 && ',' +key != 65579 && key+'"' != 44 && key != 0)
+                textTyped = textTyped + key;
             else if ((musicDisabled || Musics[3].position() >= 2300) && ','+key == 52 ) {
                 String a = textTyped;
                 textTyped = "";

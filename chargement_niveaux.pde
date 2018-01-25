@@ -2,7 +2,7 @@
 boolean loadLevel(String levelName, int floorNbr)
 {
     boolean temp = false;
-    try{ 
+    try{
         objects = new int[maxNbOfObjectsPerLevel];
         posObjectX = new int[maxNbOfObjectsPerLevel];
         posObjectY = new int[maxNbOfObjectsPerLevel];
@@ -37,6 +37,7 @@ boolean loadLevel(String levelName, int floorNbr)
     characters = new boolean[maxNbOfCharacters];
     loadCharacters(levelPath);
     loadCharactersState();
+    loadDialogs(levelPath + "/dialogs/" + language + ".txt");
     return temp;
 }
 
@@ -133,6 +134,7 @@ boolean loadLevelPath(String theLevelPath, int floorNbr)
         }
         characters = new boolean[maxNbOfCharacters];
         loadCharacters(theLevelPath);
+        loadDialogs(theLevelPath + "/dialogs/" + language);
         loadCharactersState();
     }
     return temp;

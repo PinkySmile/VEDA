@@ -49,7 +49,7 @@ void printLevel()
                 picture = redCross;
             try {
                 float _temp = zoomLevel;
-                if((posObjectX[i]*16+camPosX)*(1+_temp/20) >= 0 && (posObjectX[i]*16-16+camPosX)*(1+_temp/20) <= width && (posObjectY[i]*16+camPosY)*(1+_temp/20) >= 0 && (posObjectY[i]*16-16+camPosY)*(1+_temp/20) <= height) {
+                if((posObjectX[i] * 16 + camPosX) * (1 + _temp / 20) >= 0 && (posObjectX[i] * 16 - 16 + camPosX) * (1 + _temp / 20) <= width && (posObjectY[i] * 16 + camPosY) * (1 + _temp / 20) >= 0 && (posObjectY[i] * 16 - 16 + camPosY) * (1 + _temp / 20) <= height) {
                     image(picture,posObjectX[i]*16-16+camPosX,posObjectY[i]*16-16+camPosY);
                     if (debugMode) {
                         textSize(14);

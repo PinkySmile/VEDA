@@ -2,28 +2,24 @@ void loadAchievements()
 {
     nbOfAchievementsLoaded = 0;
     try {
-        file = new File("data/achievements/achievements_"+language+".txt");
-        String lines[] = {};
-        if(file.exists())
-            lines = loadStrings("data/achievements/achievements_"+language+".txt");
-        else
-            lines = loadStrings("data/achievements/achievements_en.txt");
-        nbOfAchievementsLoaded = int(lines.length/3);
+        String lines[] = loadStrings("data/languages/" + language + "/achievements.txt");
+        if (lines == null)
+            lines = loadStrings("data/languages/en/achievements.txt");
+        if (lines == null) {
+            errorMsg("Couldn't find achievements data", SFX[1], null);
+            return;
+        }
+        nbOfAchievementsLoaded = lines.length / 3;
         for(int i = 0 ; i <= nbOfAchievementsLoaded ; i++) {
             try {
-                achievements[i] = lines[3*i];
-                achievementsContent[i] = lines[3*i+1];
+                achievements[i] = lines[3 * i];
+                achievementsContent[i] = lines[3 * i + 1];
                 achievementImage[i] = loadImage(lines[3*i+2]);
             } catch(Exception f) {}
         }
     } catch(Exception e) {
         e.printStackTrace();
     }
-}
-
-void saveAchievements()
-{
-  
 }
 
 void giveAchievement(int ID)

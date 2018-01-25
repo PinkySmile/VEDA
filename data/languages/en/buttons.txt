@@ -1,0 +1,25 @@
+Play
+
+Settings
+Quit
+
+Options
+Sound
+Back
+Language
+
+
+Cancel
+Save
+Controls
+
+
+Save
+
+Yes
+No
+Add a character
+Select an object
+Back
+
+Back

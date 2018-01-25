@@ -107,6 +107,7 @@ String theErrorMessage;
 String background;
 String levelToLoad;
 String username = null;
+String[] languagesFound = new String[50];
 String[] cutscenesCommands = new String[2000];
 String[] keyUsage = 
 {
@@ -453,6 +454,7 @@ int achievementY;
 int nbOfObjects;
 int selectedObject;
 int a;
+int currentButton = 0;
 int progress;
 int achiev;
 int slot;
@@ -492,6 +494,7 @@ int playTime;
 int oldSecond;
 int changingKey = -1;
 int floor = 0;
+int languagesNb = 0;
 int camBuffer[] = new int[2];
 int battleBuffer[] = new int[0];
 int dialogsVariante[] = new int[maxNbOfCharacters];
@@ -578,6 +581,7 @@ PFont Wingdings;
 PFont Parchment;
 PFont MesquiteStd;
 PFont Jazz;
+PFont FreeMono;
 PFont FinaleMallets;
 PFont FinaleAlphaNotes;
 PFont Cracked;
@@ -773,9 +777,13 @@ void setup()
         BodoniOrnamentsITCTT = loadFont("fonts/BodoniOrnamentsITCTT-48.vlw");
   
     file = new File("data/fonts/ArialMT-48.vlw");
-    if (file.exists()) {
+    if (file.exists())
         Arial = loadFont("fonts/ArialMT-48.vlw");
-        textFont(Arial);
+
+    file = new File("data/fonts/FreeMono-48.vlw");
+    if (file.exists()) {
+        FreeMono = loadFont("fonts/FreeMono-48.vlw");
+        textFont(FreeMono);
     }
 
     try {
@@ -1073,7 +1081,6 @@ void setup()
     else
         giveAchievement(1);
     surface.setTitle(title + " v" + version);
-    loadDialogs("data/dialogs_" + language);
     classicButtons();
     loadCutscenes();
     dialogDeathBuffer = -2;
@@ -1177,9 +1184,11 @@ void draw()
         if (compareStrings(language, "yolo")) {
             yoloBuffer++;
             if (yoloBuffer == 40) {
-                yoloBuffer = int(random(1, 10));
+                yoloBuffer = int(random(0, 10));
                 try {
-                    if (yoloBuffer == 1)
+                    if (yoloBuffer == 0)
+                        textFont(FreeMono);
+                    else if (yoloBuffer == 1)
                         textFont(BodoniOrnamentsITCTT);
                     else if (yoloBuffer == 2)
                         textFont(Cracked);
@@ -1429,6 +1438,8 @@ void draw()
         }
         drawLife();
         drawNRJ();
+        if(menu < 6 && menu != 3)
+            enableMenus(23, 23);
         drawMenus();
         tint(255,255);
         textSize(10);
@@ -1644,26 +1655,31 @@ void draw()
     
     //Affichage des erreurs
     if (errorBuffer <= 500) {
+        int box_size = 80;
+        String theText = null;
+
         errorBuffer++;
         if (errorBuffer <= 125)
-            errorPos = width - errorBuffer*2;
+            errorPos = width - errorBuffer * 2;
         else if (errorBuffer <= 375)
             errorPos = width - 250;
         else
-            errorPos = width - 250 + (errorBuffer-375)*2;
-        fill(125);
-        stroke(0);
-        rect(errorPos, height-85, 250, 85);
-        String theText = null;
+            errorPos = width - 250 + (errorBuffer - 375) * 2;
+        fill(125, 125, 125, 204);
+        stroke(0, 0, 0, 204);
+        if (fatalError)
+            box_size = 120;
+        rect(errorPos, height - box_size - 5, 250, box_size + 5);
         if (fatalError) {
             theText = "A fatal error has been detected\nThe game will try to keep running\nYou have been sent back to main menu\n(click here for more information)";
-            fill(255, 0, 0);
+            fill(255, 0, 0, 204);
         } else {
             theText = "An error has been detected\nThe game will try to keep running\n(click here for more information)";
-            fill(0, 0, 0);
+            fill(0, 0, 0, 204);
         }
         textSize(15);
-        text(theText, errorPos+20, height-70, errorPos+150, height);
+        text(theText, errorPos + 5, height - box_size, 250, box_size + 100);
+        fill(0, 0, 0, 255);
     }
 }
 

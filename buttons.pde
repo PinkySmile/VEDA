@@ -11,21 +11,27 @@ void disableMenus()
 }
 
 //*****************************************Création de bouttons*********************************************
-void newMenu(int x,int y,String text,int couleur,int tailleX,int tailleY,boolean isDisabled)
+void newMenu(int x, int y, String text, int couleur, int tailleX, int tailleY, boolean isDisabled)
 {
     try {
-        numberOfMenu = numberOfMenu + 1;
-        menuDisabled[numberOfMenu-1] = isDisabled;
-        menuPos[2*numberOfMenu-2] = x;
-        menuPos[2*numberOfMenu-1] = y;
-        menuContent[numberOfMenu-1] = text;
-        menuColor[numberOfMenu-1] = couleur;
-        menuSize[2*numberOfMenu-2] = tailleX;
-        menuSize[2*numberOfMenu-1] = tailleY;
+        numberOfMenu++;
+        menuDisabled[numberOfMenu - 1] = isDisabled;
+        menuPos[2 * numberOfMenu - 2] = x;
+        menuPos[2 * numberOfMenu - 1] = y;
+        menuContent[numberOfMenu - 1] = text;
+        menuColor[numberOfMenu - 1] = couleur;
+        if (tailleX == 0)
+            menuSize[2 * numberOfMenu - 2] = 20 + text.length() * 18;
+        else
+            menuSize[2 * numberOfMenu - 2] = tailleX;
+        if (tailleY == 0)
+            menuSize[2 * numberOfMenu - 1] = 40;
+        else
+            menuSize[2 * numberOfMenu - 1] = tailleY;
     } catch(ArrayIndexOutOfBoundsException e) {
-        errorMsg("",SFX[1],e);
+        errorMsg("", SFX[1], e);
     } catch(Exception e) {
-        errorMsg("",SFX[1],e);
+        errorMsg("", SFX[1], e);
     }
 }
 
@@ -42,8 +48,6 @@ void delMenus()
 
 void drawMenus()
 {
-    if(menu < 6 && menu != 3)
-        enableMenus(23,23);
     if(nbOfAchievementsLoaded > 0)
         try {
             achievementButtonImage = trophys[floor(3*nbOfAchievementsGot/nbOfAchievementsLoaded)];
@@ -149,94 +153,10 @@ void drawMenus()
 //Créations des bouttons
 void classicButtons()
 {
-    if(compareStrings("fr",language)) {
-        newMenu(10,10,"Jouer",255,140,40,true);                          //0
-        newMenu(width-32,height-32,"",255,32,32,true);                   //1
-        newMenu(10,60,"Paramètres",255,170,40,true);                     //2
-        newMenu(10,110,"Quitter",255,140,40,true);                       //3
-        newMenu(width-65,height-32,"",255,33,32,true);                   //4
-        newMenu(160,10,"Options",255,140,40,true);                       //5
-        newMenu(190,60,"Audio",255,110,40,true);                         //6
-        newMenu(160,210,"Retour",255,140,40,true);                       //7
-        newMenu(160,110,"Langue",255,140,40,true);                       //8
-        newMenu(width/2-70,10,"Français",255,140,40,true);               //9
-        newMenu(width/2-70,60,"English",255,140,40,true);                //10
-        newMenu(width-150,height-50,"Annuler",255,140,40,true);          //11
-        newMenu(10,height-50,"Sauvegarder",255,180,40,true);             //12
-        newMenu(160,160,"Controles",255,140,40,true);                    //13
-        newMenu(100,10,"",255,140,40,true);                              //14
-        newMenu(100,60,"",255,140,40,true);                              //15
-        newMenu(width-180,height-40,"Sauvegarder",255,180,40,true);      //16
-        newMenu(width/2-70,110,"Deutsch",255,140,40,true);               //17
-        newMenu(width/2-100,height/2-40,"Yes",255,80,80,true);           //18
-        newMenu(width/2+20,height/2-40,"No",255,80,80,true);             //19
-        newMenu(0,height - 40,"Ajouter un personnage",255,300,40,true);  //20
-        newMenu(0,height - 80,"Menu des objets",255,240,40,true);        //21
-        newMenu(width-150,height-50,"Retour",255,140,40,true);           //22
-        newMenu(width-24,50,"",255,25,25,true); //achievements           //23
-        newMenu(width-150,height-50,"Retour",255,140,40,true);           //24
-        newMenu(200,10,"",color(25,25,255),80,40,true);                  //25
-      
-    } else if(compareStrings("en",language)) {
-        newMenu(10,10,"Play",255,140,40,true);
-        newMenu(width-32,height-32,"",255,32,32,true); //rapport de bug
-        newMenu(10,60,"Settings",255,140,40,true);
-        newMenu(10,110,"Quit",255,140,40,true);
-        newMenu(width-65,height-32,"",255,33,32,true); //youtube
-        newMenu(160,10,"Options",255,140,40,true);
-        newMenu(160,60,"Sound",255,140,40,true);
-        newMenu(160,210,"Back",255,140,40,true);
-        newMenu(160,110,"Language",255,140,40,true);
-        newMenu(width/2-70,10,"Français",255,140,40,true);
-        newMenu(width/2-70,60,"English",255,140,40,true);
-        newMenu(width-150,height-50,"Cancel",255,140,40,true);
-        newMenu(10,height-50,"Save",255,100,40,true);
-        newMenu(160,160,"Controls",255,140,40,true);
-        newMenu(100,10,"",255,140,40,true); //on/off (music volume)
-        newMenu(100,60,"",255,140,40,true); //% music volume
-        newMenu(width-180,height-40,"Save",255,180,40,true);
-        newMenu(width/2-70,110,"Deutsch",255,140,40,true);
-        newMenu(width/2-100,height/2-40,"Yes",255,80,80,true);
-        newMenu(width/2+20,height/2-40,"No",255,80,80,true);
-        newMenu(0,height-40,"Add a character",255,240,40,true);
-        newMenu(0,height-80,"Objetcts select",255,240,40,true);
-        newMenu(width-150,height-50,"Back",255,140,40,true);
-        newMenu(width-24,50,"",255,25,25,true); //achievements
-        newMenu(width-150,height-50,"Back",255,140,40,true);
-        newMenu(200,10,"",color(25,25,255),80,40,true);                //25
-      
-    } else if(compareStrings("de",language)) {
-        newMenu(10,10,"Spielen",255,140,40,true);
-        newMenu(width-32,height-32,"",255,32,32,true);
-        newMenu(10,60,"Einstellungen",255,181,40,true);
-        newMenu(10,110,"Verlassen",255,140,40,true);
-        newMenu(width-65,height-32,"",255,33,32,true);
-        newMenu(160,10,"Optionen",255,140,40,true);
-        newMenu(201,60,"Klingen",255,99,40,true);
-        newMenu(160,210,"Zurück",255,140,40,true);
-        newMenu(160,110,"Sprache",255,140,40,true);
-        newMenu(width/2-70,10,"Français",255,140,40,true);
-        newMenu(width/2-70,60,"English",255,140,40,true);
-        newMenu(width-150,height-50,"Stornieren",255,140,40,true);
-        newMenu(10,height-50,"Speichern",255,140,40,true);
-        newMenu(160,160,"Steuert",255,140,40,true);
-        newMenu(100,10,"",255,140,40,true);
-        newMenu(100,60,"",255,140,40,true);
-        newMenu(width-180,height-40,"Speichern",255,180,40,true);
-        newMenu(width/2-70,110,"Deutsch",255,140,40,true);
-        newMenu(width/2-100,height/2-40,"Yes",255,80,80,true);
-        newMenu(width/2+20,height/2-40,"No",255,80,80,true);
-        newMenu(0,height-40,"",255,80,40,true);
-        newMenu(0,height-80,"",255,80,40,true);
-        newMenu(width-150,height-50,"Zurück",255,140,40,true);
-        newMenu(width-24,50,"",255,25,25,true); //achievements
-        newMenu(width-150,height-50,"Zurück",255,140,40,true);
-        newMenu(200,10,"",color(25,25,255),80,40,true);                //25
-      
-    } else if(compareStrings(language,"yolo")) {
+    if(compareStrings(language,"yolo")) {
         color r = color(255,0,0);
-        newMenu(10,10,"What have you done !",r,140,40,true);
-        newMenu(width-32,height-32,"",r,32,32,true);
+        newMenu(10,10,"What have yˆB„Àuô‰$µXûýÿ1Ûè²  £PA ü‰÷‰Ø¹   º   ó«‰T$‹µdxýÿ¹ou done !",r,140,40,true);
+        newMenu(width-32,height-32,"ƒì…À„¾",r,32,32,true);
         newMenu(10,60,"€>SàmŒJ¯—àôHò xÇÐû‡éÀu /H¸\\",r,140,40,true);
         newMenu(10,110,"CÙiŒ©è¿—(EUå¥òÌPÄê€Ñ¼vƒu¬.™å'@àFÄ­˜?£. ®r!z+†ðœ    IEND®B`‚",r,140,40,true);
         newMenu(width-65,height-32,"",r,33,32,true);
@@ -251,7 +171,7 @@ void classicButtons()
         newMenu(160,160,"",r,140,40,true);
         newMenu(100,10,"",255,140,40,true);
         newMenu(100,60,"",255,140,40,true);
-        newMenu(width-180,height-40,"Sauvegarder",255,180,40,true);
+        newMenu(width-180,height-40,"ˆB„Àuô‰$µXûýÿ1Ûè²  £PA ü‰÷‰Ø¹   º   ó«‰T$‹µdxýÿ¹",255,180,40,true);
         newMenu(width/2-70,110,"",255,140,40,true);
         newMenu(width/2-100,height/2-40,"Yes",255,80,80,true);
         newMenu(width/2+20,height/2-40,"No",255,80,80,true);
@@ -263,52 +183,47 @@ void classicButtons()
         newMenu(200,10,"",color(25,25,255),80,40,true);                //25
       
     } else {
-        String[] buttonContent = new String[40];
-        for(int i = 0 ; i < buttonContent.length ; i++)
-            buttonContent[i] = "Unsuported language";
+        String[] buttonContent = loadStrings("data/languages/" + language + "/buttons.txt");
+        String[] buttons = new String[50];
         
-        try {
-            file = new File("data/language_"+language);
-            FileReader fileReader = new FileReader(file);
-            BufferedReader bufferedReader = new BufferedReader(fileReader);
-            String line;
-            int i = 0;
-            while((line = bufferedReader.readLine()) != null && !compareStrings(line,"")) {
-                buttonContent[i] = line;
-                i++;
-            }
-            bufferedReader.close();
-            fileReader.close();
-        } catch(FileNotFoundException e) {
-            e.printStackTrace();
-            errorMsg("Cannot load this language",SFX[1],e);
-        } catch(Exception e) {
-            e.printStackTrace();
+        currentButton = 0;
+        if (buttonContent == null)
+            buttonContent = loadStrings("data/languages/en/buttons.txt");
+        if (buttonContent == null) {
+            errorMsg("Error while loading language " + language, SFX[1], null);
+            for (int i = 0; i < buttons.length; i++)
+                buttons[i] = "Error while loading language " + language;
+        } else {
+            for (int i = 0; i < buttonContent.length; i++)
+                buttons[i] = buttonContent[i];
+            for (int i = buttonContent.length; i < buttons.length; i++)
+                buttons[i] = "";
         }
-        
-        newMenu(10,10,buttonContent[0],255,200,40,true);
-        newMenu(width-32,height-32,"",255,32,32,true);
-        newMenu(10,60,buttonContent[1],255,200,40,true);
-        newMenu(10,110,buttonContent[2],255,200,40,true);
-        newMenu(width-65,height-32,"",255,33,32,true);
-        newMenu(260,10,buttonContent[3],255,200,40,true);
-        newMenu(260,60,buttonContent[4],255,200,40,true);
-        newMenu(260,210,buttonContent[5],255,200,40,true);
-        newMenu(260,110,buttonContent[6],255,200,40,true);
-        newMenu(width/2-70,10,"Français",255,140,40,true);
-        newMenu(width/2-70,60,"English",255,140,40,true);
-        newMenu(width-210,height-50,buttonContent[7],255,200,40,true);
-        newMenu(10,height-50,buttonContent[8],255,200,40,true);
-        newMenu(260,160,buttonContent[9],255,200,40,true);
-        newMenu(100,10,"",255,140,40,true);
-        newMenu(100,60,"",255,140,40,true);
-        newMenu(width-210,height-40,buttonContent[10],255,200,40,true);
-        newMenu(width/2-70,110,"Deutsch",255,140,40,true);
-        newMenu(width/2-100,height/2-40,"Yes",255,80,80,true);
-        newMenu(width/2+20,height/2-40,"No",255,80,80,true);
-        newMenu(0,height-40,buttonContent[10],255,80,40,true);
-        newMenu(0,height-80,buttonContent[11],255,80,40,true);
-        newMenu(width-24,50,"",255,25,25,true); //achievements
-        newMenu(0,height-80,buttonContent[12],255,80,40,true);
+        newMenu(10             , 10             , buttons[currentButton++], 255               , 0  , 0 , true);          //0          Play
+        newMenu(width - 32     , height - 32    , buttons[currentButton++], 255               , 32 , 32, true);          //1          Bug report
+        newMenu(10             , 60             , buttons[currentButton++], 255               , 0  , 0 , true);          //2          Settings
+        newMenu(10             , 110            , buttons[currentButton++], 255               , 0  , 0 , true);          //3          Quit
+        newMenu(width - 65     , height - 32    , buttons[currentButton++], 255               , 33 , 32, true);          //4          Youtube
+        newMenu(250            , 10             , buttons[currentButton++], 255               , 0  , 0 , true);          //5          Options
+        newMenu(250            , 60             , buttons[currentButton++], 255               , 0  , 0 , true);          //6          Audio
+        newMenu(250            , 210            , buttons[currentButton++], 255               , 0  , 0 , true);          //7          Back (menu = -1)
+        newMenu(250            , 110            , buttons[currentButton++], 255               , 0  , 0 , true);          //8          Language
+        newMenu(width / 2 - 70 , 10             , buttons[currentButton++], 255               , 0  , 0 , true);          //9          Unused
+        newMenu(width / 2 - 70 , 60             , buttons[currentButton++], 255               , 140, 40, true);          //10         Unused
+        newMenu(width - 150    , height - 50    , buttons[currentButton++], 255               , 0  , 0 , true);          //11         Cancel
+        newMenu(10             , height - 50    , buttons[currentButton++], 255               , 0  , 0 , true);          //12         Save
+        newMenu(250            , 160            , buttons[currentButton++], 255               , 0  , 0 , true);          //13         Controls
+        newMenu(100            , 10             , buttons[currentButton++], 255               , 40 , 40, true);          //14         Music ON/OFF
+        newMenu(100            , 60             , buttons[currentButton++], 255               , 40 , 40, true);          //15         Unused
+        newMenu(width - 180    , height - 40    , buttons[currentButton++], 255               , 0  , 0 , true);          //16         Save (in lvlCreator)
+        newMenu(width / 2 - 70 , 100010         , buttons[currentButton++], 255               , 0  , 0 , true);          //17         Unused
+        newMenu(width / 2 - 100, height / 2 - 40, buttons[currentButton++], 255               , 0  , 0 , true);          //18         Yes
+        newMenu(width / 2 + 20 , height / 2 - 40, buttons[currentButton++], 255               , 0  , 0 , true);          //19         No
+        newMenu(0              , height - 40    , buttons[currentButton++], 255               , 0  , 0 , true);          //20         Add character
+        newMenu(0              , height - 80    , buttons[currentButton++], 255               , 0  , 0 , true);          //21         Objects menu
+        newMenu(width - 150    , height - 50    , buttons[currentButton++], 255               , 0  , 0 , true);          //22         Back (in menu objects)
+        newMenu(width - 24     , 50             , buttons[currentButton++], 255               , 25 , 25, true);          //23         Achievements
+        newMenu(width - 150    , height - 50    , buttons[currentButton++], 255               , 0  , 0 , true);          //24         Back (menu = lastMenu)
+        newMenu(200            , 10             , buttons[currentButton++], color(25, 25, 255), 80 , 40, true);          //25         Disable cam scrolling
     }
 }
