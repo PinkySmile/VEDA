@@ -1,7 +1,9 @@
 //*****************************************Chargement d'un niveau*********************************************
 boolean loadLevel(String levelName, int floorNbr)
 {
+    String path = "";
     boolean temp = false;
+
     try{
         objects = new int[maxNbOfObjectsPerLevel];
         posObjectX = new int[maxNbOfObjectsPerLevel];
@@ -45,6 +47,8 @@ boolean loadLevel(String levelName, int floorNbr)
 boolean loadLevelPath(String theLevelPath, int floorNbr)
 {
     boolean temp = false;
+    String path = "";
+
     if(compareStrings(theLevelPath, "debugLevel")) {
         temp = true;
         objects = new int[maxNbOfObjectsPerLevel];
@@ -143,15 +147,17 @@ boolean loadLevelPath(String theLevelPath, int floorNbr)
 int getNbOfFiles(String path)
 {
     int nbOfFiles = 0;
+    String[] dirs = null;
     File file = new File(path);
-    String[] dirs = file.list();
+
+    dirs = file.list();
     for(int i = 0 ; i < dirs.length ; i++) {
-        println(path+"/"+dirs[i]);
-        File files = new File(path+"/"+dirs[i]);
+        println(path + "/" + dirs[i]);
+        File files = new File(path + "/" + dirs[i]);
         if(files.isFile())
             nbOfFiles++;
         if(files.isDirectory())
-            nbOfFiles += getNbOfFiles(new File(path+"/"+dirs[i]).getAbsolutePath());
+            nbOfFiles += getNbOfFiles(new File(path +  "/" + dirs[i]).getAbsolutePath());
     }
     return nbOfFiles;
 }

@@ -1,5 +1,7 @@
 void saveGame()
 {
+    String path = "";
+
     try {
         path = "";
         String dirName = "save";
@@ -108,7 +110,7 @@ void loadGame()
 
 void saveCharactersState()
 {
-    println("saving characters state at " + levelPath + "/save.chr");
+    println("saving characters state to " + levelPath + "/save.chr");
     try {
         output = createWriter(levelPath + "/save.chr");
         for(int i = 0 ; i < characters.length ; i++)
@@ -134,6 +136,7 @@ void saveCharactersState()
 void loadCharacters(String theLevelPath)
 {
     String file_stream = "";
+    String path = "";
 
     try {
         levelPath = theLevelPath;
