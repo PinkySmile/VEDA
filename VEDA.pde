@@ -89,7 +89,6 @@ String status = "static";
 String textTyped = "";
 String oldCommands = "";
 String cursor = "";
-String path;
 String version = "";
 String music = "Mysterious";
 String language = "en";
@@ -599,6 +598,8 @@ Graphics g;
 //Initialisation
 void setup()
 {
+    String path;
+
     Map<String, String> env = System.getenv();
     for (String envName : env.keySet()) {
         if (compareStrings(envName, "USER") || compareStrings(envName, "USERNAME"))
@@ -1082,7 +1083,7 @@ void setup()
         giveAchievement(1);
     surface.setTitle(title + " v" + version);
     classicButtons();
-    loadCutscenes();
+    loadCutscenes("data/cutscenes");
     dialogDeathBuffer = -2;
 }
 
@@ -1092,6 +1093,8 @@ void setup()
 //Animation
 void draw()
 {
+    String path;
+
     if (hour() == 0 && minute() == 0 && second() == 0)
         giveAchievement(4);
     try {

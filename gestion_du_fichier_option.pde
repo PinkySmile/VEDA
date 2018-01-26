@@ -1,5 +1,7 @@
 void saveSettings()
 {
+    String path = "";
+
     try{
         path = "text_files/setting.txt";
         file = new File(path);
@@ -36,6 +38,8 @@ void saveSettings()
 //*****************************************Chargement des options**************************************************
 void loadSettings()
 {
+    String path = "";
+
     try{
         path = "text_files/setting.txt";
         file = new File(path);
@@ -75,6 +79,8 @@ void loadSettings()
 //******************************************Chargement des noms d'objets***************************************************
 void loadItemsNames(String language)
 {
+    String path = "";
+
     try{
         path = "text_files/items_"+language+".txt";
         file = new File(path);

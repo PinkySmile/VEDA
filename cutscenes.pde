@@ -1,8 +1,7 @@
-void loadCutscenes()
+void loadCutscenes(String path)
 {
     try {
         file = new File(path);
-        file = new File("data/cutscenes");
         FileReader fileReader = new FileReader(file);
         BufferedReader bufferedReader = new BufferedReader(fileReader);
         String line;
@@ -12,7 +11,7 @@ void loadCutscenes()
             cutscenesCommands[ID] = line;
             if (compareStrings(line, "end")) {
                 temp++;
-                println("Cutscene "+(temp-1)+" ends at pos "+ID);
+                println("Cutscene "+ (temp - 1) + " ends at pos "+ID);
                 cutsceneStart[temp] = ID + 1;
             }
         }
@@ -232,44 +231,44 @@ boolean doCommand(String commandLine)
 }
 
 void saveCommand(String commandline) {
-  String[] commandAlreadyWritten = new String[200];
-  try {
-    file = new File("save/file");
-    FileReader fileReader = new FileReader(file);
-    BufferedReader bufferedReader = new BufferedReader(fileReader);
-    int i = 0;
-    String line = bufferedReader.readLine();
-    while (line != null) {
-      commandAlreadyWritten[i] = line;
-      line = bufferedReader.readLine();
-      i++;
-    }
-    bufferedReader.close();
-    fileReader.close();
-  } 
-  catch(FileNotFoundException e) {
-    e.printStackTrace();
-  } 
-  catch(Exception e) {
-    e.printStackTrace();
-    errorMsg("Error while loading game", SFX[1], e);
-  }
+    String[] commandAlreadyWritten = new String[200];
 
-  try {
-    path = "";
-    String dirName = "save";
-    File dir = new File(dirName);
-    dir.mkdirs();
-    file = new File("save/file");
-    FileWriter fileWriter = new FileWriter(file);
-    BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
-    bufferedWriter.write(name+"\n");
-    bufferedWriter.flush();
-    bufferedWriter.close();
-    fileWriter.close();
-  } 
-  catch(Exception e) {
-    e.printStackTrace();
-    errorMsg("Error while saving game", SFX[1], e);
-  }
+    try {
+        file = new File("save/file");
+        FileReader fileReader = new FileReader(file);
+        BufferedReader bufferedReader = new BufferedReader(fileReader);
+        int i = 0;
+        String line = bufferedReader.readLine();
+        while (line != null) {
+            commandAlreadyWritten[i] = line;
+            line = bufferedReader.readLine();
+            i++;
+        }
+        bufferedReader.close();
+        fileReader.close();
+    } 
+    catch(FileNotFoundException e) {
+        e.printStackTrace();
+    } 
+    catch(Exception e) {
+        e.printStackTrace();
+        errorMsg("Error while loading game", SFX[1], e);
+    }
+
+    try {
+        String dirName = "save";
+        File dir = new File(dirName);
+        dir.mkdirs();
+        file = new File("save/file");
+        FileWriter fileWriter = new FileWriter(file);
+        BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
+        bufferedWriter.write(name+"\n");
+        bufferedWriter.flush();
+        bufferedWriter.close();
+        fileWriter.close();
+    } 
+    catch(Exception e) {
+        e.printStackTrace();
+        errorMsg("Error while saving game", SFX[1], e);
+    }
 }

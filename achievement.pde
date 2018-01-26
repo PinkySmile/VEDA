@@ -36,6 +36,8 @@ void giveAchievement(int ID)
 
 void loadAchievementsGot()
 {
+    String path;
+
     path = "save/achievement.txt";
     nbOfAchievementsGot = 0;
     try {
@@ -63,11 +65,13 @@ void loadAchievementsGot()
 
 void saveAchievementsGot()
 {
+    String path;
+    String dirName = "save";
+
     path = "save/achievement.txt";
     try {
-        String dirName = "save";
         File dir = new File(dirName);
-        boolean isCreated = dir.mkdirs();
+        dir.mkdirs();
         file = new File(path);
         file.delete();
         FileWriter fileWriter = new FileWriter(file);

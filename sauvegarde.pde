@@ -1,12 +1,14 @@
 void saveGame()
 {
-    println("saving game");
+    String path = "";
+
     try {
         path = "";
         String dirName = "save";
         File dir = new File(dirName);
         dir.mkdirs();
         file = new File("save/file");
+        println("saving game to " + file.getAbsolutePath());
         FileWriter fileWriter = new FileWriter(file);
         BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
         bufferedWriter.write(name+"\n");
@@ -35,39 +37,13 @@ void saveGame()
         e.printStackTrace();
         errorMsg("Error while saving game",SFX[1],e);
     }
-    try {
-        path = "";
-        String dirName = "lib/folder";
-        File dir = new File(dirName);
-        dir.mkdirs();
-        file = new File("lib/folder/file0");
-        FileWriter fileWriter = new FileWriter(file);
-        BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
-        bufferedWriter.write(name+"\n");
-        bufferedWriter.write(lifeMax+"\n");
-        bufferedWriter.write(life+"\n");
-        bufferedWriter.write(energyMax+"\n");
-        bufferedWriter.write(energy+"\n");
-        bufferedWriter.write(playerX+"\n");
-        bufferedWriter.write(playerY+"\n");
-        bufferedWriter.write(camPosX+"\n");
-        bufferedWriter.write(camPosY+"\n");
-        bufferedWriter.write(progress+"\n");
-        bufferedWriter.write(character+"\n");
-        bufferedWriter.write(music+"\n");
-        bufferedWriter.flush();
-        bufferedWriter.close();
-        fileWriter.close();
-    } catch(Exception e) {
-        e.printStackTrace(); errorMsg("Error while saving game",SFX[1],e);
-    }
 }
 
 void loadGame()
 {
-    println("loading game");
     try {
         file = new File("save/file");
+        println("loading game from " + file.getAbsolutePath());
         FileReader fileReader = new FileReader(file);
         BufferedReader bufferedReader = new BufferedReader(fileReader);
         name = bufferedReader.readLine();
@@ -123,61 +99,31 @@ void loadGame()
         e.printStackTrace();
     } catch(Exception e) {
         e.printStackTrace();
-        errorMsg("Error while loading game",SFX[1],e);
+        errorMsg("Error while loading game", SFX[1], e);
     }
     if(compareStrings(character,"female"))
         character = "female";
     else
         character = "male";
-    try {
-        file = new File("lib/folder/file0");
-        FileReader fileReader = new FileReader(file);
-        BufferedReader bufferedReader = new BufferedReader(fileReader);
-        name = bufferedReader.readLine();
-        int slifeMax = int(bufferedReader.readLine());
-        int slife = int(bufferedReader.readLine());
-        int senergyMax = int(bufferedReader.readLine());
-        int senergy = int(bufferedReader.readLine());
-        int splayerX = int(bufferedReader.readLine());
-        int splayerY = int(bufferedReader.readLine());
-        int scamPosX = int(bufferedReader.readLine());
-        int scamPosY = int(bufferedReader.readLine());
-        int sprogress = int(bufferedReader.readLine());
-        String schar = bufferedReader.readLine();
-        if(slifeMax != lifeMax ||life != slife ||senergyMax != energyMax ||senergy != energy ||splayerX != playerX ||splayerY != playerY ||scamPosX != camPosX ||camPosY != scamPosY ||sprogress != progress ||!compareStrings(character,schar)) {
-            giveAchievement(5);
-            lifeMax = slifeMax; 
-            life = slife;
-            playerX = splayerX;
-            playerY = splayerY;
-            camPosX = scamPosX;
-            camPosY = scamPosY;
-            progress = sprogress;
-            if(compareStrings(schar,"male"))
-                character = "male";
-            else
-                character = "female";
-            new saveEverything(true,true,false);
-        }
-        bufferedReader.close();
-        fileReader.close();
-    } catch(FileNotFoundException e) {
-        e.printStackTrace();
-    } catch(Exception e) {
-        e.printStackTrace();
-        errorMsg("Error while loading game",SFX[1],e);
-    }
     loadCharactersState();
 }
 
 void saveCharactersState()
 {
-    println("saving characters state");
+    println("saving characters state to " + levelPath + "/save.chr");
     try {
         output = createWriter(levelPath + "/save.chr");
         for(int i = 0 ; i < characters.length ; i++)
-            if(characters[i])
-                output.print(i+"\n"+characterDir[i]+"\n"+characterPointToGo[i][0]+"\n"+characterPointToGo[i][1]+"\n"+dialogsVariante[i]+"\n"+theDialogID[i]+"\n");
+            if(characters[i]) {
+                output.println(i);
+                output.println(characterX[i]);
+                output.println(characterY[i]);
+                output.println(characterDir[i]);
+                output.println(characterPointToGo[i][0]);
+                output.println(characterPointToGo[i][1]);
+                output.println(dialogsVariante[i]);
+                output.println(theDialogID[i]);
+            }
         output.flush();
         output.close();
     } catch(Exception e) {
@@ -190,10 +136,12 @@ void saveCharactersState()
 void loadCharacters(String theLevelPath)
 {
     String file_stream = "";
+    String path = "";
 
     try {
         levelPath = theLevelPath;
         path = theLevelPath + "/characters.chr";
+        println("Loading characters (" + theLevelPath + "/characters.chr)");
         BufferedReader bufferedReader = createReader(path);
         String line;
         while((line = bufferedReader.readLine()) != null)
@@ -211,30 +159,22 @@ void loadCharacters(String theLevelPath)
 
 void loadCharactersState()
 {
-    println("loading characters state");
+    println("loading characters state (" + levelPath + "/save.chr)");
     try {
-        String dirName = levelPath;
-        File dir = new File(dirName);
-        path = dir.getAbsolutePath()+"/save.chr";
-        file = new File(path);
-        if(file.exists()) {
-            FileReader fileReader = new FileReader(file);
-            BufferedReader bufferedReader = new BufferedReader(fileReader);
-            String line;
-            int a = 0;
-            while((line = bufferedReader.readLine()) != null && !compareStrings(line,"")) {
-                a = int(line);
-                characterX[a] = int(bufferedReader.readLine());
-                characterY[a] = int(bufferedReader.readLine());
-                characterDir[a] = int(bufferedReader.readLine());
-                characterPointToGo[a][0] = int(bufferedReader.readLine());
-                characterPointToGo[a][1] = int(bufferedReader.readLine());
-                dialogsVariante[a] = int(bufferedReader.readLine());
-                theDialogID[a] = int(bufferedReader.readLine());
-            }
-            bufferedReader.close();
-            fileReader.close();
+        BufferedReader bufferedReader = createReader(levelPath + "/save.chr");
+        String line;
+        int a = 0;
+        while((line = bufferedReader.readLine()) != null && !compareStrings(line,"")) {
+            a = int(line);
+            characterX[a] = int(bufferedReader.readLine());
+            characterY[a] = int(bufferedReader.readLine());
+            characterDir[a] = int(bufferedReader.readLine());
+            characterPointToGo[a][0] = int(bufferedReader.readLine());
+            characterPointToGo[a][1] = int(bufferedReader.readLine());
+            dialogsVariante[a] = int(bufferedReader.readLine());
+            theDialogID[a] = int(bufferedReader.readLine());
         }
+        bufferedReader.close();
     } catch(Exception e) {
       e.printStackTrace();
     }

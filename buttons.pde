@@ -224,6 +224,6 @@ void classicButtons()
         newMenu(width - 150    , height - 50    , buttons[currentButton++], 255               , 0  , 0 , true);          //22         Back (in menu objects)
         newMenu(width - 24     , 50             , buttons[currentButton++], 255               , 25 , 25, true);          //23         Achievements
         newMenu(width - 150    , height - 50    , buttons[currentButton++], 255               , 0  , 0 , true);          //24         Back (menu = lastMenu)
-        newMenu(200            , 10             , buttons[currentButton++], color(25, 25, 255), 80 , 40, true);          //25         Disable cam scrolling
+        newMenu(180            , 10             , buttons[currentButton++], color(25, 25, 255), 100, 40, true);          //25         Disable cam scrolling
     }
 }
