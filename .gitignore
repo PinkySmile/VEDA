@@ -8,3 +8,4 @@ application.macosx
 desktop.ini
 save.chr
 *.log
+*.autosave
