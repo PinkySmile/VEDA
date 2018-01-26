@@ -51,11 +51,12 @@ int main(int argc, char **args)
 			while (pos < len) {
 				if (match(buffer, "--end", pos)) {
 					printf("Found it !\n");
-					if (cur_file == file_nb - 2) {
+					if(cur_file >= file_nb - 1) {
+						break;
+					}
+					if (cur_file <= file_nb - 2) {
 						begin = pos + 6;
 						cur_file++;
-					} else if(cur_file == file_nb - 1) {
-						break;
 					}
 				}
 				pos++;
