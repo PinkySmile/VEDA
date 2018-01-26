@@ -21,7 +21,7 @@ void newMenu(int x, int y, String text, int couleur, int tailleX, int tailleY, b
         menuContent[numberOfMenu - 1] = text;
         menuColor[numberOfMenu - 1] = couleur;
         if (tailleX == 0)
-            menuSize[2 * numberOfMenu - 2] = 20 + text.length() * 18;
+            menuSize[2 * numberOfMenu - 2] = 10 + text.length() * 17;
         else
             menuSize[2 * numberOfMenu - 2] = tailleX;
         if (tailleY == 0)
