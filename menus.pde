@@ -131,8 +131,8 @@ void languageMenu()
     printMenuBackground();
 
     disableMenus();
-    enableMenus(9, 12);
-    enableMenus(17, 17);
+    enableMenus(11, 12);
+    enableMenus(currentButton, currentButton + languagesNb);
 }
 
 void inGame()

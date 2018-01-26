@@ -10,28 +10,28 @@ void saveSettings()
         BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
         bufferedWriter.write(language);
         bufferedWriter.write('\n');
-        bufferedWriter.write(SFXVolume+"");
+        bufferedWriter.write(SFXVolume + "");
         bufferedWriter.write('\n');
-        bufferedWriter.write(musicVolume+"");
+        bufferedWriter.write(musicVolume + "");
         bufferedWriter.write('\n');
-        bufferedWriter.write(width+"");
+        bufferedWriter.write(width + "");
         bufferedWriter.write('\n');
-        bufferedWriter.write(height+"");
+        bufferedWriter.write(height + "");
         bufferedWriter.write('\n');
-        bufferedWriter.write(camScrollingDisabled+"");
+        bufferedWriter.write(camScrollingDisabled + "");
         bufferedWriter.write('\n');
         for (int i = 0 ; i < keys.length ; i++) {
-            bufferedWriter.write(keys[i]+"");
+            bufferedWriter.write(keys[i] + "");
             bufferedWriter.write('\n');
         }
         bufferedWriter.flush();
         bufferedWriter.close();
     } catch(FileNotFoundException e) {
         e.printStackTrace();
-        errorMsg(e+"\n\nVos options n'ont pu être sauvegardées. Vérifiez que le fichier est accessible.",SFX[2],e);
+        errorMsg(e+"\n\nCouldn't save your options.", SFX[2], e);
     } catch(IOException e) {
         e.printStackTrace();
-        errorMsg(e+"\n\nVos options n'ont pu être sauvegardées. Vérifiez que le fichier est accessible.",SFX[2],e);
+        errorMsg(e+"\n\nCouldn't save your options.", SFX[2], e);
     }
 }
 
@@ -53,7 +53,7 @@ void loadSettings()
         if((line = bufferedReader.readLine()) != null)
             musicVolume = int(line);
         surface.setSize(int(bufferedReader.readLine()), int(bufferedReader.readLine()));
-        camScrollingDisabled = compareStrings(bufferedReader.readLine(),"true");
+        camScrollingDisabled = compareStrings(bufferedReader.readLine(), "true");
         for (int i = 0 ; i < keys.length ; i++)
             keys[i] = int(bufferedReader.readLine());
         bufferedReader.close();
@@ -64,7 +64,7 @@ void loadSettings()
         } catch(Exception e) {}
         try {
             for (int i = 0 ; i < Musics.length ; i++)
-                Musics[i].setGain(-50+50*musicVolume/100+baseGain[i]);
+                Musics[i].setGain(-50 + 50 * musicVolume / 100 + baseGain[i]);
         } catch(Exception e) {}
         if(musicVolume == 0)
               musicDisabled = true;
@@ -72,7 +72,7 @@ void loadSettings()
         saveSettings();
     } catch(Exception e) {
         e.printStackTrace();
-        errorMsg("Unexpected error occured while loading settings",SFX[1],e);
+        errorMsg("Unexpected error occured while loading settings", SFX[1], e);
     }
 }
 
@@ -82,7 +82,7 @@ void loadItemsNames(String language)
     String path = "";
 
     try{
-        path = "text_files/items_"+language+".txt";
+        path = "text_files/items_" + language + ".txt";
         file = new File(path);
         FileReader fileReader = new FileReader(file);
         BufferedReader bufferedReader = new BufferedReader(fileReader);
@@ -99,6 +99,6 @@ void loadItemsNames(String language)
             loadItemsNames("en");
     } catch(Exception e) {
         e.printStackTrace();
-        errorMsg("Unexpected error occured while loading items names",SFX[1],e);
+        errorMsg("Unexpected error occured while loading items names", SFX[1], e);
     }
 }

@@ -21,7 +21,7 @@ void newMenu(int x, int y, String text, int couleur, int tailleX, int tailleY, b
         menuContent[numberOfMenu - 1] = text;
         menuColor[numberOfMenu - 1] = couleur;
         if (tailleX == 0)
-            menuSize[2 * numberOfMenu - 2] = 10 + text.length() * 17;
+            menuSize[2 * numberOfMenu - 2] = 10 + text.length() * 18;
         else
             menuSize[2 * numberOfMenu - 2] = tailleX;
         if (tailleY == 0)
@@ -50,18 +50,18 @@ void drawMenus()
 {
     if(nbOfAchievementsLoaded > 0)
         try {
-            achievementButtonImage = trophys[floor(3*nbOfAchievementsGot/nbOfAchievementsLoaded)];
+            achievementButtonImage = trophys[floor(3 * nbOfAchievementsGot / nbOfAchievementsLoaded)];
         } catch(Exception e) {
             achievementButtonImage = redCross;
         }
     else
         achievementButtonImage = trophys[0];
     if(menu == -1) {
-        menuPos[46] = width-25;
+        menuPos[46] = width - 25;
         menuPos[47] = 100;
     } else if(menu >= 0 && menu <= 6) {
         tint(255,150);
-        menuPos[46] = width-25;
+        menuPos[46] = width - 25;
         menuPos[47] = 20;
     }
     for (int i = 0; i < numberOfMenu; i++) {
@@ -69,8 +69,8 @@ void drawMenus()
             noStroke();
             int current_color = 0;
             int alph = 255;
-            if (mouseX <= menuPos[2*i]+menuSize[2*i] && mouseX >= menuPos[2*i] && mouseY <= menuPos[2*i+1]+menuSize[2*i+1] && mouseY >= menuPos[2*i+1]) {
-                current_color = menuColor[i]-100;
+            if (mouseX <= menuPos[2 * i] + menuSize[2 * i] && mouseX >= menuPos[2 * i] && mouseY <= menuPos[2 * i + 1]+menuSize[2 * i + 1] && mouseY >= menuPos[2 * i + 1]) {
+                current_color = menuColor[i] - 100;
                 if (i == 1 && compareStrings(language, "yolo"))
                     bug = godEater;
                 else if (i == 1)
@@ -90,25 +90,25 @@ void drawMenus()
             }
             tint(255, 255, 255, alph+20);
             fill(current_color-150, alph);
-            rect(menuPos[2*i], menuPos[2*i+1], menuSize[2*i], menuSize[2*i+1]);
+            rect(menuPos[2 * i], menuPos[2*i+1], menuSize[2*i], menuSize[2*i+1]);
             fill(current_color-125, alph);
-            rect(menuPos[2*i]+1, menuPos[2*i+1]+1, menuSize[2*i]-2, menuSize[2*i+1]-2);
+            rect(menuPos[2 * i] + 1, menuPos[2 * i + 1] + 1, menuSize[2 * i] - 2, menuSize[2 * i + 1] - 2);
             fill(current_color-100, alph);
-            rect(menuPos[2*i]+2, menuPos[2*i+1]+2, menuSize[2*i]-4, menuSize[2*i+1]-4);
+            rect(menuPos[2 * i] + 2, menuPos[2 * i + 1] + 2, menuSize[2 * i] - 4, menuSize[2 * i + 1] - 4);
             fill(current_color-80, alph);
-            rect(menuPos[2*i]+3, menuPos[2*i+1]+3, menuSize[2*i]-6, menuSize[2*i+1]-6);
+            rect(menuPos[2 * i] + 3, menuPos[2 * i + 1] + 3, menuSize[2 * i] - 6, menuSize[2 * i + 1] - 6);
             fill(current_color-60, alph);
-            rect(menuPos[2*i]+4, menuPos[2*i+1]+4, menuSize[2*i]-8, menuSize[2*i+1]-8);
+            rect(menuPos[2 * i] + 4, menuPos[2 * i + 1] + 4, menuSize[2 * i] - 8, menuSize[2 * i + 1] - 8);
             fill(current_color-40, alph);
-            rect(menuPos[2*i]+5, menuPos[2*i+1]+5, menuSize[2*i]-10, menuSize[2*i+1]-10);
+            rect(menuPos[2 * i] + 5, menuPos[2 * i + 1] + 5, menuSize[2 * i] - 10, menuSize[2 * i + 1] - 10);
             fill(current_color-25, alph);
-            rect(menuPos[2*i]+6, menuPos[2*i+1]+6, menuSize[2*i]-12, menuSize[2*i+1]-12);
+            rect(menuPos[2 * i] + 6, menuPos[2 * i + 1] + 6, menuSize[2 * i] - 12, menuSize[2 * i + 1] - 12);
             fill(current_color-10, alph);
-            rect(menuPos[2*i]+7, menuPos[2*i+1]+7, menuSize[2*i]-14, menuSize[2*i+1]-14);
+            rect(menuPos[2 * i] + 7, menuPos[2 * i + 1] + 7, menuSize[2 * i] - 14, menuSize[2 * i + 1] - 14);
             fill(current_color, alph);
-            rect(menuPos[2*i]+8, menuPos[2*i+1]+8, menuSize[2*i]-16, menuSize[2*i+1]-16);
+            rect(menuPos[2 * i] + 8, menuPos[2 * i + 1] + 8, menuSize[2 * i] - 16, menuSize[2 * i + 1] - 16);
             fill(0);
-            if (mouseX <= menuPos[2*i]+menuSize[2*i] && mouseX >= menuPos[2*i] && mouseY <= menuPos[2*i+1]+menuSize[2*i+1] && mouseY >= menuPos[2*i+1] && i == 16)
+            if (mouseX <= menuPos[2*i]+menuSize[2*i] && mouseX >= menuPos[2*i] && mouseY <= menuPos[2 * i + 1] + menuSize[2*i+1] && mouseY >= menuPos[2*i+1] && i == 16)
                 fill(0, 150);
             if (i == 1)
                 try {
@@ -120,7 +120,7 @@ void drawMenus()
                 }
             else if (i == 4) {
                 try {
-                    image(youtube, menuPos[2*i]+1, menuPos[2*i+1]+1);
+                    image(youtube, menuPos[2*i]+1, menuPos[2 * i + 1] + 1);
                 }
                 catch(Exception e) {
                     e.printStackTrace();
@@ -128,11 +128,11 @@ void drawMenus()
                 }
             } else if(i == 23) {
                 try {
-                    image(achievementButtonImage, menuPos[2*i], menuPos[2*i+1]);
+                    image(achievementButtonImage, menuPos[2 * i], menuPos[2 * i + 1]);
                 }
                 catch(Exception e) {
                     try {
-                      image(glitched_texture, menuPos[2*i], menuPos[2*i+1]);
+                      image(glitched_texture, menuPos[2 * i], menuPos[2 * i + 1]);
                     }
                     catch(Exception f) {
                       e.printStackTrace();
@@ -144,7 +144,7 @@ void drawMenus()
             textSize(30);
             if (compareStrings(language, "yolo"))
                 textSize(random(1, 50));
-            text(menuContent[i], menuPos[2*i]+4, menuPos[2*i+1]+menuSize[2*i+1]-10);
+            text(menuContent[i], menuPos[2 * i] + 4, menuPos[2 * i + 1] + menuSize[2 * i + 1] - 10);
             tint(255);
         }
     }
@@ -208,8 +208,8 @@ void classicButtons()
         newMenu(250            , 60             , buttons[currentButton++], 255               , 0  , 0 , true);          //6          Audio
         newMenu(250            , 210            , buttons[currentButton++], 255               , 0  , 0 , true);          //7          Back (menu = -1)
         newMenu(250            , 110            , buttons[currentButton++], 255               , 0  , 0 , true);          //8          Language
-        newMenu(width / 2 - 70 , 10             , buttons[currentButton++], 255               , 0  , 0 , true);          //9          Unused
-        newMenu(width / 2 - 70 , 60             , buttons[currentButton++], 255               , 140, 40, true);          //10         Unused
+        newMenu(-10            , -10            , buttons[currentButton++], 255               , -1 , -1, true);          //9          Unused
+        newMenu(-10            , -10            , buttons[currentButton++], 255               , -1 , -1, true);          //10         Unused
         newMenu(width - 150    , height - 50    , buttons[currentButton++], 255               , 0  , 0 , true);          //11         Cancel
         newMenu(10             , height - 50    , buttons[currentButton++], 255               , 0  , 0 , true);          //12         Save
         newMenu(250            , 160            , buttons[currentButton++], 255               , 0  , 0 , true);          //13         Controls
@@ -225,5 +225,47 @@ void classicButtons()
         newMenu(width - 24     , 50             , buttons[currentButton++], 255               , 25 , 25, true);          //23         Achievements
         newMenu(width - 150    , height - 50    , buttons[currentButton++], 255               , 0  , 0 , true);          //24         Back (menu = lastMenu)
         newMenu(180            , 10             , buttons[currentButton++], color(25, 25, 255), 100, 40, true);          //25         Disable cam scrolling
+        createLanguageButtons();
+    }
+}
+
+String readFile(String path)
+{
+    String result = null;
+    BufferedReader buffer = createReader(path);
+    
+    try {
+        if (buffer == null)
+            return (null);
+        result = buffer.readLine();
+        buffer.close();
+        return (result);
+    } catch (Exception e) {
+        e.printStackTrace();
+        return (null);
+    }
+}
+
+void createLanguageButtons()
+{
+    String[] dirs = null;
+    String name = "";
+    File file = new File("data/languages");
+
+    languagesNb = 0;
+    try {
+        println("file", file);
+        dirs = file.list();
+        for (int i = 0 ; i < dirs.length ; i++) {
+            println("Found " + dirs[i]);
+            languagesNb++;
+            languagesFound[i] = dirs[i];
+            name = readFile("data/languages/" + dirs[i] + "/name.txt");
+            if (name == null)
+                name = "Language \"" + dirs[i] + "\"";
+            newMenu(width / 2 - (5 + name.length() * 9), 10 + 50 * i, name, 255, 0, 0, true);
+        }
+    } catch (Exception e) {
+        errorMsg("Couldn't fetch languages list ", SFX[1], e);
     }
 }

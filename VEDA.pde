@@ -414,7 +414,6 @@ String[] menuContent = new String[100];
 String[] achievements = new String[maxNbOfAchievement];
 String[] achievementsContent = new String[maxNbOfAchievement];
 String[] answers = new String[4];
-String[] languages = new String[100];
 String[] itemNames = new String[100];
 String[] characterName = new String[maxNbOfCharacters];
 String[] characterType = new String[maxNbOfCharacters];

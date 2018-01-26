@@ -241,6 +241,10 @@ void mousePressed()
                     menu = lastMenu;
                 } else if (i == 25) {   //boutton Scrolling de la cam
                     camScrollingDisabled = !camScrollingDisabled;
+                } else if (i >= currentButton && i < currentButton + languagesNb) {   //Langues
+                    language = languagesFound[i - currentButton];
+                    delMenus();
+                    classicButtons();
                 }
             }
         }
