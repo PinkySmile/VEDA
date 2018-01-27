@@ -437,6 +437,177 @@ void keyPressed()
         zoomLevel = 0;
     if(key == 'è' && menu == 7)
         gridShown = !gridShown;
+    //Touches de debug
+    if (debugMode && menu != 1) {
+        if (key == ';' && menu == 7) {
+            selectedObject = lireUnEntier("Id of an object : ", "ID");
+        } else if (key == ',') {
+            giveAchievement(0);
+        } else if (key == '/') {
+            playerX = lireUnEntier("Position X","Changer la position du joueur");
+            playerY = lireUnEntier("Position Y","Changer la position du joueur");
+        } else if (key == ':') {
+            int xBuffer = camPosX;
+            int yBuffer = camPosY;
+            camPosX = lireUnEntier("CamX","CamX");
+            camPosY = lireUnEntier("CamY","CamY");
+            playerX = playerX - camPosX + xBuffer;
+            playerY = playerY - camPosY + yBuffer;
+        } else if (key == 'w') {
+            life = life - 1;
+            hitBuffer = 5;
+        } else if (key == 't') {
+            itemsQuantity = new int[12];
+            items = new int[12];
+        } else if (key == 'u') {
+            int toDel = lireUnEntier("Which object to delete ?","Del object");
+            items[toDel] = 0;
+            itemsQuantity[toDel] = 0;
+            tidyInventory();
+        } else if (key == '¤') {
+            language = lireUnTexte("Language","Language");
+            delMenus();
+            classicButtons();
+        } else if (key == '@') {
+            giveAchievement(lireUnEntier("Enter an achievement ID","ID"));
+        } else if (key == '€') {
+            if(character == "male")
+                character = "female";
+            else
+                character = "male";
+        } else if (key == '!') {
+            menu = lireUnEntier("Menu","Menu");
+            if(menu == -10) {
+                for (int i = 0; i < Musics.length; i++) {
+                    try {
+                        Musics[i].setLoopPoints(mdrdbar.position(),mdrdbar.position()+50);
+                        Musics[i].loop();
+                    } catch(Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+                for (int i = 0; i < SFX.length; i++) {
+                    try {
+                        SFX[i].setLoopPoints(mdrdbar.position(),mdrdbar.position()+50);
+                        SFX[i].loop();
+                    } catch(Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        } else if (key == 'y') {
+            int mdrsd = findInventoryEmptySpace();
+            items[mdrsd] = lireUnEntier("Entrer un ID d'objet", "objet");
+            itemsQuantity[mdrsd] = lireUnEntier("Combien ?", "quantité");
+        } else if (key == 'b') {
+            disableMenus();
+            enableMenus(16, 16);
+            menu = 7;
+            levelPath = lireUnTexte("Entrez un nom de niveau", "Charger un niveau");
+            if (levelPath != null) {
+                file = new File(levelPath);
+                if (!file.exists()) {
+                    try {
+                        FileWriter fileWriter = new FileWriter(file);
+                        BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
+                        bufferedWriter.close();
+                    } 
+                    catch(IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+                loadLevelPath(levelPath, floor);
+            }
+        } else if (key == '*') {
+            nameColor++;
+        } else if (key == '?') {
+            debugMode = false;
+        } else if (key == '$') {
+            String temp = lireUnTexte("Enter an ID","Enter an ID");
+            dialogBox("Test : uyzgfedipyqgdqoyzfgqizfguzquifgyqpizfguqizfgqizfgbqjzbdlqv zdlqzvdlqyvzdlqvzdlqvzdqzdlqvzdjqgvzdugqvzdqjzhdboquzvydbqidbgzouydquozduofv§answer'battle''clear''kill''cutscene'§(0)DAH§battle"+temp+"§(1)1§clear§2(2);[§kill"+temp+"§(3)Coming soon§cutscene"+temp+"§");
+        } else if (key == 'W') {
+            energy = energy - 1;
+            energyReloadBuffer = 0;
+        } else if (key == 'X') {
+            energy = energy + 1;
+        } else if (key == 'C') {
+            energyMax = energyMax - 1;
+        } else if (key == 'V') {
+            energyMax = energyMax + 1;
+        } else if (key == 'µ') {
+            nameColor--;
+        } else if (key == 'x') {
+            life = life + 1;
+        } else if (key == 'r') {
+            file = new File("text_files/left");
+            if (file.exists())
+                file.delete();
+            setup();
+        } else if (key == 'p') {
+            glitchMode = !glitchMode;
+        } else if (key == 'k') {
+            if (!compareStrings(language, "yolo")) {
+                mdrdbar = Musics[8];
+                try {
+                    SFX[0].pause();
+                    Musics[0].pause();
+                    Musics[2].pause();
+                    Musics[1].pause();
+                    Musics[3].pause();
+                    SFX[1].pause();
+                    SFX[2].pause();
+                } 
+                catch(Exception e) {
+                    e.printStackTrace();
+                }
+                try {
+                    mdrdbar.play();
+                } catch(Exception e) {
+                    e.printStackTrace();
+                }
+                String test[] = {"Something wrong !"};
+                cd = new ImageIcon("data/OMG.png");
+                JOptionPane.showOptionDialog(null, "", "What have you done !", JOptionPane.OK_OPTION, 3, cd, test, test[0]);
+                language = "fr";
+                saveSettings();
+                language = "yolo";
+                nameColor = 0;
+                musicDisabled = true;
+                delMenus();
+                classicButtons();
+                dialogBox("What have you done !");
+                inDialog = false;
+                cd = null;
+            } else {
+                try {
+                    textFont(FreeMono);
+                } catch(Exception e) {
+                    e.printStackTrace();
+                }
+                language = "fr";
+                try {
+                    mdrdbar.pause();
+                } catch(Exception e) {
+                    e.printStackTrace();
+                }
+                delMenus();
+                classicButtons();
+                menuBackground = loadImage("background.png");
+                inDialog = false;
+                dialogText = null;
+                if (musicLoaded)
+                    musicDisabled = false;
+            }
+        } else if (key+'e' == 200)
+            lifeMax = lifeMax - 1;
+        else if (key+'e' == 219)
+            lifeMax = lifeMax + 1;
+        else if (key == 'm') {
+            String levelPath = lireUnTexte("Entrez un nom de niveau", "Charger un niveau");
+            if (levelPath != null)
+                loadLevelPath(levelPath, floor);
+        }
+    }
     if(!camMoving) {
         try {
             if(menu == 8 || menu == 9) {
@@ -580,177 +751,6 @@ void keyPressed()
                 camPosY = camPosY + 16;
             } else if(keyCode == LEFT && menu == 7) {
                 camPosX = camPosX + 16;
-            }
-            //Touches de debug
-            if (debugMode && menu != 1) {
-                if (key == ';' && menu == 7) {
-                    selectedObject = lireUnEntier("Id of an object : ", "ID");
-                } else if (key == ',') {
-                    giveAchievement(0);
-                } else if (key == '/') {
-                    playerX = lireUnEntier("Position X","Changer la position du joueur");
-                    playerY = lireUnEntier("Position Y","Changer la position du joueur");
-                } else if (key == ':') {
-                    int xBuffer = camPosX;
-                    int yBuffer = camPosY;
-                    camPosX = lireUnEntier("CamX","CamX");
-                    camPosY = lireUnEntier("CamY","CamY");
-                    playerX = playerX - camPosX + xBuffer;
-                    playerY = playerY - camPosY + yBuffer;
-                } else if (key == 'w') {
-                    life = life - 1;
-                    hitBuffer = 5;
-                } else if (key == 't') {
-                    itemsQuantity = new int[12];
-                    items = new int[12];
-                } else if (key == 'u') {
-                    int toDel = lireUnEntier("Which object to delete ?","Del object");
-                    items[toDel] = 0;
-                    itemsQuantity[toDel] = 0;
-                    tidyInventory();
-                } else if (key == '¤') {
-                    language = lireUnTexte("Language","Language");
-                    delMenus();
-                    classicButtons();
-                } else if (key == '@') {
-                    giveAchievement(lireUnEntier("Enter an achievement ID","ID"));
-                } else if (key == '€') {
-                    if(character == "male")
-                        character = "female";
-                    else
-                        character = "male";
-                } else if (key == '!') {
-                    menu = lireUnEntier("Menu","Menu");
-                    if(menu == -10) {
-                        for (int i = 0; i < Musics.length; i++) {
-                            try {
-                                Musics[i].setLoopPoints(mdrdbar.position(),mdrdbar.position()+50);
-                                Musics[i].loop();
-                            } catch(Exception e) {
-                                e.printStackTrace();
-                            }
-                        }
-                        for (int i = 0; i < SFX.length; i++) {
-                            try {
-                                SFX[i].setLoopPoints(mdrdbar.position(),mdrdbar.position()+50);
-                                SFX[i].loop();
-                            } catch(Exception e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    }
-                } else if (key == 'y') {
-                    int mdrsd = findInventoryEmptySpace();
-                    items[mdrsd] = lireUnEntier("Entrer un ID d'objet", "objet");
-                    itemsQuantity[mdrsd] = lireUnEntier("Combien ?", "quantité");
-                } else if (key == 'b') {
-                    disableMenus();
-                    enableMenus(16, 16);
-                    menu = 7;
-                    levelPath = lireUnTexte("Entrez un nom de niveau", "Charger un niveau");
-                    if (levelPath != null) {
-                        file = new File(levelPath);
-                        if (!file.exists()) {
-                            try {
-                                FileWriter fileWriter = new FileWriter(file);
-                                BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
-                                bufferedWriter.close();
-                            } 
-                            catch(IOException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                        loadLevelPath(levelPath, floor);
-                    }
-                } else if (key == '*') {
-                    nameColor++;
-                } else if (key == '?') {
-                    debugMode = false;
-                } else if (key == '$') {
-                    String temp = lireUnTexte("Enter an ID","Enter an ID");
-                    dialogBox("Test : uyzgfedipyqgdqoyzfgqizfguzquifgyqpizfguqizfgqizfgbqjzbdlqv zdlqzvdlqyvzdlqvzdlqvzdqzdlqvzdjqgvzdugqvzdqjzhdboquzvydbqidbgzouydquozduofv§answer'battle''clear''kill''cutscene'§(0)DAH§battle"+temp+"§(1)1§clear§2(2);[§kill"+temp+"§(3)Coming soon§cutscene"+temp+"§");
-                } else if (key == 'W') {
-                    energy = energy - 1;
-                    energyReloadBuffer = 0;
-                } else if (key == 'X') {
-                    energy = energy + 1;
-                } else if (key == 'C') {
-                    energyMax = energyMax - 1;
-                } else if (key == 'V') {
-                    energyMax = energyMax + 1;
-                } else if (key == 'µ') {
-                    nameColor--;
-                } else if (key == 'x') {
-                    life = life + 1;
-                } else if (key == 'r') {
-                    file = new File("text_files/left");
-                    if (file.exists())
-                        file.delete();
-                    setup();
-                } else if (key == 'p') {
-                    glitchMode = !glitchMode;
-                } else if (key == 'k') {
-                    if (!compareStrings(language, "yolo")) {
-                        mdrdbar = Musics[8];
-                        try {
-                            SFX[0].pause();
-                            Musics[0].pause();
-                            Musics[2].pause();
-                            Musics[1].pause();
-                            Musics[3].pause();
-                            SFX[1].pause();
-                            SFX[2].pause();
-                        } 
-                        catch(Exception e) {
-                            e.printStackTrace();
-                        }
-                        try {
-                            mdrdbar.play();
-                        } catch(Exception e) {
-                            e.printStackTrace();
-                        }
-                        String test[] = {"Something wrong !"};
-                        cd = new ImageIcon("data/OMG.png");
-                        JOptionPane.showOptionDialog(null, "", "What have you done !", JOptionPane.OK_OPTION, 3, cd, test, test[0]);
-                        language = "fr";
-                        saveSettings();
-                        language = "yolo";
-                        nameColor = 0;
-                        musicDisabled = true;
-                        delMenus();
-                        classicButtons();
-                        dialogBox("What have you done !");
-                        inDialog = false;
-                        cd = null;
-                    } else {
-                        try {
-                            textFont(FreeMono);
-                        } catch(Exception e) {
-                            e.printStackTrace();
-                        }
-                        language = "fr";
-                        try {
-                            mdrdbar.pause();
-                        } catch(Exception e) {
-                            e.printStackTrace();
-                        }
-                        delMenus();
-                        classicButtons();
-                        menuBackground = loadImage("background.png");
-                        inDialog = false;
-                        dialogText = null;
-                        if (musicLoaded)
-                            musicDisabled = false;
-                    }
-                } else if (key+'e' == 200)
-                    lifeMax = lifeMax - 1;
-                else if (key+'e' == 219)
-                    lifeMax = lifeMax + 1;
-                else if (key == 'm') {
-                    String levelPath = lireUnTexte("Entrez un nom de niveau", "Charger un niveau");
-                    if (levelPath != null)
-                        loadLevelPath(levelPath, floor);
-                }
             }
             //*************************************"Invite de commandes"**********************************************
             if ((musicDisabled || Musics[3].position() >= 2300) && ',' + key != 52 && ',' +key != 65579 && key+'"' != 44 && key != 0)

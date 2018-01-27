@@ -16,12 +16,15 @@ void newMenu(int x, int y, String text, int couleur, int tailleX, int tailleY, b
     try {
         numberOfMenu++;
         menuDisabled[numberOfMenu - 1] = isDisabled;
-        menuPos[2 * numberOfMenu - 2] = x;
-        menuPos[2 * numberOfMenu - 1] = y;
+        menuPos[2 * numberOfMenu - 2] = x > 0 ? x < width ? x : width : 0;
+        menuPos[2 * numberOfMenu - 1] = y > 0 ? y < height ? y : height : 0;
         menuContent[numberOfMenu - 1] = text;
         menuColor[numberOfMenu - 1] = couleur;
         if (tailleX == 0)
-            menuSize[2 * numberOfMenu - 2] = 10 + text.length() * 18;
+            if (10 + text.length() * 18 < width)
+                menuSize[2 * numberOfMenu - 2] = 10 + text.length() * 18;
+            else
+                menuSize[2 * numberOfMenu - 2] = width;
         else
             menuSize[2 * numberOfMenu - 2] = tailleX;
         if (tailleY == 0)
@@ -60,7 +63,7 @@ void drawMenus()
         menuPos[46] = width - 25;
         menuPos[47] = 100;
     } else if(menu >= 0 && menu <= 6) {
-        tint(255,150);
+        tint(255, 150);
         menuPos[46] = width - 25;
         menuPos[47] = 20;
     }
@@ -88,9 +91,9 @@ void drawMenus()
                 } else
                     current_color = menuColor[i];
             }
-            tint(255, 255, 255, alph+20);
-            fill(current_color-150, alph);
-            rect(menuPos[2 * i], menuPos[2*i+1], menuSize[2*i], menuSize[2*i+1]);
+            tint(255, 255, 255, alph + 20);
+            fill(current_color - 150, alph);
+            rect(menuPos[2 * i], menuPos[2 * i + 1], menuSize[2 * i], menuSize[2 * i + 1]);
             fill(current_color-125, alph);
             rect(menuPos[2 * i] + 1, menuPos[2 * i + 1] + 1, menuSize[2 * i] - 2, menuSize[2 * i + 1] - 2);
             fill(current_color-100, alph);
@@ -108,23 +111,23 @@ void drawMenus()
             fill(current_color, alph);
             rect(menuPos[2 * i] + 8, menuPos[2 * i + 1] + 8, menuSize[2 * i] - 16, menuSize[2 * i + 1] - 16);
             fill(0);
-            if (mouseX <= menuPos[2*i]+menuSize[2*i] && mouseX >= menuPos[2*i] && mouseY <= menuPos[2 * i + 1] + menuSize[2*i+1] && mouseY >= menuPos[2*i+1] && i == 16)
+            if (mouseX <= menuPos[2 * i] + menuSize[2 * i] && mouseX >= menuPos[2 * i] && mouseY <= menuPos[2 * i + 1] + menuSize[2 * i + 1] && mouseY >= menuPos[2 * i + 1] && i == 16)
                 fill(0, 150);
             if (i == 1)
                 try {
-                    image(bug, menuPos[2*i], menuPos[2*i+1]);
+                    image(bug, menuPos[2 * i], menuPos[2 * i + 1]);
                 }
                 catch(Exception e) {
                     e.printStackTrace();
-                    error("Error 10",e);
+                    error("Error 10", e);
                 }
             else if (i == 4) {
                 try {
-                    image(youtube, menuPos[2*i]+1, menuPos[2 * i + 1] + 1);
+                    image(youtube, menuPos[2 * i] + 1, menuPos[2 * i + 1] + 1);
                 }
                 catch(Exception e) {
                     e.printStackTrace();
-                    error("Error 11",e);
+                    error("Error 11", e);
                 }
             } else if(i == 23) {
                 try {
@@ -137,14 +140,14 @@ void drawMenus()
                     catch(Exception f) {
                       e.printStackTrace();
                       f.printStackTrace();
-                      errorMsg("Error 10 "+e+"\n"+f,SFX[1],e);
+                      errorMsg("Error 10 " + f + " --> " + e, SFX[1], e);
                     }
                 }
             }
             textSize(30);
             if (compareStrings(language, "yolo"))
                 textSize(random(1, 50));
-            text(menuContent[i], menuPos[2 * i] + 4, menuPos[2 * i + 1] + menuSize[2 * i + 1] - 10);
+            text(menuContent[i], menuPos[2 * i] + 4, menuPos[2 * i + 1] + menuSize[2 * i + 1] - 12);
             tint(255);
         }
     }
@@ -225,7 +228,6 @@ void classicButtons()
         newMenu(width - 24     , 50             , buttons[currentButton++], 255               , 25 , 25, true);          //23         Achievements
         newMenu(width - 150    , height - 50    , buttons[currentButton++], 255               , 0  , 0 , true);          //24         Back (menu = lastMenu)
         newMenu(180            , 10             , buttons[currentButton++], color(25, 25, 255), 100, 40, true);          //25         Disable cam scrolling
-        createLanguageButtons();
     }
 }
 
@@ -263,7 +265,7 @@ void createLanguageButtons()
             name = readFile("data/languages/" + dirs[i] + "/name.txt");
             if (name == null)
                 name = "Language \"" + dirs[i] + "\"";
-            newMenu(width / 2 - (5 + name.length() * 9), 10 + 50 * i, name, 255, 0, 0, true);
+            newMenu((width - (10 + name.length() * 18)) / 2, 10 + 50 * i, name, 255, 0, 0, true);
         }
     } catch (Exception e) {
         errorMsg("Couldn't fetch languages list ", SFX[1], e);

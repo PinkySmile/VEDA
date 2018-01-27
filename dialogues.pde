@@ -16,6 +16,8 @@ void execDialogCommand(String command, int _temp)
     } else if(command.startsWith("clear")) {
         stickDialog = true;
         dialogEnd = false;
+    } else if(command.startsWith("setLife")) {
+        life = int(subString(command, 7, command.length()));
     } else if(command.startsWith("cutscene")) {
         inCutscene = true;
         commandID = cutsceneStart[int(subString(command,8,command.length()-1))];
@@ -166,6 +168,6 @@ void dialogBox(String dialogue)
     e.printStackTrace();
   }
   inDialog = true;
-  dialogText = dialogue;
+  dialogText = characterName[fightingCharacter] + " : " + dialogue;
   theDialogEnd = dialogText.length();
 }

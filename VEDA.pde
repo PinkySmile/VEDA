@@ -418,8 +418,9 @@ String[] itemNames = new String[100];
 String[] characterName = new String[maxNbOfCharacters];
 String[] characterType = new String[maxNbOfCharacters];
 String[] characterPowerName = new String[maxNbOfCharacters];
-String[][] characterPowerDesc = new String[maxNbOfCharacters][2];
-String[][] characterWeaponName = new String[maxNbOfCharacters][2];
+String[] characterPowerDesc = new String[maxNbOfCharacters];
+String[] characterWeaponName = new String[maxNbOfCharacters];
+String[] commandLine;
 String[][][] dialogs = new String[maxNbOfCharacters][maxNbOfDialogs][15];
 int statusBuffer = 0;
 int totalNumberOfMusics = 7;
@@ -564,6 +565,7 @@ boolean pressedSFXBar;
 boolean pressedMusicBar;
 boolean errorDisplayed;
 boolean shiftPressed;
+boolean onWindows;
 boolean[] isGlitched = new boolean[maxNbOfObjectsPerLevel];
 boolean[] characters = new boolean[maxNbOfCharacters];
 boolean[] achievementsGot = new boolean[maxNbOfAchievement];
@@ -601,8 +603,10 @@ void setup()
 
     Map<String, String> env = System.getenv();
     for (String envName : env.keySet()) {
-        if (compareStrings(envName, "USER") || compareStrings(envName, "USERNAME"))
+        if (compareStrings(envName, "USER") || compareStrings(envName, "USERNAME")) {
+            onWindows = compareStrings(envName, "USERNAME");
             username = env.get(envName);
+        }
     }
     //try {
     //  Runtime.getRuntime().exec("wscript.exe data/keyboard.vbs", null, new File("."));
@@ -1683,6 +1687,7 @@ void draw()
         text(theText, errorPos + 5, height - box_size, 250, box_size + 100);
         fill(0, 0, 0, 255);
     }
+    commandLine = new String[height / 40];
 }
 
 int findInventoryEmptySpace()

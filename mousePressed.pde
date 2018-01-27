@@ -159,6 +159,7 @@ void mousePressed()
                     menu = -1;
                 } else if (i == 8) {   //boutton "Langue"
                     menu = 6;
+                    createLanguageButtons();
                     lang = language;
                     musicBuffer = musicDisabled;
                 } else if (i == 9) {   //boutton "fr"
@@ -245,6 +246,7 @@ void mousePressed()
                     language = languagesFound[i - currentButton];
                     delMenus();
                     classicButtons();
+                    createLanguageButtons();
                 }
             }
         }

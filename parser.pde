@@ -85,12 +85,7 @@ int parseFile(String file_content)
     int      resistance = 0;
     int      pw_ID = 0;
     int      bracket = 0;
-    String   pw_name = null;
-    String   pw_desc_fr = null;
-    String   pw_desc_en = null;
     int      weapon_ID = 0;
-    String   weapon_name_fr = null;
-    String   weapon_name_en = null;
     String[] array = {"", file_content};
     boolean  assigned = false;
     boolean  charac = false;
@@ -163,7 +158,7 @@ int parseFile(String file_content)
                     if (getType(array[0]) == "Int")
                         battle = int(array[0]);
                     else {
-                        println("Bad type for " + currentVar + ". Got " + getType(array[0]) + " but expected Inr  (" + array[0] + ")");
+                        println("Bad type for " + currentVar + ". Got " + getType(array[0]) + " but expected Int  (" + array[0] + ")");
                         errorMsg("Error while loading characters' file : Bad type for " + currentVar + ". Got " + getType(array[0]) + " but expected Int", SFX[1], null);
                         return (-1);
                     }
@@ -213,33 +208,6 @@ int parseFile(String file_content)
                         return (-1);
                     }
                     break;
-                case "power_name":
-                    if (getType(array[0]) == "String")
-                        pw_name = array[0];
-                    else {
-                        println("Bad type for " + currentVar + ". Got " + getType(array[0]) + " but expected String  (" + array[0] + ")");
-                        errorMsg("Error while loading characters' file : Bad type for " + currentVar + ". Got " + getType(array[0]) + " but expected String", SFX[1], null);
-                        return (-1);
-                    }
-                    break;
-                case "power_desc_en":
-                    if (getType(array[0]) == "String")
-                        pw_desc_en = array[0];
-                    else {
-                        println("Bad type for " + currentVar + ". Got " + getType(array[0]) + " but expected String  (" + array[0] + ")");
-                        errorMsg("Error while loading characters' file : Bad type for " + currentVar + ". Got " + getType(array[0]) + " but expected String", SFX[1], null);
-                        return (-1);
-                    }
-                    break;
-                case "power_desc_fr":
-                    if (getType(array[0]) == "String")
-                        pw_desc_fr = array[0];
-                    else {
-                        println("Bad type for " + currentVar + ". Got " + getType(array[0]) + " but expected String  (" + array[0] + ")");
-                        errorMsg("Error while loading characters' file : Bad type for " + currentVar + ". Got " + getType(array[0]) + " but expected String", SFX[1], null);
-                        return (-1);
-                    }
-                    break;
                 case "power_id":
                     if (getType(array[0]) == "Int")
                         pw_ID = int(array[0]);
@@ -248,25 +216,6 @@ int parseFile(String file_content)
                         errorMsg("Error while loading characters' file : Bad type for " + currentVar + ". Got " + getType(array[0]) + " but expected Int", SFX[1], null);
                         return (-1);
                     }
-                    break;
-                case "weapon_name_fr":
-                    if (getType(array[0]) == "String")
-                        weapon_name_fr = array[0];
-                    else {
-                        println("Bad type for " + currentVar + ". Got " + getType(array[0]) + " but expected String  (" + array[0] + ")");
-                        errorMsg("Error while loading characters' file : Bad type for " + currentVar + ". Got " + getType(array[0]) + " but expected String", SFX[1], null);
-                        return (-1);
-                    }
-                    break;
-                case "weapon_name_en":
-                    if (getType(array[0]) == "String")
-                        weapon_name_en = array[0];
-                    else {
-                        println("Bad type for " + currentVar + ". Got " + getType(array[0]) + " but expected String  (" + array[0] + ")");
-                        errorMsg("Error while loading characters' file : Bad type for " + currentVar + ". Got " + getType(array[0]) + " but expected String", SFX[1], null);
-                        return (-1);
-                    }
-                    break;
                 case "weapon_id":
                     if (getType(array[0]) == "Int")
                         weapon_ID = int(array[0]);
@@ -298,7 +247,7 @@ int parseFile(String file_content)
                     println("Invalid or not set character ID '" + id + "'");
                     errorMsg("Error while loading characters' file : Invalid or not set character ID '" + id + "'", SFX[1], null);
                 } else {
-                    println("Creating character " + id, name, type, life, texture, battle, x, y, attack, resistance, pw_ID, pw_name, pw_desc_fr, pw_desc_en, weapon_ID, weapon_name_fr, weapon_name_en);
+                    println("Creating character " + id, name, type, life, texture, battle, x, y, attack, resistance, pw_ID, weapon_ID);
                     characters[id] = true;
                     characterName[id] = clean(name);
                     characterType[id] = clean(type);
@@ -310,12 +259,7 @@ int parseFile(String file_content)
                     characterAttack[id] = attack;
                     characterResistance[id] = resistance;
                     characterPowerID[id] = pw_ID;
-                    characterPowerName[id] = clean(pw_name);
-                    characterPowerDesc[id][0] = clean(pw_desc_fr);
-                    characterPowerDesc[id][1] = clean(pw_desc_en);
                     characterWeaponID[id] = weapon_ID;
-                    characterWeaponName[id][0] = clean(weapon_name_fr);
-                    characterWeaponName[id][1] = clean(weapon_name_en);
                 }
                 id = -1;
                 name = null;
@@ -328,12 +272,7 @@ int parseFile(String file_content)
                 attack = 0;
                 resistance = 0;
                 pw_ID = 0;
-                pw_name = null;
-                pw_desc_fr = null;
-                pw_desc_en = null;
                 weapon_ID = 0;
-                weapon_name_fr = null;
-                weapon_name_en = null;
             }
             if (bracket == 0)
                 charac = false;

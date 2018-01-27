@@ -34,14 +34,9 @@ void saveCharacters(String theLevelPath) {
                 output.print("\n\t\tattack = " + characterAttack[i] + ",");
                 output.print("\n\t\tresistance = " + characterResistance[i] + ",");
                 if (characterPowerID[i] >= 0) {
-                    output.print("\n\t\tpower_name = \"" + characterPowerName[i] + "\",");
-                    output.print("\n\t\tpower_desc_en = \"" + characterPowerDesc[i][1] + "\",");
-                    output.print("\n\t\tpower_desc_fr = \"" + characterPowerDesc[i][0] + "\",");
                     output.print("\n\t\tpower_id = " + characterPowerID[i] + ",");
                 }
                 if (characterWeaponID[i] >= 0) {
-                    output.print("\n\t\tweapon_name_en = \"" + characterWeaponName[i][1] + "\",");
-                    output.print("\n\t\tweapon_name_fr = \"" + characterWeaponName[i][1] + "\",");
                     output.print("\n\t\tweapon_id = " + characterWeaponID[i]);
                 }
                 output.print("\n\t},");
