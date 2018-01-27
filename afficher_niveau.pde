@@ -141,10 +141,8 @@ void printMenuBackground()
 {
     background(122);
     try {
-        if (compareStrings(language, "yolo"))
-            menuBackground = loadImage("misc/{4FTSZ-ZE67D8}.png");
-        for (int i = 0 ; i < width ; i = i + menuBackground.width)
-            for (int j = 0 ; j < height ; j = j + menuBackground.height)
+        for (int i = 0 ; i < width ; i += menuBackground.width)
+            for (int j = 0 ; j < height ; j += menuBackground.height)
                 image(menuBackground, i, j);
     } catch (Exception e) {
         e.printStackTrace();

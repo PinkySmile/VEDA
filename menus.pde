@@ -1,5 +1,8 @@
 void audioMenu()
 {
+    int temp1 = pressedMusicBar ? 0 : 125;
+    int temp2 = pressedSFXBar ? 0 : 125;
+
     printMenuBackground();
 
     disableMenus();
@@ -26,22 +29,22 @@ void audioMenu()
         rect(106, 29, 188, 8);
   
         //Bouton
-        fill(125, 0, 0);
-        rect(90+2*musicVolume, 13, 20, 40);
-        fill(150, 0, 0);
-        rect(91+2*musicVolume, 14, 18, 38);
-        fill(165, 0, 0);
-        rect(92+2*musicVolume, 15, 16, 36);
-        fill(185, 0, 0);
-        rect(93+2*musicVolume, 16, 14, 34);
-        fill(200, 0, 0);
-        rect(94+2*musicVolume, 17, 12, 32);
-        fill(220, 0, 0);
-        rect(95+2*musicVolume, 18, 10, 30);
-        fill(235, 0, 0);
-        rect(96+2*musicVolume, 19, 8, 28);
-        fill(255, 0, 0);
-        rect(97+2*musicVolume, 20, 6, 26);
+        fill(125 - temp1, 0, 0);
+        rect(90 + 2 * musicVolume, 13, 20, 40);
+        fill(150 - temp1, 0, 0);
+        rect(91 + 2 * musicVolume, 14, 18, 38);
+        fill(165 - temp1, 0, 0);
+        rect(92 + 2 * musicVolume, 15, 16, 36);
+        fill(185 - temp1, 0, 0);
+        rect(93 + 2 * musicVolume, 16, 14, 34);
+        fill(200 - temp1, 0, 0);
+        rect(94 + 2 * musicVolume, 17, 12, 32);
+        fill(220 - temp1, 0, 0);
+        rect(95 + 2 * musicVolume, 18, 10, 30);
+        fill(235 - temp1, 0, 0);
+        rect(96 + 2 * musicVolume, 19, 8, 28);
+        fill(255 - temp1, 0, 0);
+        rect(97 + 2 * musicVolume, 20, 6, 26);
         
         textSize(20);
         fill(255);
@@ -64,22 +67,22 @@ void audioMenu()
         rect(106, 79, 188, 8);
   
         //Bouton
-        fill(125, 0, 0);
-        rect(90+2*SFXVolume, 63, 20, 40);
-        fill(150, 0, 0);
-        rect(91+2*SFXVolume, 64, 18, 38);
-        fill(165, 0, 0);
-        rect(92+2*SFXVolume, 65, 16, 36);
-        fill(185, 0, 0);
-        rect(93+2*SFXVolume, 66, 14, 34);
-        fill(200, 0, 0);
-        rect(94+2*SFXVolume, 67, 12, 32);
-        fill(220, 0, 0);
-        rect(95+2*SFXVolume, 68, 10, 30);
-        fill(235, 0, 0);
-        rect(96+2*SFXVolume, 69, 8, 28);
-        fill(255, 0, 0);
-        rect(97+2*SFXVolume, 70, 6, 26);
+        fill(125 - temp2, 0, 0);
+        rect(90 + 2 * SFXVolume, 63, 20, 40);
+        fill(150 - temp2, 0, 0);
+        rect(91 + 2 * SFXVolume, 64, 18, 38);
+        fill(165 - temp2, 0, 0);
+        rect(92 + 2 * SFXVolume, 65, 16, 36);
+        fill(185 - temp2, 0, 0);
+        rect(93 + 2 * SFXVolume, 66, 14, 34);
+        fill(200 - temp2, 0, 0);
+        rect(94 + 2 * SFXVolume, 67, 12, 32);
+        fill(220 - temp2, 0, 0);
+        rect(95 + 2 * SFXVolume, 68, 10, 30);
+        fill(235 - temp2, 0, 0);
+        rect(96 + 2 * SFXVolume, 69, 8, 28);
+        fill(255 - temp2, 0, 0);
+        rect(97 + 2 * SFXVolume, 70, 6, 26);
         
         textSize(20);
         fill(255);
@@ -798,6 +801,7 @@ void controls()
 {
     int xPos = 0;
     int yPos = 0;
+    textFont(Arial);
     printMenuBackground();
     disableMenus();
     for (int k = 0; k < keys.length; k++) {
@@ -854,6 +858,7 @@ void controls()
         yPos++;
     }
     enableMenus(11, 12);
+    textFont(FreeMono);
 }
 
 void shell()
@@ -873,7 +878,6 @@ void shell()
         e.printStackTrace();
         error("Error 8",e);
     }
-    String ah = "> ";
     cursor = "";
     fill(255);
     //Affichage du "gameover.exe" et des commandes inscrites

@@ -184,6 +184,8 @@ void classicButtons()
         newMenu(width-24,50,"",255,25,25,true); //achievements
         newMenu(width-150,height-50,"",255,140,40,true);
         newMenu(200,10,"",color(25,25,255),80,40,true);                //25
+        currentButton = 25;
+        createLanguageButtons();
       
     } else {
         String[] buttonContent = loadStrings("data/languages/" + language + "/buttons.txt");

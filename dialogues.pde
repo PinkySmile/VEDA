@@ -158,16 +158,20 @@ void loadDialogs(String path)
 
 void dialogBox(String dialogue)
 {
-  answers = new String[4];
-  PImage xywt = loadImage("misc/dialog_box.png");
-  dialogLetters = 0;
-  dialogStart = 0;
-  try {
-    image(xywt,0,height-100);
-  } catch(Exception e) {
-    e.printStackTrace();
-  }
-  inDialog = true;
-  dialogText = characterName[fightingCharacter] + " : " + dialogue;
-  theDialogEnd = dialogText.length();
+    String name = null;
+    PImage xywt = loadImage("misc/dialog_box.png");
+  
+    answers = new String[4];
+    dialogLetters = 0;
+    dialogStart = 0;
+    try {
+        image(xywt,0,height-100);
+    } catch(Exception e) {
+        e.printStackTrace();
+    }
+    inDialog = true;
+    if (fightingCharacter > 0 && fightingCharacter < characterName.length)
+        name = characterName[fightingCharacter];
+    dialogText = name + " : " + dialogue;
+    theDialogEnd = dialogText.length();
 }

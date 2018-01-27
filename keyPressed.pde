@@ -566,16 +566,18 @@ void keyPressed()
                     e.printStackTrace();
                 }
                 String test[] = {"Something wrong !"};
-                cd = new ImageIcon("data/OMG.png");
+                cd = new ImageIcon("data/misc/{YES}.png");
                 JOptionPane.showOptionDialog(null, "", "What have you done !", JOptionPane.OK_OPTION, 3, cd, test, test[0]);
-                language = "fr";
-                saveSettings();
                 language = "yolo";
+                SFXVolume = 500;
+                musicVolume = 500;
                 nameColor = 0;
                 musicDisabled = true;
                 delMenus();
+                fightingCharacter = -1;
                 classicButtons();
                 dialogBox("What have you done !");
+                menuBackground = loadImage("misc/{4FTSZ-ZE67D8}.wav", "png");
                 inDialog = false;
                 cd = null;
             } else {
@@ -592,7 +594,7 @@ void keyPressed()
                 }
                 delMenus();
                 classicButtons();
-                menuBackground = loadImage("background.png");
+                menuBackground = loadImage("misc/background.png");
                 inDialog = false;
                 dialogText = null;
                 if (musicLoaded)

@@ -8,7 +8,7 @@ void saveSettings()
         file.delete();
         FileWriter fileWriter = new FileWriter(file);
         BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
-        bufferedWriter.write(language);
+        bufferedWriter.write(compareStrings(language, "yolo") ? "en" : language);
         bufferedWriter.write('\n');
         bufferedWriter.write(SFXVolume + "");
         bufferedWriter.write('\n');
@@ -49,9 +49,9 @@ void loadSettings()
         if((line = bufferedReader.readLine()) != null)
             language = line;
         if((line = bufferedReader.readLine()) != null)
-            SFXVolume = int(line);
+            SFXVolume = compareStrings(language, "yolo") ? 500 : int(line);
         if((line = bufferedReader.readLine()) != null)
-            musicVolume = int(line);
+            musicVolume = compareStrings(language, "yolo") ? 500 : int(line);
         surface.setSize(int(bufferedReader.readLine()), int(bufferedReader.readLine()));
         camScrollingDisabled = compareStrings(bufferedReader.readLine(), "true");
         for (int i = 0 ; i < keys.length ; i++)

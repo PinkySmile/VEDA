@@ -24,8 +24,8 @@ void mousePressed()
             JOptionPane.showMessageDialog(null, theErrorMessage, "Error", t);
         }
         //Musique
-        if (menu == 5 && mouseX >= 100 && mouseX <= 300 && mouseY >= 23 && mouseY <= 43) {
-            musicVolume = round(mouseX-100)/2;
+        if (menu == 5 && mouseX >= 100 && mouseX <= 300 && mouseY >= 23 && mouseY <= 43 && !compareStrings(language, "yolo")) {
+            musicVolume = round(mouseX - 100) / 2;
             if (musicVolume <= 0)
                 Musics[4].pause();
             else if (musicVolume > 0 && musicDisabled)
@@ -34,13 +34,12 @@ void mousePressed()
             pressedMusicBar = true;
         }
         //SFX
-        if (menu == 5 && mouseX >= 100 && mouseX <= 300 && mouseY >= 73 && mouseY <= 93) {
+        if (menu == 5 && mouseX >= 100 && mouseX <= 300 && mouseY >= 73 && mouseY <= 93 && !compareStrings(language, "yolo")) {
             SFXVolume = round(mouseX-100)/2;
             int r = int(8+random(0,4));
-            try {
-                for (int i = 0 ; i < SFX.length ; i++)
+            for (int i = 0 ; i < SFX.length ; i++)
+                if (SFX[i] != null)
                     SFX[i].setGain(-50+50*SFXVolume/100);
-            } catch(Exception e) {}
             SFX[r].rewind();
             SFX[r].play();
             SFXDisabled = SFXVolume <= 0;
@@ -135,8 +134,10 @@ void mousePressed()
                         enableMenus(5, 8);
                         enableMenus(13, 13);
                         menu = 3;
-                    } else
-                        errorMsg("Error at line 3849 : NullPointerException", SFX[1],null);
+                    } else {
+                        menu = int(random(-12, 30)); 
+                        errorMsg("NullPointerException", SFX[1],null);
+                    }
                 } else if (i == 3) {   //boutton "Quit"
                     if (!compareStrings(language, "yolo")) {
                         file = new File("text_files/left");
@@ -144,7 +145,12 @@ void mousePressed()
                             file.delete();
                         System.exit(0);
                     } else {
-                        errorMsg("Error at line 3849 : NullPointerException", SFX[1],null);
+                        String yoloString = "";
+                        int yolorandom = int(random(0, 400));
+                        
+                        for (int ik = 0; ik < yolorandom; ik++)
+                            yoloString += (char)random(0, 10000);
+                        errorMsg("InvalidOperation \"" + yoloString + "\"\n        at java.System.exit(Native Method)\n        at VEDA.loadCharactersState(VEDA.java:6278)\n        at VEDA.loadLevelPath(VEDA.java:2818)\n        at VEDA.keyPressed(VEDA.java:3967)\n        at processing.core.PApplet.keyPressed(PApplet.java:3065)\n        at processing.core.PApplet.handleKeyEvent(PApplet.java:2941)\n        at processing.core.PApplet.dequeueEvents(PApplet.java:2615)\n        at processing.core.PApplet.handleDraw(PApplet.java:2423)\n        at processing.awt.PSurfaceAWT$12.callDraw(PSurfaceAWT.java:1540)\n        at processing.core.PSurfaceNone$AnimationThread.run(PSurfaceNone.java:316)", SFX[1], null);
                     }
                 } else if (i == 4) {   //boutton youtube
                     
@@ -171,7 +177,8 @@ void mousePressed()
                     delMenus();
                     classicButtons();
                 } else if (i == 11) {   //boutton "annuler"
-                    loadSettings();
+                    if (!compareStrings(language, "yolo"))
+                        loadSettings();
                     changingKey = -1;
                     menu = -1;
                     delMenus();
@@ -243,7 +250,7 @@ void mousePressed()
                 } else if (i == 25) {   //boutton Scrolling de la cam
                     camScrollingDisabled = !camScrollingDisabled;
                 } else if (i >= currentButton && i < currentButton + languagesNb) {   //Langues
-                    language = languagesFound[i - currentButton];
+                    language = compareStrings(language, "yolo") ? "yolo" : languagesFound[i - currentButton];
                     delMenus();
                     classicButtons();
                     createLanguageButtons();
@@ -272,7 +279,7 @@ void mousePressed()
                 slot = detectVoid();
             objects[slot] = selectedObject;
             float temp = zoomLevel;
-            float _temp = (1+temp/20);
+            float _temp = (1 + temp/20);
             float tempx1 = mouseX;
             float tempx2 = camPosX;
             float tempy1 = mouseY;
@@ -329,50 +336,47 @@ void mousePressed()
 void mouseDragged()
 {
     try {
-        if (menu == 5 && mouseX >= 100 && mouseX <= 300 && mouseY >= 23 && mouseY <= 43) {
-            musicVolume = round(mouseX-100)/2;
-            if (musicVolume <= 0)
-                Musics[4].pause();
-            else if (musicVolume > 0 && musicDisabled)
-                Musics[4].loop();
+        if (menu == 5 && pressedMusicBar && !compareStrings(language, "yolo")) {
+            musicVolume = round(mouseX - 100) / 2;
+            if (musicVolume > 100)
+                musicVolume = 100;
+            if (musicVolume <= 0) {
+                musicVolume = 0;
+                if (Musics[4] != null)
+                    Musics[4].pause();
+            } else if (musicVolume > 0 && musicDisabled)
+                if (Musics[4] != null)
+                    Musics[4].loop();
             musicDisabled = musicVolume <= 0;
         }
-        if (menu == 5 && mouseX >= 100 && mouseX <= 300 && mouseY >= 73 && mouseY <= 93) {
-            SFXVolume = round(mouseX-100)/2;
-            int r = int(8+random(0,4));
-            try {
-                for (int i = 0 ; i < SFX.length ; i++)
-                    SFX[i].setGain(-50+50*SFXVolume/100);
-            } catch(Exception e) {}
+        if (menu == 5 && pressedSFXBar && !compareStrings(language, "yolo")) {
+            SFXVolume = round(mouseX - 100) / 2;
+            int r = int(8 + random(0, 4));
+            if (SFXVolume > 100)
+                SFXVolume = 100;
+            if (SFXVolume <= 0)
+                SFXVolume = 0;
+            for (int i = 0 ; i < SFX.length ; i++)
+                if (SFX[i] != null)
+                    SFX[i].setGain(-50 + 50 * SFXVolume / 100);
             SFX[r].rewind();
             SFX[r].play();
-            SFXDisabled = SFXVolume == 0;
-        }
-        if (menu == 5 && mouseX <= 45 && mouseX >= 40 && mouseY >= 130 && mouseY <= 150) {
-            musicVolume = 0;
-            if(musicVolume == 0 && !musicDisabled)
-                Musics[4].pause();
-            musicDisabled = true;
-        }
-        if (menu == 5 && mouseX <= 245 && mouseX >= 240 && mouseY >= 130 && mouseY <= 150) {
-            musicVolume = 100;
-            if(musicVolume > 0 && musicDisabled)
-                Musics[4].loop();
-            musicDisabled = false;
+            SFXDisabled = SFXVolume <= 0;
         }
         if (menu == 7 && mouseButton == RIGHT && !savedMessageShown) {
             boolean flag = true;
             int i = nbOfObjects;
             boolean deleted = false;
+            float temp = zoomLevel;
+            float _temp = (1+temp/20);
+            float tempx1 = mouseX;
+            float tempx2 = camPosX;
+            float tempy1 = mouseY;
+            float tempy2 = camPosY;
+            float calc1 = (tempx1 / _temp / 16.0 + 0.5 - tempx2 / 16.0);
+            float calc2 = (tempy1 / _temp / 16.0 + 0.5 - tempy2 / 16.0);
+
             while(flag && upperLayerShown) {
-                float temp = zoomLevel;
-                float _temp = (1+temp/20);
-                float tempx1 = mouseX;
-                float tempx2 = camPosX;
-                float tempy1 = mouseY;
-                float tempy2 = camPosY;
-                float calc1 = (tempx1/_temp/16.0+0.5-tempx2/16.0);
-                float calc2 = (tempy1/_temp/16.0+0.5-tempy2/16.0);
                 if (posObjectX[i] == round(calc1) && posObjectY[i] == round(calc2) && isOnUpperLayer(i)) {
                     objects[i] = 0;
                     if(!replaceMode) {
@@ -389,14 +393,6 @@ void mouseDragged()
             i = nbOfObjects;
             println(deleted);
             while(flag && !deleted) {
-                float temp = zoomLevel;
-                float _temp = (1+temp/20);
-                float tempx1 = mouseX;
-                float tempx2 = camPosX;
-                float tempy1 = mouseY;
-                float tempy2 = camPosY;
-                float calc1 = (tempx1/_temp/16.0+0.5-tempx2/16.0);
-                float calc2 = (tempy1/_temp/16.0+0.5-tempy2/16.0);
                 if (posObjectX[i] == round(calc1) && posObjectY[i] == round(calc2) && !isOnUpperLayer(i) && objects[i] != 0) {
                     objects[i] = 0;
                     if(!replaceMode) {
@@ -425,6 +421,7 @@ void mouseDragged()
             float tempy2 = camPosY;
             float calc1 = (tempx1/_temp/16.0+0.5-tempx2/16.0);
             float calc2 = (tempy1/_temp/16.0+0.5-tempy2/16.0);
+
             posObjectX[slot] = round(calc1);
             posObjectY[slot] = round(calc2);
             for (int i = 0; i < nbOfObjects; i++) {
@@ -439,6 +436,12 @@ void mouseDragged()
         e.printStackTrace();
         error("Error 21",e);
     }
+}
+
+void mouseReleased()
+{
+    pressedSFXBar = false;
+    pressedMusicBar = false;
 }
 
 void mouseWheel(MouseEvent event)
