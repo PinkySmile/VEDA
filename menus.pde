@@ -975,7 +975,7 @@ String resolvePath(String path)
     realPath += (path.charAt(0) == '/' ? "/" : currentPath);
     start = (path.charAt(0) == '/' ? 1 : 0);
     i = start;
-    println("Resloving path " + path);
+    println("Resolving path " + path);
     while (i < path.length()) {
         if (path.charAt(i) == '/') {
             if (start == i)
