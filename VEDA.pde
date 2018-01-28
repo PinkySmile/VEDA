@@ -568,6 +568,7 @@ boolean pressedSFXBar;
 boolean pressedMusicBar;
 boolean errorDisplayed;
 boolean shiftPressed;
+boolean controlPressed;
 boolean onWindows;
 boolean gameoverDisplayed;
 boolean inShell = true;

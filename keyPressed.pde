@@ -396,6 +396,8 @@ void keyPressed()
     if (deathBuffer >= 150 && menu == 0)
         if (!musicDisabled)
             Musics[0].pause();
+    if (keyCode == CONTROL)
+        controlPressed = true;
     if (menu == 12 && changingKey != -1) {
         if (keyCode == 0)
             keyCode = -1;
@@ -410,9 +412,7 @@ void keyPressed()
             flag = true;
     if (!flag)
         pressedKeysCode[findSpace()] = keyCode;
-    if(key == 27)
-        key = 255;
-    else if(key == '²' && menu == 7) {
+    if(key == '²' && menu == 7) {
         camMoving = true;
         camBuffer[0] = -camPosX;
         camBuffer[1] = -camPosY;
@@ -761,7 +761,7 @@ void keyPressed()
                 selectedRespawn = true;
             if (menu == 1 && !inShell && keyCode == RIGHT)
                 selectedRespawn = false;
-            if (menu == 1 && !inShell && key == '\n') {
+            if (menu == 1 && !inShell && key == '\n' && keyCode == '\n') {
                 if (selectedRespawn) {
                     direction = "up";
                     status = "static";
@@ -795,9 +795,12 @@ void keyPressed()
                     menu = -1;
             }
             if (inShell)
-                if ((musicDisabled || Musics[3].position() >= 2300) && ',' + key != 52 && key <= 65000 && key + '"' != 44 && key != 0 && key != '')
-                    textTyped = textTyped + key;
-                else if ((musicDisabled || Musics[3].position() >= 2300) && ',' + key == 52 ) {
+                if ((musicDisabled || Musics[3].position() >= 2300) && keyCode != 10 && keyCode != 8 && key < 60000)
+                    if (!controlPressed && key >= ' ')
+                        textTyped = textTyped + key;
+                    else
+                        textTyped = textTyped + char(str(key).toUpperCase().charAt(0) + 60000);
+                else if ((musicDisabled || Musics[3].position() >= 2300) && key == 8) {
                     textTyped = subString(textTyped, 0, textTyped.length() - 2);
                 } else if ((musicDisabled || Musics[3].position() >= 2300) && key == '\n') {
                    addLine(prompt + textTyped);
@@ -814,7 +817,7 @@ void keyPressed()
             commandLines[j] = null;
     if (key == '' && menu == 1) {
         if (inShell) {
-            addLine(prompt + textTyped + "^C");
+            addLine(prompt + textTyped + (gameoverDisplayed ? "" : "^C"));
             Musics[3].skip(Musics[3].length());
         } else
             addLine((selectedRespawn ? "> " : "  ") + "Respawn  " + (selectedRespawn ? "  " : "> ") + "Quit^C");
@@ -823,10 +826,13 @@ void keyPressed()
         gameoverDisplayed = true;
     }
     keyCode = 0;
+    key = 0;
 }
 
 void keyReleased()
 {
+    if (keyCode == CONTROL)
+        controlPressed = false;
     if (keyCode == keys[19])
         shiftPressed = false;
     for (int k = 0 ; k < pressedKeysCode.length ; k++)

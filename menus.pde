@@ -956,19 +956,61 @@ String[] getPaths(String[] args)
     return paths;
 }
 
-String createThePath(String path)
+String delFolder(String path)
 {
-    String realPath = path;
+    int end = path.length() - 1;
 
+    for (; end > 0 && path.charAt(end) == '/'; end--);
+    for (; end > 0 && path.charAt(end) != '/'; end--);
+    return (subString(path, 0, end));
+}
+
+String resolvePath(String path)
+{
+    String realPath = "";
+    String folder = "";
+    int start = 0;
+    int i = 0;
+
+    realPath += (path.charAt(0) == '/' ? "/" : currentPath);
+    start = (path.charAt(0) == '/' ? 1 : 0);
+    i = start;
+    println("Resloving path " + path);
+    while (i < path.length()) {
+        if (path.charAt(i) == '/') {
+            if (start == i)
+                start++;
+            else {
+                folder = subString(path, start, i - 1);
+                println("Found folder " + folder);
+                if (compareStrings(folder, "..")) {
+                    realPath = delFolder(realPath);
+                    if (compareStrings(realPath, ""))
+                        realPath = "/";
+                } else if (!compareStrings(folder, ".") && !compareStrings(folder, ""))
+                    realPath += (realPath.charAt(realPath.length() - 1) != '/' ? "/" : "") + folder;
+                start = i + 1;
+            }
+        }
+        i++;
+    }
+    if (start != i) {
+        folder = subString(path, start, i - 1);
+        println("Found folder " + folder);
+        if (compareStrings(folder, "..")) {
+            realPath = delFolder(realPath);
+            if (compareStrings(realPath, ""))
+                realPath = "/";
+        } else if (!compareStrings(folder, ".") && !compareStrings(folder, ""))
+            realPath += (realPath.charAt(realPath.length() - 1) != '/' ? "/" : "") + folder;
+    }
     return (realPath);
 }
 
 void ls(String[] args)
 {
     try {
-        println("flags");
         boolean[] flags = getFlags(args);
-        println("path");
         String[] paths = getPaths(args);
         String[] dirs = null;
         String line = "";
@@ -979,7 +1021,7 @@ void ls(String[] args)
         if (paths[0] == null)
             paths[0] = currentPath;
         for (int j = 0; j < paths.length && paths[j] != null; j++) {
-            file = new File("./" + createThePath(paths[j]));
+            file = new File("./" + resolvePath(paths[j]));
             if (file.isDirectory()) {
                 dirs = file.list();
                 line = "";
@@ -1016,8 +1058,8 @@ void execShellCommand(String commandLine)
     args = shift(args, "up");
     if (compareStrings(command, ""))
         return;
-    if (compareStrings(command, "quit"))
-        menu = -1;
+    if (compareStrings(command, "shutdown"))
+        System.exit(0);
     else if (compareStrings(command, "exit")) {
         menu = 0;
         for (int i = 0; i < commandLines.length; i++)
@@ -1037,12 +1079,15 @@ void execShellCommand(String commandLine)
     } else if (compareStrings(command, "ls")) {
         ls(args);
     } else if (compareStrings(command, "cd")) {
-        file = new File("./" + createThePath((args[0].charAt(0) == '/' ? "" : currentPath) + "/" + args[0]));
+        if (args[0] == null)
+            args[0] = "/";
+        file = new File("./" + resolvePath((args[0].charAt(0) == '/' ? "" : currentPath) + "/" + args[0]));
         if (file.exists())
-            currentPath = createThePath((args[0].charAt(0) == '/' ? "" : currentPath) + "/" + args[0]);
-    } else {
+            currentPath = resolvePath((args[0].charAt(0) == '/' ? "" : currentPath) + "/" + args[0]);
+        else
+            addLine("cd: " + resolvePath((args[0].charAt(0) == '/' ? "" : currentPath) + "/" + args[0]) + ": No such file or directory");
+    } else
         addLine(command + ": Command not found.");
-    }
 }
 
 void shell()
@@ -1103,6 +1148,12 @@ void shell()
         display += subString(displayedText, i, i + 64) + "\n";
     if (!inShell)
         display += (selectedRespawn ? "> " : "  ") + "Respawn  " + (selectedRespawn ? "  " : "> ") + "Quit";
+    for (int i = 0; i < display.length(); i++) {
+        if (int(display.charAt(i)) >= 60000) {
+            display = subString(display, 0, i - 1) + "^" + char(display.charAt(i) - 60001 + 'A') + subString(display, i + 1, display.length());
+            i++;
+        }
+    }
     text(display, 20, 40);
     cursorBuffer++;
 }
