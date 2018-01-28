@@ -97,6 +97,8 @@ String dialogText;
 String lang;
 String item;
 String quan;
+String classicPrompt = "> ";
+String prompt = "> ";
 String dialogPrinted;
 String levelPath;
 String godEaterMode;
@@ -105,6 +107,7 @@ String title = "VEDA";
 String theErrorMessage;
 String background;
 String levelToLoad;
+String currentPath = "/";
 String username = null;
 String[] languagesFound = new String[50];
 String[] cutscenesCommands = new String[2000];
@@ -420,7 +423,7 @@ String[] characterType = new String[maxNbOfCharacters];
 String[] characterPowerName = new String[maxNbOfCharacters];
 String[] characterPowerDesc = new String[maxNbOfCharacters];
 String[] characterWeaponName = new String[maxNbOfCharacters];
-String[] commandLine;
+String[] commandLines;
 String[][][] dialogs = new String[maxNbOfCharacters][maxNbOfDialogs][15];
 int statusBuffer = 0;
 int totalNumberOfMusics = 7;
@@ -504,12 +507,12 @@ int cases[][] = new int[4][2];
 int[] keys = {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1};
 int[] pressedKeysCode = new int[40];
 int[] cutsceneStart = new int[200];
-int[] jpp = new int[20];
-int[] jpp2 = new int[20];
-int[] jpp3 = new int[20];
-int[] jpp4 = new int[20];
-int[] jpp5 = new int[20];
-int[] jpp6 = new int[20];
+int[] jpp = new int[50];
+int[] jpp2 = new int[50];
+int[] jpp3 = new int[50];
+int[] jpp4 = new int[50];
+int[] jpp5 = new int[50];
+int[] jpp6 = new int[50];
 int[] posObjectX = new int[maxNbOfObjectsPerLevel];
 int[] posObjectY = new int[maxNbOfObjectsPerLevel];
 int[] menuPos = new int[200];
@@ -566,6 +569,9 @@ boolean pressedMusicBar;
 boolean errorDisplayed;
 boolean shiftPressed;
 boolean onWindows;
+boolean gameoverDisplayed;
+boolean inShell = true;
+boolean selectedRespawn = true;
 boolean[] isGlitched = new boolean[maxNbOfObjectsPerLevel];
 boolean[] characters = new boolean[maxNbOfCharacters];
 boolean[] achievementsGot = new boolean[maxNbOfAchievement];
@@ -609,10 +615,7 @@ void setup()
         }
     }
     //try {
-    //  Runtime.getRuntime().exec("wscript.exe data/keyboard.vbs", null, new File("."));
-    //} catch(Exception e) {}
-    //try {
-    //  Runtime.getRuntime().exec("wscript.exe data/closeVBS.vbs", null, new File("."));
+    //  Runtime.getRuntime().exec("<exe>", null, new File("."));
     //} catch(Exception e) {}
     surface.setTitle(title);
     minim = new Minim(this);
@@ -1088,6 +1091,7 @@ void setup()
     classicButtons();
     loadCutscenes("data/cutscenes");
     dialogDeathBuffer = -2;
+    commandLines = new String[height / 20];
 }
 
 
@@ -1260,18 +1264,17 @@ void draw()
                 e.printStackTrace();
             }
         }
-        if (menu == -12) { 
-            deathBuffer++;
-            background(get(2, 2));
-            try {
-                image(bsod, 0, 0);
+        if (menu == -12) {
+            if (deathBuffer % 426 == 0) {
+                glitchPrint(true, 50);
+                glitchPrint(true, 50);
+                glitchPrint(true, 50);
             }
-            catch(Exception e) {
-                e.printStackTrace();
-            }
-            glitchPrint(false);
+            deathBuffer += 2;
+            frameRate(10);
             try {
                 if (deathBuffer >= 500) {
+                    frameRate(60);
                     try {
                         mdrdbar.play();
                     }
@@ -1286,105 +1289,9 @@ void draw()
                 e.printStackTrace();
             }
         }
-        //************************************************************************************************Mort du personnage*************************************************************************************************
-        if (life <= 0 && menu >= 0 && menu <= 1) {
-            try {
-                int temp = 0;
-                if (character == "female")
-                    temp = 1;
-                if (compareStrings(language, "yolo"))
-                    image(character_image[4][4][4][4], 0, 0);
-                image(character_image[temp][0][0][1], playerX+camPosX, playerY+camPosY+16);
-            }
-            catch(Exception e) {
-                e.printStackTrace();
-                try {
-                    image(glitched_character, playerX+camPosX, playerY+camPosY);
-                } 
-                catch(Exception f) {
-                    f.printStackTrace();
-                    error("Can't find file "+character+"_character_"+status+"_"+direction+"_"+animation+".png",e);
-                }
-            }
-            dead = true;
-            //Réaffichage du terrain
-            if (!deathAnimation) {
-                if (statusBuffer == 10) {
-                    statusBuffer = 0;
-                    status = "static";
-                }
-                if (status == "moving")
-                    statusBuffer = statusBuffer + 1;
-                else
-                    statusBuffer = 0;
-                if (playerX+camPosX <= -16 || playerX+camPosX >= width+16 || playerY+camPosY <= -32 || playerY+camPosY >= height+32)
-                    life = 0;
-                printLevel();
-                printCharacters();
-                printUpperLayer();
-                if (status == "static")
-                    animation = 1;
-                if (status == "moving" && animation >= 3)
-                    animation = 1;
-                menu = 0;
-                if (compareStrings(language, "yolo")) {
-                    try {
-                        lifeBuffer = 0;
-                        //Bug.play();
-                    } 
-                    catch(Exception e) {
-                        e.printStackTrace();
-                    }
-                    try {
-                        //mdrdbar.pause();
-                        mdrdbar.setLoopPoints(mdrdbar.position(), mdrdbar.position()+50);
-                        mdrdbar.loop();
-                    } 
-                    catch(Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-                inDialog = false;
-                dialogLetters = 0;
-                dialogText = null;
-                answers = new String[4];
-                cases = new int[4][2];
-                selectedAnswer = 0;
-                new saveEverything(true,true,false);
-            }
-            deathAnimation = true;
-        } else {
-            deathAnimation = false;
-            dead = false;
-            try {
-                if (compareStrings(language, "yolo") && mdrdbar.position() >= mdrdbar.length()-250) {
-                    mdrdbar.pause();
-                    mdrdbar.rewind();
-                    mdrdbar = Musics[7];
-                    try {
-                        mdrdbar.play();
-                    } 
-                    catch(Exception f) {
-                        f.printStackTrace();
-                        mdrdbar = Musics[8];
-                    }
-                    mdrdbar.setLoopPoints(1, mdrdbar.length()-250);
-                    mdrdbar.loop();
-                }
-            }
-            catch(Exception e) {
-                e.printStackTrace();
-                try {
-                    mdrdbar = Musics[7];
-                    mdrdbar.setLoopPoints(1, mdrdbar.length()-250);
-                    mdrdbar.loop();
-                }
-                catch(Exception f) {
-                    f.printStackTrace();
-                }
-            }
-        }
         switch (menu) {
+        case -12:
+            break;
         case -11:
             break;
         case -10:
@@ -1442,6 +1349,104 @@ void draw()
         default:
             error("Bad menu ID : " + menu, null);
         }
+        //************************************************************************************************Mort du personnage*************************************************************************************************
+        if (life <= 0 && menu >= 0 && menu <= 1) {
+            if (menu == 0)
+                try {
+                    int temp = 0;
+                    if (character == "female")
+                        temp = 1;
+                    if (compareStrings(language, "yolo"))
+                        image(glitched_character, playerX + camPosX, playerY + camPosY);
+                    else
+                        image(character_image[temp][0][0][1], playerX + camPosX, playerY + camPosY + 16);
+                }
+                catch(Exception e) {
+                    e.printStackTrace();
+                    try {
+                        image(glitched_character, playerX+camPosX, playerY+camPosY);
+                    } 
+                    catch(Exception f) {
+                        f.printStackTrace();
+                        error("Can't find file " + character + "_character_" + status + "_" + direction + "_" + animation  +".png", e);
+                    }
+                }
+            dead = true;
+            //Réaffichage du terrain
+            if (!deathAnimation) {
+                if (statusBuffer == 10) {
+                    statusBuffer = 0;
+                    status = "static";
+                }
+                if (status == "moving")
+                    statusBuffer = statusBuffer + 1;
+                else
+                    statusBuffer = 0;
+                if (playerX+camPosX <= -16 || playerX+camPosX >= width+16 || playerY+camPosY <= -32 || playerY+camPosY >= height+32)
+                    life = 0;
+                printLevel();
+                printCharacters();
+                printUpperLayer();
+                if (status == "static")
+                    animation = 1;
+                if (status == "moving" && animation >= 3)
+                    animation = 1;
+                menu = 0;
+                if (compareStrings(language, "yolo")) {
+                    try {
+                        lifeBuffer = 0;
+                    } 
+                    catch(Exception e) {
+                        e.printStackTrace();
+                    }
+                    try {
+                        mdrdbar.setLoopPoints(mdrdbar.position(), mdrdbar.position()+50);
+                        mdrdbar.loop();
+                    } 
+                    catch(Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+                inDialog = false;
+                dialogLetters = 0;
+                dialogText = null;
+                answers = new String[4];
+                cases = new int[4][2];
+                selectedAnswer = 0;
+                new saveEverything(true,true,false);
+            }
+            deathAnimation = true;
+        } else {
+            deathAnimation = false;
+            dead = false;
+            try {
+                if (compareStrings(language, "yolo") && mdrdbar.position() >= mdrdbar.length()-250) {
+                    mdrdbar.pause();
+                    mdrdbar.rewind();
+                    mdrdbar = Musics[7];
+                    try {
+                        mdrdbar.play();
+                    } 
+                    catch(Exception f) {
+                        f.printStackTrace();
+                        mdrdbar = Musics[8];
+                    }
+                    mdrdbar.setLoopPoints(1, mdrdbar.length()-250);
+                    mdrdbar.loop();
+                }
+            }
+            catch(Exception e) {
+                e.printStackTrace();
+                try {
+                    mdrdbar = Musics[7];
+                    mdrdbar.setLoopPoints(1, mdrdbar.length()-250);
+                    mdrdbar.loop();
+                }
+                catch(Exception f) {
+                    f.printStackTrace();
+                }
+            }
+        }
         drawLife();
         drawNRJ();
         if(menu < 6 && menu != 3)
@@ -1466,7 +1471,7 @@ void draw()
         else
             hitBuffer = 0;
         if (glitchMode)
-            glitchPrint(true);
+            glitchPrint(true, 20);
     
         //affichage des achievements
         if (achievementBuffer <= 200) {
@@ -1687,7 +1692,6 @@ void draw()
         text(theText, errorPos + 5, height - box_size, 250, box_size + 100);
         fill(0, 0, 0, 255);
     }
-    commandLine = new String[height / 40];
 }
 
 int findInventoryEmptySpace()
@@ -1724,9 +1728,9 @@ void tidyInventory()
     }
 }
 
-void glitchPrint(boolean mdr)
+void glitchPrint(boolean mdr, int nb)
 {
-    for (int i = 0; i < 20; i++) {
+    for (int i = 0; i < nb; i++) {
         if (mdr) {
             jpp[i] = int(random(0, width));
             jpp2[i] = int(random(0, height));

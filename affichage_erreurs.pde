@@ -12,7 +12,7 @@ void errorMsg(String errorMessage,AudioPlayer sound,Exception exc)
     if(exc != null) {
         theErrorMessage = theErrorMessage + " :   "+exc+"\n";
         for(int i = 0 ; i < exc.getStackTrace().length ; i++)
-            theErrorMessage = theErrorMessage + "            "+exc.getStackTrace()[i]+"\n";
+            theErrorMessage = theErrorMessage + "        "+exc.getStackTrace()[i]+"\n";
     } else {
         theErrorMessage = theErrorMessage + ""+"\n";
     }

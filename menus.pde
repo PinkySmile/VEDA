@@ -10,7 +10,7 @@ void audioMenu()
     
     fill(122);
     noStroke();
-    rect(0,0,12*32,3*32);
+    rect(0, 0, 12 * 32, 3 * 32);
     if (musicLoaded) {
         noStroke();
         fill(125);
@@ -48,7 +48,7 @@ void audioMenu()
         
         textSize(20);
         fill(255);
-        text(musicVolume+"%",320,43);
+        text(musicVolume + "%", 320, 41);
         
         fill(255);
         fill(125);
@@ -86,7 +86,7 @@ void audioMenu()
         
         textSize(20);
         fill(255);
-        text(SFXVolume+"%",320,93);
+        text(SFXVolume + "%", 320, 91);
     } else {
         textSize(20);
         if(compareStrings(language,"fr")) {
@@ -97,6 +97,7 @@ void audioMenu()
             text("Disabled",100,87);
         }
     }
+    textFont(Arial);
     textSize(25);
     if (compareStrings(language, "yolo"))
         textSize(random(1, 50));
@@ -106,11 +107,10 @@ void audioMenu()
         fill(255, 255, 255);
     text("Music : ", 10, 40);
     text("SFX   : ", 10, 90);
-    try {
-        for (int i = 0 ; i < Musics.length ; i++)
+    for (int i = 0 ; i < Musics.length ; i++)
+        if (Musics[i] != null)
             Musics[i].setGain(-50+50*musicVolume/100+baseGain[i]);
-    }
-    catch(Exception e) {}
+    textFont(FreeMono);
 }
 
 void optionsMenu()
@@ -318,6 +318,9 @@ void inGame()
 
 void gameover()
 {
+    gameoverDisplayed = false;
+    Musics[3].rewind();
+    selectedRespawn = true;
     try {
         if(inCutscene && !inDialog)
             if(doCommand(cutscenesCommands[commandID]))
@@ -328,20 +331,22 @@ void gameover()
                     Musics[i].setGain(-50+50*musicVolume/100+baseGain[i]);
         }
         catch(Exception e) {}
+        deathBuffer = deathBuffer + 1;
         if (!Musics[0].isPlaying() && deathBuffer >= 50 && !compareStrings(language, "yolo")) {
             menu = 1;
             cursorBuffer = 30;
             textTyped = "";
             oldCommands = "";
-        }
-        deathBuffer = deathBuffer + 1;
-        if (!musicDisabled) {
-            try {
-                for (int i = 0 ; i < Musics.length ; i++)
+        } else if (!musicDisabled) {
+            for (int i = 0 ; i < Musics.length ; i++)
+                if (Musics[i] != null)
                     Musics[i].setGain(-50+50*musicVolume/100+baseGain[i]);
-            } catch(Exception e) {}
             try {
-                Musics[0].play();
+                if (!Musics[0].isPlaying())
+                    Musics[0].play();
+                for (int i = 1 ; i < Musics.length ; i++)
+                    if (Musics[i] != null)
+                        Musics[i].pause();
             }
             catch(Exception e) {
                 e.printStackTrace();
@@ -357,7 +362,7 @@ void gameover()
         try {
             if (deathBuffer >= 300) {
                 menu = -12;
-                glitchPrint(true);
+                glitchPrint(true, 20);
             }
         }
         catch(Exception e) {
@@ -365,7 +370,7 @@ void gameover()
             mdrdbar.setLoopPoints(mdrdbar.position(), mdrdbar.position()+50);
             mdrdbar.loop();
             menu = -12;
-            glitchPrint(true);
+            glitchPrint(true, 20);
         }
     if (volume != 0)
         volume = volume - 1;
@@ -411,7 +416,7 @@ void inventory()
       else
           balaic = 255;
       fill(balaic);
-      text(name, width-220, 30);
+      text(name, width - 220, 30);
       fill(255);
       if (compareStrings(language, "fr"))
           text("PV : "+life+"/"+lifeMax*10, width-220, 60);
@@ -420,7 +425,7 @@ void inventory()
       else if (compareStrings(language, "de"))
           text("HP : "+life+"/"+lifeMax*10, width-220, 60);
       else
-          text("??/??", width-220, 60);
+          text("??/??", width - 220, 60);
       if (compareStrings(language, "fr"))
           text("Energie : "+energy+"/"+energyMax*10, width-220, 90);
       else if (compareStrings(language, "en"))
@@ -431,7 +436,7 @@ void inventory()
           text("??/??", width-220, 60);
       for (int i = 0; i < items.length; i++)
           if (compareStrings(language, "yolo"))
-              glitchPrint(true);
+              glitchPrint(true, 20);
       for (int i = 0; i < items.length; i++) {
           quan = "x"+itemsQuantity[i];
           if (compareStrings(quan, "x0"))
@@ -861,16 +866,197 @@ void controls()
     textFont(FreeMono);
 }
 
+void addLine(String lineContent)
+{
+    if (lineContent.length() <= 65) {
+        int i = 0;
+
+        for (i = 0; i < commandLines.length && commandLines[i] != null; i++);
+        if (i == commandLines.length) {
+            commandLines = shift(commandLines, "up");
+            commandLines[commandLines.length - 1] = lineContent;
+        } else
+            commandLines[i] = lineContent;
+    } else
+        for (int i = 0; i < lineContent.length(); i += 65)
+            addLine(subString(lineContent, i, i + 64));
+}
+
+String[] parseCommand(String content) {
+    String[] args = new String[100];
+    int tab = 1;
+    boolean q = false;
+    boolean s_q = false;
+    int i = 0;
+    int start = 0;
+    
+    while (i < content.length() && content.charAt(i) != ' ')
+        i++;
+    args[0] = subString(content, 0, i - 1);
+    i++;
+    while (i < content.length()) {
+        start = i;
+        if (i < content.length() && content.charAt(i) == '"') {
+            start = start + 1;
+            i = i + 1;
+            q = true;
+        } else if (i < content.length() && content.charAt(i) == '\'') {
+            start = start + 1;
+            i = i + 1;
+            s_q = true;
+        }
+        while (i < content.length() && (content.charAt(i) != ' ' || q || s_q) && (content.charAt(i) != '\"' || s_q) && (content.charAt(i) != '\'' || q)) {
+            i = i + 1;
+            if (i < content.length() && content.charAt(i) == '\"')
+                q = false;
+            else if (i < content.length() && content.charAt(i) == '\'')
+                s_q = false;
+        }
+        args[tab] = subString(content, start, i - 1);
+        if (i < content.length() - 1 && (content.charAt(i) != '\'' || content.charAt(i) != '"') && content.charAt(i + 1) == ' ')
+            i = i + 1;
+        tab = tab + 1;
+        i = i + 1;
+    }
+    return args;
+}
+
+boolean[] getFlags(String[] args)
+{
+    boolean[] flags = {false, false, false};
+    
+    for (int i = 0; i < args.length && args[i] != null; i++)
+        if (args[i].charAt(0) == '-')
+            for (int j = 1; j < args[i].length(); j++)
+                switch(args[i].charAt(j)) {
+                case 'a':
+                    flags[0] = true;
+                    break;
+                case 'l':
+                    flags[1] = true;
+                    break;
+                case 'R':
+                    flags[2] = true;
+                    break;
+                default:
+                    addLine("ls: Unknown parameter '" + args[i].charAt(j) + "'");
+                    return (null);
+                }
+    return flags;
+}
+
+String[] getPaths(String[] args)
+{
+    String[] paths = new String[args.length];
+    int index = 0;
+    
+    for (int i = 0; i < args.length && args[i] != null; i++)
+        if (args[i].charAt(0) != '-')
+            paths[index++] = args[i];
+    return paths;
+}
+
+String createThePath(String path)
+{
+    String realPath = path;
+
+    return (realPath);
+}
+
+void ls(String[] args)
+{
+    try {
+        println("flags");
+        boolean[] flags = getFlags(args);
+        println("path");
+        String[] paths = getPaths(args);
+        String[] dirs = null;
+        String line = "";
+        File file = null;
+
+        if (flags == null)
+            return;
+        if (paths[0] == null)
+            paths[0] = currentPath;
+        for (int j = 0; j < paths.length && paths[j] != null; j++) {
+            file = new File("./" + createThePath(paths[j]));
+            if (file.isDirectory()) {
+                dirs = file.list();
+                line = "";
+                if (dirs == null)
+                    addLine("ls: " + paths[j] + ": No such file or directory");
+                else {
+                    addLine(paths[j] + ":");
+                    for(int i = 0 ; i < dirs.length ; i++) {
+                        if (flags[1])
+                            addLine(dirs[i]);
+                        else
+                            line += dirs[i] + (i == dirs.length - 1 ? "" : " ");
+                      /*
+                        File files = new File("." + currentPath + "/" + paths[i] + "/" + dirs[i]);
+                        if(files.isDirectory() && flags[2])
+                            getNbOfFiles(new File(paths[i] +  "/" + dirs[i]).getAbsolutePath());*/
+                    }
+                    if (!flags[1])
+                        addLine(line);
+                }
+            } else
+                addLine(paths[j]);
+        }
+    } catch(Exception e) {
+        addLine("ls: " + e);
+    }
+}
+
+void execShellCommand(String commandLine)
+{
+    String[] args = parseCommand(commandLine);
+    String command = args[0];
+
+    args = shift(args, "up");
+    if (compareStrings(command, ""))
+        return;
+    if (compareStrings(command, "quit"))
+        menu = -1;
+    else if (compareStrings(command, "exit")) {
+        menu = 0;
+        for (int i = 0; i < commandLines.length; i++)
+            commandLines[i] = null;
+        deathBuffer = 0;
+        printLevel();
+    } else if (compareStrings(command, "gameover")) {
+        if (onWindows)
+            addLine("gameover: Wrong Architechture");
+        else
+            inShell = false;
+    } else if (compareStrings(command, "gameover.exe")) {
+        if (!onWindows)
+            addLine("gameover.exe: Wrong Architechture");
+        else
+            inShell = false;
+    } else if (compareStrings(command, "ls")) {
+        ls(args);
+    } else if (compareStrings(command, "cd")) {
+        file = new File("./" + createThePath((args[0].charAt(0) == '/' ? "" : currentPath) + "/" + args[0]));
+        if (file.exists())
+            currentPath = createThePath((args[0].charAt(0) == '/' ? "" : currentPath) + "/" + args[0]);
+    } else {
+        addLine(command + ": Command not found.");
+    }
+}
+
 void shell()
 {
+    String display = "";
+    String displayedText = "";
+
+    prompt = "[" + currentPath + "]" + classicPrompt;
     if(inCutscene && !inDialog)
         if(doCommand(cutscenesCommands[commandID]))
             commandID++;
     try {
         background(0);
-        if (!musicDisabled) {
-            if (!Musics[0].isPlaying())
-                Musics[0].loop();
+        if (!musicDisabled && Musics[3] != null) {
             Musics[3].play();
         }
     }
@@ -880,61 +1066,45 @@ void shell()
     }
     cursor = "";
     fill(255);
-    //Affichage du "gameover.exe" et des commandes inscrites
-    if (musicDisabled || Musics[3].position() >= 270)
-        ah = ah + "g";
-    if (musicDisabled || Musics[3].position() >= 430)
-        ah = ah + "a";
-    if (musicDisabled || Musics[3].position() >= 590)
-        ah = ah + "m";
-    if (musicDisabled || Musics[3].position() >= 750)
-        ah = ah + "e";
-    if (musicDisabled || Musics[3].position() >= 900)
-        ah = ah + "o";
-    if (musicDisabled || Musics[3].position() >= 1050)
-        ah = ah + "v";
-    if (musicDisabled || Musics[3].position() >= 1250)
-        ah = ah + "e";
-    if (musicDisabled || Musics[3].position() >= 1680)
-        ah = ah + "r";
-    if (musicDisabled || Musics[3].position() >= 2300)
-        ah = ah + ".exe";
+    if (!gameoverDisplayed)
+        if (musicDisabled || Musics[3].position() >= 2300) {
+            addLine(prompt + "gameover" + (onWindows ? ".exe" : ""));
+            gameoverDisplayed = true;
+            inShell = false;
+            textTyped = "";
+        } else if (musicDisabled || Musics[3].position() >= 1680)
+            textTyped =  "gameover";
+        else if (musicDisabled || Musics[3].position() >= 1250)
+            textTyped = "gameove";
+        else if (musicDisabled || Musics[3].position() >= 1050)
+            textTyped = "gameov";
+        else if (musicDisabled || Musics[3].position() >= 900)
+            textTyped = "gameo";
+        else if (musicDisabled || Musics[3].position() >= 750)
+            textTyped = "game";
+        else if (musicDisabled || Musics[3].position() >= 590)
+            textTyped = "gam";
+        else if (musicDisabled || Musics[3].position() >= 430)
+            textTyped = "ga";
+        else if (musicDisabled || Musics[3].position() >= 270)
+            textTyped = "g";
+    if (cursorBuffer >= 30 && (musicDisabled || Musics[3].position() >= 2300))
+        cursor = "_";
     if (cursorBuffer >= 60)
         cursorBuffer = 0;
-    if (cursorBuffer >= 30 && (musicDisabled || Musics[3].position() >= 2300)) {
-        ah = ah + "\n> ";
-        cursor = "_";
-    } else if (cursorBuffer >= 30 && (musicDisabled || Musics[3].position() <= 2300))
-        cursor = "_";
-    if ((musicDisabled || Musics[3].position() >= 2300) && cursorBuffer < 30)
-        ah = ah + "\n> ";
-    String j = "";
-    int _temp = 0;
-    int temp = 0;
-    char tyu;
-    for (int i = 0; i <= (j = ah+oldCommands+textTyped+cursor).length()-2; i++) {
-        tyu = j.charAt(i);
-        if (int(tyu) == 10)
-            _temp = _temp + 1;
-    }
-    for (int i = 1; i <= _temp - 18; i++)
-        temp = temp + 1;
+    cursorBuffer++;
     textSize(15);
     if (compareStrings(language, "yolo"))
         textSize(random(1, 50));
-    if (compareStrings(language, "yolo"))
-        ah = "> What have you done !.lvl";
-    text(ah+oldCommands+textTyped+cursor, 10, 20-24*temp-temp/4.45);
+    for (int i = 0; i < commandLines.length && commandLines[i] != null; i++)
+        display += commandLines[i] + "\n";
+    displayedText = prompt + textTyped + cursor;
+    for (int i = 0; i < displayedText.length() && inShell; i += 65)
+        display += subString(displayedText, i, i + 64) + "\n";
+    if (!inShell)
+        display += (selectedRespawn ? "> " : "  ") + "Respawn  " + (selectedRespawn ? "  " : "> ") + "Quit";
+    text(display, 20, 40);
     cursorBuffer++;
-    if (compareStrings(language, "yolo") && cursorBuffer == 50) {
-        try {
-            mdrdbar.pause();
-        }
-        catch(Exception e) {
-            e.printStackTrace();
-        }
-        error("Can't find file \"What have you done !.lvl\"", null);
-    }
 }
 
 void drawLife()

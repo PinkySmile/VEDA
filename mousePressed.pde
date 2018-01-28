@@ -24,7 +24,7 @@ void mousePressed()
             JOptionPane.showMessageDialog(null, theErrorMessage, "Error", t);
         }
         //Musique
-        if (menu == 5 && mouseX >= 100 && mouseX <= 300 && mouseY >= 23 && mouseY <= 43 && !compareStrings(language, "yolo")) {
+        if (musicLoaded && menu == 5 && mouseX >= 100 && mouseX <= 300 && mouseY >= 23 && mouseY <= 43 && !compareStrings(language, "yolo")) {
             musicVolume = round(mouseX - 100) / 2;
             if (musicVolume <= 0)
                 Musics[4].pause();
@@ -34,7 +34,7 @@ void mousePressed()
             pressedMusicBar = true;
         }
         //SFX
-        if (menu == 5 && mouseX >= 100 && mouseX <= 300 && mouseY >= 73 && mouseY <= 93 && !compareStrings(language, "yolo")) {
+        if (musicLoaded && menu == 5 && mouseX >= 100 && mouseX <= 300 && mouseY >= 73 && mouseY <= 93 && !compareStrings(language, "yolo")) {
             SFXVolume = round(mouseX-100)/2;
             int r = int(8+random(0,4));
             for (int i = 0 ; i < SFX.length ; i++)
@@ -68,6 +68,9 @@ void mousePressed()
                         menu = 0;
                         deathBuffer = 0;
                         cursorBuffer = 0;
+                        inShell = true;
+                        for (int j = 0; j < commandLines.length; j++)
+                            commandLines[j] = null;
                         if (!musicDisabled) {
                             Music.rewind();
                             Musics[0].rewind();

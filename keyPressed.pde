@@ -381,10 +381,6 @@ void testKeys()
                     }
                 }
                 //Skip le gameover après un certain temps
-                else if (deathBuffer >= 150 && menu == 0) {
-                    if (!musicDisabled)
-                        Musics[0].pause();
-                }
             } catch(Exception e) {
                 e.printStackTrace();
                 error("Error 16",e);
@@ -397,6 +393,9 @@ void testKeys()
 
 void keyPressed()
 {
+    if (deathBuffer >= 150 && menu == 0)
+        if (!musicDisabled)
+            Musics[0].pause();
     if (menu == 12 && changingKey != -1) {
         if (keyCode == 0)
             keyCode = -1;
@@ -413,29 +412,27 @@ void keyPressed()
         pressedKeysCode[findSpace()] = keyCode;
     if(key == 27)
         key = 255;
-    if(key == '²' && menu == 7) {
+    else if(key == '²' && menu == 7) {
         camMoving = true;
         camBuffer[0] = -camPosX;
         camBuffer[1] = -camPosY;
-    }
-    if(key == '&' && menu == 7) {
+    } else if(key == '&' && menu == 7) {
         savedMessageShown = true;
         savingBuffer = 0;
         saveLevel();
-        new saveEverything(true,false,false);
+        new saveEverything(true, false, false);
         Music.pause();
-    }
-    if(key == 'é' && menu == 7)
+    } else if(key == 'é' && menu == 7)
         menu = 8;
-    if(key == '"' && menu == 7)
+    else if(key == '"' && menu == 7)
         replaceMode = !replaceMode;
-    if(key == '\'' && menu == 7)
+    else if(key == '\'' && menu == 7)
         buttonsDisabled = !buttonsDisabled;
-    if(key == '(' && menu == 7)
+    else if(key == '(' && menu == 7)
         upperLayerShown = !upperLayerShown;
-    if(key == '-' && menu == 7)
+    else if(key == '-' && menu == 7)
         zoomLevel = 0;
-    if(key == 'è' && menu == 7)
+    else if(key == 'è' && menu == 7)
         gridShown = !gridShown;
     //Touches de debug
     if (debugMode && menu != 1) {
@@ -444,13 +441,13 @@ void keyPressed()
         } else if (key == ',') {
             giveAchievement(0);
         } else if (key == '/') {
-            playerX = lireUnEntier("Position X","Changer la position du joueur");
-            playerY = lireUnEntier("Position Y","Changer la position du joueur");
+            playerX = lireUnEntier("Position X", "Changer la position du joueur");
+            playerY = lireUnEntier("Position Y", "Changer la position du joueur");
         } else if (key == ':') {
             int xBuffer = camPosX;
             int yBuffer = camPosY;
-            camPosX = lireUnEntier("CamX","CamX");
-            camPosY = lireUnEntier("CamY","CamY");
+            camPosX = lireUnEntier("CamX", "CamX");
+            camPosY = lireUnEntier("CamY", "CamY");
             playerX = playerX - camPosX + xBuffer;
             playerY = playerY - camPosY + yBuffer;
         } else if (key == 'w') {
@@ -460,23 +457,23 @@ void keyPressed()
             itemsQuantity = new int[12];
             items = new int[12];
         } else if (key == 'u') {
-            int toDel = lireUnEntier("Which object to delete ?","Del object");
+            int toDel = lireUnEntier("Which object to delete ?", "Del object");
             items[toDel] = 0;
             itemsQuantity[toDel] = 0;
             tidyInventory();
         } else if (key == '¤') {
-            language = lireUnTexte("Language","Language");
+            language = lireUnTexte("Language", "Language");
             delMenus();
             classicButtons();
         } else if (key == '@') {
-            giveAchievement(lireUnEntier("Enter an achievement ID","ID"));
+            giveAchievement(lireUnEntier("Enter an achievement ID", "ID"));
         } else if (key == '€') {
-            if(character == "male")
+            if (character == "male")
                 character = "female";
             else
                 character = "male";
         } else if (key == '!') {
-            menu = lireUnEntier("Menu","Menu");
+            menu = lireUnEntier("Menu", "Menu");
             if(menu == -10) {
                 for (int i = 0; i < Musics.length; i++) {
                     try {
@@ -523,8 +520,8 @@ void keyPressed()
         } else if (key == '?') {
             debugMode = false;
         } else if (key == '$') {
-            String temp = lireUnTexte("Enter an ID","Enter an ID");
-            dialogBox("Test : uyzgfedipyqgdqoyzfgqizfguzquifgyqpizfguqizfgqizfgbqjzbdlqv zdlqzvdlqyvzdlqvzdlqvzdqzdlqvzdjqgvzdugqvzdqjzhdboquzvydbqidbgzouydquozduofv§answer'battle''clear''kill''cutscene'§(0)DAH§battle"+temp+"§(1)1§clear§2(2);[§kill"+temp+"§(3)Coming soon§cutscene"+temp+"§");
+            String temp = lireUnTexte("Enter an ID", "Enter an ID");
+            dialogBox("Test : uyzgfedipyqgdqoyzfgqizfguzquifgyqpizfguqizfgqizfgbqjzbdlqv zdlqzvdlqyvzdlqvzdlqvzdqzdlqvzdjqgvzdugqvzdqjzhdboquzvydbqidbgzouydquozduofv§answer'battle''clear''kill''cutscene'§(0)DAH§battle" + temp + "§(1)1§clear§2(2);[§kill" + temp + "§(3)Coming soon§cutscene" + temp + "§");
         } else if (key == 'W') {
             energy = energy - 1;
             energyReloadBuffer = 0;
@@ -571,6 +568,12 @@ void keyPressed()
                 language = "yolo";
                 SFXVolume = 500;
                 musicVolume = 500;
+                for (int i = 0 ; i < SFX.length ; i++)
+                    if (SFX[i] != null)
+                        SFX[i].setGain(-50 + 50 * SFXVolume / 100);
+                for (int i = 0 ; i < Musics.length ; i++)
+                    if (Musics[i] != null)
+                        Musics[i].setGain(-50 + 50 * musicVolume / 100 + baseGain[i]);
                 nameColor = 0;
                 musicDisabled = true;
                 delMenus();
@@ -751,29 +754,15 @@ void keyPressed()
                 camPosY = camPosY - 16;
             } else if(keyCode == UP && menu == 7) {
                 camPosY = camPosY + 16;
-            } else if(keyCode == LEFT && menu == 7) {
+            } else if(keyCode == LEFT && menu == 7)
                 camPosX = camPosX + 16;
-            }
             //*************************************"Invite de commandes"**********************************************
-            if ((musicDisabled || Musics[3].position() >= 2300) && ',' + key != 52 && ',' +key != 65579 && key+'"' != 44 && key != 0)
-                textTyped = textTyped + key;
-            else if ((musicDisabled || Musics[3].position() >= 2300) && ','+key == 52 ) {
-                String a = textTyped;
-                textTyped = "";
-                char c;
-                for (int i = 0; i<= a.length()-2; i=i+1) {
-                    c = a.charAt(i);
-                    textTyped = textTyped+c;
-                }
-            } else if ((musicDisabled || Musics[3].position() >= 2300) && '"'+key == 44) {
-                oldCommands = oldCommands+textTyped+"\n";
-                if (compareStrings(textTyped, "help")) {
-                    oldCommands = oldCommands + "  Available commands :\n    help : show a basic help\n    respawn : make you revive\n    quit : save and exit to the title screen\n";
-                } else if (compareStrings(textTyped, "quit")) {
-                    menu = -1;
-                    Musics[0].pause();
-                    Musics[0].rewind();
-                } else if (compareStrings(textTyped, "respawn")) {
+            if (menu == 1 && !inShell && keyCode == LEFT)
+                selectedRespawn = true;
+            if (menu == 1 && !inShell && keyCode == RIGHT)
+                selectedRespawn = false;
+            if (menu == 1 && !inShell && key == '\n') {
+                if (selectedRespawn) {
                     direction = "up";
                     status = "static";
                     textTyped = "";
@@ -781,8 +770,8 @@ void keyPressed()
                     cursor = "";
                     statusBuffer = 0;
                     animation = 1;
-                    playerX = 1;
-                    playerY = 1;
+                    playerX = 0;
+                    playerY = 0;
                     animationBuffer = 0;
                     volume = 70;
                     life = 10*lifeMax;
@@ -792,22 +781,46 @@ void keyPressed()
                     menu = 0;
                     deathBuffer = 0;
                     cursorBuffer = 0;
+                    inShell = true;
+                    for (int j = 0; j < commandLines.length; j++)
+                        commandLines[j] = null;
                     if (!musicDisabled) {
                         Music.rewind();
                         Musics[0].rewind();
                         Musics[3].pause();
                         Musics[3].rewind();
                     }
-                } else {
-                    oldCommands = oldCommands + "  Unknown command. Type help for help.\n";
-                }
-                textTyped = "";
-                oldCommands = oldCommands+"> ";
+                    menu = 0;
+                } else
+                    menu = -1;
             }
+            if (inShell)
+                if ((musicDisabled || Musics[3].position() >= 2300) && ',' + key != 52 && key <= 65000 && key + '"' != 44 && key != 0 && key != '')
+                    textTyped = textTyped + key;
+                else if ((musicDisabled || Musics[3].position() >= 2300) && ',' + key == 52 ) {
+                    textTyped = subString(textTyped, 0, textTyped.length() - 2);
+                } else if ((musicDisabled || Musics[3].position() >= 2300) && key == '\n') {
+                   addLine(prompt + textTyped);
+                   execShellCommand(textTyped);
+                   textTyped = "";
+                }
         } catch(Exception e) {
             e.printStackTrace();
             error("Unexpected error occured",e);
         }
+    }
+    if (key == '' && menu == 1 && inShell && gameoverDisplayed)
+        for (int j = 0; j < commandLines.length; j++)
+            commandLines[j] = null;
+    if (key == '' && menu == 1) {
+        if (inShell) {
+            addLine(prompt + textTyped + "^C");
+            Musics[3].skip(Musics[3].length());
+        } else
+            addLine((selectedRespawn ? "> " : "  ") + "Respawn  " + (selectedRespawn ? "  " : "> ") + "Quit^C");
+        inShell = true;
+        textTyped = "";
+        gameoverDisplayed = true;
     }
     keyCode = 0;
 }

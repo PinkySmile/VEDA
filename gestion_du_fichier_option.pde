@@ -58,14 +58,12 @@ void loadSettings()
             keys[i] = int(bufferedReader.readLine());
         bufferedReader.close();
         fileReader.close();
-        try {
-            for (int i = 0 ; i < SFX.length ; i++)
-                SFX[i].setGain(-50+50*SFXVolume/100);
-        } catch(Exception e) {}
-        try {
-            for (int i = 0 ; i < Musics.length ; i++)
+        for (int i = 0 ; i < SFX.length ; i++)
+            if (SFX[i] != null)
+                SFX[i].setGain(-50 + 50 * SFXVolume / 100);
+        for (int i = 0 ; i < Musics.length ; i++)
+            if (Musics[i] != null)
                 Musics[i].setGain(-50 + 50 * musicVolume / 100 + baseGain[i]);
-        } catch(Exception e) {}
         if(musicVolume == 0)
               musicDisabled = true;
     } catch(FileNotFoundException e) {
