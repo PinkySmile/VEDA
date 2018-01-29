@@ -68,8 +68,8 @@ void printLevel()
             }
             if (objects[i] == 5 && !camMoving)
                 if (playerY + 47 >= posObjectY[i] * 16 && playerY + 16 < posObjectY[i] * 16 && playerX + 3 <= posObjectX[i] * 16 && posObjectX[i] * 16 <= playerX + 29 && hitBuffer == 0) {
-                    life = life - 5;
-                    hitBuffer = 5;
+                    takeDamages(5, 1);
+                    hitBuffer = 10;
                 }
             if (objects[i] == 11 && !camMoving)
                 if (playerY + 47 >= posObjectY[i] * 16 && playerY + 16 < posObjectY[i] * 16 && playerX + 3 <= posObjectX[i] * 16 && posObjectX[i] * 16 <= playerX + 29 && life > 0)

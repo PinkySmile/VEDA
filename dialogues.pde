@@ -155,6 +155,14 @@ void loadDialogs(String path)
     }
 }
 
+void loadItemNames(String language)
+{
+    String[] file_content = loadStrings("data/languages/" + language + "/items.txt");
+    
+    for (int i = 0; file_content != null && i < file_content.length && i < itemNames.length; i++)
+        itemNames[i] = file_content[i];
+}
+
 void dialogBox(String dialogue)
 {
     String name = null;

@@ -1,3 +1,8 @@
+void takeDamages(int damages, int damageType)
+{
+    life -= damages;
+}
+
 void printCharacters()
 {
     if(menu == 7) {
@@ -18,9 +23,8 @@ void printCharacters()
             }
             if (characterStatus[i] == 1 && characterAnim[i] >= 2)
                 characterAnim[i] = 0;
-            if(characterStatusBuffer[i] == 10) {
+            if(characterStatusBuffer[i] >= 10)
                 characterStatus[i] = 0;
-            }
             if(characterStatus[i] == 1)
                 characterStatusBuffer[i]++;
             else {

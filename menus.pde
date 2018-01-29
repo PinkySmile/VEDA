@@ -299,8 +299,8 @@ void inGame()
     
     //Déplacement de la caméra lors de la sortie de l'écran
     if(!inCutscene) {
-        int camGoToX = playerX+8;
-        int camGoToY = playerY+17;
+        int camGoToX = int(playerX + 8);
+        int camGoToY = int(playerY + 17);
         if(playerX < 0)
             camGoToX -= width;
         if(playerY < 0)
@@ -444,7 +444,7 @@ void inventory()
           item = "Item "+items[i];
           if (items[i] != 0)
               try {
-                  item = itemNames[items[i]-1]+"";
+                  item = itemNames[items[i] - 1]+"";
               } catch(Exception e) {}
           if (compareStrings(item+"","null"));
               item = "Item "+items[i];
@@ -1162,7 +1162,7 @@ void drawLife()
 {
     if (life > 10*lifeMax) 
         life = 10*lifeMax;
-    lifeBuffer = life;
+    lifeBuffer = floor(life);
     //Affichage des coeurs
     if (menu == 0 && !dead && !inDialog) {
         int x = 0;
@@ -1217,7 +1217,7 @@ void drawNRJ()
 {
     if (energy > 10*energyMax) 
         energy = 10*energyMax;
-    energyBuffer = energy;
+    energyBuffer = floor(energy);
     //Affichage des éclairs
     if (menu == 0 && !dead && !inDialog) {
         int x = 0;

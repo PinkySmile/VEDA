@@ -113,6 +113,10 @@ String[] languagesFound = new String[50];
 String[] cutscenesCommands = new String[2000];
 String[] keyUsage = new String[20];
 
+String[] itemType = {
+    "",
+};
+
 String[] trollFiles = 
 {
     "data/misc/none.png", 
@@ -125,8 +129,8 @@ String[] trollFiles =
     "lib/unix.dll", 
     "misc/{4FTSZ-ZE67D8}"
 };
-/*
-String[] filesToLoad = 
+
+/*String[] filesToLoad = 
 {
     //Achievements
     "data/achievements/0h.png", 
@@ -407,14 +411,10 @@ int statusBuffer = 0;
 int totalNumberOfMusics = 7;
 int totalNumberOfMusicsLoaded;
 int animation = 1;
-int playerX = 1;
-int playerY = 1;
 int animationBuffer = 0;
 int volume = 70;
-int life = 10;
 int lifeMax = 1;
 int lifeBuffer = 0;
-int energy = 10;
 int energyMax = 1;
 int energyBuffer = 0;
 int camPosX = 0;
@@ -579,6 +579,13 @@ PrintWriter dout;
 BufferedReader din;
 ImageIcon cd = null;
 Graphics g;
+float playerSpeed = 1;
+float sprintScale = 2;
+float sprintCost = 1;
+float playerX = 1;
+float playerY = 1;
+float life = 10;
+float energy = 10;
 
 //***************************************************************************
 //Initialisation
@@ -1071,6 +1078,7 @@ void setup()
     loadCutscenes("data/cutscenes");
     dialogDeathBuffer = -2;
     commandLines = new String[height / 20];
+    loadItemNames(language);
 }
 
 
