@@ -51,14 +51,14 @@ void execDialogCommand(String command, int _temp)
             println("Shearching the end");
             while(_temp < dialogText.length()-1 && dialogText.charAt(_temp) != '(')
                 _temp++;
-            if(_temp < dialogText.length()-1)
-                ___temp = _temp-1;
+            if(_temp < dialogText.length() - 1)
+                ___temp = _temp - 1;
             else
                 ___temp = _temp;
             println("Found end of an answer at " + _temp);
             println("Answer "+int(subString(dialogText,temp__,temp-2))+" has "+temp+" as beginning and "+(_temp-1)+" as ending --> "+subString(dialogText,temp,___temp));
-            cases[int(subString(dialogText,temp__,temp-2))][0] = temp;
-            cases[int(subString(dialogText,temp__,temp-2))][1] = ___temp;
+            cases[int(subString(dialogText, temp__, temp - 2))][0] = temp;
+            cases[int(subString(dialogText, temp__, temp - 2))][1] = ___temp;
             dialogEnd = false;
         }
     }

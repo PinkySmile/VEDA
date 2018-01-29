@@ -16,8 +16,8 @@ void newMenu(int x, int y, String text, int couleur, int tailleX, int tailleY, b
     try {
         numberOfMenu++;
         menuDisabled[numberOfMenu - 1] = isDisabled;
-        menuPos[2 * numberOfMenu - 2] = x > 0 ? x < width ? x : width : 0;
-        menuPos[2 * numberOfMenu - 1] = y > 0 ? y < height ? y : height : 0;
+        menuPos[2 * numberOfMenu - 2] = (x > 0 ? (x < width ? x : width) : 0);
+        menuPos[2 * numberOfMenu - 1] = (y > 0 ? (y < height ? y : height) : 0);
         menuContent[numberOfMenu - 1] = text;
         menuColor[numberOfMenu - 1] = couleur;
         if (tailleX == 0)
