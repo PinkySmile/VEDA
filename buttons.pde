@@ -254,7 +254,7 @@ void createLanguageButtons()
 {
     String[] dirs = null;
     String name = "";
-    File file = new File("data/languages");
+    File file = new File(sketchPath("data/languages"));
 
     languagesNb = 0;
     try {
@@ -264,7 +264,7 @@ void createLanguageButtons()
             println("Found " + dirs[i]);
             languagesNb++;
             languagesFound[i] = dirs[i];
-            name = readFile("data/languages/" + dirs[i] + "/name.txt");
+            name = readFile(sketchPath("data/languages/" + dirs[i] + "/name.txt"));
             if (name == null)
                 name = "Language \"" + dirs[i] + "\"";
             newMenu((width - (10 + name.length() * 18)) / 2, 10 + 50 * i, name, 255, 0, 0, true);

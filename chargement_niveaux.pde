@@ -138,7 +138,7 @@ boolean loadLevelPath(String theLevelPath, int floorNbr)
         }
         characters = new boolean[maxNbOfCharacters];
         loadCharacters(theLevelPath);
-        loadDialogs(theLevelPath + "/dialogs/" + language);
+        loadDialogs(theLevelPath + "/dialogs/" + language + ".txt");
         loadCharactersState();
     }
     return temp;

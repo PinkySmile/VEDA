@@ -10,7 +10,6 @@ void execDialogCommand(String command, int _temp)
         else if(compareStrings(subString(command,4,command.length()-1),"ca")) {
             playerX = 10100;
             playerY = 10100;
-            //camMove(true,10100,10100);
         } else
             dialogDeathBuffer = int(subString(command,4,command.length()-1));
     } else if(command.startsWith("clear")) {
@@ -40,7 +39,7 @@ void execDialogCommand(String command, int _temp)
         }
         _temp++;
         while(_temp < dialogText.length()-1 && dialogText.charAt(_temp) == '(') {
-            println("Found beginning of an answer at "+_temp);
+            println("Found beginning of an answer at " + _temp);
             int temp__ = _temp+1;
             int temp = 0;
             _temp++;
@@ -48,7 +47,7 @@ void execDialogCommand(String command, int _temp)
                 _temp++;
             _temp++;
             temp = _temp;
-            println("Found end of the answer ID at "+_temp+" : "+subString(dialogText,temp__,temp-2));
+            println("Found end of the answer ID at " + _temp+" : " + subString(dialogText,temp__,temp-2));
             println("Shearching the end");
             while(_temp < dialogText.length()-1 && dialogText.charAt(_temp) != '(')
                 _temp++;
@@ -56,7 +55,7 @@ void execDialogCommand(String command, int _temp)
                 ___temp = _temp-1;
             else
                 ___temp = _temp;
-            println("Found end of an answer at "+_temp);
+            println("Found end of an answer at " + _temp);
             println("Answer "+int(subString(dialogText,temp__,temp-2))+" has "+temp+" as beginning and "+(_temp-1)+" as ending --> "+subString(dialogText,temp,___temp));
             cases[int(subString(dialogText,temp__,temp-2))][0] = temp;
             cases[int(subString(dialogText,temp__,temp-2))][1] = ___temp;

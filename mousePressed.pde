@@ -193,7 +193,11 @@ void mousePressed()
                     loadAchievements();
                     menu = -1;
                 } else if (i == 13) {   //boutton "Controles"
+                    String[] file_content = loadStrings("data/languages/" + language + "/keys.txt");
+
                     menu = 12;
+                    for (int j = 0; file_content != null && j < file_content.length && j < keyUsage.length; j++)
+                        keyUsage[j] = file_content[j];
                 } else if (i == 14) {   //boutton "Music On/Off"
                     musicDisabled = !musicDisabled;
                     if (musicDisabled) {

@@ -111,29 +111,7 @@ String currentPath = "/";
 String username = null;
 String[] languagesFound = new String[50];
 String[] cutscenesCommands = new String[2000];
-String[] keyUsage = 
-{
-    "Up : ",
-    "Down : ",
-    "Left : ",
-    "Right :",
-    "Inventory : ",
-    "Pause : ",
-    "Interact : ",
-    "Force Battle : ",
-    "Achievements : ",
-    "Pouvoir : ",
-    "Upgrades : ",
-    "Slot 1 : ",
-    "Slot 2 : ",
-    "Slot 3 : ",
-    "Slot 4 : ",
-    "Slot 5 : ",
-    "Slot 6 : ",
-    "Slot 7 : ",
-    "Slot 8 : ",
-    "Sprint : " 
-};
+String[] keyUsage = new String[20];
 
 String[] trollFiles = 
 {

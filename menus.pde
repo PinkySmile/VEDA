@@ -309,11 +309,11 @@ void inGame()
         camGoToY = -camGoToY + (camGoToY % height);
         camMoving = !camMove(camScrollingDisabled,camGoToX,camGoToY);
     }
-    float hours = floor(playTime/3600);
-    float minutes = floor((playTime-hours*3600)/60);
-    float seconds = playTime-hours*3600-minutes*60;
+    float hours = floor(playTime / 3600);
+    float minutes = floor((playTime - hours * 3600) / 60);
+    float seconds = playTime - hours * 3600 - minutes * 60;
     textSize(15);
-    text("Play time : "+int(hours)+":"+transformInt(int(minutes),2)+":"+transformInt(int(seconds),2),width-140,15);
+    text("Play time : " + int(hours) + ":" + transformInt(int(minutes), 2) + ":" + transformInt(int(seconds), 2), width - 200, 15);
 }
 
 void gameover()
@@ -848,7 +848,7 @@ void controls()
             fill(0);
         else
             fill(255);
-        text(keyUsage[k], 10 + xPos * 192, yPos * 32 + 20);
+        text(keyUsage[k] + "", 10 + xPos * 192, yPos * 32 + 20);
         for (int i = 0; i < keys.length; i++)
             if (keys[k] == 0 || keys[k] != -1 && k != i && keys[k] == keys[i])
                 textColor = color(255, 0, 0);

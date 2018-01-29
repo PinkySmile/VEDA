@@ -1,11 +1,11 @@
-Speilen
+ï»¿Speilen
 
 Einstellungen
 Verlassen
 
 Optionen
 Klingen
-Zurück
+ZurÃ¼ck
 Sprache
 
 
@@ -20,6 +20,6 @@ Ja
 Nein
 Add a character
 Select an object
-Zurück
+ZurÃ¼ck
 
-Zurück
+ZurÃ¼ck
