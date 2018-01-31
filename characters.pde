@@ -1,8 +1,15 @@
 void takeDamages(int damages, int damageType)
 {
     float buffer = life;
+    int res = 0;
 
-    life -= damages;
+    if (damageType > 0 && damageType < 7) {
+        for (int i = 0; i < wornItems.length; i++)
+            if (wornItems[i] != -1)
+                res += allItems[wornItems[i]].resistances[damageType - 1];
+        life -= damages / (1 + 0.001 * sqrt(res));
+    } else
+        life -= damages;
     if (life > lifeMax * 10)
         life = lifeMax * 10;
     if (life < 0)

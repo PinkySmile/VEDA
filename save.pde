@@ -6,7 +6,7 @@ public class saveEverything extends Thread {
     
     public saveEverything(boolean c,boolean g,boolean a)
     {
-        super("popUp");
+        super("Popup");
         game = g;
         ch = c;
         ach = a;

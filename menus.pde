@@ -341,12 +341,12 @@ void dispDamages()
                 fill(0, 100, 0, 255 - damageBuffer[i] / 2);
                 break;
             case 6:
-                fill(50, 50, 255, 255 - damageBuffer[i] / 2);
+                fill(150, 100, 255, 255 - damageBuffer[i] / 2);
                 break;
             case 7:
                 fill(0, 255, 0, 255 - damageBuffer[i] / 2);
             }
-            text((i == 7 ? "+" : "") + floor(damageDisplay[i]), playerX + camPosX + 8 - str(floor(damageDisplay[i])).length() * 5, playerY + camPosY - 10 + (damageBuffer[i] * damageBuffer[i] - 255 * damageBuffer[i]) / 1000);
+            text((damageDisplay[i] > 0 ? "+" : "") + floor(damageDisplay[i]), playerX + camPosX + 8 - str(floor(damageDisplay[i])).length() * 5, playerY + camPosY - 10 + (damageBuffer[i] * damageBuffer[i] - 255 * damageBuffer[i]) / 1000);
             damageBuffer[i] += 10;
             if (damageBuffer[i] >= 255)
                 damageDisplay[i] = 0;
@@ -487,66 +487,93 @@ void gameover()
 
 void inventory()
 {
-      image(inventoryFrame, 0, 0);
-      textSize(20);
-      if (compareStrings(language, "yolo"))
-          textSize(random(1, 50));
-      color balaic;
-      if (nameColor == 3)
-          balaic = color(255, 0, 0);
-      else if (nameColor == 2)
-          balaic = color(255, 255, 0);
-      else if (nameColor == 1)
-          balaic = color(0, 255, 0);
-      else if (nameColor == 0)
-          balaic = color(int(random(0, 256)), int(random(0, 256)), int(random(0, 256)));
-      else
-          balaic = 255;
-      fill(balaic);
-      text(name, width - 220, 30);
-      fill(255);
-      if (compareStrings(language, "fr"))
-          text("PV :\n " + int(life) + "/" + lifeMax * 10, width - 220, 60);
-      else if (compareStrings(language, "en"))
-          text("HP :\n " + int(life) + "/" + lifeMax * 10, width - 220, 60);
-      else if (compareStrings(language, "de"))
-          text("HP :\n " + int(life) + "/" + lifeMax * 10, width - 220, 60);
-      else
-          text("??/??", width - 220, 60);
-      if (compareStrings(language, "fr"))
-          text("Energie :\n " + int(energy) + "/" + energyMax * 10, width - 220, 110);
-      else if (compareStrings(language, "en"))
-          text("Energy :\n " + int(energy) + "/" + energyMax * 10, width - 220, 110);
-      else if (compareStrings(language, "de"))
-          text("Energie :\n " + int(energy) + "/" + energyMax * 10, width - 220, 110);
-      else
-          text("??/??", width-220, 60);
-      for (int i = 0; i < items.length; i++)
-          if (compareStrings(language, "yolo"))
-              glitchPrint(true, 20);
-      for (int i = 0; i < items.length; i++) {
-          quan = "x"+itemsQuantity[i];
-          if (compareStrings(quan, "x0"))
-              items[i] = 0;
-          item = "Item "+items[i];
-          if (items[i] != 0)
-              try {
-                  item = itemNames[items[i] - 1]+"";
-              } catch(Exception e) {}
-          if (compareStrings(item+"","null"));
-              item = "Item "+items[i];
-          if (compareStrings(quan, "x-1"))
-              quan = "";
-          else if (compareStrings(quan, "x0"))
-              quan = "@░¶½█▓";
-          if (items[i] == 0 && !compareStrings(language, "yolo")) {
-              item = "";
-              quan = "";
-          } else if (items[i] == 0)
-              item = "e̷̲̦̖͉̘͊ͩ͌̓ͫr̹̤̳̾͑͗͛̚͠r̬̖̱o̢͇̹̠̼͎̰ͯ͋ͥ̾r̸͔̘̥͎̘̩";
-          text(item, 60, 30+39*i);
-          text(quan, 350, 30+39*i);
-      }
+    image(inventoryFrame, 0, 0);
+    textSize(20);
+    if (compareStrings(language, "yolo"))
+        textSize(random(1, 50));
+    color balaic;
+    if (nameColor == 3)
+        balaic = color(255, 0, 0);
+    else if (nameColor == 2)
+        balaic = color(255, 255, 0);
+    else if (nameColor == 1)
+        balaic = color(0, 255, 0);
+    else if (nameColor == 0)
+        balaic = color(int(random(0, 256)), int(random(0, 256)), int(random(0, 256)));
+    else
+        balaic = 255;
+    fill(balaic);
+    text(name, width - 220, 30);
+    fill(255);
+    if (compareStrings(language, "fr"))
+        text("PV :\n " + int(life) + "/" + lifeMax * 10, width - 220, 60);
+    else if (compareStrings(language, "en"))
+        text("HP :\n " + int(life) + "/" + lifeMax * 10, width - 220, 60);
+    else if (compareStrings(language, "de"))
+        text("HP :\n " + int(life) + "/" + lifeMax * 10, width - 220, 60);
+    else
+        text("??/??", width - 220, 60);
+    if (compareStrings(language, "fr"))
+        text("Energie :\n " + int(energy) + "/" + energyMax * 10, width - 220, 110);
+    else if (compareStrings(language, "en"))
+        text("Energy :\n " + int(energy) + "/" + energyMax * 10, width - 220, 110);
+    else if (compareStrings(language, "de"))
+        text("Energie :\n " + int(energy) + "/" + energyMax * 10, width - 220, 110);
+    else
+        text("??/??", width - 220, 60);
+    text("Resistances : ", width - 220, 200);
+    for (int i = 0; i < 6; i++) {
+        int res = 0;
+
+        for (int j = 0; j < wornItems.length; j++)
+            if (wornItems[j] != -1)
+                res += allItems[wornItems[j]].resistances[i];
+        switch (i + 1) {
+        case 1:
+            fill(255, 205, 0);
+            break;
+        case 2:
+            fill(0, 0, 255);
+            break;
+        case 3:
+            fill(255, 0, 0);
+            break;
+        case 4:
+            fill(170, 0, 170);
+            break;
+        case 5:
+            fill(0, 100, 0);
+            break;
+        case 6:
+            fill(150, 100, 255);
+            break;
+        }
+        text(damagesName[i] + ": " + res, width - 220, 230 + 30 * i);
+    }
+    fill(255);
+    for (int i = 0; i < items.length; i++)
+        if (compareStrings(language, "yolo"))
+            glitchPrint(true, 20);
+    for (int i = 0; i < items.length; i++) {
+        if (itemsQuantity[i] > 0)
+            quan = "x"+itemsQuantity[i];
+        else
+            quan = "";
+        if (itemsQuantity[i] == 0)
+            items[i] = 0;
+        if (items[i] != 0)
+            item = "Item " + items[i];
+        else
+            item = "";
+        if (items[i] == 0 && compareStrings(language, "yolo"))
+            item = "e̷̲̦̖͉̘͊ͩ͌̓ͫr̹̤̳̾͑͗͛̚͠r̬̖̱o̢͇̹̠̼͎̰ͯ͋ͥ̾r̸͔̘̥͎̘̩";
+        if (items[i] != 0 && allItems[items[i] - 1].name != null)
+            item = allItems[items[i] - 1].name;
+        if (itemsQuantity[i] == 0 && compareStrings(language, "yolo"))
+            quan = "@░¶½█▓";
+        text(item, 60, 30 + 39 * i);
+        text(quan, 350, 30 + 39 * i);
+    }
 }
 
 void lvlCreator()

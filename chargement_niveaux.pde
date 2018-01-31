@@ -24,7 +24,7 @@ boolean loadLevel(String levelName, int floorNbr)
             a++;
         }
         if(compareStrings(line,"{guards}") || compareStrings(line,"{cams}"))
-            new popUp("This level has been created for QGel or with QGel. It might not work as expected.\nConsider loading this level using QGel","Warning !",JOptionPane.INFORMATION_MESSAGE,SFX[2]);
+            new Popup("This level has been created for QGel or with QGel. It might not work as expected.\nConsider loading this level using QGel","Warning !",JOptionPane.INFORMATION_MESSAGE,SFX[2]);
         nbOfObjects = a;
         bufferedReader.close();
         temp = true;
@@ -124,7 +124,7 @@ boolean loadLevelPath(String theLevelPath, int floorNbr)
                 a++;
             }
             if(compareStrings(line,"{guards}") || compareStrings(line,"{cams}"))
-                new popUp("This level has been created for QGel or with QGel. It might not work as expected.\nConsider loading this level using QGel","Warning !",JOptionPane.INFORMATION_MESSAGE,SFX[2]);
+                new Popup("This level has been created for QGel or with QGel. It might not work as expected.\nConsider loading this level using QGel","Warning !",JOptionPane.INFORMATION_MESSAGE,SFX[2]);
             nbOfObjects = a;
             bufferedReader.close();
             fileReader.close();
@@ -142,6 +142,37 @@ boolean loadLevelPath(String theLevelPath, int floorNbr)
         loadCharactersState();
     }
     return temp;
+}
+
+void loadItems()
+{
+    String path = "data/items.txt";
+
+    for (int i = 0; i < allItems.length; i++)
+        allItems[i] = new Item();
+    try{
+        BufferedReader bufferedReader = createReader(path);
+        String line;
+        int a = 0;
+        while((line = bufferedReader.readLine()) != null && !compareStrings(line, "")) {
+            allItems[a].name = line;
+            allItems[a].type = bufferedReader.readLine();
+            for (int i = 0; i < 6; i++)
+                allItems[a].damages[i] = int(bufferedReader.readLine());
+            for (int i = 0; i < 6; i++)
+                allItems[a].resistances[i] = int(bufferedReader.readLine());
+            allItems[a].durability = int(bufferedReader.readLine());
+            allItems[a].ability = int(bufferedReader.readLine());
+            a++;
+        }
+        bufferedReader.close();
+    } catch(FileNotFoundException e) {
+        e.printStackTrace();
+        errorMsg("The file "+'"'+Paths.get(path).toAbsolutePath()+'"'+" is missing.",SFX[2],e);
+    } catch(Exception e) {
+        e.printStackTrace();
+        errorMsg("Error 19",SFX[2],e);
+    }
 }
 
 int getNbOfFiles(String path)

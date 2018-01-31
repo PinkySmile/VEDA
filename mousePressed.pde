@@ -127,7 +127,7 @@ void mousePressed()
                               tyuio = "GodEater activated. Checking for corrupted files. Current default mode : Delete Files";
                           else
                               tyuio = "GodEater activated. Checking for corrupted files. Current default mode : [ERROR]:  java.lang.NullPointerException";
-                          new popUp(tyuio,"GodEater",JOptionPane.INFORMATION_MESSAGE,SFX[2]);
+                          new Popup(tyuio,"GodEater",JOptionPane.INFORMATION_MESSAGE,SFX[2]);
                       } else
                           errorMsg("Error in main chunk : No such process \"godEater\". Try restarting it and try again.", SFX[2],null);
                   }
@@ -261,6 +261,8 @@ void mousePressed()
                     delMenus();
                     classicButtons();
                     createLanguageButtons();
+                    loadAchievements();
+                    loadItemNames(language);
                 }
             }
         }

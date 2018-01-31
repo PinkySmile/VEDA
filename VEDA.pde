@@ -113,8 +113,13 @@ String[] languagesFound = new String[50];
 String[] cutscenesCommands = new String[2000];
 String[] keyUsage = new String[20];
 
-String[] itemType = {
-    "",
+String[] damagesName = {
+    "Fire",
+    "Sharp",
+    "Pierce",
+    "Impact",
+    "Poison",
+    "Electricity"
 };
 
 String[] trollFiles = 
@@ -483,6 +488,8 @@ int theDialogID[] = new int[maxNbOfCharacters];
 int chara[] = new int[3];
 int objects[] = new int[maxNbOfObjectsPerLevel];
 int cases[][] = new int[4][2];
+int[] wornItems = {-1, 0, 1, 2};
+int[] baseStatsResistance = new int[6];
 int[] damageBuffer = new int[8];
 int[] keys = {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1};
 int[] pressedKeysCode = new int[40];
@@ -642,7 +649,7 @@ void setup()
     catch(Exception e) {
         e.printStackTrace();
     }
-
+    //wornItems[0] = 0;
     /*//Verification des fichiers
     String message = "";
     int a = 0;
@@ -684,13 +691,10 @@ void setup()
 
     //Chargement du fichier de version
     try {
-        path = "text_files/version.txt";
-        file = new File(path);
-        FileReader fileReader = new FileReader(file);
-        BufferedReader bufferedReader = new BufferedReader(fileReader);
+        path = "version.txt";
+        BufferedReader bufferedReader = createReader(path);
         version = bufferedReader.readLine();
         bufferedReader.close();
-        fileReader.close();
     }
     catch(FileNotFoundException e) {
         e.printStackTrace();
@@ -740,43 +744,43 @@ void setup()
             errorMsg("", SFX[2], e);
         }
 
-    file = new File("data/fonts/Wingdings-Regular-48.vlw");
+    file = new File(sketchPath("data/fonts/Wingdings-Regular-48.vlw"));
     if (file.exists())
         Wingdings = loadFont("fonts/Wingdings-Regular-48.vlw");
   
-    file = new File("data/fonts/Parchment-Regular-48.vlw");
+    file = new File(sketchPath("data/fonts/Parchment-Regular-48.vlw"));
     if (file.exists())
         Parchment = loadFont("fonts/Parchment-Regular-48.vlw");
   
-    file = new File("data/fonts/MesquiteStd-48.vlw");
+    file = new File(sketchPath("data/fonts/MesquiteStd-48.vlw"));
     if (file.exists())
         MesquiteStd = loadFont("fonts/MesquiteStd-48.vlw");
   
-    file = new File("data/fonts/Jazz-48.vlw");
+    file = new File(sketchPath("data/fonts/Jazz-48.vlw"));
     if (file.exists())
         Jazz = loadFont("fonts/Jazz-48.vlw");
   
-    file = new File("data/fonts/FinaleMallets-48.vlw");
+    file = new File(sketchPath("data/fonts/FinaleMallets-48.vlw"));
     if (file.exists())
         FinaleMallets = loadFont("fonts/FinaleMallets-48.vlw");
   
-    file = new File("data/fonts/FinaleAlphaNotes-48.vlw");
+    file = new File(sketchPath("data/fonts/FinaleAlphaNotes-48.vlw"));
     if (file.exists())
         FinaleAlphaNotes = loadFont("fonts/FinaleAlphaNotes-48.vlw");
   
-    file = new File("data/fonts/Cracked-48.vlw");
+    file = new File(sketchPath("data/fonts/Cracked-48.vlw"));
     if (file.exists())
         Cracked = loadFont("fonts/Cracked-48.vlw");
   
-    file = new File("data/fonts/BodoniOrnamentsITCTT-48.vlw");
+    file = new File(sketchPath("data/fonts/BodoniOrnamentsITCTT-48.vlw"));
     if (file.exists())
         BodoniOrnamentsITCTT = loadFont("fonts/BodoniOrnamentsITCTT-48.vlw");
   
-    file = new File("data/fonts/ArialMT-48.vlw");
+    file = new File(sketchPath("data/fonts/ArialMT-48.vlw"));
     if (file.exists())
         Arial = loadFont("fonts/ArialMT-48.vlw");
 
-    file = new File("data/fonts/FreeMono-48.vlw");
+    file = new File(sketchPath("data/fonts/FreeMono-48.vlw"));
     if (file.exists()) {
         FreeMono = loadFont("fonts/FreeMono-48.vlw");
         textFont(FreeMono);
@@ -829,13 +833,21 @@ void setup()
         SFX[15] = minim.loadFile("sound/SFX/mud4.wav");
     
         stepSound = SFX[0];
-    
         musicLoaded = true;
-    }
-    catch(Exception e) {
+        for (int i = 0; i <= 15; i++)
+            if (SFX[i] == null) {
+                musicLoaded = false;
+                errorMsg("Failed to load sounds.", SFX[1], null);
+            }
+        for (int i = 0; i <= 12; i++)
+            if (Musics[i] == null) {
+                musicLoaded = false;
+                errorMsg("Failed to load sounds.", SFX[1], null);
+            }
+    } catch(Exception e) {
         e.printStackTrace();
         musicLoaded = false;
-        new popUp("Error while loading sounds.", "Sound Error", JOptionPane.ERROR_MESSAGE, SFX[1]);
+        new Popup("Error while loading sounds.", "Sound Error", JOptionPane.ERROR_MESSAGE, SFX[1]);
     }
 
     loadSettings();
@@ -844,11 +856,11 @@ void setup()
     if (file.exists()) {
         file.delete();
         if (compareStrings(language, "fr"))
-            new popUp("Il semblerait que vous n'ayez pas fermer le jeu correctement ou qu'il est planté.\nSi une erreur est apparue, signalez la dans la page de rapport de bug !", "Fermeture inatendue", JOptionPane.QUESTION_MESSAGE, SFX[1]);
+            new Popup("Il semblerait que vous n'ayez pas fermer le jeu correctement ou qu'il est planté.\nSi une erreur est apparue, signalez la dans la page de rapport de bug !", "Fermeture inatendue", JOptionPane.QUESTION_MESSAGE, SFX[1]);
         else if (compareStrings(language, "de"))
-            new popUp("Es scheint, dass du das Spiel nicht richtig beendet hast oder es abgestürzt ist.\nWenn ein Fehler aufgetreten ist, melde es mit der Fehlerberichtsseite !", "Unerwarteter Schluss", JOptionPane.QUESTION_MESSAGE, SFX[1]);
+            new Popup("Es scheint, dass du das Spiel nicht richtig beendet hast oder es abgestürzt ist.\nWenn ein Fehler aufgetreten ist, melde es mit der Fehlerberichtsseite !", "Unerwarteter Schluss", JOptionPane.QUESTION_MESSAGE, SFX[1]);
         else
-            new popUp("It seems that you didn't close the game correctly or it crashed.\nIf an error appeared, report it using the bug report page !", "Unexpected closing", JOptionPane.QUESTION_MESSAGE, SFX[1]);
+            new Popup("It seems that you didn't close the game correctly or it crashed.\nIf an error appeared, report it using the bug report page !", "Unexpected closing", JOptionPane.QUESTION_MESSAGE, SFX[1]);
     }
 
     try {
@@ -895,11 +907,11 @@ void setup()
     //        e.printStackTrace();
     //        musicLoaded = false;
     //        if (compareStrings(language, "fr"))
-    //            new popUp("Les sons ont été désactivés suite à un problème de chargement des sons.\nVerifiez les logs pour plus d'informations.", "Sound Error", JOptionPane.ERROR_MESSAGE, SFX[1]);
+    //            new Popup("Les sons ont été désactivés suite à un problème de chargement des sons.\nVerifiez les logs pour plus d'informations.", "Sound Error", JOptionPane.ERROR_MESSAGE, SFX[1]);
     //        else if (compareStrings(language, "fr"))
-    //            new popUp("Sounds sind wegen eines Ladeproblems deaktiviert.\nÜberprüfen Sie das log auf weitere Informationen.", "Sound Error", JOptionPane.ERROR_MESSAGE, SFX[1]);
+    //            new Popup("Sounds sind wegen eines Ladeproblems deaktiviert.\nÜberprüfen Sie das log auf weitere Informationen.", "Sound Error", JOptionPane.ERROR_MESSAGE, SFX[1]);
     //        else
-    //            new popUp("Sounds are disabled because of a loading problem.\nCheck the log for more information.", "Sound Error", JOptionPane.ERROR_MESSAGE, SFX[1]);
+    //            new Popup("Sounds are disabled because of a loading problem.\nCheck the log for more information.", "Sound Error", JOptionPane.ERROR_MESSAGE, SFX[1]);
     //        String[] _temp = loadStrings("errors.log");
     //        output = createWriter("errors.log");
     //        fatalError = false;
@@ -1081,6 +1093,7 @@ void setup()
     loadCutscenes("data/cutscenes");
     dialogDeathBuffer = -2;
     commandLines = new String[height / 20];
+    loadItems();
     loadItemNames(language);
 }
 
@@ -1636,7 +1649,7 @@ int findInventoryEmptySpace()
 {
     int jeucepa = 0;
     try {
-        while(items[jeucepa] != 0 && jeucepa != 12)
+        while(jeucepa < items.length && items[jeucepa] != 0)
             jeucepa++;
     }
     catch(Exception e) {
@@ -1651,7 +1664,7 @@ void tidyInventory()
     int freeSpacesBefore = 0;
     boolean replaced;
     for(int i = 0 ; i < items.length ; i++) {
-        println("Pos : "+i+" containing item "+items[i]);
+        println("Pos : " + i + " containing item "+items[i]);
         if(freeSpacesBefore > 0) {
             println("Switching item at pos "+i+" with item at pos "+(i-freeSpacesBefore)+" ("+items[i]+"-->"+items[i-freeSpacesBefore]+")");
             items[i-freeSpacesBefore] = items[i];

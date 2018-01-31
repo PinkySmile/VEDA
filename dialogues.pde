@@ -163,8 +163,10 @@ void loadItemNames(String language)
 {
     String[] file_content = loadStrings("data/languages/" + language + "/items.txt");
     
-    for (int i = 0; file_content != null && i < file_content.length && i < itemNames.length; i++)
-        itemNames[i] = file_content[i];
+    if (file_content == null)
+        file_content = loadStrings("data/languages/en/items.txt");
+    for (int i = 0; file_content != null && i < file_content.length && i < allItems.length; i++)
+        allItems[i].name = file_content[i];
 }
 
 void dialogBox(String dialogue)
@@ -181,7 +183,8 @@ void dialogBox(String dialogue)
         e.printStackTrace();
     }
     inDialog = true;
-    if (fightingCharacter > 0 && fightingCharacter < characterName.length)
+    println(fightingCharacter);
+    if (fightingCharacter >= 0 && fightingCharacter < characterName.length)
         name = characterName[fightingCharacter];
     dialogText = name + " : " + dialogue;
     theDialogEnd = dialogText.length();

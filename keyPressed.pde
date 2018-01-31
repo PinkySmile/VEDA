@@ -356,7 +356,7 @@ void testKeys()
                             }
                         }
                         if(objects[i] == 12) {
-                            if(playerY+32 >= posObjectY[i]*16-16 && playerY+16 <= posObjectY[i]*16 && playerX+8 <= posObjectX[i]*16 && posObjectX[i]*16-16 < playerX+8) {
+                            if(playerY + 32 >= posObjectY[i] * 16 - 16 && playerY + 16 <= posObjectY[i]*16 && playerX+8 <= posObjectX[i]*16 && posObjectX[i]*16-16 < playerX+8) {
                                 if(music != "eugrt" && !musicDisabled) {
                                     music = "eugrt";
                                     addingChar = true;
@@ -393,440 +393,448 @@ void testKeys()
 
 void keyPressed()
 {
-    if (deathBuffer >= 150 && menu == 0)
-        if (!musicDisabled)
-            Musics[0].pause();
-    if (keyCode == CONTROL)
-        controlPressed = true;
-    if (menu == 12 && changingKey != -1) {
-        if (keyCode == 0)
-            keyCode = -1;
-        keys[changingKey] = keyCode;
-        changingKey = -1;
-    }
-    if (keyCode == keys[19])
-        shiftPressed = true;
-    boolean flag = false;
-    for (int k = 0 ; k < pressedKeysCode.length ; k++)
-        if (keyCode == pressedKeysCode[k])
-            flag = true;
-    if (!flag)
-        pressedKeysCode[findSpace()] = keyCode;
-    if(key == '²' && menu == 7) {
-        camMoving = true;
-        camBuffer[0] = -camPosX;
-        camBuffer[1] = -camPosY;
-    } else if(key == '&' && menu == 7) {
-        savedMessageShown = true;
-        savingBuffer = 0;
-        saveLevel();
-        new saveEverything(true, false, false);
-        Music.pause();
-    } else if(key == 'é' && menu == 7)
-        menu = 8;
-    else if(key == '"' && menu == 7)
-        replaceMode = !replaceMode;
-    else if(key == '\'' && menu == 7)
-        buttonsDisabled = !buttonsDisabled;
-    else if(key == '(' && menu == 7)
-        upperLayerShown = !upperLayerShown;
-    else if(key == '-' && menu == 7)
-        zoomLevel = 0;
-    else if(key == 'è' && menu == 7)
-        gridShown = !gridShown;
-    //Touches de debug
-    if (debugMode && menu != 1) {
-        if (key == ';' && menu == 7) {
-            selectedObject = lireUnEntier("Id of an object : ", "ID");
-        } else if (key == ',') {
-            giveAchievement(0);
-        } else if (key == '/') {
-            playerX = lireUnEntier("Position X", "Changer la position du joueur");
-            playerY = lireUnEntier("Position Y", "Changer la position du joueur");
-        } else if (key == ':') {
-            int xBuffer = camPosX;
-            int yBuffer = camPosY;
-            camPosX = lireUnEntier("CamX", "CamX");
-            camPosY = lireUnEntier("CamY", "CamY");
-            playerX = playerX - camPosX + xBuffer;
-            playerY = playerY - camPosY + yBuffer;
-        } else if (key == 'w') {
-            takeDamages(1, 0);
-            hitBuffer = 5;
-        } else if (key == 't') {
-            itemsQuantity = new int[12];
-            items = new int[12];
-        } else if (key == 'u') {
-            int toDel = lireUnEntier("Which object to delete ?", "Del object");
-            items[toDel] = 0;
-            itemsQuantity[toDel] = 0;
-            tidyInventory();
-        } else if (key == '¤') {
-            language = lireUnTexte("Language", "Language");
-            delMenus();
-            classicButtons();
-        } else if (key == '@') {
-            giveAchievement(lireUnEntier("Enter an achievement ID", "ID"));
-        } else if (key == '€') {
-            if (character == "male")
-                character = "female";
-            else
-                character = "male";
-        } else if (key == '!') {
-            menu = lireUnEntier("Menu", "Menu");
-            if(menu == -10) {
-                for (int i = 0; i < Musics.length; i++) {
-                    try {
-                        Musics[i].setLoopPoints(mdrdbar.position(),mdrdbar.position()+50);
-                        Musics[i].loop();
-                    } catch(Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-                for (int i = 0; i < SFX.length; i++) {
-                    try {
-                        SFX[i].setLoopPoints(mdrdbar.position(),mdrdbar.position()+50);
-                        SFX[i].loop();
-                    } catch(Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        } else if (key == 'y') {
-            int mdrsd = findInventoryEmptySpace();
-            items[mdrsd] = lireUnEntier("Entrer un ID d'objet", "objet");
-            itemsQuantity[mdrsd] = lireUnEntier("Combien ?", "quantité");
-        } else if (key == 'b') {
-            disableMenus();
-            enableMenus(16, 16);
-            menu = 7;
-            levelPath = lireUnTexte("Entrez un nom de niveau", "Charger un niveau");
-            if (levelPath != null) {
-                file = new File(levelPath);
-                if (!file.exists()) {
-                    try {
-                        FileWriter fileWriter = new FileWriter(file);
-                        BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
-                        bufferedWriter.close();
-                    } 
-                    catch(IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-                loadLevelPath(levelPath, floor);
-            }
-        } else if (key == '*') {
-            nameColor++;
-        } else if (key == '?') {
-            debugMode = false;
-        } else if (key == '$') {
-            String temp = lireUnTexte("Enter an ID", "Enter an ID");
-            dialogBox("Test : uyzgfedipyqgdqoyzfgqizfguzquifgyqpizfguqizfgqizfgbqjzbdlqv zdlqzvdlqyvzdlqvzdlqvzdqzdlqvzdjqgvzdugqvzdqjzhdboquzvydbqidbgzouydquozduofv§answer'battle''clear''kill''other'§(0)DAH§battle" + temp + "§(1)1§clear§2(2);[§kill" + temp + "§(3)  §answer'setLife''cutscene'§(0)Life : §setLife" + temp + "§(1)Coming soon§cutscene" + temp + "§");
-        } else if (key == 'W') {
-            energy = energy - 1;
-            energyReloadBuffer = 0;
-        } else if (key == 'X') {
-            energy = energy + 1;
-        } else if (key == 'C') {
-            energyMax = energyMax - 1;
-        } else if (key == 'V') {
-            energyMax = energyMax + 1;
-        } else if (key == 'µ') {
-            nameColor--;
-        } else if (key == 'x') {
-            takeDamages(-1, 7);
-        } else if (key == 'r') {
-            file = new File("text_files/left");
-            if (file.exists())
-                file.delete();
-            setup();
-        } else if (key == 'p') {
-            glitchMode = !glitchMode;
-        } else if (key == 'k') {
-            if (!compareStrings(language, "yolo")) {
-                mdrdbar = Musics[8];
-                try {
-                    SFX[0].pause();
-                    Musics[0].pause();
-                    Musics[2].pause();
-                    Musics[1].pause();
-                    Musics[3].pause();
-                    SFX[1].pause();
-                    SFX[2].pause();
-                } 
-                catch(Exception e) {
-                    e.printStackTrace();
-                }
-                try {
-                    mdrdbar.play();
-                } catch(Exception e) {
-                    e.printStackTrace();
-                }
-                String test[] = {"Something wrong !"};
-                cd = new ImageIcon("data/misc/{YES}.png");
-                JOptionPane.showOptionDialog(null, "", "What have you done !", JOptionPane.OK_OPTION, 3, cd, test, test[0]);
-                language = "yolo";
-                SFXVolume = 500;
-                musicVolume = 500;
-                for (int i = 0 ; i < SFX.length ; i++)
-                    if (SFX[i] != null)
-                        SFX[i].setGain(-50 + 50 * SFXVolume / 100);
-                for (int i = 0 ; i < Musics.length ; i++)
-                    if (Musics[i] != null)
-                        Musics[i].setGain(-50 + 50 * musicVolume / 100 + baseGain[i]);
-                nameColor = 0;
-                musicDisabled = true;
-                delMenus();
-                fightingCharacter = -1;
-                classicButtons();
-                dialogBox("What have you done !");
-                menuBackground = loadImage("misc/{4FTSZ-ZE67D8}.wav", "png");
-                inDialog = false;
-                cd = null;
-            } else {
-                try {
-                    textFont(FreeMono);
-                } catch(Exception e) {
-                    e.printStackTrace();
-                }
-                language = "fr";
-                try {
-                    mdrdbar.pause();
-                } catch(Exception e) {
-                    e.printStackTrace();
-                }
-                delMenus();
-                classicButtons();
-                menuBackground = loadImage("misc/background.png");
-                inDialog = false;
-                dialogText = null;
-                if (musicLoaded)
-                    musicDisabled = false;
-            }
-        } else if (key+'e' == 200)
-            lifeMax = lifeMax - 1;
-        else if (key+'e' == 219)
-            lifeMax = lifeMax + 1;
-        else if (key == 'm') {
-            String levelPath = lireUnTexte("Entrez un nom de niveau", "Charger un niveau");
-            if (levelPath != null)
-                loadLevelPath(levelPath, floor);
+    try {
+        if (deathBuffer >= 150 && menu == 0)
+            if (!musicDisabled)
+                Musics[0].pause();
+        if (keyCode == CONTROL)
+            controlPressed = true;
+        if (menu == 12 && changingKey != -1) {
+            if (keyCode == 0)
+                keyCode = -1;
+            keys[changingKey] = keyCode;
+            changingKey = -1;
         }
-    }
-    if(!camMoving) {
-        try {
-            if(menu == 8 || menu == 9) {
-                if(keyCode == 37 && menuPosition > 0)
-                    menuPosition--;
-                else if(keyCode == 39 && menuPosition < (textures.length) / (floor(mouseX / 24) + floor(mouseY / 24) * floor((width - 8) / 24) + floor((width - 8) / 24) * floor((height - 50) / 24)))
-                    menuPosition++;
-            }
-            if(inDialog && !dead && (menu == 0 || menu == 1)) {
-                println(keyCode+":"+selectedAnswer+":"+answers[1]+":"+answers[0]);
-                if(keyCode == 39 && selectedAnswer < 3 && answers[selectedAnswer+1] != null)
-                    selectedAnswer++;
-                else if(keyCode == 37 && selectedAnswer > 0 && answers[selectedAnswer-1] != null)
-                    selectedAnswer--;
-            }
-            if(keys[6] == keyCode && !dead && (menu == 0 || menu == 1))
-                if(!inDialog)
-                    for(int i = 0 ; i < characters.length ; i++) {
-                        if(characters[i]) {
-                            if (playerY+34 >= characterY[i]+16 && playerY+16 <= characterY[i]+16 && playerX+3 <= characterX[i]+16 && characterX[i]+16 <= playerX+28) {
-                                down = false;
-                                fightingCharacter = i;
-                                if(direction == "down") {
-                                    characterDir[i] = 0;
-                                    dialogBox(dialogs[i][dialogID][dialogsVariante[i]]);
-                                    if(dialogsVariante[i] < 14)
-                                        dialogsVariante[i]++;
-                                }
-                            }
-                            if (playerY+16 >= characterY[i]+16 && playerY <= characterY[i]+16 && playerX+3 <= characterX[i]+16 && characterX[i]+16 <= playerX+28) {
-                                up = false;
-                                fightingCharacter = i;
-                                if(direction == "up") {
-                                    characterDir[i] = 1;
-                                    dialogBox(dialogs[i][dialogID][dialogsVariante[i]]);
-                                    if(dialogsVariante[i] < 14)
-                                        dialogsVariante[i]++;
-                                }
-                            }
-                            if (playerY+33 >= characterY[i]+16 && playerY+1 <= characterY[i]+16 && playerX+2 <= characterX[i]+16 && characterX[i]+16 <= playerX+28) {
-                                left = false;
-                                fightingCharacter = i;
-                                if(direction == "left") {
-                                    characterDir[i] = 3;
-                                    dialogBox(dialogs[i][dialogID][dialogsVariante[i]]);
-                                    if(dialogsVariante[i] < 14)
-                                        dialogsVariante[i]++;
-                                }
-                            }
-                            if (playerY+33 >= characterY[i]+16 && playerY+1 <= characterY[i]+16 && playerX <= characterX[i]+16-18 && playerX >= characterX[i]+16-30){
-                                right = false;
-                                fightingCharacter = i;
-                                if(direction == "right") {
-                                    characterDir[i] = 2;
-                                    dialogBox(dialogs[i][dialogID][dialogsVariante[i]]);
-                                    if(dialogsVariante[i] < 14)
-                                        dialogsVariante[i]++;
-                                }
-                            }
+        if (keyCode == keys[19])
+            shiftPressed = true;
+        boolean flag = false;
+        for (int k = 0 ; k < pressedKeysCode.length ; k++)
+            if (keyCode == pressedKeysCode[k])
+                flag = true;
+        if (!flag)
+            pressedKeysCode[findSpace()] = keyCode;
+        if(key == '²' && menu == 7) {
+            camMoving = true;
+            camBuffer[0] = -camPosX;
+            camBuffer[1] = -camPosY;
+        } else if(key == '&' && menu == 7) {
+            savedMessageShown = true;
+            savingBuffer = 0;
+            saveLevel();
+            new saveEverything(true, false, false);
+            Music.pause();
+        } else if(key == 'é' && menu == 7)
+            menu = 8;
+        else if(key == '"' && menu == 7)
+            replaceMode = !replaceMode;
+        else if(key == '\'' && menu == 7)
+            buttonsDisabled = !buttonsDisabled;
+        else if(key == '(' && menu == 7)
+            upperLayerShown = !upperLayerShown;
+        else if(key == '-' && menu == 7)
+            zoomLevel = 0;
+        else if(key == 'è' && menu == 7)
+            gridShown = !gridShown;
+        //Touches de debug
+        if (debugMode && menu != 1) {
+            if (key == ';' && menu == 7) {
+                selectedObject = lireUnEntier("Id of an object : ", "ID");
+            } else if (key == ',') {
+                giveAchievement(0);
+            } else if (key == '/') {
+                playerX = lireUnEntier("Position X", "Changer la position du joueur");
+                playerY = lireUnEntier("Position Y", "Changer la position du joueur");
+            } else if (key == ':') {
+                int xBuffer = camPosX;
+                int yBuffer = camPosY;
+                camPosX = lireUnEntier("CamX", "CamX");
+                camPosY = lireUnEntier("CamY", "CamY");
+                playerX = playerX - camPosX + xBuffer;
+                playerY = playerY - camPosY + yBuffer;
+            } else if (key == 'w') {
+                takeDamages(1, 0);
+                hitBuffer = 5;
+            } else if (key == 't') {
+                itemsQuantity = new int[12];
+                items = new int[12];
+            } else if (key == 'u') {
+                int toDel = lireUnEntier("Which object to delete ?", "Del object");
+                items[toDel] = 0;
+                itemsQuantity[toDel] = 0;
+                tidyInventory();
+            } else if (key == '¤') {
+                language = lireUnTexte("Language", "Language");
+                delMenus();
+                classicButtons();
+            } else if (key == '@') {
+                giveAchievement(lireUnEntier("Enter an achievement ID", "ID"));
+            } else if (key == '€') {
+                if (character == "male")
+                    character = "female";
+                else
+                    character = "male";
+            } else if (key == '!') {
+                menu = lireUnEntier("Menu", "Menu");
+                if(menu == -10) {
+                    for (int i = 0; i < Musics.length; i++) {
+                        try {
+                            Musics[i].setLoopPoints(mdrdbar.position(),mdrdbar.position()+50);
+                            Musics[i].loop();
+                        } catch(Exception e) {
+                            e.printStackTrace();
                         }
                     }
+                    for (int i = 0; i < SFX.length; i++) {
+                        try {
+                            SFX[i].setLoopPoints(mdrdbar.position(),mdrdbar.position()+50);
+                            SFX[i].loop();
+                        } catch(Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            } else if (key == 'y') {
+                int mdrsd = findInventoryEmptySpace();
+                if (mdrsd >= items.length)
+                    new Popup("L'inventaire est plein !", "Error", JOptionPane.QUESTION_MESSAGE, null);
                 else {
-                    if(dialogEnd) {
-                        inDialog = false;
-                        dialogText = null;
-                        dialogEnd = false;
-                        if(dialogDeathBuffer > -1) {
-                            characterX[dialogDeathBuffer] = 10100;
-                            characterY[dialogDeathBuffer] = 10100;
-                            dialogDeathBuffer = -2;
-                        } else if(dialogDeathBuffer == -1) {
-                            life = 0;
-                            dialogDeathBuffer = -2;
+                    items[mdrsd] = lireUnEntier("Entrer un ID d'objet", "objet");
+                    itemsQuantity[mdrsd] = lireUnEntier("Combien ?", "quantité");
+                }
+            } else if (key == 'b') {
+                disableMenus();
+                enableMenus(16, 16);
+                menu = 7;
+                levelPath = lireUnTexte("Entrez un nom de niveau", "Charger un niveau");
+                if (levelPath != null) {
+                    file = new File(levelPath);
+                    if (!file.exists()) {
+                        try {
+                            FileWriter fileWriter = new FileWriter(file);
+                            BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
+                            bufferedWriter.close();
+                        } 
+                        catch(IOException e) {
+                            e.printStackTrace();
                         }
-                        if(goInBattle) {
-                            goInBattle = false;
-                            menu = 11;
-                        }
-                    } else if(stickDialog) {
-                        dialogStart = dialogLetters+8;
-                        dialogLetters = dialogStart;
-                        stickDialog = false;
-                    } else if(answers[selectedAnswer] != null) {
-                        dialogStart = cases[selectedAnswer][0];
-                        dialogLetters = dialogStart;
-                        theDialogEnd = cases[selectedAnswer][1];
-                        println(dialogStart+" --> "+theDialogEnd+"    "+subString(dialogText,dialogStart,theDialogEnd));
-                        answers = new String[4];
-                        cases = new int[4][2];
-                        selectedAnswer = 0;
-                    } else {
-                        while(dialogLetters < dialogText.length()-1 && !dialogEnd && !stickDialog) {
-                            dialogLetters++;
-                            if(dialogText.charAt(dialogLetters) == '§') {
-                                int _temp = dialogLetters + 1;
-                                String command = "";
-                                while(dialogText.charAt(_temp) != '§') {
-                                    command = command + dialogText.charAt(_temp);
-                                    _temp++;
+                    }
+                    loadLevelPath(levelPath, floor);
+                }
+            } else if (key == '*') {
+                nameColor++;
+            } else if (key == '?') {
+                debugMode = false;
+            } else if (key == '$') {
+                String temp = lireUnTexte("Enter an ID", "Enter an ID");
+                dialogBox("uyzgfedipyqgdqoyzfgqizfguzquifgyqpizfguqizfgqizfgbqjzbdlqv zdlqzvdlqyvzdlqvzdlqvzdqzdlqvzdjqgvzdugqvzdqjzhdboquzvydbqidbgzouydquozduofv§answer'battle''clear''kill''other'§(0)DAH§battle" + temp + "§(1)1§clear§2(2);[§kill" + temp + "§(3)  §answer'setLife''cutscene'§(0)Life : §setLife" + temp + "§(1)Coming soon§cutscene" + temp + "§");
+            } else if (key == 'W') {
+                energy = energy - 1;
+                energyReloadBuffer = 0;
+            } else if (key == 'X') {
+                energy = energy + 1;
+            } else if (key == 'C') {
+                energyMax = energyMax - 1;
+            } else if (key == 'V') {
+                energyMax = energyMax + 1;
+            } else if (key == 'µ') {
+                nameColor--;
+            } else if (key == 'x') {
+                takeDamages(-1, 7);
+            } else if (key == 'r') {
+                file = new File("text_files/left");
+                if (file.exists())
+                    file.delete();
+                setup();
+            } else if (key == 'p') {
+                glitchMode = !glitchMode;
+            } else if (key == 'k') {
+                if (!compareStrings(language, "yolo")) {
+                    mdrdbar = Musics[8];
+                    try {
+                        SFX[0].pause();
+                        Musics[0].pause();
+                        Musics[2].pause();
+                        Musics[1].pause();
+                        Musics[3].pause();
+                        SFX[1].pause();
+                        SFX[2].pause();
+                    } 
+                    catch(Exception e) {
+                        e.printStackTrace();
+                    }
+                    try {
+                        mdrdbar.play();
+                    } catch(Exception e) {
+                        e.printStackTrace();
+                    }
+                    String test[] = {"Something wrong !"};
+                    cd = new ImageIcon("data/misc/{YES}.png");
+                    JOptionPane.showOptionDialog(null, "", "What have you done !", JOptionPane.OK_OPTION, 3, cd, test, test[0]);
+                    language = "yolo";
+                    SFXVolume = 500;
+                    musicVolume = 500;
+                    for (int i = 0 ; i < SFX.length ; i++)
+                        if (SFX[i] != null)
+                            SFX[i].setGain(-50 + 50 * SFXVolume / 100);
+                    for (int i = 0 ; i < Musics.length ; i++)
+                        if (Musics[i] != null)
+                            Musics[i].setGain(-50 + 50 * musicVolume / 100 + baseGain[i]);
+                    nameColor = 0;
+                    musicDisabled = true;
+                    delMenus();
+                    fightingCharacter = -1;
+                    classicButtons();
+                    dialogBox("What have you done !");
+                    menuBackground = loadImage("misc/{4FTSZ-ZE67D8}.wav", "png");
+                    inDialog = false;
+                    cd = null;
+                } else {
+                    try {
+                        textFont(FreeMono);
+                    } catch(Exception e) {
+                        e.printStackTrace();
+                    }
+                    language = "fr";
+                    try {
+                        mdrdbar.pause();
+                    } catch(Exception e) {
+                        e.printStackTrace();
+                    }
+                    delMenus();
+                    classicButtons();
+                    menuBackground = loadImage("misc/background.png");
+                    inDialog = false;
+                    dialogText = null;
+                    if (musicLoaded)
+                        musicDisabled = false;
+                }
+            } else if (key+'e' == 200)
+                lifeMax = lifeMax - 1;
+            else if (key+'e' == 219)
+                lifeMax = lifeMax + 1;
+            else if (key == 'm') {
+                String levelPath = lireUnTexte("Entrez un nom de niveau", "Charger un niveau");
+                if (levelPath != null)
+                    loadLevelPath(levelPath, floor);
+            }
+        }
+        if(!camMoving) {
+            try {
+                if(menu == 8 || menu == 9) {
+                    if(keyCode == 37 && menuPosition > 0)
+                        menuPosition--;
+                    else if(keyCode == 39 && menuPosition < (textures.length) / (floor(mouseX / 24) + floor(mouseY / 24) * floor((width - 8) / 24) + floor((width - 8) / 24) * floor((height - 50) / 24)))
+                        menuPosition++;
+                }
+                if(inDialog && !dead && (menu == 0 || menu == 1)) {
+                    println(keyCode+":"+selectedAnswer+":"+answers[1]+":"+answers[0]);
+                    if(keyCode == 39 && selectedAnswer < 3 && answers[selectedAnswer+1] != null)
+                        selectedAnswer++;
+                    else if(keyCode == 37 && selectedAnswer > 0 && answers[selectedAnswer-1] != null)
+                        selectedAnswer--;
+                }
+                if(keys[6] == keyCode && !dead && (menu == 0 || menu == 1))
+                    if(!inDialog)
+                        for(int i = 0 ; i < characters.length ; i++) {
+                            if(characters[i]) {
+                                if (playerY+34 >= characterY[i]+16 && playerY+16 <= characterY[i]+16 && playerX+3 <= characterX[i]+16 && characterX[i]+16 <= playerX+28) {
+                                    down = false;
+                                    fightingCharacter = i;
+                                    if(direction == "down") {
+                                        characterDir[i] = 0;
+                                        dialogBox(dialogs[i][dialogID][dialogsVariante[i]]);
+                                        if(dialogsVariante[i] < 14)
+                                            dialogsVariante[i]++;
+                                    }
                                 }
-                                dialogLetters--;
-                                dialogEnd = true;
-                                execDialogCommand(command, _temp);
-                                if (command.startsWith("answer"))
-                                    break;
+                                if (playerY+16 >= characterY[i]+16 && playerY <= characterY[i]+16 && playerX+3 <= characterX[i]+16 && characterX[i]+16 <= playerX+28) {
+                                    up = false;
+                                    fightingCharacter = i;
+                                    if(direction == "up") {
+                                        characterDir[i] = 1;
+                                        dialogBox(dialogs[i][dialogID][dialogsVariante[i]]);
+                                        if(dialogsVariante[i] < 14)
+                                            dialogsVariante[i]++;
+                                    }
+                                }
+                                if (playerY+33 >= characterY[i]+16 && playerY+1 <= characterY[i]+16 && playerX+2 <= characterX[i]+16 && characterX[i]+16 <= playerX+28) {
+                                    left = false;
+                                    fightingCharacter = i;
+                                    if(direction == "left") {
+                                        characterDir[i] = 3;
+                                        dialogBox(dialogs[i][dialogID][dialogsVariante[i]]);
+                                        if(dialogsVariante[i] < 14)
+                                            dialogsVariante[i]++;
+                                    }
+                                }
+                                if (playerY+33 >= characterY[i]+16 && playerY+1 <= characterY[i]+16 && playerX <= characterX[i]+16-18 && playerX >= characterX[i]+16-30){
+                                    right = false;
+                                    fightingCharacter = i;
+                                    if(direction == "right") {
+                                        characterDir[i] = 2;
+                                        dialogBox(dialogs[i][dialogID][dialogsVariante[i]]);
+                                        if(dialogsVariante[i] < 14)
+                                            dialogsVariante[i]++;
+                                    }
+                                }
+                            }
+                        }
+                    else {
+                        if(dialogEnd) {
+                            inDialog = false;
+                            dialogText = null;
+                            dialogEnd = false;
+                            if(dialogDeathBuffer > -1) {
+                                characterX[dialogDeathBuffer] = 10100;
+                                characterY[dialogDeathBuffer] = 10100;
+                                dialogDeathBuffer = -2;
+                            } else if(dialogDeathBuffer == -1) {
+                                life = 0;
+                                dialogDeathBuffer = -2;
+                            }
+                            if(goInBattle) {
+                                goInBattle = false;
+                                menu = 11;
+                            }
+                        } else if(stickDialog) {
+                            dialogStart = dialogLetters+8;
+                            dialogLetters = dialogStart;
+                            stickDialog = false;
+                        } else if(answers[selectedAnswer] != null) {
+                            dialogStart = cases[selectedAnswer][0];
+                            dialogLetters = dialogStart;
+                            theDialogEnd = cases[selectedAnswer][1];
+                            println(dialogStart+" --> "+theDialogEnd+"    "+subString(dialogText,dialogStart,theDialogEnd));
+                            answers = new String[4];
+                            cases = new int[4][2];
+                            selectedAnswer = 0;
+                        } else {
+                            while(dialogLetters < dialogText.length()-1 && !dialogEnd && !stickDialog) {
+                                dialogLetters++;
+                                if(dialogText.charAt(dialogLetters) == '§') {
+                                    int _temp = dialogLetters + 1;
+                                    String command = "";
+                                    while(dialogText.charAt(_temp) != '§') {
+                                        command = command + dialogText.charAt(_temp);
+                                        _temp++;
+                                    }
+                                    dialogLetters--;
+                                    dialogEnd = true;
+                                    execDialogCommand(command, _temp);
+                                    if (command.startsWith("answer"))
+                                        break;
+                                }
                             }
                         }
                     }
-                }
-            if (keys[4] == keyCode) {
-                status = "static";
-                if (menu == 2)
-                    menu = 0;
-                else if (menu == 0)
-                    menu = 2;
-            }
-            if (keys[5] == keyCode && menu == 0) {
-                menu = -1;
-                new saveEverything(true,true,false);
-                if (!musicDisabled) {
-                    Music.pause();
-                    Music.rewind();
-                    Musics[0].pause();
-                    Musics[0].rewind();
-                }
-                for(int i = 0 ; i < Musics.length ; i++) {
-                    try {
-                        Musics[i].pause();
-                    } catch(Exception e) {}
-                }
-            } else if (keys[5] == keyCode && menu == 7) {
-                menu = -1;
-                disableMenus();
-                enableMenus(0,2);
-            }
-            if(keyCode == RIGHT && menu == 7) {
-                camPosX = camPosX - 16;
-            } else if(keyCode == DOWN && menu == 7) {
-                camPosY = camPosY - 16;
-            } else if(keyCode == UP && menu == 7) {
-                camPosY = camPosY + 16;
-            } else if(keyCode == LEFT && menu == 7)
-                camPosX = camPosX + 16;
-            //*************************************"Invite de commandes"**********************************************
-            if (menu == 1 && !inShell && keyCode == LEFT)
-                selectedRespawn = true;
-            if (menu == 1 && !inShell && keyCode == RIGHT)
-                selectedRespawn = false;
-            if (menu == 1 && !inShell && key == '\n' && keyCode == '\n') {
-                if (selectedRespawn) {
-                    direction = "up";
+                if (keys[4] == keyCode) {
                     status = "static";
-                    textTyped = "";
-                    oldCommands = "";
-                    cursor = "";
-                    statusBuffer = 0;
-                    animation = 1;
-                    playerX = 0;
-                    playerY = 0;
-                    animationBuffer = 0;
-                    volume = 70;
-                    life = 10*lifeMax;
-                    lifeBuffer = 0;
-                    camPosX = 0;
-                    camPosY = 0;
-                    menu = 0;
-                    deathBuffer = 0;
-                    cursorBuffer = 0;
-                    inShell = true;
-                    for (int j = 0; j < commandLines.length; j++)
-                        commandLines[j] = null;
-                    if (!musicDisabled) {
-                        Music.rewind();
-                        Musics[0].rewind();
-                        Musics[3].pause();
-                        Musics[3].rewind();
-                    }
-                    menu = 0;
-                } else
-                    menu = -1;
-            }
-            if (inShell)
-                if ((musicDisabled || Musics[3].position() >= 2300) && keyCode != 10 && keyCode != 8 && key < 60000)
-                    if (!controlPressed && key >= ' ')
-                        textTyped = textTyped + key;
-                    else
-                        textTyped = textTyped + char(str(key).toUpperCase().charAt(0) + 60000);
-                else if ((musicDisabled || Musics[3].position() >= 2300) && key == 8) {
-                    textTyped = subString(textTyped, 0, textTyped.length() - 2);
-                } else if ((musicDisabled || Musics[3].position() >= 2300) && key == '\n') {
-                   addLine(prompt + textTyped);
-                   execShellCommand(textTyped);
-                   textTyped = "";
+                    if (menu == 2)
+                        menu = 0;
+                    else if (menu == 0)
+                        menu = 2;
                 }
-        } catch(Exception e) {
-            e.printStackTrace();
-            error("Unexpected error occured",e);
+                if (keys[5] == keyCode && menu == 0) {
+                    menu = -1;
+                    new saveEverything(true,true,false);
+                    if (!musicDisabled) {
+                        Music.pause();
+                        Music.rewind();
+                        Musics[0].pause();
+                        Musics[0].rewind();
+                    }
+                    for(int i = 0 ; i < Musics.length ; i++) {
+                        try {
+                            Musics[i].pause();
+                        } catch(Exception e) {}
+                    }
+                } else if (keys[5] == keyCode && menu == 7) {
+                    menu = -1;
+                    disableMenus();
+                    enableMenus(0,2);
+                }
+                if(keyCode == RIGHT && menu == 7) {
+                    camPosX = camPosX - 16;
+                } else if(keyCode == DOWN && menu == 7) {
+                    camPosY = camPosY - 16;
+                } else if(keyCode == UP && menu == 7) {
+                    camPosY = camPosY + 16;
+                } else if(keyCode == LEFT && menu == 7)
+                    camPosX = camPosX + 16;
+                //*************************************"Invite de commandes"**********************************************
+                if (menu == 1 && !inShell && keyCode == LEFT)
+                    selectedRespawn = true;
+                if (menu == 1 && !inShell && keyCode == RIGHT)
+                    selectedRespawn = false;
+                if (menu == 1 && !inShell && key == '\n' && keyCode == '\n') {
+                    if (selectedRespawn) {
+                        direction = "up";
+                        status = "static";
+                        textTyped = "";
+                        oldCommands = "";
+                        cursor = "";
+                        statusBuffer = 0;
+                        animation = 1;
+                        playerX = 0;
+                        playerY = 0;
+                        animationBuffer = 0;
+                        volume = 70;
+                        life = 10*lifeMax;
+                        lifeBuffer = 0;
+                        camPosX = 0;
+                        camPosY = 0;
+                        menu = 0;
+                        deathBuffer = 0;
+                        cursorBuffer = 0;
+                        inShell = true;
+                        for (int j = 0; j < commandLines.length; j++)
+                            commandLines[j] = null;
+                        if (!musicDisabled) {
+                            Music.rewind();
+                            Musics[0].rewind();
+                            Musics[3].pause();
+                            Musics[3].rewind();
+                        }
+                        menu = 0;
+                    } else
+                        menu = -1;
+                }
+                if (inShell)
+                    if ((musicDisabled || Musics[3].position() >= 2300) && keyCode != 10 && keyCode != 8 && key < 60000)
+                        if (!controlPressed && key >= ' ')
+                            textTyped = textTyped + key;
+                        else
+                            textTyped = textTyped + char(str(key).toUpperCase().charAt(0) + 60000);
+                    else if ((musicDisabled || Musics[3].position() >= 2300) && key == 8) {
+                        textTyped = subString(textTyped, 0, textTyped.length() - 2);
+                    } else if ((musicDisabled || Musics[3].position() >= 2300) && key == '\n') {
+                       addLine(prompt + textTyped);
+                       execShellCommand(textTyped);
+                       textTyped = "";
+                    }
+            } catch(Exception e) {
+                e.printStackTrace();
+                error("Unexpected error occured",e);
+            }
         }
+        if (key == '' && menu == 1 && inShell && gameoverDisplayed)
+            for (int j = 0; j < commandLines.length; j++)
+                commandLines[j] = null;
+        if (key == '' && menu == 1) {
+            if (inShell) {
+                addLine(prompt + textTyped + (gameoverDisplayed ? "" : "^C"));
+                Musics[3].skip(Musics[3].length());
+            } else
+                addLine((selectedRespawn ? "> " : "  ") + "Respawn  " + (selectedRespawn ? "  " : "> ") + "Quit^C");
+            inShell = true;
+            textTyped = "";
+            gameoverDisplayed = true;
+        }
+        keyCode = 0;
+        key = 0;
+    } catch (Exception e) {
+        error("Unexpected error occured", e);
     }
-    if (key == '' && menu == 1 && inShell && gameoverDisplayed)
-        for (int j = 0; j < commandLines.length; j++)
-            commandLines[j] = null;
-    if (key == '' && menu == 1) {
-        if (inShell) {
-            addLine(prompt + textTyped + (gameoverDisplayed ? "" : "^C"));
-            Musics[3].skip(Musics[3].length());
-        } else
-            addLine((selectedRespawn ? "> " : "  ") + "Respawn  " + (selectedRespawn ? "  " : "> ") + "Quit^C");
-        inShell = true;
-        textTyped = "";
-        gameoverDisplayed = true;
-    }
-    keyCode = 0;
-    key = 0;
 }
 
 void keyReleased()

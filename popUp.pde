@@ -1,16 +1,18 @@
-public class popUp extends Thread {
+public class Popup extends Thread {
     String boxTitle;
     String boxContent;
     int boxType;
     
-    public popUp(String content,String title,int type,AudioPlayer sound)
+    public Popup(String content, String title, int type, AudioPlayer sound)
     {
-        super("popUp");
+        super("Popup");
         boxTitle = title;
         boxContent = content;
         boxType = type;
-        sound.rewind();
-        sound.play();
+        if (sound != null) {
+            sound.rewind();
+            sound.play();
+        }
         this.start();
     }
    
