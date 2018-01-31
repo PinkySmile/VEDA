@@ -316,8 +316,75 @@ void inGame()
     text("Play time : " + int(hours) + ":" + transformInt(int(minutes), 2) + ":" + transformInt(int(seconds), 2), width - 200, 15);
 }
 
+void dispDamages()
+{
+    for (int i = 0; i < damageDisplay.length; i++) {
+        if (damageDisplay[i] != 0) {
+            textSize(15);
+            switch (i) {
+            case 0:
+                fill(255, 255 - damageBuffer[i] / 2);
+                break;
+            case 1:
+                fill(255, 205, 0, 255 - damageBuffer[i] / 2);
+                break;
+            case 2:
+                fill(0, 0, 255, 255 - damageBuffer[i] / 2);
+                break;
+            case 3:
+                fill(255, 0, 0, 255 - damageBuffer[i] / 2);
+                break;
+            case 4:
+                fill(170, 0, 170, 255 - damageBuffer[i] / 2);
+                break;
+            case 5:
+                fill(0, 100, 0, 255 - damageBuffer[i] / 2);
+                break;
+            case 6:
+                fill(50, 50, 255, 255 - damageBuffer[i] / 2);
+                break;
+            case 7:
+                fill(0, 255, 0, 255 - damageBuffer[i] / 2);
+            }
+            text((i == 7 ? "+" : "") + floor(damageDisplay[i]), playerX + camPosX + 8 - str(floor(damageDisplay[i])).length() * 5, playerY + camPosY - 10 + (damageBuffer[i] * damageBuffer[i] - 255 * damageBuffer[i]) / 1000);
+            damageBuffer[i] += 10;
+            if (damageBuffer[i] >= 255)
+                damageDisplay[i] = 0;
+        }
+    }
+}
+
 void gameover()
 {
+    background(0);
+    if (statusBuffer == 10) {
+        statusBuffer = 0;
+        status = "static";
+    }
+    if (status == "moving")
+        statusBuffer = statusBuffer + 1;
+    else
+        statusBuffer = 0;
+    if (playerX+camPosX <= -16 || playerX+camPosX >= width+16 || playerY+camPosY <= -32 || playerY+camPosY >= height+32)
+        life = 0;
+    printLevel();
+    printCharacters();
+    printUpperLayer();
+    if (status == "static")
+        animation = 1;
+    if (status == "moving" && animation >= 3)
+        animation = 1;
+    if (compareStrings(language, "yolo")) {
+        lifeBuffer = 0;
+        try {
+            mdrdbar.setLoopPoints(mdrdbar.position(), mdrdbar.position()+50);
+            mdrdbar.loop();
+        } 
+        catch(Exception e) {
+            e.printStackTrace();
+        }
+    }
+    tint(255, 255 - 255 / (1 +  sqrt(deathBuffer)));
     gameoverDisplayed = false;
     Musics[3].rewind();
     selectedRespawn = true;
@@ -396,6 +463,26 @@ void gameover()
         e.printStackTrace();
         error("Error 7",e);
     }
+    tint(255, 255);
+    try {
+        int temp = 0;
+        if (character == "female")
+            temp = 1;
+        if (compareStrings(language, "yolo"))
+            image(glitched_character, playerX + camPosX, playerY + camPosY);
+        else
+            image(character_image[temp][0][0][1], playerX + camPosX, playerY + camPosY + 16);
+    }
+    catch(Exception e) {
+        e.printStackTrace();
+        try {
+            image(glitched_character, playerX+camPosX, playerY+camPosY);
+        } 
+        catch(Exception f) {
+            f.printStackTrace();
+            error("Can't find file " + character + "_character_" + status + "_" + direction + "_" + animation  +".png", e);
+        }
+    }
 }
 
 void inventory()
@@ -419,19 +506,19 @@ void inventory()
       text(name, width - 220, 30);
       fill(255);
       if (compareStrings(language, "fr"))
-          text("PV : "+life+"/"+lifeMax*10, width-220, 60);
+          text("PV :\n " + int(life) + "/" + lifeMax * 10, width - 220, 60);
       else if (compareStrings(language, "en"))
-          text("HP : "+life+"/"+lifeMax*10, width-220, 60);
+          text("HP :\n " + int(life) + "/" + lifeMax * 10, width - 220, 60);
       else if (compareStrings(language, "de"))
-          text("HP : "+life+"/"+lifeMax*10, width-220, 60);
+          text("HP :\n " + int(life) + "/" + lifeMax * 10, width - 220, 60);
       else
           text("??/??", width - 220, 60);
       if (compareStrings(language, "fr"))
-          text("Energie : "+energy+"/"+energyMax*10, width-220, 90);
+          text("Energie :\n " + int(energy) + "/" + energyMax * 10, width - 220, 110);
       else if (compareStrings(language, "en"))
-          text("Energy : "+energy+"/"+energyMax*10, width-220, 90);
+          text("Energy :\n " + int(energy) + "/" + energyMax * 10, width - 220, 110);
       else if (compareStrings(language, "de"))
-          text("Energie : "+energy+"/"+energyMax*10, width-220, 90);
+          text("Energie :\n " + int(energy) + "/" + energyMax * 10, width - 220, 110);
       else
           text("??/??", width-220, 60);
       for (int i = 0; i < items.length; i++)
@@ -553,7 +640,7 @@ void mainMenu()
     textSize(15);
     text(name, width - 160, 20);
     text(texts[0] + progress + "%", width - 160, 40);
-    text(texts[1] + life + "/"+lifeMax*10, width - 160, 60);
+    text(texts[1] + int(life) + "/"+lifeMax*10, width - 160, 60);
 
     //Affichage de la version
     textSize(10);

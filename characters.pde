@@ -1,13 +1,23 @@
 void takeDamages(int damages, int damageType)
 {
+    float buffer = life;
+
     life -= damages;
+    if (life > lifeMax * 10)
+        life = lifeMax * 10;
+    if (life < 0)
+        life = 0;
+    if (life - buffer != 0) {
+        damageDisplay[damageType] -= buffer - life;
+        damageBuffer[damageType] = 0;
+    }
 }
 
 void printCharacters()
 {
     if(menu == 7) {
         float _temp = zoomLevel;
-        scale(1+_temp/20);
+        scale(1 + _temp / 20);
     } else
         zoomLevel = 0;
     for(int i = 0 ; i < characters.length ; i++) {

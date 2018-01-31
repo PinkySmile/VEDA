@@ -126,7 +126,7 @@ void mousePressed()
                           else if (compareStrings(godEaterMode, "deal-êtes"))
                               tyuio = "GodEater activated. Checking for corrupted files. Current default mode : Delete Files";
                           else
-                              tyuio = "GodEater activated. Checking for corrupted files. Current default mode : [ERROR]:NullPointerException";
+                              tyuio = "GodEater activated. Checking for corrupted files. Current default mode : [ERROR]:  java.lang.NullPointerException";
                           new popUp(tyuio,"GodEater",JOptionPane.INFORMATION_MESSAGE,SFX[2]);
                       } else
                           errorMsg("Error in main chunk : No such process \"godEater\". Try restarting it and try again.", SFX[2],null);
@@ -139,7 +139,7 @@ void mousePressed()
                         menu = 3;
                     } else {
                         menu = int(random(-12, 30)); 
-                        errorMsg("NullPointerException", SFX[1],null);
+                        errorMsg("java.lang.NullPointerException", SFX[1],null);
                     }
                 } else if (i == 3) {   //boutton "Quit"
                     if (!compareStrings(language, "yolo")) {

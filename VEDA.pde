@@ -407,6 +407,7 @@ String[] characterPowerDesc = new String[maxNbOfCharacters];
 String[] characterWeaponName = new String[maxNbOfCharacters];
 String[] commandLines;
 String[][][] dialogs = new String[maxNbOfCharacters][maxNbOfDialogs][15];
+Item[] allItems = new Item[100];
 int statusBuffer = 0;
 int totalNumberOfMusics = 7;
 int totalNumberOfMusicsLoaded;
@@ -482,6 +483,7 @@ int theDialogID[] = new int[maxNbOfCharacters];
 int chara[] = new int[3];
 int objects[] = new int[maxNbOfObjectsPerLevel];
 int cases[][] = new int[4][2];
+int[] damageBuffer = new int[8];
 int[] keys = {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1};
 int[] pressedKeysCode = new int[40];
 int[] cutsceneStart = new int[200];
@@ -586,6 +588,7 @@ float playerX = 1;
 float playerY = 1;
 float life = 10;
 float energy = 10;
+float[] damageDisplay = new float[8];
 
 //***************************************************************************
 //Initialisation
@@ -1338,62 +1341,9 @@ void draw()
         }
         //************************************************************************************************Mort du personnage*************************************************************************************************
         if (life <= 0 && menu >= 0 && menu <= 1) {
-            if (menu == 0)
-                try {
-                    int temp = 0;
-                    if (character == "female")
-                        temp = 1;
-                    if (compareStrings(language, "yolo"))
-                        image(glitched_character, playerX + camPosX, playerY + camPosY);
-                    else
-                        image(character_image[temp][0][0][1], playerX + camPosX, playerY + camPosY + 16);
-                }
-                catch(Exception e) {
-                    e.printStackTrace();
-                    try {
-                        image(glitched_character, playerX+camPosX, playerY+camPosY);
-                    } 
-                    catch(Exception f) {
-                        f.printStackTrace();
-                        error("Can't find file " + character + "_character_" + status + "_" + direction + "_" + animation  +".png", e);
-                    }
-                }
             dead = true;
             //Réaffichage du terrain
             if (!deathAnimation) {
-                if (statusBuffer == 10) {
-                    statusBuffer = 0;
-                    status = "static";
-                }
-                if (status == "moving")
-                    statusBuffer = statusBuffer + 1;
-                else
-                    statusBuffer = 0;
-                if (playerX+camPosX <= -16 || playerX+camPosX >= width+16 || playerY+camPosY <= -32 || playerY+camPosY >= height+32)
-                    life = 0;
-                printLevel();
-                printCharacters();
-                printUpperLayer();
-                if (status == "static")
-                    animation = 1;
-                if (status == "moving" && animation >= 3)
-                    animation = 1;
-                menu = 0;
-                if (compareStrings(language, "yolo")) {
-                    try {
-                        lifeBuffer = 0;
-                    } 
-                    catch(Exception e) {
-                        e.printStackTrace();
-                    }
-                    try {
-                        mdrdbar.setLoopPoints(mdrdbar.position(), mdrdbar.position()+50);
-                        mdrdbar.loop();
-                    } 
-                    catch(Exception e) {
-                        e.printStackTrace();
-                    }
-                }
                 inDialog = false;
                 dialogLetters = 0;
                 dialogText = null;
@@ -1434,6 +1384,7 @@ void draw()
                 }
             }
         }
+        dispDamages();
         drawLife();
         drawNRJ();
         if(menu < 6 && menu != 3)

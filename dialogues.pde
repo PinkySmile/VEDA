@@ -16,7 +16,11 @@ void execDialogCommand(String command, int _temp)
         stickDialog = true;
         dialogEnd = false;
     } else if(command.startsWith("setLife")) {
-        life = int(subString(command, 7, command.length()));
+        int a = int(subString(command, 7, command.length()));
+        if (a > life)
+            takeDamages(int(life - a), 7);
+        else
+            takeDamages(int(life - a), 0);
     } else if(command.startsWith("cutscene")) {
         inCutscene = true;
         commandID = cutsceneStart[int(subString(command,8,command.length()-1))];

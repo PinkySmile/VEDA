@@ -451,7 +451,7 @@ void keyPressed()
             playerX = playerX - camPosX + xBuffer;
             playerY = playerY - camPosY + yBuffer;
         } else if (key == 'w') {
-            life = life - 1;
+            takeDamages(1, 0);
             hitBuffer = 5;
         } else if (key == 't') {
             itemsQuantity = new int[12];
@@ -521,7 +521,7 @@ void keyPressed()
             debugMode = false;
         } else if (key == '$') {
             String temp = lireUnTexte("Enter an ID", "Enter an ID");
-            dialogBox("Test : uyzgfedipyqgdqoyzfgqizfguzquifgyqpizfguqizfgqizfgbqjzbdlqv zdlqzvdlqyvzdlqvzdlqvzdqzdlqvzdjqgvzdugqvzdqjzhdboquzvydbqidbgzouydquozduofv§answer'battle''clear''kill''cutscene'§(0)DAH§battle" + temp + "§(1)1§clear§2(2);[§kill" + temp + "§(3)Coming soon§cutscene" + temp + "§");
+            dialogBox("Test : uyzgfedipyqgdqoyzfgqizfguzquifgyqpizfguqizfgqizfgbqjzbdlqv zdlqzvdlqyvzdlqvzdlqvzdqzdlqvzdjqgvzdugqvzdqjzhdboquzvydbqidbgzouydquozduofv§answer'battle''clear''kill''other'§(0)DAH§battle" + temp + "§(1)1§clear§2(2);[§kill" + temp + "§(3)  §answer'setLife''cutscene'§(0)Life : §setLife" + temp + "§(1)Coming soon§cutscene" + temp + "§");
         } else if (key == 'W') {
             energy = energy - 1;
             energyReloadBuffer = 0;
@@ -534,7 +534,7 @@ void keyPressed()
         } else if (key == 'µ') {
             nameColor--;
         } else if (key == 'x') {
-            life = life + 1;
+            takeDamages(-1, 7);
         } else if (key == 'r') {
             file = new File("text_files/left");
             if (file.exists())
