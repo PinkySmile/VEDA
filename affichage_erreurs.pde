@@ -68,33 +68,3 @@ void error(String errorMessage, Exception exc){
     //JOptionPane.showMessageDialog(null, "[FATAL] : "+errorMessage+"\n\nSwitching back to main menu", "Error" , JOptionPane.ERROR_MESSAGE);
     menu = -1;
 }
-
-public class Error extends Thread
-{
-  String errorMessage;
-  boolean crash;
-  String[] button;
-  
-  public Error(String errorMessagse, boolean toCrash, String[] buttons)
-  {
-      super(name);
-      errorMessage = errorMessagse;
-      crash = toCrash;
-      button = buttons;
-      this.start();
-  }
- 
- 
-  public void run()
-  {
-      if(SFX[1] != null) {
-          SFX[1].rewind();
-          SFX[1].play();
-      }
-      if(crash)
-          errorMessage = errorMessage+"\n\nThis program will now exit";
-      JOptionPane.showOptionDialog(null, "[FATAL] : "+errorMessage, "Error" , JOptionPane.ERROR_MESSAGE, JOptionPane.OK_OPTION, null, button, "default");
-      if(crash)
-          System.exit(0);
-  }
-}
