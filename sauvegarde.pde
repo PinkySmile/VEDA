@@ -11,31 +11,33 @@ void saveGame()
         println("saving game to " + file.getAbsolutePath());
         FileWriter fileWriter = new FileWriter(file);
         BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
-        bufferedWriter.write(name+"\n");
-        bufferedWriter.write(lifeMax+"\n");
-        bufferedWriter.write(life+"\n");
-        bufferedWriter.write(energyMax+"\n");
-        bufferedWriter.write(energy+"\n");
-        bufferedWriter.write(playerX+"\n");
-        bufferedWriter.write(playerY+"\n");
-        bufferedWriter.write(camPosX+"\n");
-        bufferedWriter.write(camPosY+"\n");
-        bufferedWriter.write(progress+"\n");
-        bufferedWriter.write(character+"\n");
-        bufferedWriter.write(music+"\n");
-        bufferedWriter.write(levelToLoad+"\n");
-        bufferedWriter.write(items.length+"\n");
+        bufferedWriter.write(name + "\n");
+        bufferedWriter.write(lifeMax + "\n");
+        bufferedWriter.write(life + "\n");
+        bufferedWriter.write(energyMax + "\n");
+        bufferedWriter.write(energy + "\n");
+        bufferedWriter.write(playerX + "\n");
+        bufferedWriter.write(playerY + "\n");
+        bufferedWriter.write(camPosX + "\n");
+        bufferedWriter.write(camPosY + "\n");
+        bufferedWriter.write(progress + "\n");
+        bufferedWriter.write(character + "\n");
+        bufferedWriter.write(music + "\n");
+        bufferedWriter.write(levelToLoad + "\n");
+        bufferedWriter.write(items.length + "\n");
         for(int i = 0 ; i < items.length ; i++) {
-            bufferedWriter.write(items[i]+"\n");
-            bufferedWriter.write(itemsQuantity[i]+"\n");
+            bufferedWriter.write(items[i] + "\n");
+            bufferedWriter.write(itemsQuantity[i] + "\n");
         }
         bufferedWriter.write(playTime+"\n");
+        for (int i = 0; i < wornItems.length; i++)
+            bufferedWriter.write(wornItems[i] + "\n");
         bufferedWriter.flush();
         bufferedWriter.close();
         fileWriter.close();
     } catch(Exception e) {
         e.printStackTrace();
-        errorMsg("Error while saving game",SFX[1],e);
+        errorMsg("Error while saving game", SFX[1], e);
     }
 }
 
@@ -65,6 +67,8 @@ void loadGame()
             itemsQuantity[i] = int(bufferedReader.readLine());
         }
         playTime = int(bufferedReader.readLine());
+        for (int i = 0; i < wornItems.length; i++)
+            wornItems[i] = int(bufferedReader.readLine());
         if((menu == 0 || menu == 1) && !musicDisabled) {
             if(compareStrings(music,"Mysterious") && !musicDisabled) {
                 Music.pause();
@@ -101,7 +105,7 @@ void loadGame()
         e.printStackTrace();
         errorMsg("Error while loading game", SFX[1], e);
     }
-    if(compareStrings(character,"female"))
+    if(compareStrings(character, "female"))
         character = "female";
     else
         character = "male";
@@ -131,7 +135,6 @@ void saveCharactersState()
         errorMsg("Unhandled exception occured while saving",SFX[1],e);
     } 
 }
-
 
 void loadCharacters(String theLevelPath)
 {

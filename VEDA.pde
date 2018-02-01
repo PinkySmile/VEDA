@@ -76,8 +76,10 @@ PImage glitched_character;
 PImage achievementButtonImage;
 PImage locked;
 PImage redCross;
-PImage trophys[] = new PImage[4];
-PImage achievementImage[] = new PImage[20000];
+PImage item_glitch;
+PImage[] trophys = new PImage[4];
+PImage[] achievementImage = new PImage[20000];
+PImage[] itemSprites = new PImage[100];
 PImage[] textures = new PImage[2000];
 PImage[][] hearts = new PImage[3][11];
 PImage[][] thunderbolts= new PImage[3][11];
@@ -1000,6 +1002,9 @@ void setup()
     trophys[3] = loadImage("achievements/gold_trophy_24x24_1.png");
     godEater = loadImage("godEater/godEater.png");
 
+    for (int i = 0; i < itemSprites.length; i++)
+        itemSprites[i] = loadImage("items/item" + (i + 1) + ".png");
+    item_glitch = loadImage("items/item_glitch.png");
     achievementButtonImage = trophys[0];
   
     try {

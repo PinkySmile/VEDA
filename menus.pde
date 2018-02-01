@@ -555,6 +555,10 @@ void inventory()
         if (compareStrings(language, "yolo"))
             glitchPrint(true, 20);
     for (int i = 0; i < items.length; i++) {
+        PImage sprite = itemSprites[items[i] >= itemSprites.length || items[i] <= 0 ? 0 : items[i]];
+
+        if (sprite == null)
+            sprite = item_glitch;
         if (itemsQuantity[i] > 0)
             quan = "x"+itemsQuantity[i];
         else
@@ -573,6 +577,10 @@ void inventory()
             quan = "@░¶½█▓";
         text(item, 60, 30 + 39 * i);
         text(quan, 350, 30 + 39 * i);
+        if (item != "" && sprite != null)
+            image(sprite, 30, 15 + 39 * i);
+        else if (item != "")
+            text("?", 30, 30 + 39 * i);
     }
 }
 
