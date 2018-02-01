@@ -4,11 +4,10 @@ void errorMsg(String errorMessage,AudioPlayer sound,Exception exc)
     String[] _temp = loadStrings("errors.log");
     output = createWriter("errors.log");
     fatalError = false;
-    theErrorMessage = "[ERROR] : "+errorMessage;
-    try {
-        for(int i = 0 ; i < _temp.length ; i ++)
+    theErrorMessage = "[ERROR] : " + errorMessage;
+    for(int i = 0 ; i < _temp.length ; i++)
+        if (output != null)
             output.println(_temp[i]);
-    } catch(Exception e) {}
     if(exc != null) {
         theErrorMessage = theErrorMessage + " :   "+exc+"\n";
         for(int i = 0 ; i < exc.getStackTrace().length ; i++)
