@@ -815,7 +815,7 @@ void setup()
 
         SFX[0] = minim.loadFile("sound/SFX/iron.mp3");
 
-        SFX[3] = minim.loadFile("misc/none.png");
+        SFX[3] = minim.loadFile("misc/{NULL}");
 
         SFX[4] = minim.loadFile("sound/SFX/grass1.wav");
         SFX[5] = minim.loadFile("sound/SFX/grass2.wav");
@@ -837,12 +837,12 @@ void setup()
         for (int i = 0; i <= 15; i++)
             if (SFX[i] == null) {
                 musicLoaded = false;
-                errorMsg("Failed to load sounds.", SFX[1], null);
+                errorMsg("Failed to load sounds " + i, SFX[1], null);
             }
         for (int i = 0; i <= 12; i++)
             if (Musics[i] == null) {
                 musicLoaded = false;
-                errorMsg("Failed to load sounds.", SFX[1], null);
+                errorMsg("Failed to load music " + i, SFX[1], null);
             }
     } catch(Exception e) {
         e.printStackTrace();
