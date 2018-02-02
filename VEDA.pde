@@ -415,9 +415,6 @@ String[] characterPowerDesc = new String[maxNbOfCharacters];
 String[] characterWeaponName = new String[maxNbOfCharacters];
 String[] commandLines;
 String[][][] dialogs = new String[maxNbOfCharacters][maxNbOfDialogs][15];
-Item[] allItems = new Item[100];
-Item[] wornItems = new Item[4];
-Item[] items = new Item[12];
 int statusBuffer = 0;
 int totalNumberOfMusics = 7;
 int totalNumberOfMusicsLoaded;
@@ -599,6 +596,9 @@ float playerY = 1;
 float life = 10;
 float energy = 10;
 float[] damageDisplay = new float[8];
+Item[] allItems = new Item[100];
+Item[] wornItems = new Item[6];
+Item[] items = new Item[12];
 
 //***************************************************************************
 //Initialisation
@@ -1115,7 +1115,7 @@ void setup()
     if (name == null || name == "") {
         name = "";
         for (int i = 0; i <= int(random(4, 10)); i++)
-            name = name + char ( int( random( int('a'), int('z') ) ) );
+            name = name + char(int(random(int('a'), int('z'))));
     }
   
     loadLevel(levelToLoad, 0);
