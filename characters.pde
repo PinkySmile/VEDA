@@ -7,9 +7,10 @@ void takeDamages(int damages, int damageType)
         for (int i = 0; i < wornItems.length; i++)
             if (wornItems[i] != null) {
                 res += wornItems[i].resistances[damageType - 1];
-                if (wornItems[i].resistances[damageType - 1] > 0) {
+                println(wornItems[i].durability);
+                if (allItems[wornItems[i].id].resistances[damageType - 1] > 0) {
                     wornItems[i].durability -= damages / 10;
-                    if (wornItems[i].durability < 0)
+                    if (wornItems[i].durability <= 0)
                         wornItems[i] = null;
                     for (int j = 0; wornItems[i] != null && j < wornItems[i].resistances.length; j++)
                         wornItems[i].resistances[j] = allItems[wornItems[i].id].resistances[j] * wornItems[i].durability / allItems[wornItems[i].id].durability;
