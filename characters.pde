@@ -1,13 +1,21 @@
 void takeDamages(int damages, int damageType)
 {
     float buffer = life;
-    int res = 0;
+    float res = 0;
 
     if (damageType > 0 && damageType < 7) {
         for (int i = 0; i < wornItems.length; i++)
-            if (wornItems[i] != null)
+            if (wornItems[i] != null) {
                 res += wornItems[i].resistances[damageType - 1];
-        life -= damages / (1 + 0.001 * sqrt(res));
+                if (wornItems[i].resistances[damageType - 1] > 0) {
+                    wornItems[i].durability -= damages / 10;
+                    if (wornItems[i].durability < 0)
+                        wornItems[i] = null;
+                    for (int j = 0; wornItems[i] != null && j < wornItems[i].resistances.length; j++)
+                        wornItems[i].resistances[j] = allItems[wornItems[i].id].resistances[j] * wornItems[i].durability / allItems[wornItems[i].id].durability;
+                }
+            }
+        life -= damages * (20 / (sqrt(abs(res)) + 20));
     } else
         life -= damages;
     if (life > lifeMax * 10)
