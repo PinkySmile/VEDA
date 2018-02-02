@@ -26,12 +26,15 @@ void saveGame()
         bufferedWriter.write(levelToLoad + "\n");
         bufferedWriter.write(items.length + "\n");
         for(int i = 0 ; i < items.length ; i++) {
-            bufferedWriter.write(items[i] + "\n");
+            bufferedWriter.write((items[i] == null ? 0 : (items[i].id + 1)) + "\n");
+            bufferedWriter.write((items[i] == null ? 0 : items[i].durability) + "\n");
             bufferedWriter.write(itemsQuantity[i] + "\n");
         }
         bufferedWriter.write(playTime+"\n");
-        for (int i = 0; i < wornItems.length; i++)
-            bufferedWriter.write(wornItems[i] + "\n");
+        for (int i = 0; i < wornItems.length; i++) {
+            bufferedWriter.write((wornItems[i] == null ? -1 : wornItems[i].id) + "\n");
+            bufferedWriter.write((wornItems[i] == null ? -1 : wornItems[i].durability) + "\n");
+        }
         bufferedWriter.flush();
         bufferedWriter.close();
         fileWriter.close();
@@ -61,40 +64,77 @@ void loadGame()
         character = bufferedReader.readLine();
         music = bufferedReader.readLine();
         levelToLoad = bufferedReader.readLine();
-        items = new int[int(bufferedReader.readLine())];
+        items = new Item[int(bufferedReader.readLine())];
+        itemsQuantity = new int[items.length];
+        println("Inventory of size " + items.length);
         for(int i = 0 ; i < items.length ; i++) {
-            items[i] = int(bufferedReader.readLine());
+            int index = int(bufferedReader.readLine()) - 1;
+            println("Index " + index);
+            float durability = float(bufferedReader.readLine());
+            println("Durability " + durability);
+            if (index >= 0 && index < allItems.length) {
+                items[i] = copyItemObject(allItems[index]);
+                items[i].durability = durability;
+            } else
+                items[i] = null;
             itemsQuantity[i] = int(bufferedReader.readLine());
+            println("Quantity " + itemsQuantity[i]);
         }
         playTime = int(bufferedReader.readLine());
-        for (int i = 0; i < wornItems.length; i++)
-            wornItems[i] = int(bufferedReader.readLine());
+        for (int i = 0; i < wornItems.length; i++) {
+            int index = int(bufferedReader.readLine());
+            float durability = float(bufferedReader.readLine());
+            if (index >= 0 && index < allItems.length) {
+                wornItems[i] = copyItemObject(allItems[index]);
+                wornItems[i].durability = durability;
+            } else
+                wornItems[i] = null;
+        }
         if((menu == 0 || menu == 1) && !musicDisabled) {
             if(compareStrings(music,"Mysterious") && !musicDisabled) {
-                Music.pause();
-                Music.rewind();
+                if (Music != null) {
+                    Music.pause();
+                    Music.rewind();
+                }
                 Music = Musics[2];
-                Music.play();
+                if (Music != null)
+                    Music.play();
             } else if(compareStrings(music,"Macabre") && !musicDisabled) {
                 Music.pause();
                 Music.rewind();
                 Music = Musics[1];
                 Music.play();
+                if (Music != null) {
+                    Music.pause();
+                    Music.rewind();
+                }
+                Music = Musics[2];
+                if (Music != null)
+                    Music.play();
             } else if(compareStrings(music,"EpicBattle") && !musicDisabled) {
-                Music.pause();
-                Music.rewind();
+                if (Music != null) {
+                    Music.pause();
+                    Music.rewind();
+                }
                 Music = Musics[5];
-                Music.play();
+                if (Music != null)
+                    Music.play();
             } else if(compareStrings(music,"eugrt") && !musicDisabled) {
-                Music.pause();
-                Music.rewind();
+                if (Music != null) {
+                    Music.pause();
+                    Music.rewind();
+                }
                 Music = Musics[10];
-                Music.play();
+                if (Music != null)
+                    Music.play();
             } else if(!musicDisabled) {
-                Music.pause();
-                Music.rewind();
-                Music = Musics[int(music)];
-                Music.play();
+                if (Music != null) {
+                    Music.pause();
+                    Music.rewind();
+                }
+                Music = (int(music) >= 0 && int(music) < Musics.length ? Musics[int(music)] : null);
+                if (Music != null)
+                    Music.play();
             }
         }
         bufferedReader.close();

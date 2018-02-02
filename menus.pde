@@ -141,14 +141,14 @@ void languageMenu()
 void dispArmor(int temp, boolean death)
 {
     for (int i = 0; i < wornItems.length; i++)
-        if (wornItems[i] >= 0 && wornItems[i] < armorTextures.length)
+        if (wornItems[i] != null && wornItems[i].id >= 0 && wornItems[i].id < armorTextures.length)
             if (!death)
-                if (armorTextures[wornItems[i]][temp][chara[0]][chara[1]][animation - 1] != null)
-                    image(armorTextures[wornItems[i]][temp][chara[0]][chara[1]][animation - 1], playerX + camPosX, playerY + camPosY);
+                if (armorTextures[wornItems[i].id][temp][chara[0]][chara[1]][animation - 1] != null)
+                    image(armorTextures[wornItems[i].id][temp][chara[0]][chara[1]][animation - 1], playerX + camPosX, playerY + camPosY);
                 else
-                    println("[" + wornItems[i] + "][" + temp + "][" + chara[0] + "][" + chara[1] + "][" + (animation - 1) + "]");
-            else if (armorTextures[wornItems[i]][temp][0][0][1] != null)
-                image(armorTextures[wornItems[i]][temp][0][0][1], playerX + camPosX, playerY + camPosY + 16);
+                    println("[" + wornItems[i].id + "][" + temp + "][" + chara[0] + "][" + chara[1] + "][" + (animation - 1) + "]");
+            else if (armorTextures[wornItems[i].id][temp][0][0][1] != null)
+                image(armorTextures[wornItems[i].id][temp][0][0][1], playerX + camPosX, playerY + camPosY + 16);
             else
                 println("[" + wornItems[i] + "][" + temp + "][0][0][1]");
 }
@@ -524,29 +524,15 @@ void inventory()
     fill(balaic);
     text(name, width - 220, 30);
     fill(255);
-    if (compareStrings(language, "fr"))
-        text("PV :\n " + int(life) + "/" + lifeMax * 10, width - 220, 60);
-    else if (compareStrings(language, "en"))
-        text("HP :\n " + int(life) + "/" + lifeMax * 10, width - 220, 60);
-    else if (compareStrings(language, "de"))
-        text("HP :\n " + int(life) + "/" + lifeMax * 10, width - 220, 60);
-    else
-        text("??/??", width - 220, 60);
-    if (compareStrings(language, "fr"))
-        text("Energie :\n " + int(energy) + "/" + energyMax * 10, width - 220, 110);
-    else if (compareStrings(language, "en"))
-        text("Energy :\n " + int(energy) + "/" + energyMax * 10, width - 220, 110);
-    else if (compareStrings(language, "de"))
-        text("Energie :\n " + int(energy) + "/" + energyMax * 10, width - 220, 110);
-    else
-        text("??/??", width - 220, 60);
+    text("PV :\n " + int(life) + "/" + lifeMax * 10, width - 220, 60);
+    text("Energie :\n " + int(energy) + "/" + energyMax * 10, width - 220, 110);
     text("Resistances : ", width - 220, 200);
     for (int i = 0; i < 6; i++) {
         int res = 0;
 
         for (int j = 0; j < wornItems.length; j++)
-            if (wornItems[j] != -1)
-                res += allItems[wornItems[j]].resistances[i];
+            if (wornItems[j] != null)
+                res += wornItems[j].resistances[i];
         switch (i + 1) {
         case 1:
             fill(255, 205, 0);
@@ -574,24 +560,26 @@ void inventory()
         if (compareStrings(language, "yolo"))
             glitchPrint(true, 20);
     for (int i = 0; i < items.length; i++) {
-        PImage sprite = itemSprites[items[i] >= itemSprites.length || items[i] <= 0 ? 0 : items[i]];
-
+        PImage sprite = null;
+        
+        if (items[i] != null && items[i].id < itemSprites.length && items[i].id >= 0)
+            sprite = itemSprites[items[i].id];
         if (sprite == null)
             sprite = item_glitch;
         if (itemsQuantity[i] > 0)
             quan = "x"+itemsQuantity[i];
         else
             quan = "";
-        if (itemsQuantity[i] == 0)
-            items[i] = 0;
-        if (items[i] != 0)
-            item = "Item " + items[i];
+        if (items[i] != null && itemsQuantity[i] == 0)
+            items[i] = null;
+        if (items[i] != null)
+            item = "Item " + (items[i].id + 1);
         else
             item = "";
-        if (items[i] == 0 && compareStrings(language, "yolo"))
+        if (items[i] == null && compareStrings(language, "yolo"))
             item = "e̷̲̦̖͉̘͊ͩ͌̓ͫr̹̤̳̾͑͗͛̚͠r̬̖̱o̢͇̹̠̼͎̰ͯ͋ͥ̾r̸͔̘̥͎̘̩";
-        if (items[i] != 0 && allItems[items[i] - 1].name != null)
-            item = allItems[items[i] - 1].name;
+        if (items[i] != null && items[i].name != null)
+            item = items[i].name;
         if (itemsQuantity[i] == 0 && compareStrings(language, "yolo"))
             quan = "@░¶½█▓";
         text(item, 60, 30 + 39 * i);

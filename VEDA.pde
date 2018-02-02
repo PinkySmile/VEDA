@@ -416,6 +416,8 @@ String[] characterWeaponName = new String[maxNbOfCharacters];
 String[] commandLines;
 String[][][] dialogs = new String[maxNbOfCharacters][maxNbOfDialogs][15];
 Item[] allItems = new Item[100];
+Item[] wornItems = new Item[4];
+Item[] items = new Item[12];
 int statusBuffer = 0;
 int totalNumberOfMusics = 7;
 int totalNumberOfMusicsLoaded;
@@ -491,7 +493,6 @@ int theDialogID[] = new int[maxNbOfCharacters];
 int chara[] = new int[3];
 int objects[] = new int[maxNbOfObjectsPerLevel];
 int cases[][] = new int[4][2];
-int[] wornItems = {-1, 0, 1, 2};
 int[] baseStatsResistance = new int[6];
 int[] damageBuffer = new int[8];
 int[] keys = {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1};
@@ -525,7 +526,6 @@ int[] characterAttack = new int[maxNbOfCharacters];
 int[] characterResistance = new int[maxNbOfCharacters];
 int[] characterPowerID = new int[maxNbOfCharacters];
 int[] characterWeaponID = new int[maxNbOfCharacters];
-int[] items = new int[12];
 int[][] cutscenesArgs = new int[2000][10];
 int[][] characterPointToGo = new int[maxNbOfCharacters][2];
 boolean inDialog = false;
@@ -1083,6 +1083,8 @@ void setup()
       
     loadAchievements();
     loadAchievementsGot();
+    loadItems();
+    loadItemNames(language);
     loadGame();
   
     if (compareStrings(name, "")) {
@@ -1127,8 +1129,6 @@ void setup()
     loadCutscenes("data/cutscenes");
     dialogDeathBuffer = -2;
     commandLines = new String[height / 20];
-    loadItems();
-    loadItemNames(language);
 }
 
 
@@ -1138,7 +1138,7 @@ void setup()
 void draw()
 {
     String path;
-
+    
     if (hour() == 0 && minute() == 0 && second() == 0)
         giveAchievement(4);
     try {
@@ -1683,7 +1683,7 @@ int findInventoryEmptySpace()
 {
     int jeucepa = 0;
     try {
-        while(jeucepa < items.length && items[jeucepa] != 0)
+        while(jeucepa < items.length && items[jeucepa] != null)
             jeucepa++;
     }
     catch(Exception e) {
@@ -1701,14 +1701,14 @@ void tidyInventory()
         println("Pos : " + i + " containing item "+items[i]);
         if(freeSpacesBefore > 0) {
             println("Switching item at pos "+i+" with item at pos "+(i-freeSpacesBefore)+" ("+items[i]+"-->"+items[i-freeSpacesBefore]+")");
-            items[i-freeSpacesBefore] = items[i];
-            items[i] = 0;
+            items[i - freeSpacesBefore] = items[i];
+            items[i] = null;
             itemsQuantity[i-freeSpacesBefore] = itemsQuantity[i];
             itemsQuantity[i] = 0;
             replaced = true;
         } else
             replaced = false;
-        if(items[i] == 0 && !replaced)
+        if(items[i] == null && !replaced)
             freeSpacesBefore++;
     }
 }

@@ -148,8 +148,10 @@ void loadItems()
 {
     String path = "data/items.txt";
 
-    for (int i = 0; i < allItems.length; i++)
+    for (int i = 0; i < allItems.length; i++) {
         allItems[i] = new Item();
+        allItems[i].id = i;
+    }
     try{
         BufferedReader bufferedReader = createReader(path);
         String line;

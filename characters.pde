@@ -5,8 +5,8 @@ void takeDamages(int damages, int damageType)
 
     if (damageType > 0 && damageType < 7) {
         for (int i = 0; i < wornItems.length; i++)
-            if (wornItems[i] != -1)
-                res += allItems[wornItems[i]].resistances[damageType - 1];
+            if (wornItems[i] != null)
+                res += wornItems[i].resistances[damageType - 1];
         life -= damages / (1 + 0.001 * sqrt(res));
     } else
         life -= damages;

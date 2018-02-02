@@ -456,10 +456,10 @@ void keyPressed()
                 hitBuffer = 5;
             } else if (key == 't') {
                 itemsQuantity = new int[12];
-                items = new int[12];
+                items = new Item[12];
             } else if (key == 'u') {
                 int toDel = lireUnEntier("Which object to delete ?", "Del object");
-                items[toDel] = 0;
+                items[toDel] = null;
                 itemsQuantity[toDel] = 0;
                 tidyInventory();
             } else if (key == '¤') {
@@ -498,7 +498,7 @@ void keyPressed()
                 if (mdrsd >= items.length)
                     new Popup("L'inventaire est plein !", "Error", JOptionPane.QUESTION_MESSAGE, null);
                 else {
-                    items[mdrsd] = lireUnEntier("Entrer un ID d'objet", "objet");
+                    items[mdrsd] = copyItemObject(allItems[lireUnEntier("Entrer un ID d'objet", "objet")]);
                     itemsQuantity[mdrsd] = lireUnEntier("Combien ?", "quantité");
                 }
             } else if (key == 'b') {
