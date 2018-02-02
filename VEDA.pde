@@ -1032,7 +1032,7 @@ void setup()
     godEater = loadImage("godEater/godEater.png");
 
     for (int i = 0; i < itemSprites.length; i++)
-        itemSprites[i] = loadImage("items/item" + (i + 1) + ".png");
+        itemSprites[i] = loadImage("items/item_" + (i + 1) + ".png");
     item_glitch = loadImage("items/item_glitch.png");
     achievementButtonImage = trophys[0];
   

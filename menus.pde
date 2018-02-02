@@ -615,18 +615,18 @@ void inventory()
         }
         stroke(0);
         noFill();
-        rect(x, y - 1, 33, 33);
+        rect(x, y - 1, 34, 34);
         if (wornItems[i] != null) {
             PImage sprite = null;
-            if (items[i] != null && items[i].id < itemSprites.length && items[i].id >= 0)
-                sprite = itemSprites[items[i].id];
-            if (sprite == null)
+            if (wornItems[i] != null && wornItems[i].id < itemSprites.length && wornItems[i].id >= 0)
+                sprite = itemSprites[wornItems[i].id];
+            if (sprite == null) 
                 sprite = item_glitch;
             if (sprite != null)
-                image(sprite, x, y, 32, 32);
+                image(sprite, x + 1, y, 32, 32);
             else {
                 fill(0, 0, 255);
-                rect(x - 1, y, 32, 32);
+                rect(x + 1, y, 32, 32);
             }
             if (allItems[wornItems[i].id].durability != 0) {
                 if (wornItems[i].durability / allItems[wornItems[i].id].durability > 0.5)
@@ -636,8 +636,6 @@ void inventory()
                 else
                     fill(200, 0, 0);
                 noStroke();
-                println(i + ":" + wornItems[i].durability / allItems[wornItems[i].id].durability);
-                println(i + ":" + 48 * wornItems[i].durability / allItems[wornItems[i].id].durability);
                 rect(x - 7,  y + 35, 48.0 * wornItems[i].durability / allItems[wornItems[i].id].durability, 10);
                 stroke(125);
                 noFill();
