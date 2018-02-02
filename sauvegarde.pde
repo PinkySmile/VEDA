@@ -53,11 +53,11 @@ void loadGame()
         BufferedReader bufferedReader = new BufferedReader(fileReader);
         name = bufferedReader.readLine();
         lifeMax = int(bufferedReader.readLine());
-        life = int(bufferedReader.readLine());
+        life = float(bufferedReader.readLine());
         energyMax = int(bufferedReader.readLine());
-        energy = int(bufferedReader.readLine());
-        playerX = int(bufferedReader.readLine());
-        playerY = int(bufferedReader.readLine());
+        energy = float(bufferedReader.readLine());
+        playerX = float(bufferedReader.readLine());
+        playerY = float(bufferedReader.readLine());
         camPosX = int(bufferedReader.readLine());
         camPosY = int(bufferedReader.readLine());
         progress = int(bufferedReader.readLine());
@@ -69,16 +69,13 @@ void loadGame()
         println("Inventory of size " + items.length);
         for(int i = 0 ; i < items.length ; i++) {
             int index = int(bufferedReader.readLine()) - 1;
-            println("Index " + index);
             float durability = float(bufferedReader.readLine());
-            println("Durability " + durability);
             if (index >= 0 && index < allItems.length) {
                 items[i] = copyItemObject(allItems[index]);
                 items[i].durability = durability;
             } else
                 items[i] = null;
             itemsQuantity[i] = int(bufferedReader.readLine());
-            println("Quantity " + itemsQuantity[i]);
         }
         playTime = int(bufferedReader.readLine());
         for (int i = 0; i < wornItems.length; i++) {
@@ -86,7 +83,9 @@ void loadGame()
             float durability = float(bufferedReader.readLine());
             if (index >= 0 && index < allItems.length) {
                 wornItems[i] = copyItemObject(allItems[index]);
-                wornItems[i].durability = durability;
+                wornItems[i].durability = (durability > allItems[wornItems[i].id].durability ? allItems[wornItems[i].id].durability : durability);
+                for (int j = 0; j < wornItems[i].resistances.length; j++)
+                    wornItems[i].resistances[j] *= durability/ allItems[wornItems[i].id].durability;
             } else
                 wornItems[i] = null;
         }
