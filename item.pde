@@ -2,7 +2,7 @@ class Item {
     int id;
     int ability;
     int[] damages = new int[6];
-    int[] resistances = new int[6];
+    float[] resistances = new float[6];
     float durability;
     String name;
     String type;

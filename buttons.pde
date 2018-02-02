@@ -62,7 +62,9 @@ void drawMenus()
     if(menu == -1) {
         menuPos[46] = width - 25;
         menuPos[47] = 100;
-    } else if(menu >= 0 && menu <= 6) {
+    } else if (menu == 2) {
+        menuDisabled[23] = true;
+    } else if (menu >= 0 && menu <= 6) {
         tint(255, 150);
         menuPos[46] = width - 25;
         menuPos[47] = 20;
