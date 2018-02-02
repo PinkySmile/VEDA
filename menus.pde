@@ -556,9 +556,6 @@ void inventory()
         text(damagesName[i] + ": " + (float(floor(res * 100)) / 100), width - 220, 290 + 30 * i);
     }
     fill(255);
-    for (int i = 0; i < items.length; i++)
-        if (compareStrings(language, "yolo"))
-            glitchPrint(true, 20);
     for (int i = 0; i < items.length; i++) {
         PImage sprite = null;
         
@@ -643,6 +640,9 @@ void inventory()
             }
         }
     }
+    if (compareStrings(language, "yolo"))
+        for (int i = 0; i < items.length; i++)
+            glitchPrint(true, 20);
 }
 
 void lvlCreator()

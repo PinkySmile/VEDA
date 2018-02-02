@@ -541,7 +541,7 @@ void keyPressed()
             } else if (key == 'x') {
                 takeDamages(-1, 7);
             } else if (key == 'r') {
-                file = new File("text_files/left");
+                file = new File("save/left");
                 if (file.exists())
                     file.delete();
                 setup();

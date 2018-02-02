@@ -129,7 +129,7 @@ void loadDialogs(String path)
                     dialogs[i][j][k] = "";
         BufferedReader bufferedReader = createReader(path);
         if (bufferedReader == null)
-            bufferedReader = createReader("data/dialogs_en");
+            return;
         String line;
         while((line = bufferedReader.readLine()) != null) {
             if(line.charAt(0) == '{') {

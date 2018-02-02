@@ -1,7 +1,7 @@
 void loadCutscenes(String path)
 {
     try {
-        file = new File(path);
+        file = new File(sketchPath(path));
         FileReader fileReader = new FileReader(file);
         BufferedReader bufferedReader = new BufferedReader(fileReader);
         String line;

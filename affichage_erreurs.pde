@@ -5,9 +5,6 @@ void errorMsg(String errorMessage,AudioPlayer sound,Exception exc)
     output = createWriter("errors.log");
     fatalError = false;
     theErrorMessage = "[ERROR] : " + errorMessage;
-    for(int i = 0 ; i < _temp.length ; i++)
-        if (output != null)
-            output.println(_temp[i]);
     if(exc != null) {
         theErrorMessage = theErrorMessage + " :   "+exc+"\n";
         for(int i = 0 ; i < exc.getStackTrace().length ; i++)
@@ -15,9 +12,13 @@ void errorMsg(String errorMessage,AudioPlayer sound,Exception exc)
     } else {
         theErrorMessage = theErrorMessage + ""+"\n";
     }
-    output.print("["+transformInt(day(),2)+"/"+transformInt(month(),2)+"/"+transformInt(year(),2)+"]["+transformInt(hour(),2)+":"+transformInt(minute(),2)+":"+transformInt(second(),2)+"] "+theErrorMessage);
-    output.flush();
-    output.close();
+    if (output != null) {
+        for(int i = 0 ; _temp != null && i < _temp.length ; i++)
+            output.println(_temp[i]);
+        output.print("["+transformInt(day(),2)+"/"+transformInt(month(),2)+"/"+transformInt(year(),2)+"]["+transformInt(hour(),2)+":"+transformInt(minute(),2)+":"+transformInt(second(),2)+"] "+theErrorMessage);
+        output.flush();
+        output.close();
+    }
     try {
         Music.pause();
         Musics[4].pause();
@@ -61,9 +62,11 @@ void error(String errorMessage, Exception exc){
             theErrorMessage = theErrorMessage + "        "+exc.getStackTrace()[i]+"\n";
     } else
         theErrorMessage = theErrorMessage + ""+"\n";
+    try {
     output.print("["+transformInt(day(),2)+"/"+transformInt(month(),2)+"/"+transformInt(year(),2)+"]["+transformInt(hour(),2)+":"+transformInt(minute(),2)+":"+transformInt(second(),2)+"] "+theErrorMessage);
     output.flush();
     output.close();
+    } catch(Exception e) {}
     //JOptionPane.showMessageDialog(null, "[FATAL] : "+errorMessage+"\n\nSwitching back to main menu", "Error" , JOptionPane.ERROR_MESSAGE);
     menu = -1;
 }

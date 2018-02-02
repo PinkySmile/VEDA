@@ -492,7 +492,28 @@ int objects[] = new int[maxNbOfObjectsPerLevel];
 int cases[][] = new int[4][2];
 int[] baseStatsResistance = new int[6];
 int[] damageBuffer = new int[8];
-int[] keys = {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1};
+int[] keys = {
+    90,
+    83,
+    81,
+    68,
+    69,
+    27,
+    32,
+    67,
+    65,
+    87,
+    88,
+    49,
+    50,
+    51,
+    52,
+    53,
+    54,
+    55,
+    56,
+    16
+};
 int[] pressedKeysCode = new int[40];
 int[] cutsceneStart = new int[200];
 int[] jpp = new int[50];
@@ -694,7 +715,7 @@ void setup()
 
     //Chargement du fichier de version
     try {
-        path = "version.txt";
+        path = "data/version.txt";
         BufferedReader bufferedReader = createReader(path);
         version = bufferedReader.readLine();
         bufferedReader.close();
@@ -855,7 +876,7 @@ void setup()
 
     loadSettings();
 
-    file = new File("text_files/left");
+    file = new File("save/left");
     if (file.exists()) {
         file.delete();
         if (compareStrings(language, "fr"))

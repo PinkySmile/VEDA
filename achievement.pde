@@ -14,7 +14,7 @@ void loadAchievements()
             try {
                 achievements[i] = lines[3 * i];
                 achievementsContent[i] = lines[3 * i + 1];
-                achievementImage[i] = loadImage(lines[3*i+2]);
+                achievementImage[i] = loadImage(lines[3 * i + 2]);
             } catch(Exception f) {}
         }
     } catch(Exception e) {

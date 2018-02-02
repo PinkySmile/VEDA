@@ -143,7 +143,7 @@ void mousePressed()
                     }
                 } else if (i == 3) {   //boutton "Quit"
                     if (!compareStrings(language, "yolo")) {
-                        file = new File("text_files/left");
+                        file = new File("save/left");
                         if (file.exists())
                             file.delete();
                         System.exit(0);

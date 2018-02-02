@@ -3,7 +3,10 @@ void saveSettings()
     String path = "";
 
     try{
-        path = "text_files/setting.txt";
+        path = "save";
+        file = new File(path);
+        file.mkdirs();
+        path += "/setting.txt";
         file = new File(path);
         file.delete();
         FileWriter fileWriter = new FileWriter(file);
@@ -41,7 +44,7 @@ void loadSettings()
     String path = "";
 
     try{
-        path = "text_files/setting.txt";
+        path = "save/setting.txt";
         file = new File(path);
         FileReader fileReader = new FileReader(file);
         BufferedReader bufferedReader = new BufferedReader(fileReader);
@@ -71,32 +74,5 @@ void loadSettings()
     } catch(Exception e) {
         e.printStackTrace();
         errorMsg("Unexpected error occured while loading settings", SFX[1], e);
-    }
-}
-
-//******************************************Chargement des noms d'objets***************************************************
-void loadItemsNames(String language)
-{
-    String path = "";
-
-    try{
-        path = "text_files/items_" + language + ".txt";
-        file = new File(path);
-        FileReader fileReader = new FileReader(file);
-        BufferedReader bufferedReader = new BufferedReader(fileReader);
-        String line = bufferedReader.readLine();
-        for (int i = 0 ; line != null ; i++) {
-            
-        }
-        bufferedReader.close();
-        fileReader.close();
-    } catch(FileNotFoundException e) {
-        if(language == "en") {
-            errorMsg("[ERROR]: Couldn't load items' names", SFX[1], e);
-        } else
-            loadItemsNames("en");
-    } catch(Exception e) {
-        e.printStackTrace();
-        errorMsg("Unexpected error occured while loading items names", SFX[1], e);
     }
 }
