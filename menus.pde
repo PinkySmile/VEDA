@@ -138,6 +138,21 @@ void languageMenu()
     enableMenus(currentButton, currentButton + languagesNb);
 }
 
+void dispArmor(int temp, boolean death)
+{
+    for (int i = 0; i < wornItems.length; i++)
+        if (wornItems[i] >= 0 && wornItems[i] < armorTextures.length)
+            if (!death)
+                if (armorTextures[wornItems[i]][temp][chara[0]][chara[1]][animation - 1] != null)
+                    image(armorTextures[wornItems[i]][temp][chara[0]][chara[1]][animation - 1], playerX + camPosX, playerY + camPosY);
+                else
+                    println("[" + wornItems[i] + "][" + temp + "][" + chara[0] + "][" + chara[1] + "][" + (animation - 1) + "]");
+            else if (armorTextures[wornItems[i]][temp][0][0][1] != null)
+                image(armorTextures[wornItems[i]][temp][0][0][1], playerX + camPosX, playerY + camPosY + 16);
+            else
+                println("[" + wornItems[i] + "][" + temp + "][0][0][1]");
+}
+
 void inGame()
 {
     if(inCutscene)
@@ -277,10 +292,13 @@ void inGame()
         int temp = 0;
         if (character == "female")
             temp = 1;
-        if (compareStrings(language, "yolo") && animation == 2)
-            image(character_image[4][4][4][4], 0, 0);
-        if (hitBuffer % 2 == 0)
+        if (compareStrings(language, "yolo") && animation == 2 && hitBuffer % 2 == 0) {
+            image(glitched_character, playerX+camPosX, playerY+camPosY);
+            dispArmor(temp, false);
+        } else if (hitBuffer % 2 == 0) {
             image(character_image[temp][chara[0]][chara[1]][animation-1], playerX+camPosX, playerY+camPosY);
+            dispArmor(temp, false);
+        }
     }
     catch(Exception e) {
         e.printStackTrace();
@@ -472,6 +490,7 @@ void gameover()
             image(glitched_character, playerX + camPosX, playerY + camPosY);
         else
             image(character_image[temp][0][0][1], playerX + camPosX, playerY + camPosY + 16);
+        dispArmor(temp, true);
     }
     catch(Exception e) {
         e.printStackTrace();
