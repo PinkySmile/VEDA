@@ -729,6 +729,7 @@ void keyPressed()
                     }
                 if (keys[4] == keyCode) {
                     status = "static";
+                    choosingInInventory = false;
                     if (menu == 2)
                         menu = 0;
                     else if (menu == 0)
@@ -830,6 +831,55 @@ void keyPressed()
             textTyped = "";
             gameoverDisplayed = true;
         }
+        if(keyCode == RIGHT && inventoryPage < items.length / 12 - 1) {
+            inventoryPage--;
+        } else if(keyCode == DOWN && menu == 2) {
+            if (!choosingInInventory) {
+                selectedSlotInventory++;
+                if (selectedSlotInventory < 12 && items[selectedSlotInventory] == null)
+                    selectedSlotInventory = 12;
+                if (selectedSlotInventory > 17)
+                    selectedSlotInventory = (items[0] == null ? 12 : 0);
+            } else {
+                selectedAnswerInventory++;
+                if (selectedAnswerInventory > 2)
+                    selectedAnswerInventory = 0;
+            }
+        } else if(keyCode == UP && menu == 2) {
+            if (!choosingInInventory) {
+                selectedSlotInventory--;
+                while (selectedSlotInventory >= 0 && selectedSlotInventory < 12 && items[selectedSlotInventory] == null)
+                    selectedSlotInventory--;
+                if (selectedSlotInventory < 0)
+                    selectedSlotInventory = 17;
+            } else {
+                selectedAnswerInventory--;
+                if (selectedAnswerInventory < 0)
+                    selectedAnswerInventory = 2;
+            }
+        } else if(keyCode == LEFT && menu == 2 && inventoryPage > 0)
+            inventoryPage++;
+        else if (keyCode == ENTER && menu == 2) {
+            if (choosingInInventory) {
+                if (selectedAnswerInventory == 0)
+                    equip(selectedSlotInventory);
+                else if (selectedAnswerInventory == 2) {
+                    if (selectedSlotInventory < 12) {
+                        items[selectedSlotInventory] = null;
+                        itemsQuantity[selectedSlotInventory] = 0;
+                        tidyInventory();
+                        while (selectedSlotInventory >= 0 && items[selectedSlotInventory] == null)
+                            selectedSlotInventory--;
+                        if (selectedSlotInventory < 0)
+                            selectedSlotInventory = 17;
+                    } else {
+                        wornItems[selectedSlotInventory - 12] = null;
+                    }
+                }
+            }
+            choosingInInventory = !choosingInInventory;
+        } else if(keyCode == TAB)
+            displayAttack = true;
         keyCode = 0;
         key = 0;
     } catch (Exception e) {
@@ -846,6 +896,8 @@ void keyReleased()
     for (int k = 0 ; k < pressedKeysCode.length ; k++)
         if (keyCode == pressedKeysCode[k])
             pressedKeysCode[k] = 0;
+    if(keyCode == TAB)
+        displayAttack = false;
 }
 
 int findSpace()

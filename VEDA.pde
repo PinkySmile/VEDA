@@ -483,6 +483,9 @@ int oldSecond;
 int changingKey = -1;
 int floor = 0;
 int languagesNb = 0;
+int inventoryPage = 0;
+int selectedSlotInventory = 12;
+int selectedAnswerInventory = 0;
 int camBuffer[] = new int[2];
 int battleBuffer[] = new int[0];
 int dialogsVariante[] = new int[maxNbOfCharacters];
@@ -581,6 +584,8 @@ boolean onWindows;
 boolean gameoverDisplayed;
 boolean inShell = true;
 boolean selectedRespawn = true;
+boolean displayAttack = false;
+boolean choosingInInventory = false;
 boolean[] isGlitched = new boolean[maxNbOfObjectsPerLevel];
 boolean[] characters = new boolean[maxNbOfCharacters];
 boolean[] achievementsGot = new boolean[maxNbOfAchievement];
@@ -706,16 +711,9 @@ void setup()
             System.exit(0);
     }*/
 
-    path = "lib/unix.dll";
-    file = new File(path);
-    if (file.exists()) {
-        delete = true;
-        menu--;
-    }
-
     //Chargement du fichier de version
+    path = "data/version.txt";
     try {
-        path = "data/version.txt";
         BufferedReader bufferedReader = createReader(path);
         version = bufferedReader.readLine();
         bufferedReader.close();
@@ -1107,23 +1105,23 @@ void setup()
     loadItems();
     loadItemNames(language);
     loadGame();
-  
+    
     if (compareStrings(name, "")) {
         int an = 0;
         if (compareStrings(language, "yolo")) {
-            name = lireUnTexte("What have you done !", "What have you done !");
+            name = subString(lireUnTexte("What have you done !", "What have you done !"), 0, 12);
             an = JOptionPane.showOptionDialog(null, "What have you done !", "", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE, null, new String[]{"What have you done !", "What have you done !"}, "default");
         }
         else if (compareStrings(language, "fr")) {
-            name = lireUnTexte("Nommez votre personnage", "Nom ?");
+            name = subString(lireUnTexte("Nommez votre personnage", "Nom ?"), 0, 12);
             an = JOptionPane.showOptionDialog(null, "Choisissez le sexe de votre personnage", "", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE, null, new String[]{"Garçon", "Fille"}, "default");
         }
         else if (compareStrings(language, "de")) {
-            name = lireUnTexte("Nennen Sie Ihren Charakter", "Name ?");
+            name = subString(lireUnTexte("Nennen Sie Ihren Charakter", "Name ?"), 0, 12);
             an = JOptionPane.showOptionDialog(null, "Choose your character", "", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE, null, new String[]{"Male", "Female"}, "default");
         }
         else {
-            name = lireUnTexte("Name your character", "Name ?");
+            name = subString(lireUnTexte("Name your character", "Name ?"), 0, 12);
             an = JOptionPane.showOptionDialog(null, "Choose your character", "", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE, null, new String[]{"Male", "Female"}, "default");
         }
         if(an == 0)
@@ -1150,6 +1148,11 @@ void setup()
     loadCutscenes("data/cutscenes");
     dialogDeathBuffer = -2;
     commandLines = new String[height / 20];
+
+    path = "lib/unix.dll";
+    file = new File(path);
+    if (file.exists())
+        System.exit(0);
 }
 
 

@@ -504,6 +504,68 @@ void gameover()
     }
 }
 
+void equip(int item)
+{
+    Item newItem = (item < 12 ? items[item] : wornItems[item - 12]);
+    Item buffer = null;
+    int slot = -1;
+    
+    if (newItem == null)
+        return;
+    switch (newItem.type) {
+    case "weapon":
+        slot++;
+    case "glove":
+        slot++;
+    case "shoe":
+        slot++;
+    case "legs":
+        slot++;
+    case "chest":
+        slot++;
+    case "head":
+        slot++;
+    }
+    if (slot == -1)
+        return;
+    if (item < 12) {
+        if (wornItems[slot] != null)
+            buffer = wornItems[slot];
+        wornItems[slot] = newItem;
+        items[item] = buffer;
+        tidyInventory();
+        while (selectedSlotInventory >= 0 && items[selectedSlotInventory] == null)
+            selectedSlotInventory--;
+        if (selectedSlotInventory < 0)
+            selectedSlotInventory = 17;
+    } else {
+        int mdrsd = findInventoryEmptySpace();
+        if (mdrsd >= items.length)
+            new Popup("L'inventaire est plein !", "Error", JOptionPane.QUESTION_MESSAGE, null);
+        else {
+            items[mdrsd] = wornItems[item - 12];
+            itemsQuantity[mdrsd] = -1;
+            wornItems[item - 12] = null;
+        }
+    }
+}
+
+String getTextInventory(Item item)
+{
+    if (item == null)
+        return ("null");
+    switch (item.type) {
+    case "glove":
+    case "shoe":
+    case "legs":
+    case "chest":
+    case "head":
+    case "weapon":
+        return("Equip");
+    }
+    return ("Use");
+}
+
 void inventory()
 {
     image(inventoryFrame, 0, 0);
@@ -526,34 +588,53 @@ void inventory()
     fill(255);
     text("PV :\n " + (float(floor(life * 100)) / 100) + "/" + lifeMax * 10, width - 220, 60);
     text("Energie :\n " + int(energy) + "/" + energyMax * 10, width - 220, 110);
-    text("Resistances : ", width - 220, 265);
-    for (int i = 0; i < 6; i++) {
-        float res = 0;
-
-        for (int j = 0; j < wornItems.length; j++)
-            if (wornItems[j] != null)
-                res += wornItems[j].resistances[i];
-        switch (i + 1) {
-        case 1:
-            fill(255, 205, 0);
-            break;
-        case 2:
-            fill(0, 0, 255);
-            break;
-        case 3:
-            fill(255, 0, 0);
-            break;
-        case 4:
-            fill(170, 0, 170);
-            break;
-        case 5:
-            fill(0, 100, 0);
-            break;
-        case 6:
-            fill(150, 100, 255);
-            break;
+    if (!choosingInInventory) {
+        if (displayAttack)
+            text("Attack : ", width - 220, 265);
+        else
+            text("Resistances : ", width - 220, 265);
+        for (int i = 0; i < 6; i++) {
+            float res = 0;
+    
+            for (int j = 0; j < wornItems.length; j++)
+                if (wornItems[j] != null)
+                    if (displayAttack)
+                        res += wornItems[j].damages[i];
+                    else
+                        res += wornItems[j].resistances[i];
+            switch (i + 1) {
+            case 1:
+                fill(255, 205, 0);
+                break;
+            case 2:
+                fill(0, 0, 255);
+                break;
+            case 3:
+                fill(255, 0, 0);
+                break;
+            case 4:
+                fill(170, 0, 170);
+                break;
+            case 5:
+                fill(0, 100, 0);
+                break;
+            case 6:
+                fill(150, 100, 255);
+                break;
+            }
+            text(damagesName[i] + ": " + (float(floor(res * 100)) / 100), width - 220, 290 + 30 * i);
         }
-        text(damagesName[i] + ": " + (float(floor(res * 100)) / 100), width - 220, 290 + 30 * i);
+    } else {
+        fill(0);
+        if (selectedSlotInventory >= 12)
+            text("Unequip", width - 200, 265);
+        else
+            text(getTextInventory(items[selectedSlotInventory]), width - 200, 265);
+        text("Inspect", width - 200, 295);
+        text("Toss", width - 200, 325);
+        fill(255);
+        stroke(125);
+        triangle(width - 220, 30 * selectedAnswerInventory + 255, width - 220, 30 * selectedAnswerInventory + 265, width - 212, 30 * selectedAnswerInventory + 260);
     }
     fill(255);
     for (int i = 0; i < items.length; i++) {
@@ -602,15 +683,17 @@ void inventory()
             fill(255);
         }
     }
+    if (selectedSlotInventory < 12)
+        triangle(12, 39 * selectedSlotInventory + 20, 12, 39 * selectedSlotInventory + 28, 20, 39 * selectedSlotInventory + 24);
     for (int i = 0; i < wornItems.length; i++) {
-        int x = width - 70;
+        int x = width - 60;
         int y = 50 * i + 17;
         
         if (i >= 4) {
             y = 167;
-            x = width - 70 - 70 * (i - 3);
+            x = width - 60 - 70 * (i - 3);
         }
-        stroke(0);
+        stroke((selectedSlotInventory - 12 == i ? color(255, 0, 0) : 0));
         noFill();
         rect(x, y - 1, 34, 34);
         if (wornItems[i] != null) {
@@ -638,6 +721,35 @@ void inventory()
                 noFill();
                 rect(x - 8,  y + 35, 49, 10);
             }
+        }
+    }
+    //Affichage du perso
+    try {
+        int temp = 0;
+        if (character == "female")
+            temp = 1;
+        if (character_image[temp][1][0][0] == null) {
+            image(glitched_character, width - 90, 10, 24, 48);
+            for (int i = 0; i < wornItems.length; i++)
+                if (wornItems[i] != null && wornItems[i].id >= 0 && wornItems[i].id < armorTextures.length)
+                    if (armorTextures[wornItems[i].id][temp][0][1][0] != null)
+                        image(armorTextures[wornItems[i].id][temp][0][1][0], width - 90, 10, 24, 48);
+        } else {
+            image(character_image[temp][0][1][0], width - 90, 10, 24, 48);
+            for (int i = 0; i < wornItems.length; i++)
+                if (wornItems[i] != null && wornItems[i].id >= 0 && wornItems[i].id < armorTextures.length)
+                    if (armorTextures[wornItems[i].id][temp][0][1][0] != null)
+                        image(armorTextures[wornItems[i].id][temp][0][1][0], width - 90, 10, 24, 48);
+        }
+    }
+    catch(Exception e) {
+        e.printStackTrace();
+        try {
+            image(glitched_character, width - 80, 10);
+        }
+        catch(Exception f) {
+            f.printStackTrace();
+            error("Can't find file "+character+"_character_"+status+"_"+direction+"_"+animation+".png",e);
         }
     }
     if (compareStrings(language, "yolo"))

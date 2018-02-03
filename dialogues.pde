@@ -112,7 +112,7 @@ void showDialogBox()
         if(activated) {
             noStroke();
             fill(255);
-            triangle(10+selectedAnswer*width/4,height-20,10+selectedAnswer*width/4,height-30,20+selectedAnswer*width/4,height-25);
+            triangle(10 + selectedAnswer * width / 4, height - 20, 10 + selectedAnswer * width / 4, height- 30, 20 + selectedAnswer * width / 4, height - 25);
         }
     }
 }

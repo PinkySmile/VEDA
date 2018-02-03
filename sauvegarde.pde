@@ -51,7 +51,7 @@ void loadGame()
         println("loading game from " + file.getAbsolutePath());
         FileReader fileReader = new FileReader(file);
         BufferedReader bufferedReader = new BufferedReader(fileReader);
-        name = bufferedReader.readLine();
+        name = subString(bufferedReader.readLine(), 0, 12);
         lifeMax = int(bufferedReader.readLine());
         life = float(bufferedReader.readLine());
         energyMax = int(bufferedReader.readLine());
