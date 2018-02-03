@@ -158,6 +158,7 @@ void drawMenus()
 //Créations des bouttons
 void classicButtons()
 {
+    delMenus();
     if(compareStrings(language,"yolo")) {
         color r = color(255,0,0);
         newMenu(10,10,"What have yˆB„Àuô‰$µXûýÿ1Ûè²  £PA ü‰÷‰Ø¹   º   ó«‰T$‹µdxýÿ¹ou done !",r,140,40,true);
