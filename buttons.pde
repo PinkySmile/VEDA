@@ -74,7 +74,7 @@ void drawMenus()
             noStroke();
             int current_color = 0;
             int alph = 255;
-            if (mouseX <= menuPos[2 * i] + menuSize[2 * i] && mouseX >= menuPos[2 * i] && mouseY <= menuPos[2 * i + 1]+menuSize[2 * i + 1] && mouseY >= menuPos[2 * i + 1]) {
+            if (mouseX <= menuPos[2 * i] + menuSize[2 * i] && mouseX >= menuPos[2 * i] && mouseY <= menuPos[2 * i + 1] + menuSize[2 * i + 1] && mouseY >= menuPos[2 * i + 1]) {
                 current_color = menuColor[i] - 100;
                 if (i == 1 && compareStrings(language, "yolo"))
                     bug = godEater;
@@ -160,33 +160,33 @@ void classicButtons()
 {
     delMenus();
     if(compareStrings(language,"yolo")) {
-        color r = color(255,0,0);
-        newMenu(10,10,"What have yˆB„Àuô‰$µXûýÿ1Ûè²  £PA ü‰÷‰Ø¹   º   ó«‰T$‹µdxýÿ¹ou done !",r,140,40,true);
-        newMenu(width-32,height-32,"ƒì…À„¾",r,32,32,true);
-        newMenu(10,60,"€>SàmŒJ¯—àôHò xÇÐû‡éÀu /H¸\\",r,140,40,true);
-        newMenu(10,110,"CÙiŒ©è¿—(EUå¥òÌPÄê€Ñ¼vƒu¬.™å'@àFÄ­˜?£. ®r!z+†ðœ    IEND®B`‚",r,140,40,true);
-        newMenu(width-65,height-32,"",r,33,32,true);
-        newMenu(160,10,"",r,140,40,true);
-        newMenu(160,60,"",r,140,40,true);
-        newMenu(160,210,"",r,140,40,true);
-        newMenu(160,110,"",r,140,40,true);
-        newMenu(width/2-70,10,"",r,140,40,true);
-        newMenu(width/2-70,60,"",r,140,40,true);
-        newMenu(width-150,height-50,"",r,140,40,true);
-        newMenu(10,height-50,"",r,100,40,true);
-        newMenu(160,160,"",r,140,40,true);
-        newMenu(100,10,"",255,140,40,true);
-        newMenu(100,60,"",255,140,40,true);
-        newMenu(width-180,height-40,"ˆB„Àuô‰$µXûýÿ1Ûè²  £PA ü‰÷‰Ø¹   º   ó«‰T$‹µdxýÿ¹",255,180,40,true);
-        newMenu(width/2-70,110,"",255,140,40,true);
-        newMenu(width/2-100,height/2-40,"Yes",255,80,80,true);
-        newMenu(width/2+20,height/2-40,"No",255,80,80,true);
-        newMenu(0,height-40,"",255,80,40,true);
-        newMenu(0,height-80,"",255,80,40,true);
-        newMenu(width-150,height-50,"",255,140,40,true);
-        newMenu(width-24,50,"",255,25,25,true); //achievements
-        newMenu(width-150,height-50,"",255,140,40,true);
-        newMenu(200,10,"",color(25,25,255),80,40,true);                //25
+        color r = color(255, 0, 0);
+        newMenu(10, 10,"What have yˆB„Àuô‰$µXûýÿ1Ûè²  £PA ü‰÷‰Ø¹   º   ó«‰T$‹µdxýÿ¹ou done !",r, 140, 40,true);
+        newMenu(width-32,height-32,"ƒì…À„¾",r, 32, 32,true);
+        newMenu(10, 60,"€>SàmŒJ¯—àôHò xÇÐû‡éÀu /H¸\\",r, 140, 40,true);
+        newMenu(10, 110,"CÙiŒ©è¿—(EUå¥òÌPÄê€Ñ¼vƒu¬.™å'@àFÄ­˜?£. ®r!z+†ðœ    IEND®B`‚",r, 140, 40,true);
+        newMenu(width-65,height-32,"",r, 33, 32,true);
+        newMenu(160, 10,"",r, 140, 40,true);
+        newMenu(160, 60,"",r, 140, 40,true);
+        newMenu(160, 210,"",r, 140, 40,true);
+        newMenu(160, 110,"",r, 140, 40,true);
+        newMenu(width/2-70, 10,"",r, 140, 40,true);
+        newMenu(width/2-70, 60,"",r, 140, 40,true);
+        newMenu(width-150,height-50,"",r, 140, 40,true);
+        newMenu(10,height-50,"",r, 100, 40,true);
+        newMenu(160, 160,"",r, 140, 40,true);
+        newMenu(100, 10,"", 255, 140, 40,true);
+        newMenu(100, 60,"", 255, 140, 40,true);
+        newMenu(width-180,height-40,"ˆB„Àuô‰$µXûýÿ1Ûè²  £PA ü‰÷‰Ø¹   º   ó«‰T$‹µdxýÿ¹", 255, 180, 40,true);
+        newMenu(width/2-70, 110,"", 255, 140, 40,true);
+        newMenu(width/2-100,height/2-40,"Yes", 255, 80, 80,true);
+        newMenu(width/2 + 20,height/2-40,"No", 255, 80, 80,true);
+        newMenu(0,height-40,"", 255, 80, 40,true);
+        newMenu(0,height-80,"", 255, 80, 40,true);
+        newMenu(width-150,height-50,"", 255, 140, 40,true);
+        newMenu(width-24, 50,"", 255, 25, 25,true); //achievements
+        newMenu(width-150,height-50,"", 255, 140, 40,true);
+        newMenu(200, 10,"",color(25, 25, 255), 80, 40,true);                //25
         currentButton = 25;
         createLanguageButtons();
       

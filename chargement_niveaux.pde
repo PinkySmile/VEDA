@@ -19,7 +19,7 @@ boolean loadLevel(String levelName, int floorNbr)
             objects[a] = int(line);
             posObjectX[a] = int(bufferedReader.readLine());
             posObjectY[a] = int(bufferedReader.readLine());
-            isGlitched[a] = (int(random(0,2)) == 1);
+            isGlitched[a] = (int(random(0, 2)) == 1);
             println("Created object " + a + " at pos "+ posObjectX[a] + ", " + posObjectY[a] + " with ID " + objects[a]);
             a++;
         }
@@ -62,7 +62,7 @@ boolean loadLevelPath(String theLevelPath, int floorNbr)
             posObjectX[sdqfqsf] = x;
             posObjectY[sdqfqsf] = y;
             x += 2;
-            if(x*16-16 >= width) {
+            if(x * 16-16 >= width) {
                 y += 2;
                 x = 1;
             }
@@ -80,7 +80,7 @@ boolean loadLevelPath(String theLevelPath, int floorNbr)
             posObjectX[sdqfqsf] = x;
             posObjectY[sdqfqsf] = y;
             y += 2;
-            if(y*16-16 >= height) {
+            if(y * 16-16 >= height) {
                 x += 2;
                 y = 1;
             }

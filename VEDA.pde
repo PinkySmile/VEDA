@@ -942,7 +942,7 @@ void setup()
     //            for(int i = 0 ; i < _temp.length ; i ++)
     //                output.println(_temp[i]);
     //        } catch(Exception f) {}
-    //        output.println("["+transformInt(day(),2)+"/"+transformInt(month(),2)+"/"+transformInt(year(),2)+"]["+transformInt(hour(),2)+":"+transformInt(minute(),2)+":"+transformInt(second(),2)+"]"+theErrorMessage);
+    //        output.println("["+transformInt(day(), 2)+"/"+transformInt(month(), 2)+"/"+transformInt(year(), 2)+"]["+transformInt(hour(), 2)+":"+transformInt(minute(), 2)+":"+transformInt(second(), 2)+"]"+theErrorMessage);
     //        output.flush();
     //        output.close();
     //    }
@@ -1461,7 +1461,7 @@ void draw()
         if(menu < 6 && menu != 3)
             enableMenus(23, 23);
         drawMenus();
-        tint(255,255);
+        tint(255, 255);
         textSize(10);
         if (compareStrings(language, "yolo"))
             textSize(random(1, 50));
@@ -1596,7 +1596,7 @@ void draw()
         SFX[1].play();
         image(godEater, 0, 0, width, height);
     } else if (menu == -9)
-        image(null,0,0);
+        image(null, 0, 0);
     else if (menu == -2) {
           if (delete) {
           } else {
@@ -1612,13 +1612,13 @@ void draw()
     if (debugMode && menu == 0) {
         for(int i = 0 ; i < characters.length ; i++) {
             if(characters[i]) {
-                if (playerY+34 >= characterY[i]+16 && playerY+16 <= characterY[i]+16 && playerX+3 <= characterX[i]+16 && characterX[i]+16 <= playerX+28)
+                if (playerY+34 >= characterY[i] + 16 && playerY+16 <= characterY[i] + 16 && playerX+3 <= characterX[i] + 16 && characterX[i] + 16 <= playerX + 28)
                     down = false;
-                if (playerY+16 >= characterY[i]+16 && playerY <= characterY[i]+16 && playerX+3 <= characterX[i]+16 && characterX[i]+16 <= playerX+28)
+                if (playerY+16 >= characterY[i] + 16 && playerY <= characterY[i] + 16 && playerX+3 <= characterX[i] + 16 && characterX[i] + 16 <= playerX + 28)
                     up = false;
-                if (playerY+33 >= characterY[i]+16 && playerY+1 <= characterY[i]+16 && playerX+2 <= characterX[i]+16 && characterX[i]+16 <= playerX+28)
+                if (playerY+33 >= characterY[i] + 16 && playerY+1 <= characterY[i] + 16 && playerX + 2 <= characterX[i] + 16 && characterX[i] + 16 <= playerX + 28)
                     left = false;
-                if (playerY+33 >= characterY[i]+16 && playerY+1 <= characterY[i]+16 && playerX <= characterX[i]+16-18 && playerX >= characterX[i]+16-30)
+                if (playerY+33 >= characterY[i] + 16 && playerY+1 <= characterY[i] + 16 && playerX <= characterX[i] + 16-18 && playerX >= characterX[i] + 16-30)
                     right = false;
             }
         }
@@ -1629,27 +1629,27 @@ void draw()
                     if(objects[i] == solidObjectsPlayer[j])
                         flag = true;
             if(flag) {
-                if (playerY+32  >=  posObjectY[i]*16-16      &&     playerY+playerHeight/2  <=  posObjectY[i]*16-16  &&     playerX+1  <=  posObjectX[i]*16-16 +16     &&     playerX+playerWidth-1  >=  posObjectX[i]*16-16)            
+                if (playerY+32  >=  posObjectY[i] * 16-16      &&     playerY+playerHeight/2  <=  posObjectY[i] * 16-16  &&     playerX+1  <=  posObjectX[i] * 16-16 +16     &&     playerX+playerWidth-1  >=  posObjectX[i] * 16-16)            
                     down = false;
-                if (playerY+16 >= posObjectY[i]*16-16 && playerY+playerHeight/2-1 <= posObjectY[i]*16 && playerX+1 <= posObjectX[i]*16 && posObjectX[i]*16-16 <= playerX+playerWidth-1)
+                if (playerY+16 >= posObjectY[i] * 16-16 && playerY+playerHeight/2-1 <= posObjectY[i] * 16 && playerX+1 <= posObjectX[i] * 16 && posObjectX[i] * 16-16 <= playerX+playerWidth-1)
                     up = false;
-                if (playerY+31 >= posObjectY[i]*16-15 && playerY+playerHeight/2 <= posObjectY[i]*16 && playerX <= posObjectX[i]*16 && posObjectX[i]*16-16 <= playerX)
+                if (playerY+31 >= posObjectY[i] * 16-15 && playerY+playerHeight/2 <= posObjectY[i] * 16 && playerX <= posObjectX[i] * 16 && posObjectX[i] * 16-16 <= playerX)
                     left = false;
-                if (playerY+31 >= posObjectY[i]*16-15 && playerY+playerHeight/2 <= posObjectY[i]*16 && playerX+playerWidth <= posObjectX[i]*16 && playerX+playerWidth >= posObjectX[i]*16-16)
+                if (playerY+31 >= posObjectY[i] * 16-15 && playerY+playerHeight/2 <= posObjectY[i] * 16 && playerX+playerWidth <= posObjectX[i] * 16 && playerX+playerWidth >= posObjectX[i] * 16-16)
                     right = false;
             }
         }
         stroke(0);
         noFill();
         rect(playerX+camPosX, playerY+playerHeight/2-1+camPosY, playerWidth, playerHeight/2-2);
-        stroke(255,0,0);
-        rect(playerX+camPosX+2, playerY+playerHeight/2+camPosY, playerWidth-5, playerHeight/2-3);
-        fill(255,0,0);
-        rect(playerX+15+camPosX,playerY-1+camPosY,2,2);
-        rect(playerX+15+camPosX,playerY+31+camPosY,2,2);
-        rect(playerX-1+camPosX,playerY+31+camPosY,2,2);
-        stroke(0,255,0);
-        rect(playerX-1+camPosX,playerY-1+camPosY,2,2);
+        stroke(255, 0, 0);
+        rect(playerX+camPosX + 2, playerY+playerHeight/2+camPosY, playerWidth-5, playerHeight/2-3);
+        fill(255, 0, 0);
+        rect(playerX+15+camPosX,playerY-1+camPosY, 2, 2);
+        rect(playerX+15+camPosX,playerY+31+camPosY, 2, 2);
+        rect(playerX-1+camPosX,playerY+31+camPosY, 2, 2);
+        stroke(0, 255, 0);
+        rect(playerX-1+camPosX,playerY-1+camPosY, 2, 2);
         noFill();
         if (up)
             stroke(0);
@@ -1660,12 +1660,12 @@ void draw()
             stroke(0);
         else
             stroke(255, 0, 0);
-        line(playerX+playerWidth/2+camPosX, playerY+playerHeight+2+camPosY, playerX+playerWidth/2+camPosX, playerY+playerHeight+8+camPosY);
+        line(playerX+playerWidth/2+camPosX, playerY+playerHeight + 2+camPosY, playerX+playerWidth/2+camPosX, playerY+playerHeight+8+camPosY);
         if (right)
             stroke(0);
         else
             stroke(255, 0, 0);
-        line(playerX+playerWidth+2+camPosX, playerY+playerHeight/2+camPosY, playerX+playerWidth+8+camPosX, playerY+playerHeight/2+camPosY);
+        line(playerX+playerWidth + 2+camPosX, playerY+playerHeight/2+camPosY, playerX+playerWidth+8+camPosX, playerY+playerHeight/2+camPosY);
         if (left)
             stroke(0);
         else
@@ -1724,7 +1724,7 @@ void tidyInventory()
     for(int i = 0 ; i < items.length ; i++) {
         println("Pos : " + i + " containing item "+items[i]);
         if(freeSpacesBefore > 0) {
-            println("Switching item at pos "+i+" with item at pos "+(i-freeSpacesBefore)+" ("+items[i]+"-->"+items[i-freeSpacesBefore]+")");
+            println("Switching item at pos "+i+" with item at pos " + (i-freeSpacesBefore)+" ("+items[i] + "-->"+items[i-freeSpacesBefore] + ")");
             items[i - freeSpacesBefore] = items[i];
             items[i] = null;
             itemsQuantity[i-freeSpacesBefore] = itemsQuantity[i];

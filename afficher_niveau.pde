@@ -53,6 +53,7 @@ void printLevel()
                     image(picture, posObjectX[i] * 16 - 16 + camPosX, posObjectY[i] * 16 - 16 + camPosY);
                     if (debugMode || compareStrings(language, "yolo")) {
                         textSize(14);
+                        fill(255);
                         text(objects[i], posObjectX[i] * 16 - 16 + camPosX, posObjectY[i] * 16 + camPosY);
                     }
                     if (menu >= 7 && menu <= 8 && objects[i] == 14)
@@ -116,6 +117,7 @@ void printUpperLayer()
                     image(picture, posObjectX[i] * 16 - 16 + camPosX, posObjectY[i] * 16 - 16 + camPosY);
                     if (debugMode || compareStrings(language, "yolo")) {
                         textSize(14);
+                        fill(255, 0, 0);
                         text(objects[i], posObjectX[i] * 16 - 16 + camPosX, posObjectY[i] * 16 + camPosY);
                     }
                     if (menu >= 7 && menu <= 8 && objects[i] == 14)
@@ -131,6 +133,7 @@ void printUpperLayer()
             }
         }
     }
+    fill(0);
     if (menu == 7) {
         float _temp = zoomLevel;
         scale(1 / (1 + _temp / 20));
@@ -148,7 +151,7 @@ void printMenuBackground()
         e.printStackTrace();
         textSize(14);
         if(compareStrings(language, "yolo"))
-            textSize(random(1,50));
+            textSize(random(1, 50));
         fill(255, 0, 0);
         text("[ERROR]:Background File Missing", 230, 30);
     }

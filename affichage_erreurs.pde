@@ -8,14 +8,14 @@ void errorMsg(String errorMessage,AudioPlayer sound,Exception exc)
     if(exc != null) {
         theErrorMessage = theErrorMessage + " :   "+exc+"\n";
         for(int i = 0 ; i < exc.getStackTrace().length ; i++)
-            theErrorMessage = theErrorMessage + "        "+exc.getStackTrace()[i]+"\n";
+            theErrorMessage = theErrorMessage + "        "+exc.getStackTrace()[i] + "\n";
     } else {
         theErrorMessage = theErrorMessage + ""+"\n";
     }
     if (output != null) {
         for(int i = 0 ; _temp != null && i < _temp.length ; i++)
             output.println(_temp[i]);
-        output.print("["+transformInt(day(),2)+"/"+transformInt(month(),2)+"/"+transformInt(year(),2)+"]["+transformInt(hour(),2)+":"+transformInt(minute(),2)+":"+transformInt(second(),2)+"] "+theErrorMessage);
+        output.print("["+transformInt(day(), 2)+"/"+transformInt(month(), 2)+"/"+transformInt(year(), 2)+"]["+transformInt(hour(), 2)+":"+transformInt(minute(), 2)+":"+transformInt(second(), 2)+"] "+theErrorMessage);
         output.flush();
         output.close();
     }
@@ -59,11 +59,11 @@ void error(String errorMessage, Exception exc){
     if(exc != null) {
         theErrorMessage = theErrorMessage + "\n"+exc+"\n";
         for(int i = 0 ; i < exc.getStackTrace().length ; i++)
-            theErrorMessage = theErrorMessage + "        "+exc.getStackTrace()[i]+"\n";
+            theErrorMessage = theErrorMessage + "        "+exc.getStackTrace()[i] + "\n";
     } else
         theErrorMessage = theErrorMessage + ""+"\n";
     try {
-    output.print("["+transformInt(day(),2)+"/"+transformInt(month(),2)+"/"+transformInt(year(),2)+"]["+transformInt(hour(),2)+":"+transformInt(minute(),2)+":"+transformInt(second(),2)+"] "+theErrorMessage);
+    output.print("["+transformInt(day(), 2)+"/"+transformInt(month(), 2)+"/"+transformInt(year(), 2)+"]["+transformInt(hour(), 2)+":"+transformInt(minute(), 2)+":"+transformInt(second(), 2)+"] "+theErrorMessage);
     output.flush();
     output.close();
     } catch(Exception e) {}

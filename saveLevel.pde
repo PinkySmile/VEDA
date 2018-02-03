@@ -4,7 +4,7 @@ void saveLevel() {
         output.print(background+"\n");
         for(int i = 0 ; i < nbOfObjects ; i++)
             if(objects[i] != 0)
-                output.print(objects[i]+"\n"+posObjectX[i]+"\n"+posObjectY[i]+"\n");
+                output.print(objects[i] + "\n"+posObjectX[i] + "\n"+posObjectY[i] + "\n");
         output.flush();
         output.close();
     } catch(Exception e) {

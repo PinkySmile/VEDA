@@ -3,7 +3,7 @@ void testKeys()
     for (int k = 0 ; k < pressedKeysCode.length ; k++) {
         if(camMoving && menu == 7) {
             int camGoToX = camBuffer[0]-width/2;
-            int camGoToY = camBuffer[1]+height/2;
+            int camGoToY = camBuffer[1] + height/2;
             if(camBuffer[0] < 0)
                 camGoToX -= width;
             if(camBuffer[1] < 0)
@@ -21,13 +21,13 @@ void testKeys()
                     stepSound = SFX[0];
                     for(int i = 0 ; i < characters.length ; i++) {
                         if(characters[i]) {
-                            if (playerY+34 >= characterY[i]+16 && playerY+16 <= characterY[i]+16 && playerX+3 <= characterX[i]+16 && characterX[i]+16 <= playerX+28)
+                            if (playerY+34 >= characterY[i] + 16 && playerY+16 <= characterY[i] + 16 && playerX+3 <= characterX[i] + 16 && characterX[i] + 16 <= playerX + 28)
                               down = false;
-                            if (playerY+16 >= characterY[i]+16 && playerY <= characterY[i]+16 && playerX+3 <= characterX[i]+16 && characterX[i]+16 <= playerX+28)
+                            if (playerY+16 >= characterY[i] + 16 && playerY <= characterY[i] + 16 && playerX+3 <= characterX[i] + 16 && characterX[i] + 16 <= playerX + 28)
                               up = false;
-                            if (playerY+33 >= characterY[i]+16 && playerY+1 <= characterY[i]+16 && playerX+2 <= characterX[i]+16 && characterX[i]+16 <= playerX+28)
+                            if (playerY+33 >= characterY[i] + 16 && playerY+1 <= characterY[i] + 16 && playerX + 2 <= characterX[i] + 16 && characterX[i] + 16 <= playerX + 28)
                               left = false;
-                            if (playerY+33 >= characterY[i]+16 && playerY+1 <= characterY[i]+16 && playerX <= characterX[i]+16-18 && playerX >= characterX[i]+16-30)
+                            if (playerY+33 >= characterY[i] + 16 && playerY+1 <= characterY[i] + 16 && playerX <= characterX[i] + 16-18 && playerX >= characterX[i] + 16-30)
                               right = false;
                         }
                     }
@@ -39,67 +39,67 @@ void testKeys()
                                     flag = j;
                         if(flag != -1) {
                             if (hitboxType[flag] == 0) {
-                                if (playerY+32 >= posObjectY[i]*16-16 && playerY+playerHeight/2 <= posObjectY[i]*16-16 && playerX+1 <= posObjectX[i]*16-16 +16 && playerX+playerWidth-1 >= posObjectX[i]*16-16)
+                                if (playerY+32 >= posObjectY[i] * 16-16 && playerY+playerHeight/2 <= posObjectY[i] * 16-16 && playerX+1 <= posObjectX[i] * 16-16 +16 && playerX+playerWidth-1 >= posObjectX[i] * 16-16)
                                     down = false;
-                                if (playerY+16 >= posObjectY[i]*16-16 && playerY+playerHeight/2-1 <= posObjectY[i]*16 && playerX+1 <= posObjectX[i]*16 && posObjectX[i]*16-16 <= playerX+playerWidth-1)
+                                if (playerY+16 >= posObjectY[i] * 16-16 && playerY+playerHeight/2-1 <= posObjectY[i] * 16 && playerX+1 <= posObjectX[i] * 16 && posObjectX[i] * 16-16 <= playerX+playerWidth-1)
                                     up = false;
-                                if (playerY+31 >= posObjectY[i]*16-15 && playerY+playerHeight/2 <= posObjectY[i]*16 && playerX <= posObjectX[i]*16 && posObjectX[i]*16-16 <= playerX)
+                                if (playerY+31 >= posObjectY[i] * 16-15 && playerY+playerHeight/2 <= posObjectY[i] * 16 && playerX <= posObjectX[i] * 16 && posObjectX[i] * 16-16 <= playerX)
                                     left = false;
-                                if (playerY+31 >= posObjectY[i]*16-15 && playerY+playerHeight/2 <= posObjectY[i]*16 && playerX+playerWidth <= posObjectX[i]*16 && playerX+playerWidth >= posObjectX[i]*16-16)
+                                if (playerY+31 >= posObjectY[i] * 16-15 && playerY+playerHeight/2 <= posObjectY[i] * 16 && playerX+playerWidth <= posObjectX[i] * 16 && playerX+playerWidth >= posObjectX[i] * 16-16)
                                     right = false;
                             } else if (hitboxType[flag] == 1) {
-                                if (playerY+32 >= posObjectY[i]*16-16 && playerY+playerHeight/2 <= posObjectY[i]*16-16 && playerX+1 <= posObjectX[i]*16-16+16 && playerX+playerWidth-1 >= posObjectX[i]*16-16)
+                                if (playerY+32 >= posObjectY[i] * 16-16 && playerY+playerHeight/2 <= posObjectY[i] * 16-16 && playerX+1 <= posObjectX[i] * 16-16+16 && playerX+playerWidth-1 >= posObjectX[i] * 16-16)
                                     down = false;
-                                if (playerY+16 >= posObjectY[i]*16-16 && playerY+playerHeight/2-1 <= posObjectY[i]*16 && playerX+1 <= posObjectX[i]*16 && posObjectX[i]*16-16 <= playerX+playerWidth-1)
+                                if (playerY+16 >= posObjectY[i] * 16-16 && playerY+playerHeight/2-1 <= posObjectY[i] * 16 && playerX+1 <= posObjectX[i] * 16 && posObjectX[i] * 16-16 <= playerX+playerWidth-1)
                                     up = false;
-                                if (playerY+31 >= posObjectY[i]*16-15 && playerY+playerHeight/2 <= posObjectY[i]*16 && playerX <= posObjectX[i]*16 && posObjectX[i]*16-16 <= playerX)
+                                if (playerY+31 >= posObjectY[i] * 16-15 && playerY+playerHeight/2 <= posObjectY[i] * 16 && playerX <= posObjectX[i] * 16 && posObjectX[i] * 16-16 <= playerX)
                                     left = false;
-                                if (playerY+31 >= posObjectY[i]*16-15 && playerY+playerHeight/2 <= posObjectY[i]*16 && playerX+playerWidth <= posObjectX[i]*16 && playerX+playerWidth >= posObjectX[i]*16-16)
+                                if (playerY+31 >= posObjectY[i] * 16-15 && playerY+playerHeight/2 <= posObjectY[i] * 16 && playerX+playerWidth <= posObjectX[i] * 16 && playerX+playerWidth >= posObjectX[i] * 16-16)
                                     right = false;
                             } else if (hitboxType[flag] == 2) {
-                                if (playerY+32 >= posObjectY[i]*16-16 && playerY+playerHeight/2 <= posObjectY[i]*16-16 && playerX+1 <= posObjectX[i]*16-16 +16 && playerX+playerWidth-1 >= posObjectX[i]*16-16 + 8)
+                                if (playerY+32 >= posObjectY[i] * 16-16 && playerY+playerHeight/2 <= posObjectY[i] * 16-16 && playerX+1 <= posObjectX[i] * 16-16 +16 && playerX+playerWidth-1 >= posObjectX[i] * 16-16 + 8)
                                     down = false;
-                                if (playerY+16 >= posObjectY[i]*16-16 && playerY+playerHeight/2-1 <= posObjectY[i]*16 - 8 && playerX+1 <= posObjectX[i]*16 && posObjectX[i]*16-16 + 8 <= playerX+playerWidth-1)
+                                if (playerY+16 >= posObjectY[i] * 16-16 && playerY+playerHeight/2-1 <= posObjectY[i] * 16 - 8 && playerX+1 <= posObjectX[i] * 16 && posObjectX[i] * 16-16 + 8 <= playerX+playerWidth-1)
                                     up = false;
-                                if (playerY+31 >= posObjectY[i]*16-15 && playerY+playerHeight/2 <= posObjectY[i]*16 - 8 && playerX <= posObjectX[i]*16 && posObjectX[i]*16-16 <= playerX)
+                                if (playerY+31 >= posObjectY[i] * 16-15 && playerY+playerHeight/2 <= posObjectY[i] * 16 - 8 && playerX <= posObjectX[i] * 16 && posObjectX[i] * 16-16 <= playerX)
                                     left = false;
-                                if (playerY+31 >= posObjectY[i]*16-15 && playerY+playerHeight/2 <= posObjectY[i]*16 - 8 && playerX+playerWidth <= posObjectX[i]*16 && playerX+playerWidth >= posObjectX[i]*16-16+8)
+                                if (playerY+31 >= posObjectY[i] * 16-15 && playerY+playerHeight/2 <= posObjectY[i] * 16 - 8 && playerX+playerWidth <= posObjectX[i] * 16 && playerX+playerWidth >= posObjectX[i] * 16-16+8)
                                     right = false;
                             } else if (hitboxType[flag] == 3) {
-                                if (playerY+32 >= posObjectY[i]*16-16 && playerY+playerHeight/2 <= posObjectY[i]*16-16 && playerX+1 <= posObjectX[i]*16-16 +16 && playerX+playerWidth-1 >= posObjectX[i]*16-16)
+                                if (playerY+32 >= posObjectY[i] * 16-16 && playerY+playerHeight/2 <= posObjectY[i] * 16-16 && playerX+1 <= posObjectX[i] * 16-16 +16 && playerX+playerWidth-1 >= posObjectX[i] * 16-16)
                                     down = false;
-                                if (playerY+16 >= posObjectY[i]*16-16 && playerY+playerHeight/2-1 <= posObjectY[i]*16 && playerX+1 <= posObjectX[i]*16 && posObjectX[i]*16-16 <= playerX+playerWidth-1)
+                                if (playerY+16 >= posObjectY[i] * 16-16 && playerY+playerHeight/2-1 <= posObjectY[i] * 16 && playerX+1 <= posObjectX[i] * 16 && posObjectX[i] * 16-16 <= playerX+playerWidth-1)
                                     up = false;
-                                if (playerY+31 >= posObjectY[i]*16-15 && playerY+playerHeight/2 <= posObjectY[i]*16 && playerX <= posObjectX[i]*16 && posObjectX[i]*16-16 <= playerX)
+                                if (playerY+31 >= posObjectY[i] * 16-15 && playerY+playerHeight/2 <= posObjectY[i] * 16 && playerX <= posObjectX[i] * 16 && posObjectX[i] * 16-16 <= playerX)
                                     left = false;
-                                if (playerY+31 >= posObjectY[i]*16-15 && playerY+playerHeight/2 <= posObjectY[i]*16 && playerX+playerWidth <= posObjectX[i]*16 && playerX+playerWidth >= posObjectX[i]*16-16)
+                                if (playerY+31 >= posObjectY[i] * 16-15 && playerY+playerHeight/2 <= posObjectY[i] * 16 && playerX+playerWidth <= posObjectX[i] * 16 && playerX+playerWidth >= posObjectX[i] * 16-16)
                                     right = false;
                             } else if (hitboxType[flag] == 4) {
-                                if (playerY+32 >= posObjectY[i]*16-16 && playerY+playerHeight/2 <= posObjectY[i]*16-16 && playerX+1 <= posObjectX[i]*16-16 +16 && playerX+playerWidth-1 >= posObjectX[i]*16-16)
+                                if (playerY+32 >= posObjectY[i] * 16-16 && playerY+playerHeight/2 <= posObjectY[i] * 16-16 && playerX+1 <= posObjectX[i] * 16-16 +16 && playerX+playerWidth-1 >= posObjectX[i] * 16-16)
                                     down = false;
-                                if (playerY+16 >= posObjectY[i]*16-16 && playerY+playerHeight/2-1 <= posObjectY[i]*16 && playerX+1 <= posObjectX[i]*16 && posObjectX[i]*16-16 <= playerX+playerWidth-1)
+                                if (playerY+16 >= posObjectY[i] * 16-16 && playerY+playerHeight/2-1 <= posObjectY[i] * 16 && playerX+1 <= posObjectX[i] * 16 && posObjectX[i] * 16-16 <= playerX+playerWidth-1)
                                     up = false;
-                                if (playerY+31 >= posObjectY[i]*16-15 && playerY+playerHeight/2 <= posObjectY[i]*16 && playerX <= posObjectX[i]*16 && posObjectX[i]*16-16 <= playerX)
+                                if (playerY+31 >= posObjectY[i] * 16-15 && playerY+playerHeight/2 <= posObjectY[i] * 16 && playerX <= posObjectX[i] * 16 && posObjectX[i] * 16-16 <= playerX)
                                     left = false;
-                                if (playerY+31 >= posObjectY[i]*16-15 && playerY+playerHeight/2 <= posObjectY[i]*16 && playerX+playerWidth <= posObjectX[i]*16 && playerX+playerWidth >= posObjectX[i]*16-16)
+                                if (playerY+31 >= posObjectY[i] * 16-15 && playerY+playerHeight/2 <= posObjectY[i] * 16 && playerX+playerWidth <= posObjectX[i] * 16 && playerX+playerWidth >= posObjectX[i] * 16-16)
                                     right = false;
                             }
                         }
                         if(objects[i] == 2) {
-                            if(playerY+47 >= posObjectY[i]*16 && playerY < posObjectY[i]*16-16 && playerX+3 <= posObjectX[i]*16 && posObjectX[i]*16 <= playerX+29 && stepSoundPriority <= 1) {
-                                stepSound = SFX[4+int(random(0,4))];
+                            if(playerY+47 >= posObjectY[i] * 16 && playerY < posObjectY[i] * 16-16 && playerX+3 <= posObjectX[i] * 16 && posObjectX[i] * 16 <= playerX + 29 && stepSoundPriority <= 1) {
+                                stepSound = SFX[4+int(random(0, 4))];
                                 stepSoundPriority = 1;
                             }
                         }
                         if(objects[i] == 4) {
-                            if(playerY+47 >= posObjectY[i]*16 && playerY < posObjectY[i]*16-16 && playerX+3 <= posObjectX[i]*16 && posObjectX[i]*16 <= playerX+29 && stepSoundPriority <= 2) {
-                                stepSound = SFX[8+int(random(0,4))];
+                            if(playerY+47 >= posObjectY[i] * 16 && playerY < posObjectY[i] * 16-16 && playerX+3 <= posObjectX[i] * 16 && posObjectX[i] * 16 <= playerX + 29 && stepSoundPriority <= 2) {
+                                stepSound = SFX[8+int(random(0, 4))];
                                 stepSoundPriority = 2;
                             }
                         }
                         if(objects[i] == 5) {
-                            if(playerY+47 >= posObjectY[i]*16 && playerY < posObjectY[i]*16-16 && playerX+3 <= posObjectX[i]*16 && posObjectX[i]*16 <= playerX+29 && stepSoundPriority <= 3) {
-                                stepSound = SFX[12+int(random(0,4))];
+                            if(playerY+47 >= posObjectY[i] * 16 && playerY < posObjectY[i] * 16-16 && playerX+3 <= posObjectX[i] * 16 && posObjectX[i] * 16 <= playerX + 29 && stepSoundPriority <= 3) {
+                                stepSound = SFX[12+int(random(0, 4))];
                                 stepSoundPriority = 3;
                             }
                         }
@@ -313,10 +313,10 @@ void testKeys()
                                 if(objects[i] == solidObjectsPlayer[j])
                                     flag = j;
                         if (flag != -1)
-                            if(hitboxType[flag] == 0 && playerY+32 > posObjectY[i]*16-16 && playerY+17 < posObjectY[i]*16 && playerX < posObjectX[i]*16 && posObjectX[i]*16-16 < playerX+16)
+                            if(hitboxType[flag] == 0 && playerY+32 > posObjectY[i] * 16-16 && playerY+17 < posObjectY[i] * 16 && playerX < posObjectX[i] * 16 && posObjectX[i] * 16-16 < playerX+16)
                                 inWall = i;
                         if(objects[i] == 8) {
-                            if(playerY+32 >= posObjectY[i]*16-16 && playerY+16 <= posObjectY[i]*16 && playerX+8 <= posObjectX[i]*16 && posObjectX[i]*16-16 < playerX+8) {
+                            if(playerY+32 >= posObjectY[i] * 16-16 && playerY+16 <= posObjectY[i] * 16 && playerX+8 <= posObjectX[i] * 16 && posObjectX[i] * 16-16 < playerX+8) {
                                 if(music != "Mysterious" && !musicDisabled) {
                                     music = "Mysterious";
                                     addingChar = true;
@@ -329,7 +329,7 @@ void testKeys()
                             }
                         }
                         if(objects[i] == 9) {
-                            if(playerY+32 >= posObjectY[i]*16-16 && playerY+16 <= posObjectY[i]*16 && playerX+8 <= posObjectX[i]*16 && posObjectX[i]*16-16 < playerX+8) {
+                            if(playerY+32 >= posObjectY[i] * 16-16 && playerY+16 <= posObjectY[i] * 16 && playerX+8 <= posObjectX[i] * 16 && posObjectX[i] * 16-16 < playerX+8) {
                                 if(music != "Macabre" && !musicDisabled) {
                                     music = "Macabre";
                                     addingChar = true;
@@ -342,7 +342,7 @@ void testKeys()
                             }
                         }
                         if(objects[i] == 10) {
-                            if(playerY+32 >= posObjectY[i]*16-16 && playerY+16 <= posObjectY[i]*16 && playerX+8 <= posObjectX[i]*16 && posObjectX[i]*16-16 < playerX+8) {
+                            if(playerY+32 >= posObjectY[i] * 16-16 && playerY+16 <= posObjectY[i] * 16 && playerX+8 <= posObjectX[i] * 16 && posObjectX[i] * 16-16 < playerX+8) {
                                 if(music != "EpicBattle" && !musicDisabled) {
                                     println(music);
                                     music = "EpicBattle";
@@ -356,7 +356,7 @@ void testKeys()
                             }
                         }
                         if(objects[i] == 12) {
-                            if(playerY + 32 >= posObjectY[i] * 16 - 16 && playerY + 16 <= posObjectY[i]*16 && playerX+8 <= posObjectX[i]*16 && posObjectX[i]*16-16 < playerX+8) {
+                            if(playerY + 32 >= posObjectY[i] * 16 - 16 && playerY + 16 <= posObjectY[i] * 16 && playerX+8 <= posObjectX[i] * 16 && posObjectX[i] * 16-16 < playerX+8) {
                                 if(music != "eugrt" && !musicDisabled) {
                                     music = "eugrt";
                                     addingChar = true;
@@ -371,13 +371,13 @@ void testKeys()
                     }
                     if(inWall >= 0) {
                         if(direction == "down")
-                            playerY = posObjectY[inWall]*16-16-32;
+                            playerY = posObjectY[inWall] * 16-16-32;
                         if(direction == "up")
-                            playerY = posObjectY[inWall]*16-16;
+                            playerY = posObjectY[inWall] * 16-16;
                         if(direction == "left")
-                            playerX = posObjectX[inWall]*16;
+                            playerX = posObjectX[inWall] * 16;
                         if(direction == "right")
-                            playerX = posObjectX[inWall]*16-16-16;
+                            playerX = posObjectX[inWall] * 16-16-16;
                     }
                 }
                 //Skip le gameover après un certain temps
@@ -627,7 +627,7 @@ void keyPressed()
                         menuPosition++;
                 }
                 if(inDialog && !dead && (menu == 0 || menu == 1)) {
-                    println(keyCode+":"+selectedAnswer+":"+answers[1]+":"+answers[0]);
+                    println(keyCode+":"+selectedAnswer+":"+answers[1] + ":"+answers[0]);
                     if(keyCode == 39 && selectedAnswer < 3 && answers[selectedAnswer+1] != null)
                         selectedAnswer++;
                     else if(keyCode == 37 && selectedAnswer > 0 && answers[selectedAnswer-1] != null)
@@ -637,7 +637,7 @@ void keyPressed()
                     if(!inDialog)
                         for(int i = 0 ; i < characters.length ; i++) {
                             if(characters[i]) {
-                                if (playerY+34 >= characterY[i]+16 && playerY+16 <= characterY[i]+16 && playerX+3 <= characterX[i]+16 && characterX[i]+16 <= playerX+28) {
+                                if (playerY+32 >= characterY[i] + 16 && playerY+16 <= characterY[i] + 16 && playerX+3 <= characterX[i] + 16 && characterX[i] + 16 <= playerX + 28) {
                                     down = false;
                                     fightingCharacter = i;
                                     if(direction == "down") {
@@ -647,7 +647,7 @@ void keyPressed()
                                             dialogsVariante[i]++;
                                     }
                                 }
-                                if (playerY+16 >= characterY[i]+16 && playerY <= characterY[i]+16 && playerX+3 <= characterX[i]+16 && characterX[i]+16 <= playerX+28) {
+                                if (playerY+16 >= characterY[i] + 16 && playerY <= characterY[i] + 16 && playerX+3 <= characterX[i] + 16 && characterX[i] + 16 <= playerX + 28) {
                                     up = false;
                                     fightingCharacter = i;
                                     if(direction == "up") {
@@ -657,7 +657,7 @@ void keyPressed()
                                             dialogsVariante[i]++;
                                     }
                                 }
-                                if (playerY+33 >= characterY[i]+16 && playerY+1 <= characterY[i]+16 && playerX+2 <= characterX[i]+16 && characterX[i]+16 <= playerX+28) {
+                                if (playerY+33 >= characterY[i] + 16 && playerY+1 <= characterY[i] + 16 && playerX + 2 <= characterX[i] + 16 && characterX[i] + 16 <= playerX + 28) {
                                     left = false;
                                     fightingCharacter = i;
                                     if(direction == "left") {
@@ -667,7 +667,7 @@ void keyPressed()
                                             dialogsVariante[i]++;
                                     }
                                 }
-                                if (playerY+33 >= characterY[i]+16 && playerY+1 <= characterY[i]+16 && playerX <= characterX[i]+16-18 && playerX >= characterX[i]+16-30){
+                                if (playerY+33 >= characterY[i] + 16 && playerY+1 <= characterY[i] + 16 && playerX <= characterX[i] + 16-18 && playerX >= characterX[i] + 16-30){
                                     right = false;
                                     fightingCharacter = i;
                                     if(direction == "right") {
@@ -752,7 +752,7 @@ void keyPressed()
                 } else if (keys[5] == keyCode && menu == 7) {
                     menu = -1;
                     disableMenus();
-                    enableMenus(0,2);
+                    enableMenus(0, 2);
                 }
                 if(keyCode == RIGHT && menu == 7) {
                     camPosX = camPosX - 16;

@@ -90,11 +90,11 @@ void audioMenu()
     } else {
         textSize(20);
         if(compareStrings(language,"fr")) {
-            text("Désactivé",100,37);
-            text("Désactivé",100,87);
+            text("Désactivé", 100, 37);
+            text("Désactivé", 100, 87);
         } else {
-            text("Disabled",100,37);
-            text("Disabled",100,87);
+            text("Disabled", 100, 37);
+            text("Disabled", 100, 87);
         }
     }
     textFont(Arial);
@@ -119,14 +119,14 @@ void optionsMenu()
     disableMenus();
     textSize(15);
     fill(122);
-    rect(0,0,288,58);
+    rect(0, 0, 288, 58);
     fill(255);
     if (compareStrings(language, "yolo"))
         textSize(random(1, 50));
-    text("Camera scrolling disabled : ",10,25,200,200);
+    text("Camera scrolling disabled : ", 10, 25, 200, 200);
     menuContent[25] = camScrollingDisabled+"";
-    enableMenus(12,12);
-    enableMenus(24,25); 
+    enableMenus(12, 12);
+    enableMenus(24, 25); 
 }
 
 void languageMenu()
@@ -182,24 +182,24 @@ void inGame()
                 characterPointToGo[i][0] = 0;
                 characterPointToGo[i][1] = 0;
             }
-            if(characterPointsBuffer[i] >= 200 && int(random(0,100)) == 1) {
-                characterDir[i] = int(random(0,4));
+            if(characterPointsBuffer[i] >= 200 && int(random(0, 100)) == 1) {
+                characterDir[i] = int(random(0, 4));
                 characterPointsBuffer[i] = 0;
             }
             else if(characterPointsBuffer[i] >= 300) {
-                int temp = int(random(0,4));
+                int temp = int(random(0, 4));
                 characterPointsBuffer[i] = 0;
                 if(temp == 0) {
                     characterPointToGo[i][0] = characterX[i];
                     characterPointToGo[i][1] = characterY[i]-16;
                 } else if(temp == 1) {
                     characterPointToGo[i][0] = characterX[i];
-                    characterPointToGo[i][1] = characterY[i]+16;
+                    characterPointToGo[i][1] = characterY[i] + 16;
                 } else if(temp == 2) {
                     characterPointToGo[i][0] = characterX[i]-16;
                     characterPointToGo[i][1] = characterY[i];
                 } else {
-                    characterPointToGo[i][0] = characterX[i]+16;
+                    characterPointToGo[i][0] = characterX[i] + 16;
                     characterPointToGo[i][1] = characterY[i];
                 }
             }
@@ -463,7 +463,7 @@ void gameover()
         for (int k = 0; k <= height/16; k++) {
             if (!(j >= 13 && j <= 24 && k >= 12 && k <= 16)) {
                 try {
-                    image(gameover_font, j*16, k*16);
+                    image(gameover_font, j * 16, k * 16);
                 }
                 catch(Exception e) {
                     e.printStackTrace();
@@ -791,16 +791,16 @@ void lvlCreator()
     textSize(15);
     float temp = zoomLevel;
     float _temp = (1+temp/20);
-    text("x:"+round(mouseX/_temp-camPosX)+" y:"+round(mouseY/_temp-camPosY),width-130,15);
-    text("Zoom : "+round((1+temp/20)*100)+"%",2,15);
+    text("x:"+round(mouseX/_temp-camPosX)+" y:"+round(mouseY/_temp-camPosY),width-130, 15);
+    text("Zoom : "+round((1+temp/20) * 100)+"%", 2, 15);
     if(replaceMode)
-        text("Mode remplacement : actif",100,15);
+        text("Mode remplacement : actif", 100, 15);
     else
-        text("Mode remplacement : inactif",100,15);
+        text("Mode remplacement : inactif", 100, 15);
     if(upperLayerShown)
-        text("Couche supérieur affiché",2,30);
+        text("Couche supérieur affiché", 2, 30);
     else
-        text("Couche supérieur cachée",2,30);
+        text("Couche supérieur cachée", 2, 30);
     if(savedMessageShown) {
         savingBuffer++;
         text("Sauvegardé !",width/2-50,height/2-5);
@@ -815,7 +815,7 @@ void lvlCreator()
         float tempo = 1+_temps/20;
         int loops = 0;
         for(float i = (16 - camPosX % 16)*tempo ; i <= width && loops <= 150 ; i += 16*tempo) {
-            line(i,0,i,height);
+            line(i, 0,i,height);
             loops++;
         }
         for(float j = (16 - camPosX % 16)*tempo ; j <= height && loops <= 300; j += 16*tempo) {
@@ -853,7 +853,7 @@ void mainMenu()
     textSize(15);
     text(name, width - 160, 20);
     text(texts[0] + progress + "%", width - 160, 40);
-    text(texts[1] + int(life) + "/"+lifeMax*10, width - 160, 60);
+    text(texts[1] + int(life) + "/"+lifeMax * 10, width - 160, 60);
 
     //Affichage de la version
     textSize(10);
@@ -898,7 +898,7 @@ void objMenu()
         }
         if (y <= height - 50 - 24) {
             try {
-                image(textures[i+2], x, y);
+                image(textures[i + 2], x, y);
                 if((i >= 7 && i <= 9) || i == 11)
                     image(textures[0], x, y);
                 if(i == 12 || i == 13)
@@ -909,20 +909,20 @@ void objMenu()
             }
             stroke(0);
             noFill();
-            rect(x-1,y-1,17,17);
+            rect(x-1,y-1, 17, 17);
         }
         x = x + 24;
     }
     try {
-      image(textures[1+selectedObject],10,height-26);
+      image(textures[1+selectedObject], 10,height-26);
       if(selectedObject <= 10 && selectedObject >= 8 || selectedObject == 12) {
-          image(textures[0],10,height-26);
+          image(textures[0], 10,height-26);
       }
       if(selectedObject == 13 || selectedObject == 14) {
-          image(redCross,10,height-26);
+          image(redCross, 10,height-26);
       }
     } catch(Exception e) {
-        image(glitched_texture,10,height-26);
+        image(glitched_texture, 10,height-26);
     }
     if (music == "EpicBattle" && !Music.isPlaying() && !addingChar) {
         Music.pause();
@@ -995,7 +995,7 @@ void achievements()
 {
     printMenuBackground();
     disableMenus();
-    enableMenus(24,24);
+    enableMenus(24, 24);
     
     if(lastMenu == 0 || lastMenu == 1) {
         if (music == "EpicBattle" && !Music.isPlaying() && !addingChar) {
@@ -1131,7 +1131,7 @@ void controls()
         fill(current_color-125);
         rect(115 + xPos * 192+1, yPos * 32 + 5+1, 71-2, 20-2);
         fill(current_color-100);
-        rect(115 + xPos * 192+2, yPos * 32 + 5+2, 71-4, 20-4);
+        rect(115 + xPos * 192 + 2, yPos * 32 + 5 + 2, 71-4, 20-4);
         fill(current_color-80);
         rect(115 + xPos * 192+3, yPos * 32 + 5+3, 71-6, 20-6);
         fill(current_color-60);
@@ -1141,7 +1141,7 @@ void controls()
         fill(current_color-25);
         rect(115 + xPos * 192+6, yPos * 32 + 5+6, 71-12, 20-12);
         fill(current_color-10);
-        rect(115 + xPos * 192+7, yPos * 32 + 5+7,71-14, 20-14);
+        rect(115 + xPos * 192+7, yPos * 32 + 5+7, 71-14, 20-14);
         fill(current_color);
         rect(115 + xPos * 192+8, yPos * 32 + 5+8, 71-16, 20-16);
         if (textColor == color(0, 255, 0))
@@ -1494,11 +1494,11 @@ void drawLife()
                     x += 15;
                 }
             }
-            if (x >= 15*10) {
+            if (x >= 15 * 10) {
                 x = 0;
                 y += 15;
             }
-            if (b == 0 && y >= 3*15) {
+            if (b == 0 && y >= 3 * 15) {
                 h++;
                 y = 0;
             } 
@@ -1549,11 +1549,11 @@ void drawNRJ()
                     x += 15;
                 }
             }
-            if (x >= 15*10) {
+            if (x >= 15 * 10) {
                 x = 0;
                 y += 15;
             }
-            if (b == 0 && y >= 3*15) {
+            if (b == 0 && y >= 3 * 15) {
                 h++;
                 y = 0;
             } 

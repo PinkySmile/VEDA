@@ -36,7 +36,7 @@ void mousePressed()
         //SFX
         if (musicLoaded && menu == 5 && mouseX >= 100 && mouseX <= 300 && mouseY >= 73 && mouseY <= 93 && !compareStrings(language, "yolo")) {
             SFXVolume = round(mouseX-100)/2;
-            int r = int(8+random(0,4));
+            int r = int(8+random(0, 4));
             for (int i = 0 ; i < SFX.length ; i++)
                 if (SFX[i] != null)
                     SFX[i].setGain(-50+50*SFXVolume/100);
@@ -46,7 +46,7 @@ void mousePressed()
             pressedSFXBar = true;
         }
         for (int i = 0; i <= numberOfMenu-1; i = i+1) {
-            if (mouseX <= menuPos[2*i]+menuSize[2*i] && mouseX >= menuPos[2*i] && mouseY <= menuPos[2*i+1]+menuSize[2*i+1] && mouseY >= menuPos[2*i+1] && !menuDisabled[i] && mouseButton == LEFT) {
+            if (mouseX <= menuPos[2*i] + menuSize[2*i] && mouseX >= menuPos[2*i] && mouseY <= menuPos[2*i+1] + menuSize[2*i+1] && mouseY >= menuPos[2*i+1] && !menuDisabled[i] && mouseButton == LEFT) {
                 if (i == 0) { //boutton "play"
                     try {
                         disableMenus();
@@ -86,8 +86,8 @@ void mousePressed()
                         menu = 0;
                         loadGame();
                         println(life+":"+lifeMax+":"+camPosX+":"+camPosY+":"+playerX+":"+playerY);
-                        if (life > lifeMax*10) {
-                            println(life > lifeMax*10);
+                        if (life > lifeMax * 10) {
+                            println(life > lifeMax * 10);
                             background(0);
                             Music.pause();
                             menu = -11;
@@ -274,8 +274,8 @@ void mousePressed()
                 float tempx2 = camPosX;
                 float tempy1 = mouseY;
                 float tempy2 = camPosY;
-                float calc1 = (tempx1/_temp/16.0+0.5-tempx2/16.0);
-                float calc2 = (tempy1/_temp/16.0+0.5-tempy2/16.0);
+                float calc1 = (tempx1 / _temp/16.0+0.5-tempx2 / 16.0);
+                float calc2 = (tempy1 / _temp/16.0+0.5-tempy2 / 16.0);
                 if (posObjectX[i] == round(calc1) && posObjectY[i] == round(calc2)) {
                     objects[i] = 0;
                 }
@@ -293,8 +293,8 @@ void mousePressed()
             float tempx2 = camPosX;
             float tempy1 = mouseY;
             float tempy2 = camPosY;
-            float calc1 = (tempx1/_temp/16.0+0.5-tempx2/16.0);
-            float calc2 = (tempy1/_temp/16.0+0.5-tempy2/16.0);
+            float calc1 = (tempx1 / _temp/16.0+0.5-tempx2 / 16.0);
+            float calc2 = (tempy1 / _temp/16.0+0.5-tempy2 / 16.0);
             posObjectX[slot] = round(calc1);
             posObjectY[slot] = round(calc2);
         }
@@ -428,8 +428,8 @@ void mouseDragged()
             float tempx2 = camPosX;
             float tempy1 = mouseY;
             float tempy2 = camPosY;
-            float calc1 = (tempx1/_temp/16.0+0.5-tempx2/16.0);
-            float calc2 = (tempy1/_temp/16.0+0.5-tempy2/16.0);
+            float calc1 = (tempx1 / _temp/16.0+0.5-tempx2 / 16.0);
+            float calc2 = (tempy1 / _temp/16.0+0.5-tempy2 / 16.0);
 
             posObjectX[slot] = round(calc1);
             posObjectY[slot] = round(calc2);

@@ -65,7 +65,7 @@ boolean doCommand(String commandLine)
                 command = commandLine;
             print("Found command \""+command+"\" with args : ");
             for (int i = 0; i < args.length; i++) {
-                print(args[i]+"");
+                print(args[i] + "");
                 if (i != args.length - 1)
                     print(",");
                 else
@@ -97,8 +97,8 @@ boolean doCommand(String commandLine)
                         nbOfObjects++;
                     } else
                         slot = detectVoid();
-                    println(slot+":"+args[argPos+2]+":"+args[argPos]+":"+args[argPos+1]);
-                    objects[slot] = int(args[argPos+2]);
+                    println(slot+":"+args[argPos + 2] + ":"+args[argPos] + ":"+args[argPos+1]);
+                    objects[slot] = int(args[argPos + 2]);
                     posObjectX[slot] = int(args[argPos]);
                     posObjectY[slot] = int(args[argPos+1]);
                 }
@@ -119,7 +119,7 @@ boolean doCommand(String commandLine)
             } else if (compareStrings(command, "teleportCharacter")) {
                 for (int argPos = 0; argPos*3 < args.length; argPos+= 3) {
                     characterX[int(args[argPos])] = int(args[argPos+1]);
-                    characterY[int(args[argPos])] = int(args[argPos+2]);
+                    characterY[int(args[argPos])] = int(args[argPos + 2]);
                 }
             } else if (compareStrings(command, "movePlayer")) {
                 playerX += int(args[0]);
@@ -127,7 +127,7 @@ boolean doCommand(String commandLine)
             } else if (compareStrings(command, "moveCharacter")) {
                 for (int argPos = 0; argPos*3 < args.length; argPos+= 3) {
                     characterPointToGo[int(args[argPos])][0] = int(args[argPos+1]);
-                    characterPointToGo[int(args[argPos])][1] = int(args[argPos+2]);
+                    characterPointToGo[int(args[argPos])][1] = int(args[argPos + 2]);
                 }
             } else if (compareStrings(command, "changePlayerSprite")) {
                 character = args[0];
@@ -141,11 +141,11 @@ boolean doCommand(String commandLine)
                     int newAnim = 0;
                     if (args[argPos+1] == "moving")
                         newStatus = 1;
-                    if (args[argPos+2] == "down")
+                    if (args[argPos + 2] == "down")
                         newDir = 2;
-                    else if (args[argPos+2] == "left")
+                    else if (args[argPos + 2] == "left")
                         newDir = 3;
-                    else if (args[argPos+2] == "right")
+                    else if (args[argPos + 2] == "right")
                         newDir = 4;
                     newAnim = int(argPos+3);
                     characterDir[int(args[argPos])] = newDir;
@@ -212,9 +212,9 @@ boolean doCommand(String commandLine)
             } else if (compareStrings(command, "loadSound")) {
                 for (int argPos = 0; argPos*3 < args.length; argPos+= 3)
                     if (compareStrings(args[argPos], "SFX"))
-                        SFX[int(args[argPos+2])] = minim.loadFile(args[argPos]);
+                        SFX[int(args[argPos + 2])] = minim.loadFile(args[argPos]);
                     else if (compareStrings(args[argPos], "Music"))
-                        Musics[int(args[argPos+2])] = minim.loadFile(args[argPos]);
+                        Musics[int(args[argPos + 2])] = minim.loadFile(args[argPos]);
                 saveCommand(commandLine);
             } else if (compareStrings(command, "end"))
                 inCutscene = false;

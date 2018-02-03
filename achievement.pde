@@ -77,7 +77,7 @@ void saveAchievementsGot()
         FileWriter fileWriter = new FileWriter(file);
         BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
         for(int i = 0 ; i < achievementsGot.length ; i++)
-            bufferedWriter.write(achievementsGot[i]+"\n");
+            bufferedWriter.write(achievementsGot[i] + "\n");
         bufferedWriter.close();
         fileWriter.close();
     } catch(Exception e) {
