@@ -533,6 +533,8 @@ void equip(int item)
             buffer = wornItems[slot];
         wornItems[slot] = newItem;
         items[item] = buffer;
+        itemsQuantity[item] = (items[item] == null ? 0 : -1);
+            
         tidyInventory();
         while (selectedSlotInventory >= 0 && items[selectedSlotInventory] == null)
             selectedSlotInventory--;
@@ -622,7 +624,8 @@ void inventory()
                 fill(150, 100, 255);
                 break;
             }
-            text(damagesName[i] + ": " + (float(floor(res * 100)) / 100), width - 220, 290 + 30 * i);
+            textSize(17);
+            text(damagesName[i] + ":\n " + (float(floor(res * 100)) / 100), width - 220, 280 + 32 * i);
         }
     } else {
         fill(0);
@@ -632,10 +635,12 @@ void inventory()
             text(getTextInventory(items[selectedSlotInventory]), width - 200, 265);
         text("Inspect", width - 200, 295);
         text("Toss", width - 200, 325);
+        text("Back", width - 200, 355);
         fill(255);
         stroke(125);
         triangle(width - 220, 30 * selectedAnswerInventory + 255, width - 220, 30 * selectedAnswerInventory + 265, width - 212, 30 * selectedAnswerInventory + 260);
     }
+    textSize(20);
     fill(255);
     for (int i = 0; i < items.length; i++) {
         PImage sprite = null;

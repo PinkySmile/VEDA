@@ -842,7 +842,7 @@ void keyPressed()
                     selectedSlotInventory = (items[0] == null ? 12 : 0);
             } else {
                 selectedAnswerInventory++;
-                if (selectedAnswerInventory > 2)
+                if (selectedAnswerInventory > 3)
                     selectedAnswerInventory = 0;
             }
         } else if(keyCode == UP && menu == 2) {
@@ -855,11 +855,12 @@ void keyPressed()
             } else {
                 selectedAnswerInventory--;
                 if (selectedAnswerInventory < 0)
-                    selectedAnswerInventory = 2;
+                    selectedAnswerInventory = 3;
             }
         } else if(keyCode == LEFT && menu == 2 && inventoryPage > 0)
             inventoryPage++;
         else if (keyCode == ENTER && menu == 2) {
+            selectedAnswerInventory = 0;
             if (choosingInInventory) {
                 if (selectedAnswerInventory == 0)
                     equip(selectedSlotInventory);
