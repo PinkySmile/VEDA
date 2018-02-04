@@ -586,6 +586,7 @@ boolean inShell = true;
 boolean selectedRespawn = true;
 boolean displayAttack = false;
 boolean choosingInInventory = false;
+boolean showItemDetails = false;
 boolean[] isGlitched = new boolean[maxNbOfObjectsPerLevel];
 boolean[] characters = new boolean[maxNbOfCharacters];
 boolean[] achievementsGot = new boolean[maxNbOfAchievement];

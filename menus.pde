@@ -642,89 +642,171 @@ void inventory()
     }
     textSize(20);
     fill(255);
-    for (int i = 0; i < items.length; i++) {
+    if (showItemDetails) {
         PImage sprite = null;
+        Item theItem = (selectedSlotInventory >= 12 ? wornItems[selectedSlotInventory - 12] : items[selectedSlotInventory]);
         
-        if (items[i] != null && items[i].id < itemSprites.length && items[i].id >= 0)
-            sprite = itemSprites[items[i].id];
+        if (theItem != null && theItem.id < itemSprites.length && theItem.id >= 0)
+            sprite = itemSprites[theItem.id];
         if (sprite == null)
             sprite = item_glitch;
-        if (itemsQuantity[i] > 0)
-            quan = "x"+itemsQuantity[i];
+        if (sprite != null)
+            image(sprite, 30, 15);
         else
-            quan = "";
-        if (items[i] != null && itemsQuantity[i] == 0)
-            items[i] = null;
-        if (items[i] != null)
-            item = "Item " + (items[i].id + 1);
-        else
-            item = "";
-        if (items[i] == null && compareStrings(language, "yolo"))
-            item = "e̷̲̦̖͉̘͊ͩ͌̓ͫr̹̤̳̾͑͗͛̚͠r̬̖̱o̢͇̹̠̼͎̰ͯ͋ͥ̾r̸͔̘̥͎̘̩";
-        if (items[i] != null && items[i].name != null)
-            item = items[i].name;
-        if (itemsQuantity[i] == 0 && compareStrings(language, "yolo"))
-            quan = "@░¶½█▓";
-        text(item, 60, 30 + 39 * i);
-        text(quan, 350, 30 + 39 * i);
-        if (items[i] != null) {
-            if (sprite != null)
-                image(sprite, 30, 15 + 39 * i);
+            text("?", 30, 30 + 39);
+        if (theItem != null && allItems[theItem.id].durability != 0) {
+            if (theItem.durability / allItems[theItem.id].durability > 0.5)
+                fill(0, 200, 0);
+            else if (theItem.durability / allItems[theItem.id].durability > 0.25)
+                fill(200, 200, 0);
             else
-                text("?", 30, 30 + 39 * i);
-            if (allItems[items[i].id].durability != 0) {
-                if (items[i].durability / allItems[items[i].id].durability > 0.5)
-                    fill(0, 200, 0);
-                else if (items[i].durability / allItems[items[i].id].durability > 0.25)
-                    fill(200, 200, 0);
-                else
-                    fill(200, 0, 0);
-                noStroke();
-                rect(25, 39 * i + 32, 24 * items[i].durability / allItems[items[i].id].durability, 5);
-                stroke(125);
-                noFill();
-                rect(25, 39 * i + 32, 24, 5);
+                fill(200, 0, 0);
+            noStroke();
+            rect(25, 32, 24 * theItem.durability / allItems[theItem.id].durability, 5);
+            stroke(125);
+            noFill();
+            rect(25, 32, 24, 5);
+        }
+        if (theItem != null) {
+            fill(0);
+            text("Name : " + theItem.name, 60, 30);
+            text("Type : " + theItem.type, 60, 65);
+            text("Durability : " + theItem.durability + "/" + allItems[theItem.id].durability, 60, 100);
+            text("Resistances : ", 10, 135);
+            for (int i = 0; i < 6; i++) {
+                switch (i + 1) {
+                case 1:
+                    fill(255, 205, 0);
+                    break;
+                case 2:
+                    fill(0, 0, 255);
+                    break;
+                case 3:
+                    fill(255, 0, 0);
+                    break;
+                case 4:
+                    fill(170, 0, 170);
+                    break;
+                case 5:
+                    fill(0, 100, 0);
+                    break;
+                case 6:
+                    fill(150, 100, 255);
+                    break;
+                }
+                text(damagesName[i] + ":\n " + (float(floor(theItem.resistances[i] * 100)) / 100), 20, 170 + 50 * i);
             }
-            fill(255);
+            fill(0);
+            text("Attaques : ", 200, 135);
+            for (int i = 0; i < 6; i++) {
+                switch (i + 1) {
+                case 1:
+                    fill(255, 205, 0);
+                    break;
+                case 2:
+                    fill(0, 0, 255);
+                    break;
+                case 3:
+                    fill(255, 0, 0);
+                    break;
+                case 4:
+                    fill(170, 0, 170);
+                    break;
+                case 5:
+                    fill(0, 100, 0);
+                    break;
+                case 6:
+                    fill(150, 100, 255);
+                    break;
+                }
+                text(damagesName[i] + ":\n " + (float(floor(theItem.damages[i] * 100)) / 100), 210, 170 + 50 * i);
+            }
         }
-    }
-    if (selectedSlotInventory < 12)
-        triangle(12, 39 * selectedSlotInventory + 20, 12, 39 * selectedSlotInventory + 28, 20, 39 * selectedSlotInventory + 24);
-    for (int i = 0; i < wornItems.length; i++) {
-        int x = width - 60;
-        int y = 50 * i + 17;
-        
-        if (i >= 4) {
-            y = 167;
-            x = width - 60 - 70 * (i - 3);
-        }
-        stroke((selectedSlotInventory - 12 == i ? color(255, 0, 0) : 0));
-        noFill();
-        rect(x, y - 1, 34, 34);
-        if (wornItems[i] != null) {
+    } else {
+        for (int i = 0; i < items.length; i++) {
             PImage sprite = null;
-            if (wornItems[i] != null && wornItems[i].id < itemSprites.length && wornItems[i].id >= 0)
-                sprite = itemSprites[wornItems[i].id];
-            if (sprite == null) 
+            
+            if (items[i] != null && items[i].id < itemSprites.length && items[i].id >= 0)
+                sprite = itemSprites[items[i].id];
+            if (sprite == null)
                 sprite = item_glitch;
-            if (sprite != null)
-                image(sprite, x + 1, y, 32, 32);
-            else {
-                fill(0, 0, 255);
-                rect(x + 1, y, 32, 32);
-            }
-            if (allItems[wornItems[i].id].durability != 0) {
-                if (wornItems[i].durability / allItems[wornItems[i].id].durability > 0.5)
-                    fill(0, 200, 0);
-                else if (wornItems[i].durability / allItems[wornItems[i].id].durability > 0.25)
-                    fill(200, 200, 0);
+            if (itemsQuantity[i] > 0)
+                quan = "x" + itemsQuantity[i];
+            else
+                quan = "";
+            if (items[i] != null && itemsQuantity[i] == 0)
+                items[i] = null;
+            if (items[i] != null)
+                item = "Item " + (items[i].id + 1);
+            else
+                item = "";
+            if (items[i] == null && compareStrings(language, "yolo"))
+                item = "e̷̲̦̖͉̘͊ͩ͌̓ͫr̹̤̳̾͑͗͛̚͠r̬̖̱o̢͇̹̠̼͎̰ͯ͋ͥ̾r̸͔̘̥͎̘̩";
+            if (items[i] != null && items[i].name != null)
+                item = items[i].name;
+            if (itemsQuantity[i] == 0 && compareStrings(language, "yolo"))
+                quan = "@░¶½█▓";
+            text(item, 60, 30 + 39 * i);
+            text(quan, 350, 30 + 39 * i);
+            if (items[i] != null) {
+                if (sprite != null)
+                    image(sprite, 30, 15 + 39 * i);
                 else
-                    fill(200, 0, 0);
-                noStroke();
-                rect(x - 7,  y + 35, 48.0 * wornItems[i].durability / allItems[wornItems[i].id].durability, 10);
-                stroke(125);
-                noFill();
-                rect(x - 8,  y + 35, 49, 10);
+                    text("?", 30, 30 + 39 * i);
+                if (allItems[items[i].id].durability != 0) {
+                    if (items[i].durability / allItems[items[i].id].durability > 0.5)
+                        fill(0, 200, 0);
+                    else if (items[i].durability / allItems[items[i].id].durability > 0.25)
+                        fill(200, 200, 0);
+                    else
+                        fill(200, 0, 0);
+                    noStroke();
+                    rect(25, 39 * i + 32, 24 * items[i].durability / allItems[items[i].id].durability, 5);
+                    stroke(125);
+                    noFill();
+                    rect(25, 39 * i + 32, 24, 5);
+                }
+                fill(255);
+            }
+        }
+        if (selectedSlotInventory < 12)
+            triangle(12, 39 * selectedSlotInventory + 20, 12, 39 * selectedSlotInventory + 28, 20, 39 * selectedSlotInventory + 24);
+        for (int i = 0; i < wornItems.length; i++) {
+            int x = width - 60;
+            int y = 50 * i + 17;
+            
+            if (i >= 4) {
+                y = 167;
+                x = width - 60 - 70 * (i - 3);
+            }
+            stroke((selectedSlotInventory - 12 == i ? color(255, 0, 0) : 0));
+            noFill();
+            rect(x, y - 1, 34, 34);
+            if (wornItems[i] != null) {
+                PImage sprite = null;
+                if (wornItems[i] != null && wornItems[i].id < itemSprites.length && wornItems[i].id >= 0)
+                    sprite = itemSprites[wornItems[i].id];
+                if (sprite == null) 
+                    sprite = item_glitch;
+                if (sprite != null)
+                    image(sprite, x + 1, y, 32, 32);
+                else {
+                    fill(0, 0, 255);
+                    rect(x + 1, y, 32, 32);
+                }
+                if (allItems[wornItems[i].id].durability != 0) {
+                    if (wornItems[i].durability / allItems[wornItems[i].id].durability > 0.5)
+                        fill(0, 200, 0);
+                    else if (wornItems[i].durability / allItems[wornItems[i].id].durability > 0.25)
+                        fill(200, 200, 0);
+                    else
+                        fill(200, 0, 0);
+                    noStroke();
+                    rect(x - 7,  y + 35, 48.0 * wornItems[i].durability / allItems[wornItems[i].id].durability, 10);
+                    stroke(125);
+                    noFill();
+                    rect(x - 8,  y + 35, 49, 10);
+                }
             }
         }
     }

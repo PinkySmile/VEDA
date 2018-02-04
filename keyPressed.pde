@@ -729,6 +729,7 @@ void keyPressed()
                     }
                 if (keys[4] == keyCode) {
                     status = "static";
+                    showItemDetails = false;
                     choosingInInventory = false;
                     if (menu == 2)
                         menu = 0;
@@ -834,25 +835,25 @@ void keyPressed()
         if(keyCode == RIGHT && inventoryPage < items.length / 12 - 1) {
             inventoryPage--;
         } else if(keyCode == DOWN && menu == 2) {
-            if (!choosingInInventory) {
+            if (!showItemDetails && !choosingInInventory) {
                 selectedSlotInventory++;
                 if (selectedSlotInventory < 12 && items[selectedSlotInventory] == null)
                     selectedSlotInventory = 12;
                 if (selectedSlotInventory > 17)
                     selectedSlotInventory = (items[0] == null ? 12 : 0);
-            } else {
+            } else if (!showItemDetails) {
                 selectedAnswerInventory++;
                 if (selectedAnswerInventory > 3)
                     selectedAnswerInventory = 0;
             }
         } else if(keyCode == UP && menu == 2) {
-            if (!choosingInInventory) {
+            if (!showItemDetails && !choosingInInventory) {
                 selectedSlotInventory--;
                 while (selectedSlotInventory >= 0 && selectedSlotInventory < 12 && items[selectedSlotInventory] == null)
                     selectedSlotInventory--;
                 if (selectedSlotInventory < 0)
                     selectedSlotInventory = 17;
-            } else {
+            } else if (!showItemDetails) {
                 selectedAnswerInventory--;
                 if (selectedAnswerInventory < 0)
                     selectedAnswerInventory = 3;
@@ -860,11 +861,19 @@ void keyPressed()
         } else if(keyCode == LEFT && menu == 2 && inventoryPage > 0)
             inventoryPage++;
         else if (keyCode == ENTER && menu == 2) {
-            selectedAnswerInventory = 0;
+            boolean bool = true;;
+            if (showItemDetails)
+                showItemDetails = bool = false;
             if (choosingInInventory) {
                 if (selectedAnswerInventory == 0)
                     equip(selectedSlotInventory);
-                else if (selectedAnswerInventory == 2) {
+                else if (selectedAnswerInventory == 1) {
+                    if ((selectedSlotInventory < 12 ? items[selectedSlotInventory] : wornItems[selectedSlotInventory - 12]) != null) {
+                        showItemDetails = true;
+                        selectedAnswerInventory = 0;
+                        choosingInInventory = !choosingInInventory;
+                    }
+                } else if (selectedAnswerInventory == 2) {
                     if (selectedSlotInventory < 12) {
                         items[selectedSlotInventory] = null;
                         itemsQuantity[selectedSlotInventory] = 0;
@@ -878,7 +887,10 @@ void keyPressed()
                     }
                 }
             }
-            choosingInInventory = !choosingInInventory;
+            if (!showItemDetails && bool && selectedAnswerInventory != 1) {
+                selectedAnswerInventory = 0;
+                choosingInInventory = !choosingInInventory;
+            }
         } else if(keyCode == TAB)
             displayAttack = true;
         keyCode = 0;
