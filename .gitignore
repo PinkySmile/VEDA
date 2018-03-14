@@ -9,3 +9,6 @@ desktop.ini
 save.chr
 *.log
 *.autosave
+*.o
+*.a
+VEDA
