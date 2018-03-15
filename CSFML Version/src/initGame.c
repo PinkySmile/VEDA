@@ -6,6 +6,8 @@
 #include <sys/stat.h>
 #include <stdbool.h>
 #include <stdio.h>
+#include <errno.h>
+#include <unistd.h>
 
 char	*getVersion()
 {
