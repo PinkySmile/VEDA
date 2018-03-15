@@ -5,6 +5,10 @@
 #include <SFML/Audio.h>
 #include <stdbool.h>
 
+enum textures {
+	MENU_BACKGROUND,
+};
+
 typedef struct {
 	void	*content;
 	int	length;

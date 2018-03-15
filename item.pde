@@ -6,6 +6,23 @@ class Item {
     float durability;
     String name;
     String type;
+    
+    Item createCopy()
+    {
+        Item copy = null;
+    
+        copy = new Item();
+        copy.id = id;
+        copy.name = name;
+        copy.durability = durability;
+        copy.type = type;
+        copy.ability = ability;
+        for (int i = 0; i < 6; i++) {
+            copy.damages[i] = damages[i];
+            copy.resistances[i] = resistances[i];
+        }
+        return (copy);
+    }
 }
 
 Item copyItemObject(Item itemObj)

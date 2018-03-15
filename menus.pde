@@ -146,11 +146,11 @@ void dispArmor(int temp, boolean death)
                 if (armorTextures[wornItems[i].id][temp][chara[0]][chara[1]][animation - 1] != null)
                     image(armorTextures[wornItems[i].id][temp][chara[0]][chara[1]][animation - 1], playerX + camPosX, playerY + camPosY);
                 else
-                    println("[" + wornItems[i].id + "][" + temp + "][" + chara[0] + "][" + chara[1] + "][" + (animation - 1) + "]");
+                    println("No such index [" + wornItems[i].id + "][" + temp + "][" + chara[0] + "][" + chara[1] + "][" + (animation - 1) + "]");
             else if (armorTextures[wornItems[i].id][temp][0][0][1] != null)
                 image(armorTextures[wornItems[i].id][temp][0][0][1], playerX + camPosX, playerY + camPosY + 16);
             else
-                println("[" + wornItems[i] + "][" + temp + "][0][0][1]");
+                println("No such index [" + wornItems[i] + "][" + temp + "][0][0][1]");
 }
 
 void inGame()
@@ -328,8 +328,8 @@ void inGame()
         camMoving = !camMove(camScrollingDisabled,camGoToX,camGoToY);
     }
     float hours = floor(playTime / 3600);
-    float minutes = floor((playTime - hours * 3600) / 60);
-    float seconds = playTime - hours * 3600 - minutes * 60;
+    float minutes = floor(playTime % 3600 / 60);
+    float seconds = playTime % 60;
     textSize(15);
     text("Play time : " + int(hours) + ":" + transformInt(int(minutes), 2) + ":" + transformInt(int(seconds), 2), width - 200, 15);
 }

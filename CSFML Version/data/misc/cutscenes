@@ -1,0 +1,11 @@
+setPlayerLife 1
+timeOut 300
+healPlayer 100
+setBlock -1 -1 1 -10 -10 1
+end
+teleportPlayer 0 0
+save
+end
+stopSound All
+loopSound Music 12
+end

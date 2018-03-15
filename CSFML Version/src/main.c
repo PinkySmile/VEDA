@@ -8,6 +8,36 @@
 #include "functions.h"
 #include "macros.h"
 
+char	*strsignal(int signum)
+{
+	switch (signum) {
+	case 3:
+		return ("Quit");
+	case 4:
+		return ("Illegal hardware instruction");
+	case 6:
+		return ("Aborted");
+	case 7:
+		return ("Bus error");
+	case 8:
+		return ("Floating point exception");
+	case 10:
+		return ("User defined signal 1");
+	case 11:
+		return ("Segmentation fault");
+	case 12:
+		return ("User defined signal 2");
+	case 13:
+		return ("Broken pipe");
+	case 14:
+		return ("Timer expired");
+	case 15:
+		return ("Terminated");
+	default:
+		return ("Unknown signal");
+	}
+}
+
 void	sighandler(int signum)
 {
 	printf("%s: Caught signal %i (%s). Exiting\n", FATAL, signum, strsignal(signum));

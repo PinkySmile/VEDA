@@ -1,0 +1,16 @@
+﻿T-Shirt
+Jean
+Baskets
+Mittens
+Wooden Helm
+Wooden Chest
+Wooden Leggings
+Wooden Boots
+Steal Helmet
+Steal Chestplate
+Steal Leggings
+Steal Boots
+Bandage
+Energy Drink
+Stick
+Sword

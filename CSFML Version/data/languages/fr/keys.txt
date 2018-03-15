@@ -1,0 +1,20 @@
+﻿Haut : 
+Bas : 
+Gauche : 
+Droite :
+Inventaire : 
+Pause : 
+Interaction : 
+Attaquer : 
+Succès : 
+Pouvoir : 
+Améliorations : 
+Objet 1 : 
+Objet 2 : 
+Objet 3 : 
+Objet 4 : 
+Objet 5 : 
+Objet 6 : 
+Objet 7 : 
+Objet 8 : 
+Courir : 

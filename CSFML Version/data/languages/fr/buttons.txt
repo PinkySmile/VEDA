@@ -1,0 +1,25 @@
+﻿Jouer
+
+Paramètres
+Quitter
+
+Options
+Audio
+Retour
+Langue
+
+
+Annuler
+Sauvegarder
+Controles
+
+
+Sauvegarder
+
+Oui
+Non
+Ajouter un personnage
+Menu des objets
+Retour
+
+Retour

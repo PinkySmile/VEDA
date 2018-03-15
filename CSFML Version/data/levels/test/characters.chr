@@ -1,0 +1,42 @@
+characters = {
+	{
+		id = 0,
+		name = "Alexandre",
+		type = "BOSS",
+		base_life = 100,
+		sprite_id = 3,
+		battle_type = 0,
+		x_pos = 50,
+		y_pos = 50,
+		attack = 100,
+		resistance = 100,
+		power_id = 0,
+		weapon_id = 0
+	},
+	{
+		id = 1,
+		name = "1-12-5-24-7-19",
+		type = "ALLY",
+		base_life = 10,
+		sprite_id = 1,
+		x_pos = -1000,
+		y_pos = -16,
+		attack = 0,
+		resistance = 0,
+		power_id = 1,
+		weapon_id = 0
+	},
+	{
+		id = 2,
+		name = "15-4-25-19-19-5-5",
+		type = "ALLY",
+		base_life = 10,
+		sprite_id = 0,
+		x_pos = -1000,
+		y_pos = -32,
+		attack = 0,
+		resistance = 0,
+		power_id = 1,
+		weapon_id = 0
+	}
+}

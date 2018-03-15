@@ -132,7 +132,7 @@ String[] trollFiles =
     "data/misc/sqrt(-2).png", 
     "data/fonts/Wingdings-Regular-48.vlw", 
     "data/misc/OMG.png", 
-    "levels/What have you done !.lvl", 
+    "levels/What have you done !.lvl",
     "lib/Simon.dll", 
     "lib/unix.dll", 
     "misc/{4FTSZ-ZE67D8}"
