@@ -18,6 +18,12 @@ Sprite	createSprite(Sprite_config config)
 			return ((Sprite){NULL, NULL, {0, 0}, {0, 0, 0, 0}});
 		}
 		sfSprite_setTexture(sprite.sprite, sprite.texture, sfTrue);
+		sprite.rect.left = config.rectPos.x;
+		sprite.rect.top = config.rectPos.y;
+		sprite.rect.width = config.size.x;
+		sprite.rect.height = config.size.y;
+		sprite.size.x = config.size.x;
+		sprite.size.y = config.size.y;
 	} else
 		printf("%s: Couldn't load file %s\n", ERROR, config.path);
 	return (sprite);

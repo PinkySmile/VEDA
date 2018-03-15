@@ -2,5 +2,5 @@
 
 Array	loadSfx()
 {
-	
+	return ((Array){NULL, 0});
 }
