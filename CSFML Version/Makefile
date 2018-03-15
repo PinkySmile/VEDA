@@ -8,6 +8,8 @@ SRC = 	main.c		\
 	loadSfx.c	\
 	launchGame.c	\
 	manageEvents.c	\
+	mainMenu.c	\
+	drawSprite.c	\
 
 OBJ =	$(SRC:%.c=src/%.o)
 
@@ -37,7 +39,7 @@ clean:
 	$(RM) $(OBJ)
 
 fclean:	clean
-	$(RM) $(NAME)
+	$(RM) $(NAME) $(NAME).exe
 	$(RM) score.dat
 
 re:	fclean all

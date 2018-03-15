@@ -2,6 +2,6 @@
 #include <stdlib.h>
 
 const Music_config	musics_conf[] = {
-	{"data\sound\Musics\Menu.ogg", sfTrue},
+	{"data/sound/Musics/Menu.ogg", sfTrue},
 	{NULL, sfFalse}
 };

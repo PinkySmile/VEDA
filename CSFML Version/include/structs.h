@@ -9,6 +9,10 @@ enum textures {
 	MENU_BACKGROUND,
 };
 
+enum musics {
+	MAIN_MENU_MUSIC,
+};
+
 typedef struct {
 	void	*content;
 	int	length;

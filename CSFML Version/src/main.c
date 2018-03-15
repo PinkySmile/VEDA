@@ -11,6 +11,8 @@
 char	*strsignal(int signum)
 {
 	switch (signum) {
+	case 2:
+		return ("Interrupted");
 	case 3:
 		return ("Quit");
 	case 4:
