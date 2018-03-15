@@ -3,16 +3,31 @@
 
 #include <SFML/Graphics.h>
 #include <SFML/Audio.h>
+#include <stdbool.h>
 
 typedef struct {
 	void	*content;
-	int	lenght;
+	int	length;
 } Array;
 
 typedef struct {
 	sfSprite	*sprite;
 	sfTexture	*texture;
+	sfVector2f	size;
+	sfIntRect	rect;
 } Sprite;
+
+typedef struct {
+	char		*path;
+	bool		isRepeated;
+} Music_config;
+
+typedef struct {
+	char		*path;
+	sfVector2f	scale;
+	sfVector2i	size;
+	sfVector2i	rectPos;
+} Sprite_config;
 
 typedef struct {
 	sfVector2f	pos;
@@ -22,12 +37,18 @@ typedef struct {
 	int		maxEnergy;
 } Player;
 
+typedef struct {
+	char	*index;
+	void	*content;
+	char	type;
+} Dict;
+
 typedef struct game_s game_t;
 
 typedef struct {
 	sfVector2f		pos;
 	sfRectangleShape	*button;
-	void			(*callback)(game_t);
+	void			(*callback)(game_t *);
 } Button;
 
 struct game_s {
@@ -37,7 +58,7 @@ struct game_s {
 	Array			sfx;
 	sfRectangleShape	*rectangle;
 	Player			player;
-	Button			*button;
+	Button			*buttons;
 };
 
 #endif
