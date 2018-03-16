@@ -43,15 +43,15 @@ void	initGame(game_t *game)
 		exit(EXIT_FAILURE);
 	}
 	memset(game, 0, sizeof(*game));
+	game->sprites = loadSprites();
+	game->musics = loadMusics();
+	game->sfx = loadSfx();
 	game->window = sfRenderWindow_create((sfVideoMode){640, 480, 32}, title, sfResize | sfClose, NULL);
-	if (icon)
-		sfRenderWindow_setIcon(game->window, 32, 32, icon);
-	free(title);
 	if (!game->window) {
 		printf("%s: Couldn't create window\n", FATAL);
 		exit(EXIT_FAILURE);
 	}
-	game->sprites = loadSprites();
-	game->musics = loadMusics();
-	game->sfx = loadSfx();
+	if (icon)
+		sfRenderWindow_setIcon(game->window, 32, 32, icon);
+	free(title);
 }

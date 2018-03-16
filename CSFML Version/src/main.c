@@ -40,12 +40,6 @@ char	*strsignal(int signum)
 	}
 }
 
-void	sighandler(int signum)
-{
-	printf("%s: Caught signal %i (%s). Exiting\n", FATAL, signum, strsignal(signum));
-	exit(EXIT_FAILURE);
-}
-
 void	destroyStruct(game_t *game)
 {
 	printf("%s: Destroying game objects\n", INFO);
@@ -70,8 +64,6 @@ int	main()
 {
 	game_t	game;
 
-	for (int i = 0; i < 31; i++)
-		signal(i, &sighandler);
 	printf("%s: Initializating game\n", INFO);
 	initGame(&game);
 	launchGame(&game);
