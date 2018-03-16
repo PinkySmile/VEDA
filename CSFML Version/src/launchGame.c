@@ -10,6 +10,7 @@ void	launchGame(game_t *game)
 		manageEvents(game);
 		sfRenderWindow_clear(game->window, (sfColor){0, 0, 0, 255});
 		mainMenu(game);
+		disp_buttons(game);
 		sfRenderWindow_display(game->window);
 	}
 }

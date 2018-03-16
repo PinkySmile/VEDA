@@ -47,11 +47,20 @@ typedef struct {
 } Player;
 
 typedef struct {
+	Array	buttons;
+	char	id[50];
+	char	*name;
+	char	**items;
+	char	**keys;
+} Language;
+
+typedef struct {
 	char		musicVolume;
 	char		sfxVolume;
 	char		windowMode;
 	sfVector2i	windowSize;
 	char		keys[NB_OF_KEYS];
+	Language	language;
 } Settings;
 
 typedef struct {
@@ -73,6 +82,7 @@ typedef struct {
 	sfVector2f	size;
 	sfColor		color;
 	void		(*callback)(game_t *, int);
+	bool		disabled;
 } Button_config;
 
 typedef struct {
@@ -86,6 +96,7 @@ typedef struct {
 
 struct game_s {
 	sfRenderWindow		*window;
+	int			menu;
 	Array			sprites;
 	Array			musics;
 	Array			sfx;

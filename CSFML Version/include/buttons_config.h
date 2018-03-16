@@ -1,28 +1,23 @@
-/*
-** EPITECH PROJECT, 2018
-** button_config
-** File description:
-** Config file for buttons
-*/
-
 #include <SFML/Graphics.h>
 #include <SFML/Audio.h>
 #include "structs.h"
 #include "functions.h"
 
-Button_config const	button_config[] = {
+const Button_config	button_config[] = {
 	{
-	        1,
+	        0,
 		{640, 100},
 		{225, 90},
 		{255, 0, 0, 255},
-		&play_button
+		&play_button,
+		true
 	},
 	{
-		0,
+		-1,
 		{0, 0},
 		{0, 0},
 		{0, 0, 0, 0},
-		0
+		0,
+		false
 	}
 };

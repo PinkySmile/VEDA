@@ -34,6 +34,7 @@ Array	loadMusics()
 	array.content = musics;
 	for (int i = 0; musics_conf[i].path; i++)
 		musics[i] = createMusic(musics_conf[i]);
+	printf("%s: Musics loaded !\n", INFO);
 	return (array);
 }
 
@@ -54,5 +55,6 @@ Array	loadSfx()
 	array.content = sfx;
 	for (int i = 0; sfx_conf[i].path; i++)
 		sfx[i] = createMusic(sfx_conf[i]);
+	printf("%s: Sounds loaded !\n", INFO);
 	return (array);
 }

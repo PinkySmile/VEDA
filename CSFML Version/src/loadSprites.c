@@ -46,5 +46,6 @@ Array	loadSprites()
 	array.content = sprites;
 	for (int i = 0; sprites_conf[i].path; i++)
 		sprites[i] = createSprite(sprites_conf[i]);
+	printf("%s: Textures loaded !\n", INFO);
 	return (array);
 }

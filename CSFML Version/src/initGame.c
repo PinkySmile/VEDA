@@ -56,6 +56,7 @@ void	initGame(game_t *game)
 	game->sprites = loadSprites();
 	game->musics = loadMusics();
 	game->sfx = loadSfx();
+	game->buttons = loadButtons(game);
 	game->window = sfRenderWindow_create(mode, title, style, NULL);
 	if (!game->window) {
 		printf("%s: Couldn't create window\n", FATAL);
