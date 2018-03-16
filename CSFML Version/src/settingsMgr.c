@@ -29,7 +29,7 @@ Settings	loadSettings()
 	fd = open("data/settings.dat", O_RDONLY);
 	memset(&settings, 0, sizeof(settings));
 	if (fd < 0) {
-		printf("%s: Couldn't save settings (data/settings.dat: %s)\n", ERROR, strerror(errno));
+		printf("%s: Couldn't load settings (data/settings.dat: %s)\n", ERROR, strerror(errno));
 		memset(&settings.keys, -1, NB_OF_KEYS);
 		settings.sfxVolume = 100;
 		settings.musicVolume = 100;

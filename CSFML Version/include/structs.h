@@ -60,12 +60,28 @@ typedef struct {
 	char	type;
 } Dict;
 
+typedef struct {
+	sfText	*text;
+	sfFont	*font;
+} Text;
+
 typedef struct game_s game_t;
 
 typedef struct {
+	int		nameId;
+	sfVector2f	pos;
+	sfVector2f	size;
+	sfColor		color;
+	void		(*callback)(game_t *, int);
+} Button_config;
+
+typedef struct {
+	char			*content;
 	sfVector2f		pos;
-	sfRectangleShape	*button;
+	sfVector2f		size;
 	void			(*callback)(game_t *, int);
+	sfRectangleShape	*rect;
+	bool			displayed;
 } Button;
 
 struct game_s {
@@ -76,6 +92,8 @@ struct game_s {
 	Settings		settings;
 	sfRectangleShape	*rectangle;
 	sfCircleShape		*circle;
+	sfText			*text;
+	Array			fonts;
 	Player			player;
 	Button			*buttons;
 };

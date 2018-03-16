@@ -17,5 +17,7 @@ Array		loadSprites();
 Array		loadSfx();
 Settings	loadSettings();
 void		saveSettings(game_t *game);
+char		*getButtonContent(int nameId, game_t *game);
+void		play_button(game_t *game, int buttonId);
 
 #endif

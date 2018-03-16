@@ -10,6 +10,8 @@ SRC = 	main.c		\
 	mainMenu.c	\
 	drawSprite.c	\
 	settingsMgr.c	\
+	load_buttons.c	\
+	callbacks.c	\
 
 OBJ =	$(SRC:%.c=src/%.o)
 
