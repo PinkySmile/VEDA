@@ -9,6 +9,7 @@ SRC = 	main.c		\
 	manageEvents.c	\
 	mainMenu.c	\
 	drawSprite.c	\
+	settingsMgr.c	\
 
 OBJ =	$(SRC:%.c=src/%.o)
 
@@ -39,7 +40,6 @@ clean:
 
 fclean:	clean
 	$(RM) $(NAME) $(NAME).exe
-	$(RM) score.dat
 
 re:	fclean all
 

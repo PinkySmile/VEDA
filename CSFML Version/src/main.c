@@ -67,6 +67,7 @@ int	main()
 	printf("%s: Initializating game\n", INFO);
 	initGame(&game);
 	launchGame(&game);
+	saveSettings(&game);
 	destroyStruct(&game);
 	printf("%s: Goodbye !\n", INFO);
 	return (EXIT_SUCCESS);

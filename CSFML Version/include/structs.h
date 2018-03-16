@@ -4,6 +4,7 @@
 #include <SFML/Graphics.h>
 #include <SFML/Audio.h>
 #include <stdbool.h>
+#include "macros.h"
 
 enum textures {
 	MENU_BACKGROUND,
@@ -46,6 +47,14 @@ typedef struct {
 } Player;
 
 typedef struct {
+	char		musicVolume;
+	char		sfxVolume;
+	char		windowMode;
+	sfVector2i	windowSize;
+	char		keys[NB_OF_KEYS];
+} Settings;
+
+typedef struct {
 	char	*index;
 	void	*content;
 	char	type;
@@ -56,7 +65,7 @@ typedef struct game_s game_t;
 typedef struct {
 	sfVector2f		pos;
 	sfRectangleShape	*button;
-	void			(*callback)(game_t *);
+	void			(*callback)(game_t *, int);
 } Button;
 
 struct game_s {
@@ -64,7 +73,9 @@ struct game_s {
 	Array			sprites;
 	Array			musics;
 	Array			sfx;
+	Settings		settings;
 	sfRectangleShape	*rectangle;
+	sfCircleShape		*circle;
 	Player			player;
 	Button			*buttons;
 };

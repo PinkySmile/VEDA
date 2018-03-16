@@ -11,5 +11,6 @@ save.chr
 *.autosave
 *.o
 *.a
+*.dat
 VEDA
 VEDA.exe
