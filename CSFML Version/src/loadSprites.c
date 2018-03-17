@@ -1,5 +1,6 @@
 #include "structs.h"
 #include "macros.h"
+#include "functions.h"
 #include "sprites_conf.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -29,7 +30,7 @@ Sprite	createSprite(Sprite_config config)
 	return (sprite);
 }
 
-Array	loadSprites()
+Array	loadSprites(game_t *game)
 {
 	Array	array = {NULL, 0};
 	int	len = 0;
@@ -44,8 +45,10 @@ Array	loadSprites()
 	}
 	array.length = len;
 	array.content = sprites;
-	for (int i = 0; sprites_conf[i].path; i++)
+	for (int i = 0; sprites_conf[i].path; i++) {
+		displayLoadingBar(game, 2, 5, i, len, "Loading textures");
 		sprites[i] = createSprite(sprites_conf[i]);
+	}
 	printf("%s: Textures loaded !\n", INFO);
 	return (array);
 }

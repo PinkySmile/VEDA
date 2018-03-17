@@ -22,7 +22,7 @@ void	text(char *str, game_t *game, int x, int y)
 {
 	sfVector2f pos = {x, y};
 
-	if (game->text) {
+	if (game->text && sfText_getFont(game->text)) {
 		sfText_setString(game->text, str);
 		sfText_setPosition(game->text, pos);
 		sfRenderWindow_drawText(game->window, game->text, 0);
@@ -74,8 +74,10 @@ Button	*loadButtons(game_t *game)
 		printf("%s: Couldn't malloc %liB for buttons\n", FATAL, sizeof(*buttons) * (len + 1));
 		exit(EXIT_FAILURE);
 	}
-	for (int i = 0; i < len; i++)
+	for (int i = 0; i < len; i++) {
+		displayLoadingBar(game, 5, 5, i, len, "Creating buttons");
 		buttons[i] = create_button(button_config[i], game);
+	}
 	buttons[len].content = NULL;
 	printf("%s: Buttons loaded !\n", INFO);
 	return (buttons);

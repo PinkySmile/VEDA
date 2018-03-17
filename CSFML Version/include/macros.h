@@ -1,4 +1,5 @@
-#ifndef INFO
+#ifndef __MACROS_H_
+#define __MACROS_H_
 
 #define EXIT_SUCCESS 0
 #define EXIT_FAILURE 1

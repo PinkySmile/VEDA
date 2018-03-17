@@ -1,6 +1,7 @@
 #include "structs.h"
 #include "macros.h"
 #include "sounds_conf.h"
+#include "functions.h""
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -17,7 +18,7 @@ sfMusic	*createMusic(Music_config config)
 	return (music);
 }
 
-Array	loadMusics()
+Array	loadMusics(game_t *game)
 {
 	Array	array = {NULL, 0};
 	int	len = 0;
@@ -32,13 +33,15 @@ Array	loadMusics()
 	}
 	array.length = len;
 	array.content = musics;
-	for (int i = 0; musics_conf[i].path; i++)
+	for (int i = 0; musics_conf[i].path; i++) {
+		displayLoadingBar(game, 3, 5, i, len, "Loading musics");
 		musics[i] = createMusic(musics_conf[i]);
+	}
 	printf("%s: Musics loaded !\n", INFO);
 	return (array);
 }
 
-Array	loadSfx()
+Array	loadSfx(game_t *game)
 {
 	Array	array = {NULL, 0};
 	int	len = 0;
@@ -53,8 +56,10 @@ Array	loadSfx()
 	}
 	array.length = len;
 	array.content = sfx;
-	for (int i = 0; sfx_conf[i].path; i++)
+	for (int i = 0; sfx_conf[i].path; i++) {
+		displayLoadingBar(game, 4, 5, i, len, "Loading sound effects");
 		sfx[i] = createMusic(sfx_conf[i]);
+	}
 	printf("%s: Sounds loaded !\n", INFO);
 	return (array);
 }

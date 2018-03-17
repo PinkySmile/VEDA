@@ -12,6 +12,9 @@ SRC = 	main.c		\
 	settingsMgr.c	\
 	load_buttons.c	\
 	callbacks.c	\
+	int_to_str.c	\
+	loadFonts.c	\
+	get_nbrlen.c	\
 
 OBJ =	$(SRC:%.c=src/%.o)
 

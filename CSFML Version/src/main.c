@@ -57,6 +57,7 @@ void	destroyStruct(game_t *game)
 	for (int i = 0; i < game->sfx.length; i++)
 		if (((sfMusic **)game->sfx.content)[i] != NULL)
 			sfMusic_destroy(((sfMusic **)game->sfx.content)[i]);
+	sfRectangleShape_destroy(game->rectangle);
 	free(game->sfx.content);
 }
 

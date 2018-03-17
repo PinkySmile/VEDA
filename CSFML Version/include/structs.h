@@ -8,10 +8,53 @@
 
 enum textures {
 	MENU_BACKGROUND,
+	OBJECTS,
+	MALE_CHARACTER,
+	FEMALE_CHARACTER,
+	CHARACTER0,
+	CHARACTER1,
+	CHARACTER2,
+	CHARACTER3,
+};
+
+enum fonts {
+	ARIAL,
+	SOMETHING,
 };
 
 enum musics {
+	GAME_OVER,
+	MACABRE,
+	MYSTERIOUS,
+	CLAVIER,
 	MAIN_MENU_MUSIC,
+	EPICBATTLE_START,
+	EPICBATTLE_LOOP,
+	SQRT1,
+	SQRT2,
+	EUGRT_FULL,
+	EUGRT_START,
+	EUGRT_LOOP,
+	UMLAUT,
+};
+
+enum sfx {
+	IRON,
+	ERROR_SOUND,
+	EXCLAMATION,
+	O_o,
+	GRASS1,
+	GRASS2,
+	GRASS3,
+	GRASS4,
+	DIRT1,
+	DIRT2,
+	DIRT3,
+	DIRT4,
+	MUD1,
+	MUD2,
+	MUD3,
+	MUD4,
 };
 
 typedef struct {
@@ -69,11 +112,6 @@ typedef struct {
 	char	type;
 } Dict;
 
-typedef struct {
-	sfText	*text;
-	sfFont	*font;
-} Text;
-
 typedef struct game_s game_t;
 
 typedef struct {
@@ -94,6 +132,12 @@ typedef struct {
 	bool			displayed;
 } Button;
 
+typedef struct {
+	sfTexture	*texture;
+	sfSprite	*sprite;
+	sfImage		*image;
+} Icon;
+
 struct game_s {
 	sfRenderWindow		*window;
 	int			menu;
@@ -105,8 +149,10 @@ struct game_s {
 	sfCircleShape		*circle;
 	sfText			*text;
 	Array			fonts;
+	sfVector2f		baseScale;
 	Player			player;
 	Button			*buttons;
+	Icon			icon;
 };
 
 #endif
