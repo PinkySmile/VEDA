@@ -24,7 +24,7 @@ Array	loadFonts(game_t *game)
 		fonts[i] = sfFont_createFromFile(fonts_conf[i]);
 		if (i == ARIAL)
 			setFont(game->text, fonts[ARIAL]);
-		displayLoadingBar(game, 1, 5, i + 1, len, "Loading fonts");
+		displayLoadingBar(game, 1, MAX_STEPS, i + 1, len, "Loading fonts");
 		if (!fonts[i])
 			printf("%s: Couldn't load file %s\n", ERROR, fonts_conf[i]);
 	}

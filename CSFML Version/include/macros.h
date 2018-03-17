@@ -8,6 +8,8 @@
 #define ERROR	"[ERROR]"
 #define FATAL	"[FATAL]"
 
+#define MAX_STEPS	6
+
 #define WINDOWED		0
 #define FULLSCREEN		1
 #define BORDERLESS_WINDOW	2

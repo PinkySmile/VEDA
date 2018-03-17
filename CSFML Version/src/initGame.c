@@ -38,11 +38,11 @@ void	displayLoadingBar(game_t *game, float step, float maxSteps, float file, flo
 	sfRectangleShape_setPosition(game->rectangle, pos);
 	sfRectangleShape_setSize(game->rectangle, size);
 	sfRenderWindow_clear(game->window, (sfColor){0, 0, 0, 255});
-	rect(game, pos.x - 5, pos.y - 5, 450, 60);
-	rect(game, pos2.x - 5, pos2.y - 5, 450, 60);
+	rect(game, pos.x - 5 * game->baseScale.x, pos.y - 5 * game->baseScale.y, 450 * game->baseScale.x, 60 * game->baseScale.y);
+	rect(game, pos2.x - 5 * game->baseScale.x, pos2.y - 5 * game->baseScale.y, 450 * game->baseScale.x, 60 * game->baseScale.y);
 	sfRectangleShape_setFillColor(game->rectangle, (sfColor){0, 0, 0, 255});
-	rect(game, pos.x, pos.y, 440, 50);
-	rect(game, pos2.x, pos2.y, 440, 50);
+	rect(game, pos.x, pos.y, 440 * game->baseScale.x, 50 * game->baseScale.y);
+	rect(game, pos2.x, pos2.y, 440 * game->baseScale.x, 50 * game->baseScale.y);
 	sfRectangleShape_setFillColor(game->rectangle, (sfColor){0, 0, 255, 255});
 	rect(game, pos.x, pos.y, size.x, size.y);
 	sfRectangleShape_setFillColor(game->rectangle, (sfColor){0, 255, 0, 255});
@@ -132,5 +132,6 @@ void	initGame(game_t *game)
 	game->musics = loadMusics(game);
 	game->sfx = loadSfx(game);
 	game->buttons = loadButtons(game);
+	game->languages = loadLanguages(game);
 	free(title);
 }

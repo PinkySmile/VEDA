@@ -103,7 +103,7 @@ typedef struct {
 	char		windowMode;
 	sfVector2i	windowSize;
 	char		keys[NB_OF_KEYS];
-	Language	language;
+	char		lang;
 } Settings;
 
 typedef struct {

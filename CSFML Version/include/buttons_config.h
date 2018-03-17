@@ -6,8 +6,8 @@
 const Button_config	button_config[] = {
 	{
 	        0,
-		{640, 100},
-		{225, 90},
+		{10, 40},
+		{150, 40},
 		{255, 0, 0, 255},
 		&play_button,
 		true

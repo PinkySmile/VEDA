@@ -9,5 +9,6 @@ const Sprite_config	sprites_conf[] = {
 	{"data/characters/1_character.png", {1, 1}, {32, 32}, {0, 0}},
 	{"data/characters/2_character.png", {1, 1}, {32, 32}, {0, 0}},
 	{"data/characters/3_character.png", {1, 1}, {32, 32}, {0, 0}},
+	{"data/godEater/godEater.png", {1, 1}, {32, 32}, {0, 0}},
 	{0, {0, 0}, {0, 0}, {0, 0}}
 };

@@ -34,7 +34,7 @@ Array	loadMusics(game_t *game)
 	array.length = len;
 	array.content = musics;
 	for (int i = 0; musics_conf[i].path; i++) {
-		displayLoadingBar(game, 3, 5, i, len, "Loading musics");
+		displayLoadingBar(game, 3, MAX_STEPS, i, len, "Loading musics");
 		musics[i] = createMusic(musics_conf[i]);
 	}
 	printf("%s: Musics loaded !\n", INFO);
@@ -57,7 +57,7 @@ Array	loadSfx(game_t *game)
 	array.length = len;
 	array.content = sfx;
 	for (int i = 0; sfx_conf[i].path; i++) {
-		displayLoadingBar(game, 4, 5, i, len, "Loading sound effects");
+		displayLoadingBar(game, 4, MAX_STEPS, i, len, "Loading sound effects");
 		sfx[i] = createMusic(sfx_conf[i]);
 	}
 	printf("%s: Sounds loaded !\n", INFO);

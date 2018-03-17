@@ -49,8 +49,8 @@ Button	create_button(Button_config config, game_t *game)
 	Button	button;
 
 	button.content = getButtonContent(config.nameId, game);
-	button.pos = config.pos;
-	button.size = config.size;
+	button.pos = (sfVector2f){config.pos.x * game->baseScale.x, config.pos.y * game->baseScale.y};
+	button.size = (sfVector2f){config.size.x * game->baseScale.x, config.size.y * game->baseScale.y};
 	button.callback = config.callback;
 	button.rect = sfRectangleShape_create();
 	button.displayed = config.disabled;
@@ -75,7 +75,7 @@ Button	*loadButtons(game_t *game)
 		exit(EXIT_FAILURE);
 	}
 	for (int i = 0; i < len; i++) {
-		displayLoadingBar(game, 5, 5, i, len, "Creating buttons");
+		displayLoadingBar(game, 5, MAX_STEPS, i, len, "Creating buttons");
 		buttons[i] = create_button(button_config[i], game);
 	}
 	buttons[len].content = NULL;

@@ -8,6 +8,13 @@
 #include "functions.h"
 #include "macros.h"
 
+sfRenderWindow	**window;
+
+void	sighandler(int signum)
+{
+	sfRenderWindow_close(*window);
+}
+
 char	*strsignal(int signum)
 {
 	switch (signum) {
@@ -65,6 +72,8 @@ int	main()
 {
 	game_t	game;
 
+	window = & game.window;
+	signal(2, &sighandler);
 	printf("%s: Initializating game\n", INFO);
 	initGame(&game);
 	launchGame(&game);
