@@ -65,8 +65,23 @@ void	destroyStruct(game_t *game)
 	for (int i = 0; i < game->sfx.length; i++)
 		if (((sfMusic **)game->sfx.content)[i] != NULL)
 			sfMusic_destroy(((sfMusic **)game->sfx.content)[i]);
-	sfRectangleShape_destroy(game->rectangle);
 	free(game->sfx.content);
+	for (int i = 0; i < game->fonts.length; i++)
+		if (((sfFont **)game->fonts.content)[i] != NULL)
+			sfFont_destroy(((sfFont **)game->fonts.content)[i]);
+	free(game->fonts.content);
+	sfRectangleShape_destroy(game->rectangle);
+	sfRenderWindow_destroy(game->window);
+	sfText_destroy(game->text);
+	sfImage_destroy(game->icon.image);
+	sfTexture_destroy(game->icon.texture);
+	sfSprite_destroy(game->icon.sprite);
+	for (int i = 0; game->buttons[i].content; i++)
+		sfRectangleShape_destroy(game->buttons[i].rect);
+	free(game->buttons);
+	for (int i = 0; game->languages[i].name; i++)
+		free(game->languages[i].name);
+	free(game->languages);
 }
 
 int	main()

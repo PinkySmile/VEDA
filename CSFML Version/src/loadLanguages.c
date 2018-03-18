@@ -24,6 +24,7 @@ Language	createLanguage(char *path)
 	char		*buffer = NULL;
 	char		*path_buffer = concat("data/languages/", path, false, false);
 
+	memset(&language, 0, sizeof(language));
 	if (!path_buffer) {
 		printf("%s: Couldn't concatenate '%s' with '%s'\n", FATAL, "data/languages/", path);
 		exit(EXIT_FAILURE);
@@ -40,6 +41,7 @@ Language	createLanguage(char *path)
 		printf("%s: Couldn't open file %s (%s)\n", ERROR, buffer, strerror(errno));
 		language.name = strdup(path);
 	} else {
+		language.name = NULL;
 		getline(&language.name, &n, stream);
 		fclose(stream);
 	}
@@ -82,7 +84,9 @@ Language	*loadLanguages(game_t *game)
 		displayLoadingBar(game, 5, MAX_STEPS, i, len, buffer);
 		free(buffer);
 		languages[i] = createLanguage(paths[i]);
+		free(paths[i]);
 	}
+	free(paths);
 	languages[len].name = NULL;
 	printf("%s: Languages loaded !\n", INFO);
 	closedir(dir);

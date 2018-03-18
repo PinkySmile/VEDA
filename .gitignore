@@ -12,5 +12,6 @@ save.chr
 *.o
 *.a
 *.dat
+*.lnk
 VEDA
 VEDA.exe

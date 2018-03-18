@@ -15,7 +15,7 @@ char	*getButtonContent(int nameId, game_t *game)
 {
 	int 	len = 0;
 	
-	if (getLanguage(game->languages, game->settings.lang_id) < 0)
+	if (game->languages[getLanguage(game->languages, game->settings.lang_id)].buttons == NULL || getLanguage(game->languages, game->settings.lang_id) < 0)
 		return ("");
 	for (; game->languages[getLanguage(game->languages, game->settings.lang_id)].buttons[len]; len++);
 	if (nameId < len && game->languages[getLanguage(game->languages, game->settings.lang_id)].buttons[nameId])

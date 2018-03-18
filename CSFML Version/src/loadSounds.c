@@ -1,7 +1,7 @@
 #include "structs.h"
 #include "macros.h"
 #include "sounds_conf.h"
-#include "functions.h""
+#include "functions.h"
 #include <stdio.h>
 #include <stdlib.h>
 

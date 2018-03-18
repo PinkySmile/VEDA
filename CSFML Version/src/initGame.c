@@ -69,7 +69,8 @@ char	*getVersion()
 		if (!version)
 			exit(EXIT_FAILURE);
 		return (version);
-	}
+	} else
+		memset(version, 0, 10);
 	read(fd, version, 9);
 	version[9] = 0;
 	close(fd);
