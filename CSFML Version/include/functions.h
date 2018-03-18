@@ -29,5 +29,7 @@ Array		loadFonts(game_t *game);
 int		get_nbrlen(int nbr);
 void		displayLoadingBar(game_t *game, float step, float maxSteps, float file, float maxFiles, char *status);
 void		setFont(sfText *text, sfFont *font);
+Language	*loadLanguages(game_t *game);
+int		getLanguage(Language *languages, char *lang_id);
 
 #endif

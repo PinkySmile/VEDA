@@ -13,8 +13,13 @@ void	disableButtons(game_t *game)
 
 char	*getButtonContent(int nameId, game_t *game)
 {
-	if (nameId < game->settings.language.buttons.length && ((char **)game->settings.language.buttons.content)[nameId])
-		return (((char **)game->settings.language.buttons.content)[nameId]);
+	int 	len = 0;
+	
+	if (getLanguage(game->languages, game->settings.lang_id) < 0)
+		return ("");
+	for (; game->languages[getLanguage(game->languages, game->settings.lang_id)].buttons[len]; len++);
+	if (nameId < len && game->languages[getLanguage(game->languages, game->settings.lang_id)].buttons[nameId])
+		return (game->languages[getLanguage(game->languages, game->settings.lang_id)].buttons[nameId]);
 	return ("");
 }
 
@@ -75,7 +80,7 @@ Button	*loadButtons(game_t *game)
 		exit(EXIT_FAILURE);
 	}
 	for (int i = 0; i < len; i++) {
-		displayLoadingBar(game, 5, MAX_STEPS, i, len, "Creating buttons");
+		displayLoadingBar(game, 6, MAX_STEPS, i, len, "Creating buttons");
 		buttons[i] = create_button(button_config[i], game);
 	}
 	buttons[len].content = NULL;

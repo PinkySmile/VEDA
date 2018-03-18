@@ -47,8 +47,8 @@ void	displayLoadingBar(game_t *game, float step, float maxSteps, float file, flo
 	rect(game, pos.x, pos.y, size.x, size.y);
 	sfRectangleShape_setFillColor(game->rectangle, (sfColor){0, 255, 0, 255});
 	rect(game, pos2.x, pos2.y, size2.x, size2.y);
-	text(status, game, (320 - (strlen(status) / 2) * 6) * game->baseScale.x, 320 * game->baseScale.y);
-	text(nbr, game, (320 - strlen(nbr)/2 * 7) * game->baseScale.x, 420 * game->baseScale.y);
+	text(status, game, (320 - (strlen(status) / 2) * 6) * game->baseScale.x, 310 * game->baseScale.y);
+	text(nbr, game, (320 - strlen(nbr)/2 * 7) * game->baseScale.x, 410 * game->baseScale.y);
 	image(game, game->icon.sprite, 256, 100, 128, 128);
 	sfRenderWindow_display(game->window);
 	free(nbr);
@@ -131,7 +131,7 @@ void	initGame(game_t *game)
 	game->sprites = loadSprites(game);
 	game->musics = loadMusics(game);
 	game->sfx = loadSfx(game);
-	game->buttons = loadButtons(game);
 	game->languages = loadLanguages(game);
+	game->buttons = loadButtons(game);
 	free(title);
 }

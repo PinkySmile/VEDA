@@ -90,8 +90,8 @@ typedef struct {
 } Player;
 
 typedef struct {
-	Array	buttons;
-	char	id[50];
+	char	**buttons;
+	char	id[256];
 	char	*name;
 	char	**items;
 	char	**keys;
@@ -103,7 +103,7 @@ typedef struct {
 	char		windowMode;
 	sfVector2i	windowSize;
 	char		keys[NB_OF_KEYS];
-	char		lang;
+	char		lang_id[256];
 } Settings;
 
 typedef struct {
@@ -138,6 +138,14 @@ typedef struct {
 	sfImage		*image;
 } Icon;
 
+typedef struct list_s List;
+
+struct list_s {
+	void	*data;
+	List	*next;
+	List	*prev;
+};
+
 struct game_s {
 	sfRenderWindow		*window;
 	int			menu;
@@ -153,6 +161,7 @@ struct game_s {
 	Player			player;
 	Button			*buttons;
 	Icon			icon;
+	Language		*languages;		
 };
 
 #endif

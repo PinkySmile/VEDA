@@ -10,11 +10,6 @@
 
 sfRenderWindow	**window;
 
-void	sighandler(int signum)
-{
-	sfRenderWindow_close(*window);
-}
-
 char	*strsignal(int signum)
 {
 	switch (signum) {
@@ -45,6 +40,12 @@ char	*strsignal(int signum)
 	default:
 		return ("Unknown signal");
 	}
+}
+
+void	sighandler(int signum)
+{
+	sfRenderWindow_close(*window);
+	printf("%s: Caught signal %i (%s). Exiting.\n", INFO, signum, strsignal(signum));
 }
 
 void	destroyStruct(game_t *game)
