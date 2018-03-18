@@ -1,4 +1,4 @@
-﻿Up : 
+Up : 
 Down : 
 Left : 
 Right :

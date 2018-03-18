@@ -8,10 +8,10 @@
 #include <string.h>
 #include <errno.h>
 
-int		getLanguage(Language *languages, char *lang_id)
+int	getLanguage(Language *languages, char *lang_id)
 {
 	for (int i = 0; languages[i].name; i++)
-		if (strcmp(languages[i].id, lang_id))
+		if (!strcmp(languages[i].id, lang_id))
 			return (i);
 	return (-1);
 }
@@ -31,7 +31,33 @@ Language	createLanguage(char *path)
 	}
 	printf("%s: Loading language folder %s\n", INFO, path_buffer);
 	strcpy(language.id, path);
-	buffer = concat(path_buffer, "/name.txt", true, false);
+	buffer = concat(path_buffer, "/buttons.txt", false, false);
+	if (!buffer) {
+		printf("%s: Couldn't concatenate '%s' with '%s'\n", FATAL, buffer, "/name.txt");
+		exit(EXIT_FAILURE);
+	}
+	stream = fopen(buffer, "r");
+	if (!stream) {
+		printf("%s: Couldn't open file %s (%s)\n", ERROR, buffer, strerror(errno));
+		language.buttons = NULL;
+	} else {
+		n = 0;
+		language.buttons = malloc(sizeof(*language.buttons));
+		language.buttons[0] = NULL;
+		for (int i = 1; getline(&language.buttons[i - 1], &n, stream) >= 0; i++, n = 0) {
+			language.buttons = realloc(language.buttons, sizeof(*language.buttons) * (i + 1));
+			if (!language.buttons) {
+				printf("%s: Couldn't allocate %liB\n", FATAL, sizeof(*language.buttons) * (i + 1));
+				exit(EXIT_FAILURE);
+			}
+			if (language.buttons[i - 1] && language.buttons[i - 1][strlen(language.buttons[i - 1]) - 1] == '\n')
+				language.buttons[i - 1][strlen(language.buttons[i - 1]) - 1] = 0;
+			language.buttons[i] = NULL;
+		}
+		fclose(stream);
+	}
+	free(buffer);
+	buffer = concat(path_buffer, "/name.txt", false, false);
 	if (!buffer) {
 		printf("%s: Couldn't concatenate '%s' with '%s'\n", FATAL, buffer, "/name.txt");
 		exit(EXIT_FAILURE);
@@ -41,11 +67,13 @@ Language	createLanguage(char *path)
 		printf("%s: Couldn't open file %s (%s)\n", ERROR, buffer, strerror(errno));
 		language.name = strdup(path);
 	} else {
+		n = 0;
 		language.name = NULL;
 		getline(&language.name, &n, stream);
 		fclose(stream);
 	}
 	free(buffer);
+	free(path_buffer);
 	return (language);
 }
 

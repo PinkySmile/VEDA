@@ -1,4 +1,4 @@
-﻿Debug !
+Debug !
 Appuie sur ',' en mode debug et c'est tout !!
 misc/bug.png
 Beginner

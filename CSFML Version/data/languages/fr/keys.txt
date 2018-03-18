@@ -1,4 +1,4 @@
-﻿Haut : 
+Haut : 
 Bas : 
 Gauche : 
 Droite :

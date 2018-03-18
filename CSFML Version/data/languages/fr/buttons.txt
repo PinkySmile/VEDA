@@ -1,4 +1,4 @@
-﻿Jouer
+Jouer
 
 Paramètres
 Quitter
