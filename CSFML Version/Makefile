@@ -53,4 +53,4 @@ dbg:	CFLAGS += -g -O0
 dbg:	re
 
 epi:	LDFLAGS = -lc_graph_prog -lm
-epi:	re
+epi:	dbg

@@ -20,6 +20,7 @@ Language	createLanguage(char *path)
 {
 	Language	language;
 	size_t		n = 0;
+	int		len = 1;
 	FILE		*stream;
 	char		*buffer = NULL;
 	char		*path_buffer = concat("data/languages/", path, false, false);
@@ -44,16 +45,17 @@ Language	createLanguage(char *path)
 		n = 0;
 		language.buttons = malloc(sizeof(*language.buttons));
 		language.buttons[0] = NULL;
-		for (int i = 1; getline(&language.buttons[i - 1], &n, stream) >= 0; i++, n = 0) {
-			language.buttons = realloc(language.buttons, sizeof(*language.buttons) * (i + 1));
+		for (len = 0; getline(&language.buttons[len], &n, stream) >= 0; len++, n = 0) {
+			language.buttons = realloc(language.buttons, sizeof(*language.buttons) * (len + 3));
 			if (!language.buttons) {
-				printf("%s: Couldn't allocate %liB\n", FATAL, sizeof(*language.buttons) * (i + 1));
+				printf("%s: Couldn't allocate %liB\n", FATAL, sizeof(*language.buttons) * (len + 3));
 				exit(EXIT_FAILURE);
 			}
-			if (language.buttons[i - 1] && language.buttons[i - 1][strlen(language.buttons[i - 1]) - 1] == '\n')
-				language.buttons[i - 1][strlen(language.buttons[i - 1]) - 1] = 0;
-			language.buttons[i] = NULL;
+			if (language.buttons[len] && language.buttons[len][strlen(language.buttons[len]) - 1] == '\n')
+				language.buttons[len][strlen(language.buttons[len]) - 1] = 0;
+			language.buttons[len + 1] = NULL;
 		}
+		language.buttons[len + 1] = NULL;
 		fclose(stream);
 	}
 	free(buffer);

@@ -14,7 +14,7 @@ void	disableButtons(game_t *game)
 char	*getButtonContent(int nameId, game_t *game)
 {
 	int 	len = 0;
-	
+
 	if (getLanguage(game->languages, game->settings.lang_id) < 0 || game->languages[getLanguage(game->languages, game->settings.lang_id)].buttons == NULL)
 		return ("");
 	for (; game->languages[getLanguage(game->languages, game->settings.lang_id)].buttons[len]; len++);

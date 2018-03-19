@@ -44,7 +44,10 @@ char	*strsignal(int signum)
 
 void	sighandler(int signum)
 {
-	sfRenderWindow_close(*window);
+	if (*window)
+		sfRenderWindow_close(*window);
+	else
+		exit(EXIT_SUCCESS);
 	printf("%s: Caught signal %i (%s). Exiting.\n", INFO, signum, strsignal(signum));
 }
 
