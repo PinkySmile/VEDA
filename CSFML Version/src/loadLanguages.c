@@ -16,13 +16,69 @@ int	getLanguage(Language *languages, char *lang_id)
 	return (-1);
 }
 
+void	loadButtonsNames(char *path_buffer, Language *language)
+{
+	char	*buffer = NULL;
+	size_t	n = 0;
+	int		len = 1;
+	FILE		*stream;
+	
+	buffer = concat(path_buffer, "/buttons.txt", false, false);
+	if (!buffer) {
+		printf("%s: Couldn't concatenate '%s' with '%s'\n", FATAL, buffer, "/name.txt");
+		exit(EXIT_FAILURE);
+	}
+	stream = fopen(buffer, "r");
+	if (!stream) {
+		printf("%s: Couldn't open file %s (%s)\n", ERROR, buffer, strerror(errno));
+		language->buttons = NULL;
+	} else {
+		n = 0;
+		language->buttons = malloc(sizeof(*language->buttons));
+		language->buttons[0] = NULL;
+		for (len = 0; getline(&language->buttons[len], &n, stream) >= 0; len++, n = 0) {
+			language->buttons = realloc(language->buttons, sizeof(*language->buttons) * (len + 3));
+			if (!language->buttons) {
+				printf("%s: Couldn't allocate %liB\n", FATAL, sizeof(*language->buttons) * (len + 3));
+				exit(EXIT_FAILURE);
+			}
+			if (language->buttons[len] && language->buttons[len][strlen(language->buttons[len]) - 1] == '\n')
+				language->buttons[len][strlen(language->buttons[len]) - 1] = 0;
+			language->buttons[len + 1] = NULL;
+		}
+		language->buttons[len + 1] = NULL;
+		fclose(stream);
+	}
+	free(buffer);
+}
+
+void	loadLanguageName(char *path_buffer, Language *language, char *path)
+{
+	char	*buffer = NULL;
+	size_t	n = 0;
+	FILE		*stream;
+	
+	buffer = concat(path_buffer, "/name.txt", false, false);
+	if (!buffer) {
+		printf("%s: Couldn't concatenate '%s' with '%s'\n", FATAL, buffer, "/name.txt");
+		exit(EXIT_FAILURE);
+	}
+	stream = fopen(buffer, "r");
+	if (!stream) {
+		printf("%s: Couldn't open file %s (%s)\n", ERROR, buffer, strerror(errno));
+		language->name = strdup(path);
+	} else {
+		n = 0;
+		language->name = NULL;
+		getline(&language->name, &n, stream);
+		fclose(stream);
+	}
+	free(buffer);
+}
+
 Language	createLanguage(char *path)
 {
 	Language	language;
-	size_t		n = 0;
-	int		len = 1;
-	FILE		*stream;
-	char		*buffer = NULL;
 	char		*path_buffer = concat("data/languages/", path, false, false);
 
 	memset(&language, 0, sizeof(language));
@@ -32,49 +88,8 @@ Language	createLanguage(char *path)
 	}
 	printf("%s: Loading language folder %s\n", INFO, path_buffer);
 	strcpy(language.id, path);
-	buffer = concat(path_buffer, "/buttons.txt", false, false);
-	if (!buffer) {
-		printf("%s: Couldn't concatenate '%s' with '%s'\n", FATAL, buffer, "/name.txt");
-		exit(EXIT_FAILURE);
-	}
-	stream = fopen(buffer, "r");
-	if (!stream) {
-		printf("%s: Couldn't open file %s (%s)\n", ERROR, buffer, strerror(errno));
-		language.buttons = NULL;
-	} else {
-		n = 0;
-		language.buttons = malloc(sizeof(*language.buttons));
-		language.buttons[0] = NULL;
-		for (len = 0; getline(&language.buttons[len], &n, stream) >= 0; len++, n = 0) {
-			language.buttons = realloc(language.buttons, sizeof(*language.buttons) * (len + 3));
-			if (!language.buttons) {
-				printf("%s: Couldn't allocate %liB\n", FATAL, sizeof(*language.buttons) * (len + 3));
-				exit(EXIT_FAILURE);
-			}
-			if (language.buttons[len] && language.buttons[len][strlen(language.buttons[len]) - 1] == '\n')
-				language.buttons[len][strlen(language.buttons[len]) - 1] = 0;
-			language.buttons[len + 1] = NULL;
-		}
-		language.buttons[len + 1] = NULL;
-		fclose(stream);
-	}
-	free(buffer);
-	buffer = concat(path_buffer, "/name.txt", false, false);
-	if (!buffer) {
-		printf("%s: Couldn't concatenate '%s' with '%s'\n", FATAL, buffer, "/name.txt");
-		exit(EXIT_FAILURE);
-	}
-	stream = fopen(buffer, "r");
-	if (!stream) {
-		printf("%s: Couldn't open file %s (%s)\n", ERROR, buffer, strerror(errno));
-		language.name = strdup(path);
-	} else {
-		n = 0;
-		language.name = NULL;
-		getline(&language.name, &n, stream);
-		fclose(stream);
-	}
-	free(buffer);
+	loadButtonsNames(path_buffer, &language);
+	loadLanguageName(path_buffer, &language, path);
 	free(path_buffer);
 	return (language);
 }
