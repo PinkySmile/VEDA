@@ -127,6 +127,7 @@ typedef struct {
 	char			*content;
 	sfVector2f		pos;
 	sfVector2f		size;
+	sfColor			color;
 	void			(*callback)(game_t *, int);
 	sfRectangleShape	*rect;
 	bool			displayed;

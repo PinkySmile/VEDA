@@ -38,12 +38,53 @@ void	disp_buttons(game_t *game)
 {
 	Button		*buttons = game->buttons;
 	sfRenderWindow	*window = game->window;
+	sfVector2f	pos;
+	sfVector2f	size;
+	sfColor		color;
 
-	if (game->text)
-		sfText_setCharacterSize(game->text, 50);
+	if (game->text) {
+		sfText_setCharacterSize(game->text, 20);
+		sfText_setScale(game->text, game->baseScale);
+	}
 	for (int i = 0; buttons && buttons[i].content; i++) {
 		if (buttons[i].displayed && buttons[i].rect) {
-			sfRenderWindow_drawRectangleShape(window, buttons[i].rect, NULL);
+			color = buttons[i].color;
+			if (color.g > 200)
+				color.g -= 200;
+			else
+				color.g = 0;
+			if (color.b > 200)
+				color.b -= 200;
+			else
+				color.b = 0;
+			if (color.r > 200)
+				color.r -= 200;
+			else
+				color.r = 0;
+			size = buttons[i].size;
+			pos = buttons[i].pos;
+			for (int j = 0; j < 10; j++) {
+				pos.x += 2;
+				pos.y += 2;
+				size.x -= 4;
+				size.y -= 4;
+				sfRectangleShape_setFillColor(buttons[i].rect, color);
+				sfRectangleShape_setPosition(buttons[i].rect, pos);
+				sfRectangleShape_setSize(buttons[i].rect, size);
+				sfRenderWindow_drawRectangleShape(window, buttons[i].rect, NULL);
+				if (color.r <= 235 && color.r < buttons[i].color.r - 20)
+					color.r += 20;
+				else if (color.r < buttons[i].color.r - 20)
+					color.r = 255;
+				if (color.b <= 235 && color.b < buttons[i].color.b - 20)
+					color.b += 20;
+				else if (color.b < buttons[i].color.b - 20)
+					color.b = 255;
+				if (color.g <= 235 && color.g < buttons[i].color.g - 20)
+					color.g += 20;
+				else if (color.g < buttons[i].color.g - 20)
+					color.g = 255;
+			}
 			text(buttons[i].content, game, buttons[i].pos.x + 20, buttons[i].pos.y + 20);
 		}
 	}
@@ -59,6 +100,7 @@ Button	create_button(Button_config config, game_t *game)
 	button.callback = config.callback;
 	button.rect = sfRectangleShape_create();
 	button.displayed = config.disabled;
+	button.color = config.color;
 	if (button.rect) {
 		sfRectangleShape_setSize(button.rect, button.size);
 		sfRectangleShape_setPosition(button.rect, button.pos);
