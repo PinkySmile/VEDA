@@ -20,8 +20,8 @@ void	loadButtonsNames(char *path_buffer, Language *language)
 {
 	char	*buffer = NULL;
 	size_t	n = 0;
-	int		len = 1;
-	FILE		*stream;
+	int	len = 1;
+	FILE	*stream;
 	
 	buffer = concat(path_buffer, "/buttons.txt", false, false);
 	if (!buffer) {
@@ -47,6 +47,78 @@ void	loadButtonsNames(char *path_buffer, Language *language)
 			language->buttons[len + 1] = NULL;
 		}
 		language->buttons[len + 1] = NULL;
+		fclose(stream);
+	}
+	free(buffer);
+}
+
+void	loadItemsNames(char *path_buffer, Language *language)
+{
+	char	*buffer = NULL;
+	size_t	n = 0;
+	int	len = 1;
+	FILE	*stream;
+	
+	buffer = concat(path_buffer, "/items.txt", false, false);
+	if (!buffer) {
+		printf("%s: Couldn't concatenate '%s' with '%s'\n", FATAL, buffer, "/name.txt");
+		exit(EXIT_FAILURE);
+	}
+	stream = fopen(buffer, "r");
+	if (!stream) {
+		printf("%s: Couldn't open file %s (%s)\n", ERROR, buffer, strerror(errno));
+		language->items = NULL;
+	} else {
+		n = 0;
+		language->items = malloc(sizeof(*language->items));
+		language->items[0] = NULL;
+		for (len = 0; getline(&language->items[len], &n, stream) >= 0; len++, n = 0) {
+			language->items = realloc(language->items, sizeof(*language->items) * (len + 3));
+			if (!language->items) {
+				printf("%s: Couldn't allocate %liB\n", FATAL, sizeof(*language->items) * (len + 3));
+				exit(EXIT_FAILURE);
+			}
+			if (language->items[len] && language->items[len][strlen(language->items[len]) - 1] == '\n')
+				language->items[len][strlen(language->items[len]) - 1] = 0;
+			language->items[len + 1] = NULL;
+		}
+		language->items[len + 1] = NULL;
+		fclose(stream);
+	}
+	free(buffer);
+}
+
+void	loadKeysNames(char *path_buffer, Language *language)
+{
+	char	*buffer = NULL;
+	size_t	n = 0;
+	int	len = 1;
+	FILE	*stream;
+	
+	buffer = concat(path_buffer, "/keys.txt", false, false);
+	if (!buffer) {
+		printf("%s: Couldn't concatenate '%s' with '%s'\n", FATAL, buffer, "/name.txt");
+		exit(EXIT_FAILURE);
+	}
+	stream = fopen(buffer, "r");
+	if (!stream) {
+		printf("%s: Couldn't open file %s (%s)\n", ERROR, buffer, strerror(errno));
+		language->keys = NULL;
+	} else {
+		n = 0;
+		language->keys = malloc(sizeof(*language->keys));
+		language->keys[0] = NULL;
+		for (len = 0; getline(&language->keys[len], &n, stream) >= 0; len++, n = 0) {
+			language->keys = realloc(language->keys, sizeof(*language->keys) * (len + 3));
+			if (!language->keys) {
+				printf("%s: Couldn't allocate %liB\n", FATAL, sizeof(*language->keys) * (len + 3));
+				exit(EXIT_FAILURE);
+			}
+			if (language->keys[len] && language->keys[len][strlen(language->keys[len]) - 1] == '\n')
+				language->keys[len][strlen(language->keys[len]) - 1] = 0;
+			language->keys[len + 1] = NULL;
+		}
+		language->keys[len + 1] = NULL;
 		fclose(stream);
 	}
 	free(buffer);
@@ -90,6 +162,8 @@ Language	createLanguage(char *path)
 	strcpy(language.id, path);
 	loadButtonsNames(path_buffer, &language);
 	loadLanguageName(path_buffer, &language, path);
+	loadItemsNames(path_buffer, &language);
+	loadKeysNames(path_buffer, &language);
 	free(path_buffer);
 	return (language);
 }

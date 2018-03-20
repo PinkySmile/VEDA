@@ -85,7 +85,13 @@ void	destroyStruct(game_t *game)
 	for (int i = 0; game->languages[i].name; i++) {
 		for (int j = 0; game->languages[i].buttons && game->languages[i].buttons[j]; j++)
 			free(game->languages[i].buttons[j]);
+		for (int j = 0; game->languages[i].items && game->languages[i].items[j]; j++)
+			free(game->languages[i].items[j]);
+		for (int j = 0; game->languages[i].keys && game->languages[i].keys[j]; j++)
+			free(game->languages[i].keys[j]);
 		free(game->languages[i].buttons);
+		free(game->languages[i].keys);
+		free(game->languages[i].items);
 		free(game->languages[i].name);
 	}
 	free(game->languages);
