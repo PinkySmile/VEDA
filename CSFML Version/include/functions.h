@@ -27,7 +27,7 @@ void		text(char *str, game_t *game, int x, int y);
 void		rect(game_t *game, int x, int y, int width, int height);
 Array		loadFonts(game_t *game);
 int		get_nbrlen(int nbr);
-void		displayLoadingBar(game_t *game, float step, float maxSteps, float file, float maxFiles, char *status);
+void		displayLoadingBar(game_t *game, int step, int maxSteps, int file, int maxFiles, char *status);
 void		setFont(sfText *text, sfFont *font);
 Language	*loadLanguages(game_t *game);
 int		getLanguage(Language *languages, char *lang_id);

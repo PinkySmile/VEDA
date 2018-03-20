@@ -1,6 +1,7 @@
 #include "structs.h"
 #include "functions.h"
 #include "macros.h"
+#include "concatf.h"
 #include <stdlib.h>
 #include <fcntl.h>
 #include <string.h>
@@ -10,20 +11,15 @@
 #include <errno.h>
 #include <unistd.h>
 
-void	displayLoadingBar(game_t *game, float step, float maxSteps, float file, float maxFiles, char *status)
+void	displayLoadingBar(game_t *game, int step, int maxSteps, int file, int maxFiles, char *status)
 {
 	sfVector2f	pos2 = {100 * game->baseScale.x, 250 * game->baseScale.y};
 	sfVector2f	size2 = {(440 * step / maxSteps) * game->baseScale.x, 50 * game->baseScale.y};
 	sfVector2f	pos = {100 * game->baseScale.x, 350 * game->baseScale.y};
 	sfVector2f	size = {(440 * file / maxFiles) * game->baseScale.x, 50 * game->baseScale.y};
-	char		*nbr = concat(int_to_str((int)file), "/", true, false);
-	
-	status = concat(status, " (", false, false);
-	status = concat(status, int_to_str((int)step), true, true);
-	status = concat(status, "/", true, false);
-	status = concat(status, int_to_str((int)maxSteps), true, true);
-	status = concat(status, ")", true, false);
-	nbr = concat(nbr, int_to_str((int)maxFiles), true, true);
+	char		*nbr = concatf("%i/%i", file, maxFiles);
+
+	status = concatf("%s (%i/%i)", status, step, maxSteps);
 	if (!nbr || !status) {
 		free(nbr);
 		free(status);

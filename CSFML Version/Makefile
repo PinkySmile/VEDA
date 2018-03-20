@@ -19,15 +19,18 @@ SRC = 	main.c		\
 
 OBJ =	$(SRC:%.c=src/%.o)
 
-INC =	-Iinclude
+INC =	-Iinclude		\
+	-Ilib/concatf/include	\
 
 LDFLAGS =			\
+	-L lib/concatf		\
 	-lcsfml-audio		\
 	-lcsfml-graphics	\
 	-lcsfml-network		\
 	-lcsfml-system		\
 	-lcsfml-window		\
-	-lm
+	-lm			\
+	-lconcatf		\
 
 CFLAGS= $(INC) \
 	-W \
@@ -39,12 +42,15 @@ CC =	gcc
 all:    $(NAME)
 
 $(NAME):$(OBJ)
+	$(MAKE) -C lib/concatf
 	$(CC) -o $(NAME) $(OBJ) $(LDFLAGS)
 
 clean:
+	$(MAKE) -C lib/concatf clean
 	$(RM) $(OBJ)
 
 fclean:	clean
+	$(MAKE) -C lib/concatf fclean
 	$(RM) $(NAME) $(NAME).exe
 
 re:	fclean all
