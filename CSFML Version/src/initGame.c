@@ -13,10 +13,10 @@
 
 void	displayLoadingBar(game_t *game, int step, int maxSteps, int file, int maxFiles, char *status)
 {
-	sfVector2f	pos2 = {100 * game->baseScale.x, 250 * game->baseScale.y};
-	sfVector2f	size2 = {(440 * step / maxSteps) * game->baseScale.x, 50 * game->baseScale.y};
-	sfVector2f	pos = {100 * game->baseScale.x, 350 * game->baseScale.y};
-	sfVector2f	size = {(440 * file / maxFiles) * game->baseScale.x, 50 * game->baseScale.y};
+	sfVector2f	pos2 = {100, 250};
+	sfVector2f	size2 = {440 * step / maxSteps, 50};
+	sfVector2f	pos = {100, 350};
+	sfVector2f	size = {440 * file / maxFiles, 50};
 	char		*nbr = concatf("%i/%i", file, maxFiles);
 
 	status = concatf("%s (%i/%i)", status, step, maxSteps);
@@ -28,23 +28,23 @@ void	displayLoadingBar(game_t *game, int step, int maxSteps, int file, int maxFi
 	}
 	if (game->text) {
 		sfText_setColor(game->text, (sfColor){255, 255, 255, 255});
-		sfText_setCharacterSize(game->text, 15 * game->baseScale.x);
+		sfText_setCharacterSize(game->text, 15);
 	}
 	sfRectangleShape_setFillColor(game->rectangle, (sfColor){150, 150, 150, 255});
 	sfRectangleShape_setPosition(game->rectangle, pos);
 	sfRectangleShape_setSize(game->rectangle, size);
 	sfRenderWindow_clear(game->window, (sfColor){0, 0, 0, 255});
-	rect(game, pos.x - 5 * game->baseScale.x, pos.y - 5 * game->baseScale.y, 450 * game->baseScale.x, 60 * game->baseScale.y);
-	rect(game, pos2.x - 5 * game->baseScale.x, pos2.y - 5 * game->baseScale.y, 450 * game->baseScale.x, 60 * game->baseScale.y);
+	rect(game, pos.x - 5, pos.y - 5, 450, 60);
+	rect(game, pos2.x - 5, pos2.y - 5, 450, 60);
 	sfRectangleShape_setFillColor(game->rectangle, (sfColor){0, 0, 0, 255});
-	rect(game, pos.x, pos.y, 440 * game->baseScale.x, 50 * game->baseScale.y);
-	rect(game, pos2.x, pos2.y, 440 * game->baseScale.x, 50 * game->baseScale.y);
+	rect(game, pos.x, pos.y, 440, 50);
+	rect(game, pos2.x, pos2.y, 440, 50);
 	sfRectangleShape_setFillColor(game->rectangle, (sfColor){0, 0, 255, 255});
 	rect(game, pos.x, pos.y, size.x, size.y);
 	sfRectangleShape_setFillColor(game->rectangle, (sfColor){0, 255, 0, 255});
 	rect(game, pos2.x, pos2.y, size2.x, size2.y);
-	text(status, game, (320 - (strlen(status) / 2) * 6) * game->baseScale.x, 310 * game->baseScale.y);
-	text(nbr, game, (320 - strlen(nbr)/2 * 7) * game->baseScale.x, 410 * game->baseScale.y);
+	text(status, game, 320 - strlen(status) / 2 * 6, 310);
+	text(nbr, game, 320 - strlen(nbr) / 2 * 7, 410);
 	image(game, game->icon.sprite, 256, 100, 128, 128);
 	sfRenderWindow_display(game->window);
 	free(nbr);

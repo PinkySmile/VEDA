@@ -35,6 +35,10 @@ void	loadButtonsNames(char *path_buffer, Language *language)
 	} else {
 		n = 0;
 		language->buttons = malloc(sizeof(*language->buttons));
+		if (!language->buttons) {
+			printf("%s: Couldn't allocate %liB\n", FATAL, sizeof(*language->buttons));
+			exit(EXIT_FAILURE);
+		}
 		language->buttons[0] = NULL;
 		for (len = 0; getline(&language->buttons[len], &n, stream) >= 0; len++, n = 0) {
 			language->buttons = realloc(language->buttons, sizeof(*language->buttons) * (len + 3));
