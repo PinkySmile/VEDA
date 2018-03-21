@@ -82,7 +82,7 @@ void	destroyStruct(game_t *game)
 	for (int i = 0; game->buttons[i].content; i++)
 		sfRectangleShape_destroy(game->buttons[i].rect);
 	free(game->buttons);
-	for (int i = 0; game->languages[i].name; i++) {
+	for (int i = 0; game->languages && game->languages[i].name; i++) {
 		for (int j = 0; game->languages[i].buttons && game->languages[i].buttons[j]; j++)
 			free(game->languages[i].buttons[j]);
 		for (int j = 0; game->languages[i].items && game->languages[i].items[j]; j++)

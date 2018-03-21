@@ -2,6 +2,7 @@
 #include "structs.h"
 #include "functions.h"
 #include "macros.h"
+#include "game_functions.h"
 
 void	launchGame(game_t *game)
 {
@@ -9,7 +10,7 @@ void	launchGame(game_t *game)
 	while (sfRenderWindow_isOpen(game->window)) {
 		manageEvents(game);
 		sfRenderWindow_clear(game->window, (sfColor){0, 0, 0, 255});
-		mainMenu(game);
+		game_functions[game->menu](game);
 		disp_buttons(game);
 		sfRenderWindow_display(game->window);
 	}

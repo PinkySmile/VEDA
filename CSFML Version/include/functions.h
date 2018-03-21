@@ -19,9 +19,7 @@ Settings	loadSettings();
 void		saveSettings(game_t *game);
 char		*getButtonContent(int nameId, game_t *game);
 Button		*loadButtons(game_t *game);
-void		disableButtons(game_t *game);
 void		disp_buttons(game_t *game);
-void		play_button(game_t *game, int buttonId);
 char		*int_to_str(int nb);
 void		text(char *str, game_t *game, int x, int y);
 void		rect(game_t *game, int x, int y, int width, int height);
@@ -31,5 +29,15 @@ void		displayLoadingBar(game_t *game, int step, int maxSteps, int file, int maxF
 void		setFont(sfText *text, sfFont *font);
 Language	*loadLanguages(game_t *game);
 int		getLanguage(Language *languages, char *lang_id);
+void		manage_mouse_click(game_t *game);
 
+//callbacks
+void		play_button(game_t *game, int buttonId);
+void		quit_button(game_t *game, int buttonId);
+void		settings_button(game_t *game, int buttonId);
+void		options_button(game_t *game, int buttonID);
+void		audio_button(game_t *game, int buttonID);
+void		lang_button(game_t *game, int buttonID);
+void		controls_button(game_t *game, int buttonID);
+void		back_on_title_screen(game_t *game, int buttonID);
 #endif

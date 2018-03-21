@@ -131,6 +131,7 @@ typedef struct {
 	void			(*callback)(game_t *, int);
 	sfRectangleShape	*rect;
 	bool			displayed;
+	bool			active;
 } Button;
 
 typedef struct {

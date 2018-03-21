@@ -16,6 +16,7 @@ SRC = 	main.c		\
 	loadFonts.c	\
 	get_nbrlen.c	\
 	loadLanguages.c	\
+	clic_button.c	\
 
 OBJ =	$(SRC:%.c=src/%.o)
 

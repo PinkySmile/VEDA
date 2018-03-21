@@ -10,7 +10,7 @@
 
 int	getLanguage(Language *languages, char *lang_id)
 {
-	for (int i = 0; languages[i].name; i++)
+	for (int i = 0; languages && languages[i].name; i++)
 		if (!strcmp(languages[i].id, lang_id))
 			return (i);
 	return (-1);
@@ -192,6 +192,8 @@ Language	*loadLanguages(game_t *game)
 			paths[len - 1] = strdup(dirEntry->d_name);
 		}
 	}
+	if (len == 0)
+		return (NULL);
 	languages = malloc(sizeof(*languages) * (len + 1));
 	if (!languages) {
 		printf("%s: Couldn't allocate %liB\n", FATAL, sizeof(*languages) * (len + 1));
