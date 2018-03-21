@@ -23,7 +23,6 @@ INC =	-Iinclude		\
 	-Ilib/concatf/include	\
 
 LDFLAGS =			\
-	-L lib/concatf		\
 	-lcsfml-audio		\
 	-lcsfml-graphics	\
 	-lcsfml-network		\
@@ -31,6 +30,7 @@ LDFLAGS =			\
 	-lcsfml-window		\
 	-lm			\
 	-lconcatf		\
+	-L lib/concatf		\
 
 CFLAGS= $(INC) \
 	-W \
@@ -58,5 +58,5 @@ re:	fclean all
 dbg:	CFLAGS += -g -O0
 dbg:	re
 
-epi:	LDFLAGS = -lc_graph_prog -lm
+epi:	LDFLAGS = -lc_graph_prog -lm -lconcatf -L lib/concatf
 epi:	dbg

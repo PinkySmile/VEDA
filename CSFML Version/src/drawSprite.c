@@ -8,8 +8,8 @@ void	setFont(sfText *text, sfFont *font)
 
 void	rect(game_t *game, int x, int y, int width, int height)
 {
-	sfVector2f	pos = {x, y};
-	sfVector2f	size = {width, height};
+	sfVector2f	pos = {x * game->baseScale.x, y * game->baseScale.y};
+	sfVector2f	size = {width * game->baseScale.x, height * game->baseScale.y};
 
 	sfRectangleShape_setPosition(game->rectangle, pos);
 	sfRectangleShape_setSize(game->rectangle, size);

@@ -25,11 +25,12 @@ char	*getButtonContent(int nameId, game_t *game)
 
 void	text(char *str, game_t *game, int x, int y)
 {
-	sfVector2f pos = {x, y};
+	sfVector2f pos = {x * game->baseScale.x, y * game->baseScale.y};
 
 	if (game->text && sfText_getFont(game->text)) {
 		sfText_setString(game->text, str);
 		sfText_setPosition(game->text, pos);
+		sfText_setScale(game->text, game->baseScale);
 		sfRenderWindow_drawText(game->window, game->text, 0);
 	}
 }
@@ -64,13 +65,16 @@ void	disp_buttons(game_t *game)
 			size = buttons[i].size;
 			pos = buttons[i].pos;
 			for (int j = 0; j < 10; j++) {
-				pos.x += 2;
-				pos.y += 2;
-				size.x -= 4;
-				size.y -= 4;
+				sfVector2f	realSize = {size.x * game->baseScale.x, size.y * game->baseScale.y};
+				sfVector2f	realPos = {pos.x * game->baseScale.x, pos.y * game->baseScale.y};
+
+				pos.x += 1;
+				pos.y += 1;
+				size.x -= 2;
+				size.y -= 2;
 				sfRectangleShape_setFillColor(buttons[i].rect, color);
-				sfRectangleShape_setPosition(buttons[i].rect, pos);
-				sfRectangleShape_setSize(buttons[i].rect, size);
+				sfRectangleShape_setPosition(buttons[i].rect, realPos);
+				sfRectangleShape_setSize(buttons[i].rect, realSize);
 				sfRenderWindow_drawRectangleShape(window, buttons[i].rect, NULL);
 				if (color.r <= 235 && color.r < buttons[i].color.r - 20)
 					color.r += 20;
@@ -85,7 +89,7 @@ void	disp_buttons(game_t *game)
 				else if (color.g < buttons[i].color.g - 20)
 					color.g = 255;
 			}
-			text(buttons[i].content, game, buttons[i].pos.x + 20, buttons[i].pos.y + 20);
+			text(buttons[i].content, game, buttons[i].pos.x + 10, buttons[i].pos.y + 8);
 		}
 	}
 }
@@ -95,8 +99,8 @@ Button	create_button(Button_config config, game_t *game)
 	Button	button;
 
 	button.content = getButtonContent(config.nameId, game);
-	button.pos = (sfVector2f){config.pos.x * game->baseScale.x, config.pos.y * game->baseScale.y};
-	button.size = (sfVector2f){config.size.x * game->baseScale.x, config.size.y * game->baseScale.y};
+	button.pos = (sfVector2f){config.pos.x, config.pos.y};
+	button.size = (sfVector2f){config.size.x, config.size.y};
 	button.callback = config.callback;
 	button.rect = sfRectangleShape_create();
 	button.displayed = config.disabled;
