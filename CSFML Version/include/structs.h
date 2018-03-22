@@ -124,6 +124,16 @@ typedef struct {
 } Button_config;
 
 typedef struct {
+	int		texture;
+	int		dialog;
+	int		variante;
+	int		animation;
+	int		status;
+	sfVector2f	pos;
+	sfVector2f	pointToGo;
+} Character;
+
+typedef struct {
 	char			*content;
 	sfVector2f		pos;
 	sfVector2f		size;
@@ -133,6 +143,12 @@ typedef struct {
 	bool			displayed;
 	bool			active;
 } Button;
+
+typedef struct {
+	int		id;
+	bool		solid;
+	sfVector2f	pos;
+} Object;
 
 typedef struct {
 	sfTexture	*texture;
@@ -163,7 +179,8 @@ struct game_s {
 	Player			player;
 	Button			*buttons;
 	Icon			icon;
-	Language		*languages;		
+	Language		*languages;
+	Object			*map;
 };
 
 #endif
