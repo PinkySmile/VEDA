@@ -18,10 +18,12 @@ void	play_button(game_t *game, int buttonID)
 {
 	(void)buttonID;
 	game->menu = 1;
+	free(game->map);
 	for (int i = 0; game->buttons[i].content; i++) {
 		game->buttons[i].active = false;
 		game->buttons[i].displayed = false;
 	}
+	game->map = loadLevel("data/levels/test/level/floor0.lvl", &game->bg);
 }
 
 void	options_button(game_t *game, int buttonID)

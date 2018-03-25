@@ -18,12 +18,12 @@ void	rect(game_t *game, int x, int y, int width, int height)
 void	image(game_t *game, sfSprite *sprite, int x, int y, int width, int height)
 {
 	sfVector2f	pos = {x * game->baseScale.x, y * game->baseScale.y};
-	sfVector2u	size;
+	sfIntRect	rect;
 	sfVector2f	scale;
 	
 	if (sprite && sfSprite_getTexture(sprite)) {
-		size = sfTexture_getSize(sfSprite_getTexture(sprite)); 
-		scale = (sfVector2f){width / size.x * game->baseScale.x, height / size.y * game->baseScale.y};
+		rect = sfSprite_getTextureRect(sprite);
+		scale = (sfVector2f){width / rect.width * game->baseScale.x, height / rect.height * game->baseScale.y};
 		if (width == -1)
 			scale.x = game->baseScale.x;
 		if (height == -1)

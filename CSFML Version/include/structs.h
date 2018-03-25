@@ -82,7 +82,11 @@ typedef struct {
 } Sprite_config;
 
 typedef struct {
-	sfVector2f	pos;
+	bool		isFemale;
+	int		animation;
+	int		position;
+	int		state;
+	sfVector2i	pos;
 	int		life;
 	int		maxLife;
 	int		energy;
@@ -147,7 +151,8 @@ typedef struct {
 typedef struct {
 	int		id;
 	bool		solid;
-	sfVector2f	pos;
+	sfVector2i	pos;
+	int		layer;
 } Object;
 
 typedef struct {
@@ -176,11 +181,13 @@ struct game_s {
 	sfText			*text;
 	Array			fonts;
 	sfVector2f		baseScale;
+	sfVector2i		cam;
 	Player			player;
 	Button			*buttons;
 	Icon			icon;
 	Language		*languages;
 	Object			*map;
+	char			*bg;
 };
 
 #endif

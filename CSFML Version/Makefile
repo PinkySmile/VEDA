@@ -17,6 +17,8 @@ SRC = 	main.c		\
 	get_nbrlen.c	\
 	loadLanguages.c	\
 	clic_button.c	\
+	loadLevel.c	\
+	inGame.c	\
 
 OBJ =	$(SRC:%.c=src/%.o)
 
