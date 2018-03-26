@@ -1,5 +1,6 @@
 #include "structs.h"
 #include "functions.h"
+#include <string.h>
 
 void	displayLowerLayer(game_t *game)
 {
@@ -30,8 +31,8 @@ void	displayCharacters(game_t *game)
 	Array		sprites = game->sprites;
 	sfVector2i	cam = game->cam;
 
-	rec.top = player.position / 2 + (player.state * 2) + (player.animation * 2);
-	rec.left = player.state / 2 % 2;
+	rec.top = (player.position / 2 + (player.state * 2) + (player.animation * 2)) * 32;
+	rec.left = (player.position % 2) * 32;
 	sfSprite_setTextureRect(((Sprite *)sprites.content)[MALE_CHARACTER + player.isFemale].sprite, rec);
 	image(game, ((Sprite *)sprites.content)[MALE_CHARACTER + player.isFemale].sprite,  player.pos.x + cam.x, player.pos.y + cam.y, 16, 32);
 }
@@ -65,7 +66,32 @@ void	displayUpperLayer(game_t *game)
 
 void	inGame(game_t *game)
 {
+	game->player.canMove = true;
 	displayLowerLayer(game);
 	displayCharacters(game);
-	//displayUpperLayer(game);
+	displayUpperLayer(game);
+	if (game->player.canMove) {
+		memset(&game->player.blocked, 1, sizeof(game->player.blocked));
+		// for (int i = 0; map && map[i].layer; i++) {
+			// if (game->player.pos.x > map[i].pos.x - 16 && game->player.pos.x <= map[i].pos.x + 16 && game->player.pos.y + 16 > map[i].pos.y && game->player.pos.y + 16 <= map[i].pos.y + 16)
+				// game->player.blocked.left = false;
+		// }
+		if (game->player.blocked.left && sfKeyboard_isKeyPressed(sfKeyLeft)) {
+			game->player.pos.x -= 1;
+			game->player.position = LEFT;
+			game->player.state = MOVING;
+		} else if (game->player.blocked.right && sfKeyboard_isKeyPressed(sfKeyRight)) {
+			game->player.pos.x += 1;
+			game->player.position = RIGHT;
+			game->player.state = MOVING;
+		} else if (game->player.blocked.up && sfKeyboard_isKeyPressed(sfKeyUp)) {
+			game->player.pos.y -= 1;
+			game->player.position = UP;
+			game->player.state = MOVING;
+		} else if (game->player.blocked.down && sfKeyboard_isKeyPressed(sfKeyDown)) {
+			game->player.pos.y += 1;
+			game->player.position = DOWN;
+			game->player.state = MOVING;
+		}
+	}
 }

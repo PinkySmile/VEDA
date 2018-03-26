@@ -124,11 +124,14 @@ void	initGame(game_t *game)
 	game->icon.sprite = sfSprite_create();
 	if (game->icon.sprite && game->icon.texture)
 		sfSprite_setTexture(game->icon.sprite, game->icon.texture, sfTrue);
+	game->player.animationClock = sfClock_create();
+	game->player.stateClock = sfClock_create();
 	game->fonts = loadFonts(game);
 	game->sprites = loadSprites(game);
 	game->musics = loadMusics(game);
 	game->sfx = loadSfx(game);
 	game->languages = loadLanguages(game);
 	game->buttons = loadButtons(game);
+	sfRenderWindow_setFramerateLimit(game->window, 60);
 	free(title);
 }

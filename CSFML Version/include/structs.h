@@ -17,6 +17,18 @@ enum textures {
 	CHARACTER3,
 };
 
+enum directions {
+	UP,
+	RIGHT,
+	DOWN,
+	LEFT,
+};
+
+enum state {
+	STATIC,
+	MOVING,
+};
+
 enum fonts {
 	ARIAL,
 	SOMETHING,
@@ -82,6 +94,13 @@ typedef struct {
 } Sprite_config;
 
 typedef struct {
+	bool	up;
+	bool	right;
+	bool	down;
+	bool	left;
+} Directions;
+
+typedef struct {
 	bool		isFemale;
 	int		animation;
 	int		position;
@@ -91,6 +110,10 @@ typedef struct {
 	int		maxLife;
 	int		energy;
 	int		maxEnergy;
+	bool		canMove;
+	Directions	blocked;
+	sfClock		*animationClock;
+	sfClock		*stateClock;
 } Player;
 
 typedef struct {

@@ -94,6 +94,8 @@ void	destroyStruct(game_t *game)
 		free(game->languages[i].items);
 		free(game->languages[i].name);
 	}
+	sfClock_destroy(game->player.animationClock);
+	sfClock_destroy(game->player.stateClock);
 	free(game->languages);
 }
 
