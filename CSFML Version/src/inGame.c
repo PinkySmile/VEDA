@@ -70,28 +70,38 @@ void	inGame(game_t *game)
 	displayLowerLayer(game);
 	displayCharacters(game);
 	displayUpperLayer(game);
+	if (game->player.state == MOVING && sfTime_asSeconds(sfClock_getElapsedTime(game->player.animationClock)) >= 0.3) {
+		game->player.animation = !game->player.animation;
+		sfClock_restart(game->player.animationClock);
+	} else if (game->player.state == MOVING && sfTime_asSeconds(sfClock_getElapsedTime(game->player.stateClock)) >= 0.3) {
+		game->player.state = STATIC;
+		game->player.animation = 0;
+	}
 	if (game->player.canMove) {
-		memset(&game->player.blocked, 1, sizeof(game->player.blocked));
 		// for (int i = 0; map && map[i].layer; i++) {
 			// if (game->player.pos.x > map[i].pos.x - 16 && game->player.pos.x <= map[i].pos.x + 16 && game->player.pos.y + 16 > map[i].pos.y && game->player.pos.y + 16 <= map[i].pos.y + 16)
 				// game->player.blocked.left = false;
 		// }
-		if (game->player.blocked.left && sfKeyboard_isKeyPressed(sfKeyLeft)) {
+		if (!game->player.blocked.left && sfKeyboard_isKeyPressed(sfKeyLeft)) {
 			game->player.pos.x -= 1;
 			game->player.position = LEFT;
 			game->player.state = MOVING;
-		} else if (game->player.blocked.right && sfKeyboard_isKeyPressed(sfKeyRight)) {
+			sfClock_restart(game->player.stateClock);
+		} else if (!game->player.blocked.right && sfKeyboard_isKeyPressed(sfKeyRight)) {
 			game->player.pos.x += 1;
 			game->player.position = RIGHT;
 			game->player.state = MOVING;
-		} else if (game->player.blocked.up && sfKeyboard_isKeyPressed(sfKeyUp)) {
+			sfClock_restart(game->player.stateClock);
+		} else if (!game->player.blocked.up && sfKeyboard_isKeyPressed(sfKeyUp)) {
 			game->player.pos.y -= 1;
 			game->player.position = UP;
 			game->player.state = MOVING;
-		} else if (game->player.blocked.down && sfKeyboard_isKeyPressed(sfKeyDown)) {
+			sfClock_restart(game->player.stateClock);
+		} else if (!game->player.blocked.down && sfKeyboard_isKeyPressed(sfKeyDown)) {
 			game->player.pos.y += 1;
 			game->player.position = DOWN;
 			game->player.state = MOVING;
+			sfClock_restart(game->player.stateClock);
 		}
 	}
 }

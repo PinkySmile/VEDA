@@ -1,5 +1,6 @@
 #include "structs.h"
 #include "functions.h"
+#include <stdlib.h>
 
 void	back_on_title_screen(game_t *game, int buttonID)
 {
@@ -52,11 +53,9 @@ void	settings_button(game_t *game, int buttonID)
 	for (int i = 0; game->buttons[i].content; i++)
 		game->buttons[i].active = false;
 	for (int i = 3; i < 10; i++) {
-		game->buttons[i].active = true;
+		game->buttons[i].active = i != 3;
 		game->buttons[i].displayed = true;
 	}
-	game->buttons[0].active = true;
-	game->buttons[0].displayed = true;
 }
 
 void	quit_button(game_t *game, int buttonID)
