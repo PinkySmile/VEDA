@@ -66,6 +66,9 @@ void	displayUpperLayer(game_t *game)
 
 void	inGame(game_t *game)
 {
+	Player	player = game->player;
+	Object	*map = game->map;
+
 	game->player.canMove = true;
 	displayLowerLayer(game);
 	displayCharacters(game);
@@ -78,10 +81,19 @@ void	inGame(game_t *game)
 		game->player.animation = 0;
 	}
 	if (game->player.canMove) {
-		// for (int i = 0; map && map[i].layer; i++) {
-			// if (game->player.pos.x > map[i].pos.x - 16 && game->player.pos.x <= map[i].pos.x + 16 && game->player.pos.y + 16 > map[i].pos.y && game->player.pos.y + 16 <= map[i].pos.y + 16)
-				// game->player.blocked.left = false;
-		// }
+		memset(&game->player.blocked, 0, sizeof(game->player.blocked));
+		for (int i = 0; map && map[i].layer; i++) {
+			if (map[i].solid) {
+                                if (player.pos.y + 32 >= map[i].pos.y && player.pos.y + 17 <= map[i].pos.y && player.pos.x <= map[i].pos.x + 32 && player.pos.x + 16 >= map[i].pos.x)
+                                    game->player.blocked.down = true;
+                                if (player.pos.y + 16 >= map[i].pos.y && player.pos.y + 16 <= map[i].pos.y + 16 && player.pos.x + 1 <= map[i].pos.x+ 16 && map[i].pos.x <= player.pos.x + 16)
+                                    game->player.blocked.up = true;
+                                if (player.pos.y + 31 >= map[i].pos.y - 1 && player.pos.y + 17 <= map[i].pos.y + 16 && player.pos.x <= map[i].pos.x + 16 && map[i].pos.x <= player.pos.x)
+                                    game->player.blocked.left = true;
+                                if (player.pos.y + 31 >= map[i].pos.y - 1 && player.pos.y+ 17 <= map[i].pos.y - 16 && player.pos.x + 16 <= map[i].pos.x && player.pos.x + 16 >= map[i].pos.x)
+                                    game->player.blocked.right = true;
+			}
+		}
 		if (!game->player.blocked.left && sfKeyboard_isKeyPressed(sfKeyLeft)) {
 			game->player.pos.x -= 1;
 			game->player.position = LEFT;
