@@ -107,6 +107,7 @@ int	main()
 	signal(2, &sighandler);
 	printf("%s: Initializating game\n", INFO);
 	initGame(&game);
+	game.debug = true;
 	launchGame(&game);
 	saveSettings(&game);
 	destroyStruct(&game);

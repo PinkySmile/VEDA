@@ -3,6 +3,7 @@
 #include <errno.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <stdbool.h>
 #include <string.h>
 #include <errno.h>
 #include <unistd.h>
@@ -13,19 +14,34 @@
 char	**splitLines(char *string)
 {
 	int	len = 2;
+	int	len2 = 2;
 	char	*str = strdup(string);
 	char	**result = NULL;
 	char	separator = '\r';
-	
+	bool	win = false;
+
 	for (int i = 0; str[i]; i++)
-		if (str[i] == separator)
+		if (str[i] == '\r')
 			len++;
+	for (int i = 0; str[i]; i++)
+		if (str[i] == '\n')
+			len2++;
 	if (len == 2) {
 		separator = '\n';
+		len = len2;
+		printf("%s: Linux: ", INFO);
+	} else if (len2 > 2) {
+		win = true;
+		len = 2;
+		printf("%s: Windows: ", INFO);
 		for (int i = 0; str[i]; i++)
-			if (str[i] == separator)
+			if (str[i] == '\r' && str[i + 1] == '\n') {
 				len++;
-	}
+				i++;
+			}
+	} else
+		printf("%s: Mac: ", INFO);
+	printf("%i lines\n", len);
 	result = malloc(len * sizeof(*result));
 	if (!result) {
 		printf("Error: Couldn't allocate %liB", (long)(len * sizeof(*result)));
@@ -34,15 +50,12 @@ char	**splitLines(char *string)
 	result[0] = str;
 	len = 1;
 	for (int i = 0; str[i]; i++) {
-		if (str[i] == separator) {
+		if (win && str[i] == '\r' && str[i + 1] == '\n') {
 			str[i] = '\0';
-			if (str[i - 1] == '\r' || str[i - 1] == '\n')
-				str[i - 1] = '\0';
-			if (str[i + 1] == '\r' || str[i + 1] == '\n') {
-				str[i + 1] = '\0';
-				result[len++] = &str[i + 2];
-			} else
-				result[len++] = &str[i + 1];
+			result[len++] = &str[i + 2];
+		} else if (str[i] == separator) {
+			str[i] = '\0';
+			result[len++] = &str[i + 1];
 		}
 	}
 	result[len] = NULL;

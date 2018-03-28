@@ -212,6 +212,7 @@ struct game_s {
 	Object			*map;
 	char			*bg;
 	sfVector2i		languagesConf;
+	bool			debug;
 };
 
 #endif
