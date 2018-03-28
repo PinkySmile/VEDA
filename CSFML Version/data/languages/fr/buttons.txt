@@ -1,5 +1,5 @@
 Jouer
-Parametres
+Paramètres
 Quitter
 Options
 Audio
@@ -7,6 +7,6 @@ Retour
 Langue
 Annuler
 Sauvegarder
-Controles
+Contrôles
 Oui
 Non
