@@ -181,7 +181,7 @@ Object	*loadLevel(char *path)
 		objs[i / 3].pos.x = atoi(lines[i + 1]) * 16 - 16;
 		objs[i / 3].pos.y = atoi(lines[i + 2]) * 16 - 16;
 		objs[i / 3].layer = 1;
-		objs[i / 3].solid = solidObjects[objs[i / 3].id];
+		objs[i / 3].solid = solidObjects[objs[i / 3].id - 1];
 		for (int j = 0; layer[j].object; j++)
 			if (layer[j].object == objs[i / 3].id) {
 				objs[i / 3].id = layer[j].replacement;
@@ -209,7 +209,7 @@ void	saveLevel(char *path, Object *objs)
 	}
 	printf("Writing header (%s) (%i chars)\n", header, write(fd, header, strlen(header)));
 	for (int i = 0; objs[i].layer; i++) {
-		buffer = concatf("\n%i\n%i\n%i\n%i\n%i", objs[i].id, objs[i].pos.x, objs[i].pos.y, objs[i].layer, objs[i].solid);
+		buffer = concatf("\r%i\r%i\r%i\r%i\r%i", objs[i].id, objs[i].pos.x, objs[i].pos.y, objs[i].layer, objs[i].solid);
 		buf = concatf("%S", buffer);
 		printf("Writing object %i (%s) (%i chars)\n", i, buf, write(fd, buffer, strlen(buffer)));
 		free(buffer);
