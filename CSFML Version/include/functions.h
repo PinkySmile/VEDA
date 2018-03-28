@@ -29,7 +29,7 @@ void		displayLoadingBar(game_t *game, int step, int maxSteps, int file, int maxF
 void		setFont(sfText *text, sfFont *font);
 Language	*loadLanguages(game_t *game);
 int		getLanguage(Language *languages, char *lang_id);
-void		manage_mouse_click(game_t *game);
+void		manage_mouse_click(game_t *game, sfMouseButtonEvent event);
 Object		*loadLevel(char *path, char **bg_path);
 void		inGame(game_t *game);
 void		settings(game_t *game);

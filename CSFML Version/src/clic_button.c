@@ -23,18 +23,13 @@ void	which_button(sfVector2f pos, game_t *game)
 			printf("%s: Clicked on button %i (%s)\n", INFO, i, game->buttons[i].content);
 			game->buttons[i].callback(game, i);
 		}
-
 }
 
-void	manage_mouse_click(game_t *game)
+void	manage_mouse_click(game_t *game, sfMouseButtonEvent event)
 {
-	sfVector2i	position;
-	sfVector2f	pos;
+	sfVector2f	pos = {event.x, event.y};
 
-	position = sfMouse_getPosition((const sfWindow *)game->window);
-	pos.x = position.x;
-	pos.y = position.y;
-	printf("%s: Mouse click at position (%i, %i)\n", INFO, position.x, position.y);
-	if (sfMouse_isButtonPressed(sfMouseLeft) == sfTrue)
+	printf("%s: Mouse click at position (%i, %i)\n", INFO, event.x, event.y);
+	if (event.button == sfMouseLeft)
 		which_button(pos, game);
 }

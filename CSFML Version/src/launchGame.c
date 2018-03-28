@@ -8,10 +8,10 @@ void	launchGame(game_t *game)
 {
 	printf("%s: Launching game\n", INFO);
 	while (sfRenderWindow_isOpen(game->window)) {
-		manageEvents(game);
 		sfRenderWindow_clear(game->window, (sfColor){0, 0, 0, 255});
 		game_functions[game->menu](game);
 		disp_buttons(game);
 		sfRenderWindow_display(game->window);
+		manageEvents(game);
 	}
 }

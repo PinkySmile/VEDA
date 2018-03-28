@@ -12,7 +12,7 @@ void	manageEvents(game_t *game)
 				if (((sfMusic **)game->musics.content)[i] && sfMusic_getStatus(((sfMusic **)game->musics.content)[MAIN_MENU_MUSIC]) == sfPlaying)
 					sfMusic_stop(((sfMusic **)game->musics.content)[i]);
 		} else if (event.type == sfEvtMouseButtonPressed) {
-			manage_mouse_click(game);
+			manage_mouse_click(game, event.mouseButton);
 		}
 	}
 }
