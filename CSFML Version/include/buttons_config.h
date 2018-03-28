@@ -79,6 +79,14 @@ const Button_config	button_config[] = {
 		false
 	},
 	{
+		BACK,
+		{530, 430},
+		{100, 40},
+		{205, 205, 205, 255},
+		&back_on_title_screen,
+		false
+	},
+	{
 		-1,
 		{0, 0},
 		{0, 0},

@@ -6,9 +6,9 @@ Inventaire :
 Pause : 
 Interaction : 
 Attaquer : 
-SuccÃ¨s : 
+Succès : 
 Pouvoir : 
-AmÃ©liorations : 
+Améliorations : 
 Objet 1 : 
 Objet 2 : 
 Objet 3 : 

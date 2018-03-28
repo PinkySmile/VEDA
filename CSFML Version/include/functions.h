@@ -32,6 +32,7 @@ int		getLanguage(Language *languages, char *lang_id);
 void		manage_mouse_click(game_t *game);
 Object		*loadLevel(char *path, char **bg_path);
 void		inGame(game_t *game);
+void		settings(game_t *game);
 
 //callbacks
 void		play_button(game_t *game, int buttonId);
@@ -42,4 +43,5 @@ void		audio_button(game_t *game, int buttonID);
 void		lang_button(game_t *game, int buttonID);
 void		controls_button(game_t *game, int buttonID);
 void		back_on_title_screen(game_t *game, int buttonID);
+void		changeLanguage(game_t *game, int buttonID);
 #endif

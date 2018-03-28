@@ -211,6 +211,7 @@ struct game_s {
 	Language		*languages;
 	Object			*map;
 	char			*bg;
+	sfVector2i		languagesConf;
 };
 
 #endif

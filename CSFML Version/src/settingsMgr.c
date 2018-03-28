@@ -35,7 +35,7 @@ Settings	loadSettings()
 		settings.musicVolume = 100;
 		settings.windowSize.x = 640;
 		settings.windowSize.y = 480;
-		strcpy(settings.lang_id, "fr");
+		strcpy(settings.lang_id, "en");
 	} else
 		read(fd, &settings, sizeof(settings));
 	return (settings);

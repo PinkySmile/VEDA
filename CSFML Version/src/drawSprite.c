@@ -33,3 +33,15 @@ void	image(game_t *game, sfSprite *sprite, int x, int y, int width, int height)
 		sfRenderWindow_drawSprite(game->window, sprite, NULL);
 	}
 }
+
+void	text(char *str, game_t *game, int x, int y)
+{
+	sfVector2f	pos = {x * game->baseScale.x, y * game->baseScale.y};
+
+	if (game->text && sfText_getFont(game->text)) {
+		sfText_setString(game->text, str);
+		sfText_setPosition(game->text, pos);
+		sfText_setScale(game->text, game->baseScale);
+		sfRenderWindow_drawText(game->window, game->text, 0);
+	}
+}

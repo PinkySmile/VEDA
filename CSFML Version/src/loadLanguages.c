@@ -132,7 +132,7 @@ void	loadLanguageName(char *path_buffer, Language *language, char *path)
 {
 	char	*buffer = NULL;
 	size_t	n = 0;
-	FILE		*stream;
+	FILE	*stream;
 	
 	buffer = concat(path_buffer, "/name.txt", false, false);
 	if (!buffer) {
