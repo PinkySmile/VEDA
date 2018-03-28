@@ -16,19 +16,18 @@ bool	button_is_clicked(Button button, sfVector2f click_pos, game_t *game)
 	return (is_in_y && is_in_x && button.active);
 }
 
-void	which_button(sfVector2f pos, Button *buttons, game_t *game)
+void	which_button(sfVector2f pos, game_t *game)
 {
-	for (int i = 0; buttons[i].content; i++)
-		if (button_is_clicked(buttons[i], pos, game)) {
-			printf("%s: Clicked on button %i (%s)\n", INFO, i, buttons[i].content);
-			buttons[i].callback(game, i);
+	for (int i = 0; game->buttons[i].content; i++)
+		if (button_is_clicked(game->buttons[i], pos, game)) {
+			printf("%s: Clicked on button %i (%s)\n", INFO, i, game->buttons[i].content);
+			game->buttons[i].callback(game, i);
 		}
 
 }
 
 void	manage_mouse_click(game_t *game)
 {
-	Button		*buttons = game->buttons;
 	sfVector2i	position;
 	sfVector2f	pos;
 
@@ -37,5 +36,5 @@ void	manage_mouse_click(game_t *game)
 	pos.y = position.y;
 	printf("%s: Mouse click at position (%i, %i)\n", INFO, position.x, position.y);
 	if (sfMouse_isButtonPressed(sfMouseLeft) == sfTrue)
-		which_button(pos, buttons, game);
+		which_button(pos, game);
 }

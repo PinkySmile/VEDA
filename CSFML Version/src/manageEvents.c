@@ -4,7 +4,6 @@
 void	manageEvents(game_t *game)
 {
 	sfEvent	event;
-	Object	*map = game->map;
 
 	while (sfRenderWindow_pollEvent(game->window, &event)) {
 		if (event.type == sfEvtClosed) {
