@@ -96,15 +96,122 @@ void	displayUpperLayer(game_t *game)
 		}
 }
 
+void	drawLifeBar(game_t *game)
+{
+	int		lifeBuffer = game->player.life;
+	int		x = 0;
+	int		y = 0;
+	int		h = 0;
+	int		b = 0;
+	sfIntRect	rec = {0, 0, 16, 16};
+
+	for (int i = 1 ; i <= game->player.maxLife ; i++) {
+		if (lifeBuffer <= 10 && lifeBuffer >= 0)
+			rec.left = 48 + 160 * h + 16 * (10 - lifeBuffer);
+		else if (lifeBuffer >= 10)
+			rec.left = 48 + 160 * h;
+		else
+			rec.left = 528;
+		sfSprite_setTextureRect(((Sprite *)game->sprites.content)[LIFE_BAR].sprite, rec);
+		image(game, ((Sprite *)game->sprites.content)[LIFE_BAR].sprite, x, 465 - y, 16, 16);
+		rec.left = 16 * h;
+		sfSprite_setTextureRect(((Sprite *)game->sprites.content)[LIFE_BAR].sprite, rec);
+		image(game, ((Sprite *)game->sprites.content)[LIFE_BAR].sprite, x, 465 - y, 16, 16);
+		if (b == 0)
+			x = x + 15;
+		if (b == 1) {
+			h++;
+			if (h == 3) {
+				h = 0;
+				x += 15;
+			}
+		}
+		if (x >= 15 * 10) {
+			x = 0;
+			y += 15;
+		}
+		if (b == 0 && y >= 3 * 15) {
+			h++;
+			y = 0;
+		} 
+		if (h == 3 && b == 0) {
+			x = 0;
+			b = 1;
+			h = 0;
+			y = y + 45;
+		}
+		lifeBuffer = lifeBuffer - 10;
+	}
+}
+
+void	drawEnergyBar(game_t *game)
+{
+	int		energyBuffer = game->player.energy;
+	int		x = 0;
+	int		y = 0;
+	int		h = 0;
+	int		b = 0;
+	sfIntRect	rec = {0, 0, 16, 16};
+
+	for (int i = 1 ; i <= game->player.maxEnergy ; i++) {
+		if (energyBuffer <= 10 && energyBuffer >= 0)
+			rec.left = 48 + 160 * h + 16 * (10 - energyBuffer);
+		else if (energyBuffer >= 10)
+			rec.left = 48 + 160 * h;
+		else
+			rec.left = 528;
+		sfSprite_setTextureRect(((Sprite *)game->sprites.content)[ENERGY_BAR].sprite, rec);
+		image(game, ((Sprite *)game->sprites.content)[ENERGY_BAR].sprite, 625 - x, 465 - y, 16, 16);
+		rec.left = 16 * h;
+		sfSprite_setTextureRect(((Sprite *)game->sprites.content)[ENERGY_BAR].sprite, rec);
+		image(game, ((Sprite *)game->sprites.content)[ENERGY_BAR].sprite, 625 - x, 465 - y, 16, 16);
+		if (b == 0)
+			x = x + 15;
+		if (b == 1) {
+			h++;
+			if (h == 3) {
+				h = 0;
+				x += 15;
+			}
+		}
+		if (x >= 15 * 10) {
+			x = 0;
+			y += 15;
+		}
+		if (b == 0 && y >= 3 * 15) {
+			h++;
+			y = 0;
+		} 
+		if (h == 3 && b == 0) {
+			x = 0;
+			b = 1;
+			h = 0;
+			y = y + 45;
+		}
+		energyBuffer = energyBuffer - 10;
+	}
+}
+
+void	displayHUD(game_t *game)
+{
+	drawEnergyBar(game);
+	drawLifeBar(game);
+}
+
 void	inGame(game_t *game)
 {
 	Player	player = game->player;
 	Object	*map = game->map;
 
 	game->player.canMove = true;
+	game->player.life = 332;
+	game->player.maxLife = 45;
+	game->player.energy = 1332;
+	game->player.maxEnergy = 145;
 	displayLowerLayer(game);
 	displayCharacters(game);
 	displayUpperLayer(game);
+	displayHUD(game);
 	if (game->player.state == MOVING && sfTime_asSeconds(sfClock_getElapsedTime(game->player.animationClock)) >= 0.3) {
 		game->player.animation = !game->player.animation;
 		sfClock_restart(game->player.animationClock);
@@ -112,6 +219,8 @@ void	inGame(game_t *game)
 		game->player.state = STATIC;
 		game->player.animation = 0;
 	}
+	if (game->player.life > 10 * game->player.maxLife) 
+		game->player.life = 10 * game->player.maxLife;
 	if (game->player.canMove) {
 		memset(&game->player.blocked, 0, sizeof(game->player.blocked));
 		for (int i = 0; map && map[i].layer; i++) {

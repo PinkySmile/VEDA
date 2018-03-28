@@ -15,6 +15,9 @@ enum textures {
 	CHARACTER1,
 	CHARACTER2,
 	CHARACTER3,
+	GOD_EATER,
+	LIFE_BAR,
+	ENERGY_BAR,
 };
 
 enum directions {
