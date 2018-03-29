@@ -240,17 +240,20 @@ void	inGame(game_t *game)
 			game->player.position = LEFT;
 			game->player.state = MOVING;
 			sfClock_restart(game->player.stateClock);
-		} else if (!game->player.blocked.right && sfKeyboard_isKeyPressed(sfKeyRight)) {
+		}
+		if (!game->player.blocked.right && sfKeyboard_isKeyPressed(sfKeyRight)) {
 			game->player.pos.x += 1;
 			game->player.position = RIGHT;
 			game->player.state = MOVING;
 			sfClock_restart(game->player.stateClock);
-		} else if (!game->player.blocked.up && sfKeyboard_isKeyPressed(sfKeyUp)) {
+		}
+		if (!game->player.blocked.up && sfKeyboard_isKeyPressed(sfKeyUp)) {
 			game->player.pos.y -= 1;
 			game->player.position = UP;
 			game->player.state = MOVING;
 			sfClock_restart(game->player.stateClock);
-		} else if (!game->player.blocked.down && sfKeyboard_isKeyPressed(sfKeyDown)) {
+		}
+		if (!game->player.blocked.down && sfKeyboard_isKeyPressed(sfKeyDown)) {
 			game->player.pos.y += 1;
 			game->player.position = DOWN;
 			game->player.state = MOVING;

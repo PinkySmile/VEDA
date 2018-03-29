@@ -869,7 +869,7 @@ void setup()
             }
     } catch(Exception e) {
         e.printStackTrace();
-        musicLoaded = false;
+        //musicLoaded = false;
         new Popup("Error while loading sounds.", "Sound Error", JOptionPane.ERROR_MESSAGE, SFX[1]);
     }
 
