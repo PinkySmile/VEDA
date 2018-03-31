@@ -10,6 +10,40 @@
 
 char	*header;
 
+enum damagesTypes {
+	TRUE_DAMAGE,
+	FIRE_DAMAGE,
+	SHARP_DAMAGE,
+	PIERCE_DAMAGE,
+	IMPACT_DAMAGE,
+	POISON_DAMAGE,
+	ELECTRICITY_DAMAGE,
+	DAMAGES_TYPE_NB,
+};
+
+enum actions {
+	NONE,
+	DEAL_DAMAGES,
+	CHANGE_MUSIC,
+	LAUNCH_CUTSCENE,
+};
+
+enum musics {
+	GAME_OVER,
+	MACABRE,
+	MYSTERIOUS,
+	CLAVIER,
+	MAIN_MENU_MUSIC,
+	EPICBATTLE_START,
+	EPICBATTLE_LOOP,
+	SQRT1,
+	SQRT2,
+	EUGRT_FULL,
+	EUGRT_START,
+	EUGRT_LOOP,
+	UMLAUT,
+};
+
 const bool	solidObjects[] = {
 	true,
 	false,
@@ -66,6 +100,9 @@ typedef struct {
 	bool		solid;
 	sfVector2i	pos;
 	int		layer;
+	int		damages[DAMAGES_TYPE_NB];
+	int		action;
+	float		invulnerabiltyTime;
 } Object;
 
 char	*concat(char *, char *, bool, bool);
@@ -182,6 +219,29 @@ Object	*loadLevel(char *path)
 		objs[i / 3].pos.y = atoi(lines[i + 2]) * 16 - 16;
 		objs[i / 3].layer = 1;
 		objs[i / 3].solid = solidObjects[objs[i / 3].id - 1];
+		if (objs[i / 3].id == 5) {
+			objs[i / 3].action = DEAL_DAMAGES;
+			objs[i / 3].damages[FIRE_DAMAGE] = 10;
+			objs[i / 3].invulnerabiltyTime = 10;
+		} else if (objs[i / 3].id == 8) {
+			objs[i / 3].action = CHANGE_MUSIC;
+			objs[i / 3].invulnerabiltyTime = MYSTERIOUS;
+		} else if (objs[i / 3].id == 9) {
+			objs[i / 3].action = CHANGE_MUSIC;
+			objs[i / 3].invulnerabiltyTime = MACABRE;
+		} else if (objs[i / 3].id == 10) {
+			objs[i / 3].action = CHANGE_MUSIC;
+			objs[i / 3].invulnerabiltyTime = EPICBATTLE_START;
+		} else if (objs[i / 3].id == 11) {
+			objs[i / 3].action = DEAL_DAMAGES;
+			objs[i / 3].damages[TRUE_DAMAGE] = 3;
+			objs[i / 3].invulnerabiltyTime = 0;
+		} else if (objs[i / 3].id == 12) {
+			objs[i / 3].action = CHANGE_MUSIC;
+			objs[i / 3].damages[FIRE_DAMAGE] = 10;
+			objs[i / 3].invulnerabiltyTime = EUGRT_START;
+		} else
+			objs[i / 3].action = NONE;
 		for (int j = 0; layer[j].object; j++)
 			if (layer[j].object == objs[i / 3].id) {
 				objs[i / 3].id = layer[j].replacement;
@@ -200,6 +260,7 @@ void	saveLevel(char *path, Object *objs)
 	int	fd;
 	char	*buffer = "test";
 	char	*buf;
+	int	ln = 0;
 
 	printf("Saving to %s\n", path);
 	fd = open(path, O_WRONLY | O_CREAT, 0664);
@@ -209,9 +270,11 @@ void	saveLevel(char *path, Object *objs)
 	}
 	printf("Writing header (%s) (%i chars)\n", header, write(fd, header, strlen(header)));
 	for (int i = 0; objs[i].layer; i++) {
-		buffer = concatf("\r%i\r%i\r%i\r%i\r%i", objs[i].id, objs[i].pos.x, objs[i].pos.y, objs[i].layer, objs[i].solid);
+		ln = 0;
+		buffer = concatf("\r%i\r%i\r%i\r%i\r%i\r%i\r%i\r%i\r%i\r%i\r%i\r%i\r%i\r%i", objs[i].id, objs[i].pos.x, objs[i].pos.y, objs[i].layer, objs[i].solid, objs[i].action, objs[i].invulnerabiltyTime, objs[i].damages[0], objs[i].damages[1], objs[i].damages[2], objs[i].damages[3], objs[i].damages[4], objs[i].damages[5], objs[i].damages[6]);
 		buf = concatf("%S", buffer);
-		printf("Writing object %i (%s) (%i chars)\n", i, buf, write(fd, buffer, strlen(buffer)));
+		for (int i = 0; buffer[i]; ln += buffer[i] == '\r', i++);
+		printf("Writing object %i (%s) (%i chars and %i lines)\n", i, buf, write(fd, buffer, strlen(buffer)), ln);
 		free(buffer);
 		free(buf);
 	}

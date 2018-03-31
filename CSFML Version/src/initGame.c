@@ -126,6 +126,16 @@ void	initGame(game_t *game)
 		sfSprite_setTexture(game->icon.sprite, game->icon.texture, sfTrue);
 	game->player.animationClock = sfClock_create();
 	game->player.stateClock = sfClock_create();
+	game->player.energyRegenClock = sfClock_create();
+	game->player.energyRegen = 1;
+	game->player.energyUsedBySprint = 8;
+	game->player.sprintSpeed = 2;
+	game->player.timeBeforeEnergyUse = 1;
+	game->player.life = 332;
+	game->player.maxLife = 45;
+	game->player.energy = 1332;
+	game->player.maxEnergy = 145;
+	game->player.canMove = true;
 	game->fonts = loadFonts(game);
 	game->sprites = loadSprites(game);
 	game->musics = loadMusics(game);

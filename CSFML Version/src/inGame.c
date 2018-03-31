@@ -106,7 +106,7 @@ void	drawLifeBar(game_t *game)
 	sfIntRect	rec = {0, 0, 16, 16};
 
 	for (int i = 1 ; i <= game->player.maxLife ; i++) {
-		if (lifeBuffer <= 10 && lifeBuffer >= 0)
+		if (lifeBuffer <= 10 && lifeBuffer > 0)
 			rec.left = 48 + 160 * h + 16 * (10 - lifeBuffer);
 		else if (lifeBuffer >= 10)
 			rec.left = 48 + 160 * h;
@@ -154,7 +154,7 @@ void	drawEnergyBar(game_t *game)
 	sfIntRect	rec = {0, 0, 16, 16};
 
 	for (int i = 1 ; i <= game->player.maxEnergy ; i++) {
-		if (energyBuffer <= 10 && energyBuffer >= 0)
+		if (energyBuffer <= 10 && energyBuffer > 0)
 			rec.left = 48 + 160 * h + 16 * (10 - energyBuffer);
 		else if (energyBuffer >= 10)
 			rec.left = 48 + 160 * h;
@@ -198,16 +198,75 @@ void	displayHUD(game_t *game)
 	drawLifeBar(game);
 }
 
-void	inGame(game_t *game)
+void	movePlayer(game_t *game)
 {
 	Player	player = game->player;
 	Object	*map = game->map;
 
-	game->player.canMove = true;
-	game->player.life = 332;
-	game->player.maxLife = 45;
-	game->player.energy = 1332;
-	game->player.maxEnergy = 145;
+	memset(&game->player.blocked, 0, sizeof(game->player.blocked));
+	for (int i = 0; map && map[i].layer; i++) {
+		if (map[i].solid) {
+			if (player.pos.y + 31 >= map[i].pos.y && player.pos.y + 17 <= map[i].pos.y && player.pos.x < map[i].pos.x + 16 && player.pos.x + 16 > map[i].pos.x)
+			    game->player.blocked.down = true;
+			if (player.pos.y + 16 >= map[i].pos.y && player.pos.y + 16 <= map[i].pos.y + 16 && player.pos.x + 1 <= map[i].pos.x + 16 && map[i].pos.x <= player.pos.x + 16)
+			    game->player.blocked.up = true;
+			if (player.pos.y + 29 >= map[i].pos.y - 1 && player.pos.y + 17 <= map[i].pos.y + 16 && player.pos.x <= map[i].pos.x + 16 && map[i].pos.x <= player.pos.x)
+			    game->player.blocked.left = true;
+			if (player.pos.y + 29 >= map[i].pos.y - 1 && player.pos.y + 17 <= map[i].pos.y + 16 && player.pos.x + 16 <= map[i].pos.x && player.pos.x + 16 >= map[i].pos.x)
+			    game->player.blocked.right = true;
+		}
+	}
+	if (!game->player.blocked.left && sfKeyboard_isKeyPressed(sfKeyLeft)) {
+		game->player.pos.x -= 1;
+		game->player.position = LEFT;
+		game->player.state = MOVING;
+		sfClock_restart(game->player.stateClock);
+		if (sfKeyboard_isKeyPressed(sfKeyLShift) && game->player.energy >= game->player.sprintSpeed) {
+			game->player.pos.x -= game->player.sprintSpeed - 1;
+			game->player.energyClock++;
+		}
+	}
+	if (!game->player.blocked.right && sfKeyboard_isKeyPressed(sfKeyRight)) {
+		game->player.pos.x += 1;
+		game->player.position = RIGHT;
+		game->player.state = MOVING;
+		sfClock_restart(game->player.stateClock);
+		if (sfKeyboard_isKeyPressed(sfKeyLShift) && game->player.energy >= game->player.sprintSpeed) {
+			game->player.pos.x += game->player.sprintSpeed - 1;
+			game->player.energyClock++;
+		}
+	}
+	if (!game->player.blocked.up && sfKeyboard_isKeyPressed(sfKeyUp)) {
+		game->player.pos.y -= 1;
+		game->player.position = UP;
+		game->player.state = MOVING;
+		sfClock_restart(game->player.stateClock);
+		if (sfKeyboard_isKeyPressed(sfKeyLShift) && game->player.energy >= game->player.sprintSpeed) {
+			game->player.pos.y -= game->player.sprintSpeed - 1;
+			game->player.energyClock++;
+		}
+	}
+	if (!game->player.blocked.down && sfKeyboard_isKeyPressed(sfKeyDown)) {
+		game->player.pos.y += 1;
+		game->player.position = DOWN;
+		game->player.state = MOVING;
+		sfClock_restart(game->player.stateClock);
+		if (sfKeyboard_isKeyPressed(sfKeyLShift) && game->player.energy >= game->player.sprintSpeed) {
+			game->player.pos.y += game->player.sprintSpeed - 1;
+			game->player.energyClock++;
+		}
+	}
+	if (game->player.energyClock >= game->player.timeBeforeEnergyUse) {
+		game->player.energyClock -= game->player.timeBeforeEnergyUse;
+		game->player.energy -= game->player.energyUsedBySprint;
+		sfClock_restart(game->player.energyRegenClock);
+	}
+	if (sfTime_asSeconds(sfClock_getElapsedTime(game->player.energyRegenClock)) >= 4)
+		game->player.energy += game->player.energyRegen;
+}
+
+void	inGame(game_t *game)
+{
 	displayLowerLayer(game);
 	displayCharacters(game);
 	displayUpperLayer(game);
@@ -221,45 +280,8 @@ void	inGame(game_t *game)
 	}
 	if (game->player.life > 10 * game->player.maxLife) 
 		game->player.life = 10 * game->player.maxLife;
-	if (game->player.canMove) {
-		memset(&game->player.blocked, 0, sizeof(game->player.blocked));
-		for (int i = 0; map && map[i].layer; i++) {
-			if (map[i].solid) {
-                                if (player.pos.y + 31 >= map[i].pos.y && player.pos.y + 17 <= map[i].pos.y && player.pos.x < map[i].pos.x + 16 && player.pos.x + 16 > map[i].pos.x)
-                                    game->player.blocked.down = true;
-                                if (player.pos.y + 16 >= map[i].pos.y && player.pos.y + 16 <= map[i].pos.y + 16 && player.pos.x + 1 <= map[i].pos.x + 16 && map[i].pos.x <= player.pos.x + 16)
-                                    game->player.blocked.up = true;
-                                if (player.pos.y + 29 >= map[i].pos.y - 1 && player.pos.y + 17 <= map[i].pos.y + 16 && player.pos.x <= map[i].pos.x + 16 && map[i].pos.x <= player.pos.x)
-                                    game->player.blocked.left = true;
-                                if (player.pos.y + 29 >= map[i].pos.y - 1 && player.pos.y + 17 <= map[i].pos.y + 16 && player.pos.x + 16 <= map[i].pos.x && player.pos.x + 16 >= map[i].pos.x)
-                                    game->player.blocked.right = true;
-			}
-		}
-		if (!game->player.blocked.left && sfKeyboard_isKeyPressed(sfKeyLeft)) {
-			game->player.pos.x -= 1;
-			game->player.position = LEFT;
-			game->player.state = MOVING;
-			sfClock_restart(game->player.stateClock);
-		}
-		if (!game->player.blocked.right && sfKeyboard_isKeyPressed(sfKeyRight)) {
-			game->player.pos.x += 1;
-			game->player.position = RIGHT;
-			game->player.state = MOVING;
-			sfClock_restart(game->player.stateClock);
-		}
-		if (!game->player.blocked.up && sfKeyboard_isKeyPressed(sfKeyUp)) {
-			game->player.pos.y -= 1;
-			game->player.position = UP;
-			game->player.state = MOVING;
-			sfClock_restart(game->player.stateClock);
-		}
-		if (!game->player.blocked.down && sfKeyboard_isKeyPressed(sfKeyDown)) {
-			game->player.pos.y += 1;
-			game->player.position = DOWN;
-			game->player.state = MOVING;
-			sfClock_restart(game->player.stateClock);
-		}
-	}
+	if (game->player.canMove)
+		movePlayer(game);
 	if (game->player.pos.x + game->cam.x + 8 > 640) {
 		game->cam.x -= 640;
 	} else if (game->player.pos.x + game->cam.x + 8 < 0) {

@@ -6,6 +6,24 @@
 #include <stdbool.h>
 #include "macros.h"
 
+enum damagesTypes {
+	TRUE_DAMAGE,
+	FIRE_DAMAGE,
+	SHARP_DAMAGE,
+	PIERCE_DAMAGE,
+	IMPACT_DAMAGE,
+	POISON_DAMAGE,
+	ELECTRICITY_DAMAGE,
+	DAMAGES_TYPE_NB,
+};
+
+enum actions {
+	NO_ACTION,
+	DEAL_DAMAGES,
+	CHANGE_MUSIC,
+	LAUNCH_CUTSCENE,
+};
+
 enum textures {
 	MENU_BACKGROUND,
 	OBJECTS,
@@ -109,14 +127,20 @@ typedef struct {
 	int		position;
 	int		state;
 	sfVector2i	pos;
-	int		life;
+	float		life;
 	int		maxLife;
-	int		energy;
+	float		energy;
 	int		maxEnergy;
 	bool		canMove;
 	Directions	blocked;
 	sfClock		*animationClock;
 	sfClock		*stateClock;
+	int		energyClock;
+	sfClock		*energyRegenClock;
+	int		energyRegen;
+	float		energyUsedBySprint;
+	float		sprintSpeed;
+	int		timeBeforeEnergyUse;
 } Player;
 
 typedef struct {
@@ -161,6 +185,7 @@ typedef struct {
 	int		status;
 	sfVector2f	pos;
 	sfVector2f	pointToGo;
+	float		sprintSpeed;
 } Character;
 
 typedef struct {
@@ -179,6 +204,9 @@ typedef struct {
 	bool		solid;
 	sfVector2i	pos;
 	int		layer;
+	int		damages[DAMAGES_TYPE_NB];
+	int		invulnerabiltyTime;
+	int		action;
 } Object;
 
 typedef struct {
