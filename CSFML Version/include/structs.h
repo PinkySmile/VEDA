@@ -205,8 +205,10 @@ typedef struct {
 	sfVector2i	pos;
 	int		layer;
 	int		damages[DAMAGES_TYPE_NB];
-	int		invulnerabiltyTime;
+	float		invulnerabiltyTime;
 	int		action;
+	int		footstepSound;
+	int		footstepVariance;
 } Object;
 
 typedef struct {

@@ -27,6 +27,8 @@ void	play_button(game_t *game, int buttonID)
 		game->buttons[i].displayed = false;
 	}
 	game->map = loadLevel("data/levels/test/level/floor0.lvl", &game->bg);
+	if (((sfMusic **)game->musics.content)[MAIN_MENU_MUSIC] && sfMusic_getStatus(((sfMusic **)game->musics.content)[MAIN_MENU_MUSIC]) == sfPlaying)
+		sfMusic_stop(((sfMusic **)game->musics.content)[MAIN_MENU_MUSIC]);
 }
 
 void	options_button(game_t *game, int buttonID)

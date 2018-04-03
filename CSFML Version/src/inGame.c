@@ -198,6 +198,21 @@ void	displayHUD(game_t *game)
 	drawLifeBar(game);
 }
 
+void	execAction(game_t *game, Object obj)
+{
+	switch(obj.action) {
+	case DEAL_DAMAGES:
+	//	for (int i = 0; i < DAMAGES_TYPE_NB; i++)
+	//		if (obj.damages[i])
+	//			dealDamages(&game->player.life, getPlayerResistances(game, i), obj.damages[i]);
+		break;
+	case CHANGE_MUSIC:
+		break;
+	case LAUNCH_CUTSCENE:
+		break;
+	}
+}
+
 void	movePlayer(game_t *game)
 {
 	Player	player = game->player;
@@ -256,6 +271,9 @@ void	movePlayer(game_t *game)
 			game->player.energyClock++;
 		}
 	}
+	for (int i = 0; map && map[i].layer; i++)
+		if (player.pos.y + 16 >= map[i].pos.y && player.pos.y + 16 <= map[i].pos.y && player.pos.x < map[i].pos.x + 16 && player.pos.x + 16 > map[i].pos.x)
+			execAction(game, map[i]);
 	if (game->player.energyClock >= game->player.timeBeforeEnergyUse) {
 		game->player.energyClock -= game->player.timeBeforeEnergyUse;
 		game->player.energy -= game->player.energyUsedBySprint;

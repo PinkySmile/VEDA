@@ -113,14 +113,14 @@ Object	*loadLevel(char *path, char **bg)
 	file_buffer[buffer.st_size] = '\0';
 	lines = splitLines(file_buffer);
 	*bg = strdup(lines[0]);
-	for (int i = 1; lines[i] && strcmp(lines[i], ""); i += (7 + DAMAGES_TYPE_NB)) {
-		objs = realloc(objs, sizeof(*objs) * (i / (7 + DAMAGES_TYPE_NB) + 2));
+	for (int i = 1; lines[i] && strcmp(lines[i], ""); i += (9 + DAMAGES_TYPE_NB)) {
+		objs = realloc(objs, sizeof(*objs) * (i / (9 + DAMAGES_TYPE_NB) + 2));
 		if (!objs) {
-			printf("%s: Couldn't allocate %liB", FATAL, sizeof(*objs) * (i / (7 + DAMAGES_TYPE_NB) + 2));
+			printf("%s: Couldn't allocate %liB", FATAL, sizeof(*objs) * (i / (9 + DAMAGES_TYPE_NB) + 2));
 			exit(EXIT_FAILURE);
 		}
-		memset(&objs[i / (7 + DAMAGES_TYPE_NB)], 0, sizeof(*objs));
-		for (int j = 1; j < (7 + DAMAGES_TYPE_NB); j++)
+		memset(&objs[i / (9 + DAMAGES_TYPE_NB)], 0, sizeof(*objs));
+		for (int j = 1; j < (9 + DAMAGES_TYPE_NB); j++)
 			if (!lines[i + j]) {
 				printf("%s: Unexpected <EOF> after line %i (%s)\n", INFO, i + j, lines[i + j - 1]);
 				free(objs);
@@ -129,7 +129,7 @@ Object	*loadLevel(char *path, char **bg)
 				free(file_buffer);
 				return (NULL);
 			}
-		for (int j = 0; j < (7 + DAMAGES_TYPE_NB); j++)
+		for (int j = 0; j < (9 + DAMAGES_TYPE_NB); j++)
 			if (!is_nbr(lines[i + j])) {
 				printf("%s: Invalid line %i (", ERROR, i + j + 1);
 				showStr(lines[i + j]);
@@ -140,16 +140,18 @@ Object	*loadLevel(char *path, char **bg)
 				free(file_buffer);
 				return (NULL);
 			}
-		objs[i / (7 + DAMAGES_TYPE_NB)].id = atoi(lines[i]);
-		objs[i / (7 + DAMAGES_TYPE_NB)].pos.x = atoi(lines[i + 1]);
-		objs[i / (7 + DAMAGES_TYPE_NB)].pos.y = atoi(lines[i + 2]);
-		objs[i / (7 + DAMAGES_TYPE_NB)].layer = atoi(lines[i + 3]);
-		objs[i / (7 + DAMAGES_TYPE_NB)].solid = atoi(lines[i + 4]);
-		objs[i / (7 + DAMAGES_TYPE_NB)].action = atoi(lines[i + 5]);
-		objs[i / (7 + DAMAGES_TYPE_NB)].invulnerabiltyTime = atoi(lines[i + 6]);
+		objs[i / (9 + DAMAGES_TYPE_NB)].id = atoi(lines[i]);
+		objs[i / (9 + DAMAGES_TYPE_NB)].pos.x = atoi(lines[i + 1]);
+		objs[i / (9 + DAMAGES_TYPE_NB)].pos.y = atoi(lines[i + 2]);
+		objs[i / (9 + DAMAGES_TYPE_NB)].layer = atoi(lines[i + 3]);
+		objs[i / (9 + DAMAGES_TYPE_NB)].solid = atoi(lines[i + 4]);
+		objs[i / (9 + DAMAGES_TYPE_NB)].action = atoi(lines[i + 5]);
+		objs[i / (9 + DAMAGES_TYPE_NB)].invulnerabiltyTime = atof(lines[i + 6]);
+		objs[i / (9 + DAMAGES_TYPE_NB)].footstepSound = atof(lines[i + DAMAGES_TYPE_NB + 1]);
+		objs[i / (9 + DAMAGES_TYPE_NB)].footstepVariance = atof(lines[i + DAMAGES_TYPE_NB + 2]);
 		for (int j = 0; j < DAMAGES_TYPE_NB; j++)
-			objs[i / (7 + DAMAGES_TYPE_NB)].damages[j] = atoi(lines[i + 7 + j]);
-		if (objs[i / (7 + DAMAGES_TYPE_NB)].layer <= 0) {
+			objs[i / (9 + DAMAGES_TYPE_NB)].damages[j] = atoi(lines[i + 7 + j]);
+		if (objs[i / (9 + DAMAGES_TYPE_NB)].layer <= 0) {
 			printf("%s: Invalid line %i (", ERROR, i + 4);
 			showStr(lines[i + 3]);
 			printf("): Expected value greater than 0\n");
@@ -159,7 +161,7 @@ Object	*loadLevel(char *path, char **bg)
 			free(file_buffer);
 			return (NULL);
 		}
-		if (objs[i / (7 + DAMAGES_TYPE_NB)].solid != 0 && objs[i / (7 + DAMAGES_TYPE_NB)].solid != 1) {
+		if (objs[i / (9 + DAMAGES_TYPE_NB)].solid != 0 && objs[i / (9 + DAMAGES_TYPE_NB)].solid != 1) {
 			printf("%s: Invalid line %i (", ERROR, i + 5);
 			showStr(lines[i + 4]);
 			printf("): Expected boolean value\n");
@@ -169,7 +171,7 @@ Object	*loadLevel(char *path, char **bg)
 			free(file_buffer);
 			return (NULL);
 		}
-		objs[i / (7 + DAMAGES_TYPE_NB) + 1].layer = 0;
+		objs[i / (9 + DAMAGES_TYPE_NB) + 1].layer = 0;
 	}
 	free(lines[0]);
 	free(lines);
