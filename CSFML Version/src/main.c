@@ -101,7 +101,7 @@ void	destroyStruct(game_t *game)
 	free(game->languages);
 }
 
-int	main(int argc, char *args)
+int	main(int argc)
 {
 	game_t	game;
 

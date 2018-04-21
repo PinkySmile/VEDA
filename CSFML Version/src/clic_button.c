@@ -22,6 +22,7 @@ void	which_button(sfVector2f pos, game_t *game)
 		if (button_is_clicked(game->buttons[i], pos, game)) {
 			printf("%s: Clicked on button %i (%s)\n", INFO, i, game->buttons[i].content);
 			game->buttons[i].callback(game, i);
+			break;
 		}
 }
 

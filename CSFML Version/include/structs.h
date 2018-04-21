@@ -269,6 +269,7 @@ struct game_s {
 	char			*bg;
 	sfVector2i		languagesConf;
 	bool			debug;
+	int			selected;
 };
 
 #endif
