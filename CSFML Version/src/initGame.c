@@ -80,8 +80,10 @@ void	initGame(game_t *game)
 	sfImage		*image = sfImage_createFromFile("data/misc/icon.png");
 	sfVideoMode	mode = {640, 480, 32};
 	sfWindowStyle	style;
+	Character	player;
 
 	memset(game, 0, sizeof(*game));
+	memset(&player, 0, sizeof(player));
 	game->settings = loadSettings();
 	if (game->settings.windowMode == FULLSCREEN) {
 		style = sfFullscreen;
@@ -124,18 +126,29 @@ void	initGame(game_t *game)
 	game->icon.sprite = sfSprite_create();
 	if (game->icon.sprite && game->icon.texture)
 		sfSprite_setTexture(game->icon.sprite, game->icon.texture, sfTrue);
-	game->player.animationClock = sfClock_create();
-	game->player.stateClock = sfClock_create();
-	game->player.energyRegenClock = sfClock_create();
-	game->player.energyRegen = 1;
-	game->player.energyUsedBySprint = 8;
-	game->player.sprintSpeed = 2;
-	game->player.timeBeforeEnergyUse = 1;
-	game->player.life = 332;
-	game->player.maxLife = 45;
-	game->player.energy = 1332;
-	game->player.maxEnergy = 145;
-	game->player.canMove = true;
+	game->characters.content = malloc(sizeof(Character));
+	if (!game->characters.content) {
+		printf("%s: Couldn't create player object\n", FATAL);
+		exit(EXIT_FAILURE);
+	}
+	game->characters.length = 1;
+	player.movement.animationClock = sfClock_create();
+	player.movement.stateClock = sfClock_create();
+	player.stats.energyRegenClock = sfClock_create();
+	player.stats.energyRegen = 1;
+	player.stats.energyUsedBySprint = 8;
+	player.stats.sprintSpeed = 2;
+	player.stats.timeBeforeEnergyUse = 1;
+	player.stats.life = 332;
+	player.stats.lifeMax = 45;
+	player.stats.energy = 1332;
+	player.stats.maxEnergy = 145;
+	player.movement.canMove = true;
+	player.isPlayer = true;
+	player.texture = 0;
+	for (int i = 0; i < DAMAGES_TYPE_NB; i++)
+		player.damageClock[i] = sfClock_create();
+	((Character *)game->characters.content)[0] = player;
 	game->fonts = loadFonts(game);
 	game->sprites = loadSprites(game);
 	game->musics = loadMusics(game);

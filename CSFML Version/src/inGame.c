@@ -2,6 +2,7 @@
 #include "functions.h"
 #include "concatf.h"
 #include <stdlib.h>
+#include <math.h>
 #include <string.h>
 
 void	displayLowerLayer(game_t *game)
@@ -40,15 +41,15 @@ void	displayLowerLayer(game_t *game)
 
 void	displayCharacters(game_t *game)
 {
-	Player		player = game->player;
+	Character	player = ((Character *)game->characters.content)[0];
 	sfIntRect	rec = {0, 0, 16, 32};
 	Array		sprites = game->sprites;
 	sfVector2i	cam = game->cam;
 
-	rec.top = (player.position / 2 + (player.state * 2) + (player.animation * 2)) * 32;
-	rec.left = (player.position % 2) * 32;
-	sfSprite_setTextureRect(((Sprite *)sprites.content)[MALE_CHARACTER + player.isFemale].sprite, rec);
-	image(game, ((Sprite *)sprites.content)[MALE_CHARACTER + player.isFemale].sprite,  player.pos.x + cam.x, player.pos.y + cam.y, 16, 32);
+	rec.top = (player.movement.position / 2 + (player.movement.state * 2) + (player.movement.animation * 2)) * 32;
+	rec.left = (player.movement.position % 2) * 32;
+	sfSprite_setTextureRect(((Sprite *)sprites.content)[MALE_CHARACTER + player.texture].sprite, rec);
+	image(game, ((Sprite *)sprites.content)[MALE_CHARACTER + player.texture].sprite,  player.movement.pos.x + cam.x, player.movement.pos.y + cam.y, 16, 32);
 }
 
 void	displayUpperLayer(game_t *game)
@@ -98,14 +99,14 @@ void	displayUpperLayer(game_t *game)
 
 void	drawLifeBar(game_t *game)
 {
-	int		lifeBuffer = game->player.life;
+	int		lifeBuffer = ((Character *)game->characters.content)[0].stats.life;
 	int		x = 0;
 	int		y = 0;
 	int		h = 0;
 	int		b = 0;
 	sfIntRect	rec = {0, 0, 16, 16};
 
-	for (int i = 1 ; i <= game->player.maxLife ; i++) {
+	for (int i = 1 ; i <= ((Character *)game->characters.content)[0].stats.lifeMax ; i++) {
 		if (lifeBuffer <= 10 && lifeBuffer > 0)
 			rec.left = 48 + 160 * h + 16 * (10 - lifeBuffer);
 		else if (lifeBuffer >= 10)
@@ -146,14 +147,14 @@ void	drawLifeBar(game_t *game)
 
 void	drawEnergyBar(game_t *game)
 {
-	int		energyBuffer = game->player.energy;
+	int		energyBuffer = ((Character *)game->characters.content)[0].stats.energy;
 	int		x = 0;
 	int		y = 0;
 	int		h = 0;
 	int		b = 0;
 	sfIntRect	rec = {0, 0, 16, 16};
 
-	for (int i = 1 ; i <= game->player.maxEnergy ; i++) {
+	for (int i = 1 ; i <= ((Character *)game->characters.content)[0].stats.maxEnergy ; i++) {
 		if (energyBuffer <= 10 && energyBuffer > 0)
 			rec.left = 48 + 160 * h + 16 * (10 - energyBuffer);
 		else if (energyBuffer >= 10)
@@ -198,13 +199,43 @@ void	displayHUD(game_t *game)
 	drawLifeBar(game);
 }
 
+void	dealDamages(Character character, int damages, int damageType)
+{
+	float	buffer = character.stats.life;
+	float	res = 0;
+
+	if (damageType != TRUE_DAMAGE) {
+		for (int i = 0; i < 5; i++)
+			if (character.wornItems[i].name) {
+				res += character.wornItems[i].resistances[damageType];
+				if (character.wornItems[i].resistances[damageType] > 0) {
+					character.wornItems[i].durability -= damages / 10;
+					if (character.wornItems[i].durability <= 0)
+						character.wornItems[i].name = NULL;
+					for (int j = 0; character.wornItems[i].name != NULL && j < DAMAGES_TYPE_NB; j++)
+						character.wornItems[i].resistances[j] = character.wornItems[i].baseResistances[j] * character.wornItems[i].durability / character.wornItems[i].baseDurability;
+				}
+			}
+		character.stats.life -= damages * (20 / (sqrt(abs(res)) + 20));
+	} else
+		character.stats.life -= damages;
+	if (character.stats.life > character.stats.lifeMax * 10)
+		character.stats.life = character.stats.lifeMax * 10;
+	if (character.stats.life < 0)
+		character.stats.life = 0;
+	if (character.stats.life - buffer != 0) {
+		character.damageDisplay[damageType] -= buffer - character.stats.life;
+		sfClock_restart(character.damageClock[damageType]);
+	}
+}
+
 void	execAction(game_t *game, Object obj)
 {
 	switch(obj.action) {
 	case DEAL_DAMAGES:
-	//	for (int i = 0; i < DAMAGES_TYPE_NB; i++)
-	//		if (obj.damages[i])
-	//			dealDamages(&game->player.life, getPlayerResistances(game, i), obj.damages[i]);
+		for (int i = 0; i < DAMAGES_TYPE_NB; i++)
+			if (obj.damages[i])
+				dealDamages(((Character *)game->characters.content)[0], obj.damages[i], i);
 		break;
 	case CHANGE_MUSIC:
 		break;
@@ -215,98 +246,102 @@ void	execAction(game_t *game, Object obj)
 
 void	movePlayer(game_t *game)
 {
-	Player	player = game->player;
-	Object	*map = game->map;
+	Character	*player = &((Character *)game->characters.content)[0];
+	Object		*map = game->map;
 
-	memset(&game->player.blocked, 0, sizeof(game->player.blocked));
+	memset(&player->movement.blocked, 0, sizeof(player->movement.blocked));
 	for (int i = 0; map && map[i].layer; i++) {
 		if (map[i].solid) {
-			if (player.pos.y + 31 >= map[i].pos.y && player.pos.y + 17 <= map[i].pos.y && player.pos.x < map[i].pos.x + 16 && player.pos.x + 16 > map[i].pos.x)
-			    game->player.blocked.down = true;
-			if (player.pos.y + 16 >= map[i].pos.y && player.pos.y + 16 <= map[i].pos.y + 16 && player.pos.x + 1 <= map[i].pos.x + 16 && map[i].pos.x <= player.pos.x + 16)
-			    game->player.blocked.up = true;
-			if (player.pos.y + 29 >= map[i].pos.y - 1 && player.pos.y + 17 <= map[i].pos.y + 16 && player.pos.x <= map[i].pos.x + 16 && map[i].pos.x <= player.pos.x)
-			    game->player.blocked.left = true;
-			if (player.pos.y + 29 >= map[i].pos.y - 1 && player.pos.y + 17 <= map[i].pos.y + 16 && player.pos.x + 16 <= map[i].pos.x && player.pos.x + 16 >= map[i].pos.x)
-			    game->player.blocked.right = true;
+			if (player->movement.pos.y + 31 >= map[i].pos.y && player->movement.pos.y + 17 <= map[i].pos.y && player->movement.pos.x < map[i].pos.x + 16 && player->movement.pos.x + 16 > map[i].pos.x)
+			    player->movement.blocked.down = true;
+			if (player->movement.pos.y + 16 >= map[i].pos.y && player->movement.pos.y + 16 <= map[i].pos.y + 16 && player->movement.pos.x + 1 <= map[i].pos.x + 16 && map[i].pos.x <= player->movement.pos.x + 16)
+			    player->movement.blocked.up = true;
+			if (player->movement.pos.y + 29 >= map[i].pos.y - 1 && player->movement.pos.y + 17 <= map[i].pos.y + 16 && player->movement.pos.x <= map[i].pos.x + 16 && map[i].pos.x <= player->movement.pos.x)
+			    player->movement.blocked.left = true;
+			if (player->movement.pos.y + 29 >= map[i].pos.y - 1 && player->movement.pos.y + 17 <= map[i].pos.y + 16 && player->movement.pos.x + 16 <= map[i].pos.x && player->movement.pos.x + 16 >= map[i].pos.x)
+			    player->movement.blocked.right = true;
 		}
 	}
-	if (!game->player.blocked.left && sfKeyboard_isKeyPressed(sfKeyLeft)) {
-		game->player.pos.x -= 1;
-		game->player.position = LEFT;
-		game->player.state = MOVING;
-		sfClock_restart(game->player.stateClock);
-		if (sfKeyboard_isKeyPressed(sfKeyLShift) && game->player.energy >= game->player.sprintSpeed) {
-			game->player.pos.x -= game->player.sprintSpeed - 1;
-			game->player.energyClock++;
+	if (!player->movement.blocked.left && sfKeyboard_isKeyPressed(sfKeyLeft)) {
+		player->movement.pos.x -= 1;
+		player->movement.position = LEFT;
+		player->movement.state = MOVING;
+		sfClock_restart(player->movement.stateClock);
+		if (sfKeyboard_isKeyPressed(sfKeyLShift) && player->stats.energy >= player->stats.sprintSpeed) {
+			player->movement.pos.x -= player->stats.sprintSpeed - 1;
+			player->stats.energyClock++;
 		}
 	}
-	if (!game->player.blocked.right && sfKeyboard_isKeyPressed(sfKeyRight)) {
-		game->player.pos.x += 1;
-		game->player.position = RIGHT;
-		game->player.state = MOVING;
-		sfClock_restart(game->player.stateClock);
-		if (sfKeyboard_isKeyPressed(sfKeyLShift) && game->player.energy >= game->player.sprintSpeed) {
-			game->player.pos.x += game->player.sprintSpeed - 1;
-			game->player.energyClock++;
+	if (!player->movement.blocked.right && sfKeyboard_isKeyPressed(sfKeyRight)) {
+		player->movement.pos.x += 1;
+		player->movement.position = RIGHT;
+		player->movement.state = MOVING;
+		sfClock_restart(player->movement.stateClock);
+		if (sfKeyboard_isKeyPressed(sfKeyLShift) && player->stats.energy >= player->stats.sprintSpeed) {
+			player->movement.pos.x += player->stats.sprintSpeed - 1;
+			player->stats.energyClock++;
 		}
 	}
-	if (!game->player.blocked.up && sfKeyboard_isKeyPressed(sfKeyUp)) {
-		game->player.pos.y -= 1;
-		game->player.position = UP;
-		game->player.state = MOVING;
-		sfClock_restart(game->player.stateClock);
-		if (sfKeyboard_isKeyPressed(sfKeyLShift) && game->player.energy >= game->player.sprintSpeed) {
-			game->player.pos.y -= game->player.sprintSpeed - 1;
-			game->player.energyClock++;
+	if (!player->movement.blocked.up && sfKeyboard_isKeyPressed(sfKeyUp)) {
+		player->movement.pos.y -= 1;
+		player->movement.position = UP;
+		player->movement.state = MOVING;
+		sfClock_restart(player->movement.stateClock);
+		if (sfKeyboard_isKeyPressed(sfKeyLShift) && player->stats.energy >= player->stats.sprintSpeed) {
+			player->movement.pos.y -= player->stats.sprintSpeed - 1;
+			player->stats.energyClock++;
 		}
 	}
-	if (!game->player.blocked.down && sfKeyboard_isKeyPressed(sfKeyDown)) {
-		game->player.pos.y += 1;
-		game->player.position = DOWN;
-		game->player.state = MOVING;
-		sfClock_restart(game->player.stateClock);
-		if (sfKeyboard_isKeyPressed(sfKeyLShift) && game->player.energy >= game->player.sprintSpeed) {
-			game->player.pos.y += game->player.sprintSpeed - 1;
-			game->player.energyClock++;
+	if (!player->movement.blocked.down && sfKeyboard_isKeyPressed(sfKeyDown)) {
+		player->movement.pos.y += 1;
+		player->movement.position = DOWN;
+		player->movement.state = MOVING;
+		sfClock_restart(player->movement.stateClock);
+		if (sfKeyboard_isKeyPressed(sfKeyLShift) && player->stats.energy >= player->stats.sprintSpeed) {
+			player->movement.pos.y += player->stats.sprintSpeed - 1;
+			player->stats.energyClock++;
 		}
 	}
 	for (int i = 0; map && map[i].layer; i++)
-		if (player.pos.y + 16 >= map[i].pos.y && player.pos.y + 16 <= map[i].pos.y && player.pos.x < map[i].pos.x + 16 && player.pos.x + 16 > map[i].pos.x)
+		if (player->movement.pos.y + 16 >= map[i].pos.y && player->movement.pos.y + 16 <= map[i].pos.y && player->movement.pos.x < map[i].pos.x + 16 && player->movement.pos.x + 16 > map[i].pos.x)
 			execAction(game, map[i]);
-	if (game->player.energyClock >= game->player.timeBeforeEnergyUse) {
-		game->player.energyClock -= game->player.timeBeforeEnergyUse;
-		game->player.energy -= game->player.energyUsedBySprint;
-		sfClock_restart(game->player.energyRegenClock);
+	if (player->stats.energyClock >= player->stats.timeBeforeEnergyUse) {
+		player->stats.energyClock -= player->stats.timeBeforeEnergyUse;
+		player->stats.energy -= player->stats.energyUsedBySprint;
+		sfClock_restart(player->stats.energyRegenClock);
 	}
-	if (sfTime_asSeconds(sfClock_getElapsedTime(game->player.energyRegenClock)) >= 4)
-		game->player.energy += game->player.energyRegen;
+	if (sfTime_asSeconds(sfClock_getElapsedTime(player->stats.energyRegenClock)) >= 4)
+		player->stats.energy += player->stats.energyRegen;
+	if (player->stats.energy > player->stats.maxEnergy * 10)
+		player->stats.energy = player->stats.maxEnergy * 10;
 }
 
 void	inGame(game_t *game)
 {
+	Character	*player = &((Character *)game->characters.content)[0];
+
 	displayLowerLayer(game);
 	displayCharacters(game);
 	displayUpperLayer(game);
 	displayHUD(game);
-	if (game->player.state == MOVING && sfTime_asSeconds(sfClock_getElapsedTime(game->player.animationClock)) >= 0.3) {
-		game->player.animation = !game->player.animation;
-		sfClock_restart(game->player.animationClock);
-	} else if (game->player.state == MOVING && sfTime_asSeconds(sfClock_getElapsedTime(game->player.stateClock)) >= 0.3) {
-		game->player.state = STATIC;
-		game->player.animation = 0;
+	if (player->movement.state == MOVING && sfTime_asSeconds(sfClock_getElapsedTime(player->movement.animationClock)) >= 0.3) {
+		player->movement.animation = !player->movement.animation;
+		sfClock_restart(player->movement.animationClock);
+	} else if (player->movement.state == MOVING && sfTime_asSeconds(sfClock_getElapsedTime(player->movement.stateClock)) >= 0.3) {
+		player->movement.state = STATIC;
+		player->movement.animation = 0;
 	}
-	if (game->player.life > 10 * game->player.maxLife) 
-		game->player.life = 10 * game->player.maxLife;
-	if (game->player.canMove)
+	if (player->stats.life > 10 * player->stats.lifeMax) 
+		player->stats.life = 10 * player->stats.lifeMax;
+	if (player->movement.canMove)
 		movePlayer(game);
-	if (game->player.pos.x + game->cam.x + 8 > 640) {
+	if (player->movement.pos.x + game->cam.x + 8 > 640) {
 		game->cam.x -= 640;
-	} else if (game->player.pos.x + game->cam.x + 8 < 0) {
+	} else if (player->movement.pos.x + game->cam.x + 8 < 0) {
 		game->cam.x += 640;
-	} else if (game->player.pos.y + game->cam.y - 16 > 480) {
+	} else if (player->movement.pos.y + game->cam.y - 16 > 480) {
 		game->cam.y -= 480;
-	} else if (game->player.pos.y + game->cam.y + 16 < 0) {
+	} else if (player->movement.pos.y + game->cam.y + 16 < 0) {
 		game->cam.y += 480;
 	}
 }

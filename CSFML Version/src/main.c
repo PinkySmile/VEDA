@@ -94,12 +94,14 @@ void	destroyStruct(game_t *game)
 		free(game->languages[i].items);
 		free(game->languages[i].name);
 	}
-	sfClock_destroy(game->player.animationClock);
-	sfClock_destroy(game->player.stateClock);
+	for (int i = 0; i < game->characters.length; i++) {
+		sfClock_destroy(((Character *)game->characters.content)[i].movement.animationClock);
+		sfClock_destroy(((Character *)game->characters.content)[i].movement.stateClock);
+	}
 	free(game->languages);
 }
 
-int	main()
+int	main(int argc, char *args)
 {
 	game_t	game;
 
@@ -107,7 +109,7 @@ int	main()
 	signal(2, &sighandler);
 	printf("%s: Initializating game\n", INFO);
 	initGame(&game);
-	game.debug = true;
+	game.debug = argc >= 2;
 	launchGame(&game);
 	saveSettings(&game);
 	destroyStruct(&game);

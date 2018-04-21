@@ -108,6 +108,18 @@ typedef struct {
 } Music_config;
 
 typedef struct {
+	int	id;
+	int	ability;
+	int	damages[DAMAGES_TYPE_NB];
+	double	resistances[DAMAGES_TYPE_NB];
+	double	durability;
+	double	baseResistances[DAMAGES_TYPE_NB];
+	double	baseDurability;
+	char	*name;
+	int	type;
+} Item;
+
+typedef struct {
 	char		*path;
 	sfVector2f	scale;
 	sfVector2i	size;
@@ -121,27 +133,49 @@ typedef struct {
 	bool	left;
 } Directions;
 
-typedef struct {
-	bool		isFemale;
-	int		animation;
-	int		position;
-	int		state;
-	sfVector2i	pos;
-	float		life;
-	int		maxLife;
+typedef	struct {
+	int		resistances[DAMAGES_TYPE_NB];
 	float		energy;
 	int		maxEnergy;
-	bool		canMove;
-	Directions	blocked;
-	sfClock		*animationClock;
-	sfClock		*stateClock;
+	float		life;
+	int		lifeMax;
 	int		energyClock;
 	sfClock		*energyRegenClock;
 	int		energyRegen;
 	float		energyUsedBySprint;
 	float		sprintSpeed;
 	int		timeBeforeEnergyUse;
-} Player;
+} Stats;
+
+typedef struct {
+	bool		canMove;
+	Directions	blocked;
+	sfVector2f	pos;
+	int		position;
+	int		state;
+	int		animation;
+	sfVector2f	pointToGo;
+	sfClock		*animationClock;
+	sfClock		*stateClock;
+} Movement;
+
+typedef struct {
+	int	dialogId;
+	int	dialogNum;
+	int	variante;
+} Dialog;
+
+typedef struct {
+	bool		isPlayer;
+	int		texture;
+	Movement	movement;
+	Stats		stats;
+	Array		inventory;
+	Item		wornItems[5];
+	int		damageDisplay[DAMAGES_TYPE_NB];
+	sfClock		*damageClock[DAMAGES_TYPE_NB];
+	Dialog		dialogs;
+} Character;
 
 typedef struct {
 	char	**buttons;
@@ -176,17 +210,6 @@ typedef struct {
 	void		(*callback)(game_t *, int);
 	bool		disabled;
 } Button_config;
-
-typedef struct {
-	int		texture;
-	int		dialog;
-	int		variante;
-	int		animation;
-	int		status;
-	sfVector2f	pos;
-	sfVector2f	pointToGo;
-	float		sprintSpeed;
-} Character;
 
 typedef struct {
 	char			*content;
@@ -238,7 +261,7 @@ struct game_s {
 	Array			fonts;
 	sfVector2f		baseScale;
 	sfVector2i		cam;
-	Player			player;
+	Array			characters;
 	Button			*buttons;
 	Icon			icon;
 	Language		*languages;
