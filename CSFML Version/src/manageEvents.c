@@ -13,6 +13,12 @@ void	manageEvents(game_t *game)
 					sfMusic_stop(((sfMusic **)game->musics.content)[i]);
 		} else if (event.type == sfEvtMouseButtonPressed) {
 			manage_mouse_click(game, event.mouseButton);
+		} else if (event.type == sfEvtKeyPressed) {
+			if (game->selected >= 0) {
+				game->settings.keys[game->selected - game->languagesConf.y - game->languagesConf.x] = event.key.code;
+				game->buttons[game->selected].content = getKeyString(event.key.code);
+				game->selected = -1;
+			}
 		}
 	}
 }

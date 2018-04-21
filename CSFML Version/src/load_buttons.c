@@ -35,7 +35,6 @@ void	disp_buttons(game_t *game)
 	if (game->text) {
 		sfText_setCharacterSize(game->text, 20);
 		sfText_setScale(game->text, game->baseScale);
-		sfText_setColor(game->text, (sfColor){0, 0, 0, 255});
 	}
 	for (int i = 0; buttons && buttons[i].content; i++) {
 		if (buttons[i].displayed && buttons[i].rect) {
@@ -79,6 +78,10 @@ void	disp_buttons(game_t *game)
 			        blue += 15;
 			        green += 15;
 			}
+			if (game->selected == i)
+				sfText_setColor(game->text, (sfColor){0, 125, 0, 255});
+			else
+				sfText_setColor(game->text, (sfColor){0, 0, 0, 255});
 			text(buttons[i].content, game, buttons[i].pos.x + 10, buttons[i].pos.y + 8);
 		}
 	}

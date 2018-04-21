@@ -101,7 +101,7 @@ void	destroyStruct(game_t *game)
 	free(game->languages);
 }
 
-int	main(int argc)
+int	main(int argc, char **args)
 {
 	game_t	game;
 
@@ -109,7 +109,7 @@ int	main(int argc)
 	signal(2, &sighandler);
 	printf("%s: Initializating game\n", INFO);
 	initGame(&game);
-	game.debug = argc >= 2;
+	game.debug = (argc == 2 && !strcmp("debug", args[1]));
 	launchGame(&game);
 	saveSettings(&game);
 	destroyStruct(&game);

@@ -33,6 +33,7 @@ void		manage_mouse_click(game_t *game, sfMouseButtonEvent event);
 Object		*loadLevel(char *path, char **bg_path);
 void		inGame(game_t *game);
 void		controls(game_t *game);
+char		*getKeyString(int keyID);
 
 //callbacks
 void		play_button(game_t *game, int buttonId);

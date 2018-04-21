@@ -132,6 +132,7 @@ void	initGame(game_t *game)
 		exit(EXIT_FAILURE);
 	}
 	game->characters.length = 1;
+	game->selected = -1;
 	player.movement.animationClock = sfClock_create();
 	player.movement.stateClock = sfClock_create();
 	player.stats.energyRegenClock = sfClock_create();
