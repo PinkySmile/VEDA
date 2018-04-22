@@ -3,14 +3,14 @@
 
 void	mainMenu(game_t *game)
 {
-	static float var = 1;
+	//static float var = 1;
 
-	var -= 0.0001 * var;
-	sfMusic_setPitch(((sfMusic **)game->musics.content)[MYSTERIOUS], var);
+	//var -= 0.0001 * var;
+	//sfMusic_setPitch(((sfMusic **)game->musics.content)[MAIN_MENU_MUSIC], var);
 	if (!sfRenderWindow_isOpen(game->window))
 		return;
-	if (((sfMusic **)game->musics.content)[MYSTERIOUS] && sfMusic_getStatus(((sfMusic **)game->musics.content)[MYSTERIOUS]) != sfPlaying)
-		sfMusic_play(((sfMusic **)game->musics.content)[MYSTERIOUS]);
+	if (((sfMusic **)game->musics.content)[MAIN_MENU_MUSIC] && sfMusic_getStatus(((sfMusic **)game->musics.content)[MAIN_MENU_MUSIC]) != sfPlaying)
+		sfMusic_play(((sfMusic **)game->musics.content)[MAIN_MENU_MUSIC]);
 	for (int i = 0; i < 640; i += ((Sprite *)game->sprites.content)[MENU_BACKGROUND].size.x) {
 		if (((Sprite *)game->sprites.content)[MENU_BACKGROUND].size.x == 0)
 			break;
