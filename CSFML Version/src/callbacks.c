@@ -167,6 +167,10 @@ void	controls(game_t *game)
 void	changeLanguage(game_t *game, int buttonID)
 {
 	strcpy(game->settings.lang_id, game->languages[buttonID - game->languagesConf.x].id);
+	for (int i = 0; game->buttons[i].content; i++) {
+		printf("%s: Destroying button %i\n", INFO, i);
+		sfRectangleShape_destroy(game->buttons[i].rect);
+	}
 	free(game->buttons);
 	game->buttons = loadButtons(game);
 	for (int i = 0; game->buttons[i].content; i++) {

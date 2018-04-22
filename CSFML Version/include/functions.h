@@ -31,6 +31,7 @@ int		getLanguage(Language *languages, char *lang_id);
 void		manage_mouse_click(game_t *game, sfMouseButtonEvent event);
 Object		*loadLevel(char *path, char **bg_path);
 char		*getKeyString(int keyID);
+void		setVolumes(Array sounds, float volume);
 
 //Menu functions
 void		mainMenu(game_t *game);
