@@ -1,6 +1,7 @@
 #include "structs.h"
 #include "functions.h"
 #include <stdlib.h>
+#include <stdio.h>
 
 
 void	setVolumes(Array sounds, float volume)
@@ -25,6 +26,7 @@ void	manageEvents(game_t *game)
 		} else if (event.type == sfEvtMouseButtonPressed) {
 			manage_mouse_click(game, event.mouseButton);
 		} else if (event.type == sfEvtJoystickMoved) {
+			printf("%s: Joystick moved to %f arround axis %i on joystick %i\n", INFO, event.joystickMove.position, event.joystickMove.axis, event.joystickMove.joystickId);
 			if (game->selected >= 0 && game->menu == 2) {
 				for (int i = 0; i < 4; i++) {
 					if (game->settings.keys[i] >= 105)
@@ -36,6 +38,7 @@ void	manageEvents(game_t *game)
 				game->selected = -1;
 			}
 		} else if (event.type == sfEvtJoystickButtonPressed) {
+			printf("%s: Button %i pressed on joystick %i\n", INFO, event.joystickButton.button, event.joystickButton.joystickId);
 			if (game->selected >= 0 && game->menu == 2) {
 				if (game->settings.keys[game->selected - game->languagesConf.y - game->languagesConf.x] >= 105)
 					free(game->buttons[game->selected].content);
