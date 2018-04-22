@@ -31,6 +31,15 @@ void	manage_mouse_click(game_t *game, sfMouseButtonEvent event)
 	sfVector2f	pos = {event.x, event.y};
 
 	printf("%s: Mouse click at position (%i, %i)\n", INFO, event.x, event.y);
+	if (game->menu == 3) {
+		if (pos.x >= 140 * game->baseScale.x && pos.x <= 440 * game->baseScale.x && pos.y >= 4 * game->baseScale.y && pos.y <= 44 * game->baseScale.y) {
+			game->selected = 1;
+			printf("%s: Clicked on sfx volume control\n", INFO);
+		} else if (pos.x >= 140 * game->baseScale.x && pos.x <= 440 * game->baseScale.x && pos.y >= 52 * game->baseScale.y && pos.y <= 92 * game->baseScale.y) {
+			game->selected = 2;
+			printf("%s: Clicked on music volume control\n", INFO);
+		}
+	}
 	if (event.button == sfMouseLeft)
 		which_button(pos, game);
 }

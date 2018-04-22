@@ -1,5 +1,6 @@
 #include "structs.h"
 #include "functions.h"
+#include "concatf.h"
 #include <stdlib.h>
 #include <string.h>
 
@@ -46,7 +47,15 @@ void	options_button(game_t *game, int buttonID)
 
 void	audio_button(game_t *game, int buttonID)
 {
-
+	(void)buttonID;
+	game->menu = 3;
+	game->selected = 0;
+	for (int i = 0; game->buttons[i].content; i++) {
+		game->buttons[i].active = false;
+		game->buttons[i].displayed = false;
+	}
+	game->buttons[9].active = true;
+	game->buttons[9].displayed = true;
 }
 
 void	lang_button(game_t *game, int buttonID)
@@ -92,6 +101,42 @@ void	settings_button(game_t *game, int buttonID)
 	}
 }
 
+void	audio(game_t *game)
+{
+	char	*nbrs[2];
+
+	for (int i = 0; i < 640; i += ((Sprite *)game->sprites.content)[MENU_BACKGROUND].size.x) {
+		if (((Sprite *)game->sprites.content)[MENU_BACKGROUND].size.x == 0)
+			break;
+		for (int j = 0; j < 640; j += ((Sprite *)game->sprites.content)[MENU_BACKGROUND].size.y) {
+			image(game, ((Sprite *)game->sprites.content)[MENU_BACKGROUND].sprite, i, j, -1, -1);
+			if (((Sprite *)game->sprites.content)[MENU_BACKGROUND].size.y == 0)
+				break;
+		}
+	}
+	sfRectangleShape_setFillColor(game->rectangle, (sfColor){100, 100, 100, 255});
+	rect(game, 0, 0, 512, 48);
+	rect(game, 0, 48, 512, 48);
+	rect(game, 0, 0, 512, 48);
+	rect(game, 0, 48, 512, 48);
+	sfRectangleShape_setFillColor(game->rectangle, (sfColor){255, 255, 255, 255});
+	rect(game, 140, 14, 300, 20);
+	rect(game, 140, 62, 300, 20);
+	sfRectangleShape_setFillColor(game->rectangle, (sfColor){255, 0, 0, 255});
+	rect(game, 130 + game->settings.sfxVolume * 3, 6, 20, 36);
+	rect(game, 130 + game->settings.musicVolume * 3, 54, 20, 36);
+	text("Sound effects", game, 5, 8);
+	text("Musics", game, 5, 56);
+	nbrs[0] = concatf("%i%%", game->settings.sfxVolume);
+	nbrs[1] = concatf("%i%%", game->settings.musicVolume);
+	if (nbrs[0])
+		text(nbrs[0], game, 455, 8);
+	if (nbrs[1])
+		text(nbrs[1], game, 455, 56);
+	free(nbrs[0]);
+	free(nbrs[1]);
+}
+
 void	controls(game_t *game)
 {
 	for (int i = 0; i < 640; i += ((Sprite *)game->sprites.content)[MENU_BACKGROUND].size.x) {
@@ -106,7 +151,7 @@ void	controls(game_t *game)
 	if (getLanguage(game->languages, game->settings.lang_id) < 0 || game->languages[getLanguage(game->languages, game->settings.lang_id)].keys == NULL)
 		return;
 	for (int i = 0; game->languages[getLanguage(game->languages, game->settings.lang_id)].keys[i] && i < NB_OF_KEYS; i++) {
-		sfRectangleShape_setFillColor(game->rectangle, (sfColor){50, 50, 50, 255});
+		sfRectangleShape_setFillColor(game->rectangle, (sfColor){100, 100, 100, 255});
 		rect(game, i / 10 * 272, i % 10 * 48, 272, 48);
 		sfText_setCharacterSize(game->text, 17);
 		sfText_setColor(game->text, (sfColor){255, 255, 255, 255});

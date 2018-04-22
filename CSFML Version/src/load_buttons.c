@@ -360,8 +360,9 @@ Button	*loadButtons(game_t *game)
 		config.callback = &changeKey;
 		config.disabled = false;
 		buttons[i + len + langs] = create_button(config, game, false);
+		buttons[i + len + langs].content = "";
 	}
-	buttons[len + langs].content = NULL;
+	buttons[len + langs + NB_OF_KEYS].content = NULL;
 	printf("%s: Buttons loaded !\n", INFO);
 	return (buttons);
 }

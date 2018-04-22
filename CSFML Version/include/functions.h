@@ -11,7 +11,6 @@ char		*concat(char *str1, char *str2, bool free1, bool free2);
 void		launchGame(game_t *game);
 void		manageEvents(game_t *game);
 void		image(game_t *game, sfSprite *sprite, int x, int y, int width, int height);
-void		mainMenu(game_t *game);
 Array		loadMusics(game_t *game);
 Array		loadSprites(game_t *game);
 Array		loadSfx(game_t *game);
@@ -31,9 +30,13 @@ Language	*loadLanguages(game_t *game);
 int		getLanguage(Language *languages, char *lang_id);
 void		manage_mouse_click(game_t *game, sfMouseButtonEvent event);
 Object		*loadLevel(char *path, char **bg_path);
+char		*getKeyString(int keyID);
+
+//Menu functions
+void		mainMenu(game_t *game);
 void		inGame(game_t *game);
 void		controls(game_t *game);
-char		*getKeyString(int keyID);
+void		audio(game_t *game);
 
 //callbacks
 void		play_button(game_t *game, int buttonId);

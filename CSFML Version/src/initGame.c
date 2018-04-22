@@ -92,7 +92,7 @@ void	initGame(game_t *game)
 		style = sfNone;
 		mode = sfVideoMode_getDesktopMode();
 	} else
-		style = sfDefaultStyle;
+		style = sfTitlebar | sfClose;
 	game->baseScale.x = (float)mode.width / 640.0;
 	game->baseScale.y = (float)mode.height / 480.0;
 	if (image)
@@ -147,15 +147,19 @@ void	initGame(game_t *game)
 	player.movement.canMove = true;
 	player.isPlayer = true;
 	player.texture = 0;
+	strcpy(player.name, game->settings.playerName);
 	for (int i = 0; i < DAMAGES_TYPE_NB; i++)
 		player.damageClock[i] = sfClock_create();
 	((Character *)game->characters.content)[0] = player;
 	game->fonts = loadFonts(game);
 	game->sprites = loadSprites(game);
 	game->musics = loadMusics(game);
+	setVolumes(game->musics, game->settings.musicVolume);
 	game->sfx = loadSfx(game);
+	setVolumes(game->sfx, game->settings.sfxVolume);
 	game->languages = loadLanguages(game);
 	game->buttons = loadButtons(game);
 	sfRenderWindow_setFramerateLimit(game->window, 60);
+	//sfMusic_setPitch(((sfMusic **)game->musics.content)[MAIN_MENU_MUSIC], 0.1);
 	free(title);
 }

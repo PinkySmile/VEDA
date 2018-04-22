@@ -172,6 +172,7 @@ typedef struct {
 	Stats		stats;
 	Array		inventory;
 	Item		wornItems[5];
+	char		name[16];
 	int		damageDisplay[DAMAGES_TYPE_NB];
 	sfClock		*damageClock[DAMAGES_TYPE_NB];
 	Dialog		dialogs;
@@ -192,6 +193,7 @@ typedef struct {
 	sfVector2i	windowSize;
 	char		keys[NB_OF_KEYS];
 	char		lang_id[256];
+	char		playerName[16];
 } Settings;
 
 typedef struct {

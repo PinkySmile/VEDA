@@ -42,10 +42,12 @@ CFLAGS= $(INC) \
 
 CC =	gcc
 
+RULE =	all
+
 all:    $(NAME)
 
 $(NAME):$(OBJ)
-	$(MAKE) -C lib/concatf
+	$(MAKE) -C lib/concatf $(RULE)
 	$(CC) -o $(NAME) $(OBJ) $(LDFLAGS)
 
 clean:
@@ -59,6 +61,7 @@ fclean:	clean
 re:	fclean all
 
 dbg:	CFLAGS += -g -O0
+dbg:	RULE = dbg
 dbg:	re
 
 epi:	LDFLAGS = -lc_graph_prog -lm -lconcatf -L lib/concatf

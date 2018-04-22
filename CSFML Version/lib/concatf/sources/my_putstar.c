@@ -11,7 +11,7 @@
 
 char	*my_putstarfloat(double *nbr, int format, int format_size)
 {
-	return (float_to_str(*nbr, 6));
+	return (float_to_str(*nbr, 2));
 }
 
 char	*my_putstarint(int *nbr, int format, int format_size)

@@ -20,7 +20,7 @@ OBJ =	$(SRC:.c=.o)
 
 INC =	-Iinclude
 
-CFLAGS=	$(INC) -g
+CFLAGS=	$(INC)
 
 CC =	gcc
 
@@ -36,3 +36,6 @@ fclean:	clean
 	$(RM) $(NAME)
 
 re:	fclean all
+
+dbg:	CFLAGS += -g -O0
+dbg:	re
