@@ -6,6 +6,7 @@
 #include "structs.h"
 #include "macros.h"
 #include "functions.h"
+#include "concatf.h"
 
 char	*getButtonContent(int nameId, game_t *game)
 {
@@ -315,7 +316,17 @@ char	*getKeyString(int keyID)
 		return ("F15");
 	case (int)sfKeyPause:
 		return ("Pause");
+	case 101:
+		return ("Joystick Up");
+	case 102:
+		return ("Joystick Down");
+	case 103:
+		return ("Joystick Left");
+	case 104:
+		return ("Joystick Right");
 	default:
+		if (keyID >= 105)
+			return (concatf("Joystick %i", keyID - 105));
 		return ("Unknown key");
 	}
 }

@@ -112,6 +112,9 @@ void	destroyStruct(game_t *game)
 		for (int j = 0; j < DAMAGES_TYPE_NB; j++)
 			sfClock_destroy(((Character *)game->characters.content)[i].damageClock[j]);
 	}
+	for (int i = 0; i < NB_OF_KEYS; i++)
+		if (game->settings.keys[i] >= 105)
+			free(game->buttons[i + game->languagesConf.y + game->languagesConf.x].content);
 	free(game->characters.content);
 	free(game->languages);
 }

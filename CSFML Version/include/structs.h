@@ -272,6 +272,7 @@ struct game_s {
 	sfVector2i		languagesConf;
 	bool			debug;
 	int			selected;
+	float			var;
 };
 
 #endif

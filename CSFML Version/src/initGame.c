@@ -160,6 +160,7 @@ void	initGame(game_t *game)
 	game->languages = loadLanguages(game);
 	game->buttons = loadButtons(game);
 	sfRenderWindow_setFramerateLimit(game->window, 60);
-	//sfMusic_setPitch(((sfMusic **)game->musics.content)[MAIN_MENU_MUSIC], 0.1);
+	game->var = 1;
+	sfMusic_setPitch(((sfMusic **)game->musics.content)[MAIN_MENU_MUSIC], 1);
 	free(title);
 }
