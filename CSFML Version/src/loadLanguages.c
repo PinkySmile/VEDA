@@ -19,7 +19,7 @@ int	getLanguage(Language *languages, char *lang_id)
 void	loadButtonsNames(char *path_buffer, Language *language)
 {
 	char	*buffer = NULL;
-	size_t	n = 0;
+	size_t	n = 1;
 	int	len = 1;
 	FILE	*stream;
 	
@@ -33,14 +33,14 @@ void	loadButtonsNames(char *path_buffer, Language *language)
 		printf("%s: Couldn't open file %s (%s)\n", ERROR, buffer, strerror(errno));
 		language->buttons = NULL;
 	} else {
-		n = 0;
+		n = 1;
 		language->buttons = malloc(sizeof(*language->buttons));
 		if (!language->buttons) {
 			printf("%s: Couldn't allocate %liB\n", FATAL, sizeof(*language->buttons));
 			exit(EXIT_FAILURE);
 		}
-		language->buttons[0] = NULL;
-		for (len = 0; getline(&language->buttons[len], &n, stream) >= 0; len++, n = 0) {
+		language->buttons[0] = malloc(1);
+		for (len = 0; getline(&language->buttons[len], &n, stream) >= 0; len++, n = 1) {
 			language->buttons = realloc(language->buttons, sizeof(*language->buttons) * (len + 3));
 			if (!language->buttons) {
 				printf("%s: Couldn't allocate %liB\n", FATAL, sizeof(*language->buttons) * (len + 3));
@@ -48,7 +48,7 @@ void	loadButtonsNames(char *path_buffer, Language *language)
 			}
 			if (language->buttons[len] && language->buttons[len][strlen(language->buttons[len]) - 1] == '\n')
 				language->buttons[len][strlen(language->buttons[len]) - 1] = 0;
-			language->buttons[len + 1] = NULL;
+			language->buttons[len + 1] = malloc(1);
 		}
 		language->buttons[len + 1] = NULL;
 		fclose(stream);
@@ -59,7 +59,7 @@ void	loadButtonsNames(char *path_buffer, Language *language)
 void	loadItemsNames(char *path_buffer, Language *language)
 {
 	char	*buffer = NULL;
-	size_t	n = 0;
+	size_t	n = 1;
 	int	len = 1;
 	FILE	*stream;
 	
@@ -73,10 +73,10 @@ void	loadItemsNames(char *path_buffer, Language *language)
 		printf("%s: Couldn't open file %s (%s)\n", ERROR, buffer, strerror(errno));
 		language->items = NULL;
 	} else {
-		n = 0;
+		n = 1;
 		language->items = malloc(sizeof(*language->items));
-		language->items[0] = NULL;
-		for (len = 0; getline(&language->items[len], &n, stream) >= 0; len++, n = 0) {
+		language->items[0] = malloc(1);
+		for (len = 0; getline(&language->items[len], &n, stream) >= 0; len++, n = 1) {
 			language->items = realloc(language->items, sizeof(*language->items) * (len + 3));
 			if (!language->items) {
 				printf("%s: Couldn't allocate %liB\n", FATAL, sizeof(*language->items) * (len + 3));
@@ -84,7 +84,7 @@ void	loadItemsNames(char *path_buffer, Language *language)
 			}
 			if (language->items[len] && language->items[len][strlen(language->items[len]) - 1] == '\n')
 				language->items[len][strlen(language->items[len]) - 1] = 0;
-			language->items[len + 1] = NULL;
+			language->items[len + 1] = malloc(1);
 		}
 		language->items[len + 1] = NULL;
 		fclose(stream);
@@ -95,7 +95,7 @@ void	loadItemsNames(char *path_buffer, Language *language)
 void	loadKeysNames(char *path_buffer, Language *language)
 {
 	char	*buffer = NULL;
-	size_t	n = 0;
+	size_t	n = 1;
 	int	len = 1;
 	FILE	*stream;
 	
@@ -109,10 +109,10 @@ void	loadKeysNames(char *path_buffer, Language *language)
 		printf("%s: Couldn't open file %s (%s)\n", ERROR, buffer, strerror(errno));
 		language->keys = NULL;
 	} else {
-		n = 0;
+		n = 1;
 		language->keys = malloc(sizeof(*language->keys));
-		language->keys[0] = NULL;
-		for (len = 0; getline(&language->keys[len], &n, stream) >= 0; len++, n = 0) {
+		language->keys[0] = malloc(1);
+		for (len = 0; getline(&language->keys[len], &n, stream) >= 0; len++, n = 1) {
 			language->keys = realloc(language->keys, sizeof(*language->keys) * (len + 3));
 			if (!language->keys) {
 				printf("%s: Couldn't allocate %liB\n", FATAL, sizeof(*language->keys) * (len + 3));
@@ -120,7 +120,7 @@ void	loadKeysNames(char *path_buffer, Language *language)
 			}
 			if (language->keys[len] && language->keys[len][strlen(language->keys[len]) - 1] == '\n')
 				language->keys[len][strlen(language->keys[len]) - 1] = 0;
-			language->keys[len + 1] = NULL;
+			language->keys[len + 1] = malloc(1);
 		}
 		language->keys[len + 1] = NULL;
 		fclose(stream);

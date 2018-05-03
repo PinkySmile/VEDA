@@ -35,10 +35,10 @@ LDFLAGS =			\
 	-lconcatf		\
 	-L lib/concatf		\
 
-CFLAGS= $(INC) \
-	-W \
-	-Wall \
-	-Wextra \
+CFLAGS= $(INC)	\
+	-W	\
+	-Wall	\
+	-Wextra	\
 
 CC =	gcc
 

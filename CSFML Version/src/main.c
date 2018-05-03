@@ -8,6 +8,13 @@
 #include "functions.h"
 #include "macros.h"
 
+#ifndef SIGBUS
+#define SIGBUS 7
+#endif
+#ifndef SIGQUIT
+#define SIGQUIT 3
+#endif
+
 sfRenderWindow	**window;
 
 char	*strsignal(int signum)
@@ -44,11 +51,21 @@ char	*strsignal(int signum)
 
 void	sighandler(int signum)
 {
-	if (*window)
-		sfRenderWindow_close(*window);
-	else
-		exit(EXIT_SUCCESS);
-	printf("%s: Caught signal %i (%s). Exiting.\n", INFO, signum, strsignal(signum));
+	if (signum == SIGINT || signum == SIGTERM) {
+		if (*window)
+			sfRenderWindow_close(*window);
+		else
+			exit(EXIT_SUCCESS);
+		printf("%s: Caught signal %i (%s). Exiting.\n", INFO, signum, strsignal(signum));
+	} else {
+		printf("%s: Caught signal %i (%s). Aborting !\n", FATAL, signum, strsignal(signum));
+		signal(signum, NULL);
+		raise(signum);
+		exit(EXIT_FAILURE); //In case the crash trashed the raise function
+		exit(128 + signum); //In case the first one fail
+		signal(11, NULL);
+		*(char *)NULL = *(char *)NULL; //Let's do this kernel. Come on, I wait you !
+	}
 }
 
 void	destroyStruct(game_t *game)
@@ -90,7 +107,6 @@ void	destroyStruct(game_t *game)
 		printf("%s: Destroying button %i\n", INFO, i);
 		sfRectangleShape_destroy(game->buttons[i].rect);
 	}
-	free(game->buttons);
 	for (int i = 0; game->languages && game->languages[i].name; i++) {
 		printf("%s: Destroying language %i (%s)\n", INFO, i, game->languages[i].name);
 		for (int j = 0; game->languages[i].buttons && game->languages[i].buttons[j]; j++)
@@ -115,6 +131,7 @@ void	destroyStruct(game_t *game)
 	for (int i = 0; i < NB_OF_KEYS; i++)
 		if (game->settings.keys[i] >= 105)
 			free(game->buttons[i + game->languagesConf.y + game->languagesConf.x].content);
+	free(game->buttons);
 	free(game->characters.content);
 	free(game->languages);
 }
@@ -124,7 +141,15 @@ int	main(int argc, char **args)
 	game_t	game;
 
 	window = & game.window;
-	signal(2, &sighandler);
+	signal(SIGINT, &sighandler);
+	signal(SIGQUIT, &sighandler);
+	signal(SIGILL, &sighandler);
+	signal(SIGABRT, &sighandler);
+	signal(SIGBUS, &sighandler);
+	signal(SIGFPE, &sighandler);
+	signal(SIGSEGV, &sighandler);
+	signal(SIGTERM, &sighandler);
+	signal(11, &sighandler);
 	printf("%s: Initializating game\n", INFO);
 	initGame(&game);
 	game.debug = (argc == 2 && !strcmp("debug", args[1]));

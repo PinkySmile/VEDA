@@ -37,6 +37,8 @@ void	changeKey(game_t *game, int buttonID)
 	if (game->selected >= 0)
 		game->buttons[game->selected].content = getKeyString(game->settings.keys[game->selected - game->languagesConf.y - game->languagesConf.x]);
 	game->selected = buttonID;
+	if (game->settings.keys[game->selected - game->languagesConf.y - game->languagesConf.x] >= 105)
+		free(game->buttons[game->selected].content);
 	game->buttons[game->selected].content = "<Press a key>";
 }
 
