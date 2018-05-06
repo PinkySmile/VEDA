@@ -3,6 +3,7 @@
 #include "concatf.h"
 #include <stdlib.h>
 #include <string.h>
+#include <stdio.h>
 
 void	back_on_title_screen(game_t *game, int buttonID)
 {
@@ -37,7 +38,7 @@ void	changeKey(game_t *game, int buttonID)
 	if (game->selected >= 0)
 		game->buttons[game->selected].content = getKeyString(game->settings.keys[game->selected - game->languagesConf.y - game->languagesConf.x]);
 	game->selected = buttonID;
-	if (game->settings.keys[game->selected - game->languagesConf.y - game->languagesConf.x] >= 105)
+	if (game->settings.keys[game->selected - game->languagesConf.y - game->languagesConf.x] >= 101 && (game->settings.keys[game->selected - game->languagesConf.y - game->languagesConf.x] < 201 || game->settings.keys[game->selected - game->languagesConf.y - game->languagesConf.x] > 204))
 		free(game->buttons[game->selected].content);
 	game->buttons[game->selected].content = "<Press a key>";
 }
@@ -77,6 +78,7 @@ void	lang_button(game_t *game, int buttonID)
 
 void	controls_button(game_t *game, int buttonID)
 {
+	(void)buttonID;
 	game->selected = -1;
 	for (int i = 0; game->buttons[i].content; i++) {
 		game->buttons[i].active = false;
@@ -157,11 +159,14 @@ void	controls(game_t *game)
 		rect(game, i / 10 * 272, i % 10 * 48, 272, 48);
 		sfText_setCharacterSize(game->text, 17);
 		sfText_setColor(game->text, (sfColor){255, 255, 255, 255});
-		for (int j = 0; j < NB_OF_KEYS; j++)
-			if ((j != i && game->settings.keys[j] == game->settings.keys[i]) || game->settings.keys[j] == -1) {
-				sfText_setColor(game->text, (sfColor){255, 0, 0, 255});
-				break;
-			}
+		if (game->settings.keys[i] == (unsigned char)-1)
+			sfText_setColor(game->text, (sfColor){0, 0, 0, 255});
+		else
+			for (int j = 0; j < NB_OF_KEYS; j++)
+				if ((j != i && game->settings.keys[j] == game->settings.keys[i])) {
+					sfText_setColor(game->text, (sfColor){255, 0, 0, 255});
+					break;
+				}
 		text(game->languages[getLanguage(game->languages, game->settings.lang_id)].keys[i], game, 5 + i / 10 * 272, i % 10 * 48 + 15);
 	}
 }

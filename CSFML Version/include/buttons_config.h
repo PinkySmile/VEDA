@@ -80,7 +80,7 @@ const Button_config	button_config[] = {
 	},
 	{
 		BACK,
-		{530, 430},
+		{540, 440},
 		{100, 40},
 		{205, 205, 205, 255},
 		&back_on_title_screen,

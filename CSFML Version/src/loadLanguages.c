@@ -36,14 +36,14 @@ void	loadButtonsNames(char *path_buffer, Language *language)
 		n = 1;
 		language->buttons = malloc(sizeof(*language->buttons));
 		if (!language->buttons) {
-			printf("%s: Couldn't allocate %liB\n", FATAL, sizeof(*language->buttons));
+			printf("%s: Couldn't allocate %liB\n", FATAL, (long)sizeof(*language->buttons));
 			exit(EXIT_FAILURE);
 		}
 		language->buttons[0] = malloc(1);
 		for (len = 0; getline(&language->buttons[len], &n, stream) >= 0; len++, n = 1) {
 			language->buttons = realloc(language->buttons, sizeof(*language->buttons) * (len + 3));
 			if (!language->buttons) {
-				printf("%s: Couldn't allocate %liB\n", FATAL, sizeof(*language->buttons) * (len + 3));
+				printf("%s: Couldn't allocate %liB\n", FATAL, (long)sizeof(*language->buttons) * (len + 3));
 				exit(EXIT_FAILURE);
 			}
 			if (language->buttons[len] && language->buttons[len][strlen(language->buttons[len]) - 1] == '\n')
@@ -79,7 +79,7 @@ void	loadItemsNames(char *path_buffer, Language *language)
 		for (len = 0; getline(&language->items[len], &n, stream) >= 0; len++, n = 1) {
 			language->items = realloc(language->items, sizeof(*language->items) * (len + 3));
 			if (!language->items) {
-				printf("%s: Couldn't allocate %liB\n", FATAL, sizeof(*language->items) * (len + 3));
+				printf("%s: Couldn't allocate %liB\n", FATAL, (long)sizeof(*language->items) * (len + 3));
 				exit(EXIT_FAILURE);
 			}
 			if (language->items[len] && language->items[len][strlen(language->items[len]) - 1] == '\n')
@@ -115,7 +115,7 @@ void	loadKeysNames(char *path_buffer, Language *language)
 		for (len = 0; getline(&language->keys[len], &n, stream) >= 0; len++, n = 1) {
 			language->keys = realloc(language->keys, sizeof(*language->keys) * (len + 3));
 			if (!language->keys) {
-				printf("%s: Couldn't allocate %liB\n", FATAL, sizeof(*language->keys) * (len + 3));
+				printf("%s: Couldn't allocate %liB\n", FATAL, (long)sizeof(*language->keys) * (len + 3));
 				exit(EXIT_FAILURE);
 			}
 			if (language->keys[len] && language->keys[len][strlen(language->keys[len]) - 1] == '\n')
@@ -190,7 +190,7 @@ Language	*loadLanguages(game_t *game)
 			len++;
 			paths = realloc(paths, sizeof(*paths) * (len + 1));
 			if (!paths) {
-				printf("%s: Couldn't allocate %liB\n", FATAL, sizeof(*paths) * len);
+				printf("%s: Couldn't allocate %liB\n", FATAL, (long)sizeof(*paths) * len);
 				exit(EXIT_FAILURE);
 			}
 			paths[len - 1] = strdup(dirEntry->d_name);
@@ -200,7 +200,7 @@ Language	*loadLanguages(game_t *game)
 		return (NULL);
 	languages = malloc(sizeof(*languages) * (len + 1));
 	if (!languages) {
-		printf("%s: Couldn't allocate %liB\n", FATAL, sizeof(*languages) * (len + 1));
+		printf("%s: Couldn't allocate %liB\n", FATAL, (long)sizeof(*languages) * (len + 1));
 		exit(EXIT_FAILURE);
 	}
 	printf("%s: Loading %i languages\n", INFO, len);

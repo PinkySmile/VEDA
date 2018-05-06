@@ -97,7 +97,7 @@ Object	*loadLevel(char *path, char **bg)
 	}
 	file_buffer = malloc(buffer.st_size + 1);
 	if (!file_buffer) {
-		printf("Error: Couldn't allocate %liB", (long)(buffer.st_size + 1));
+		printf("Error: Couldn't allocate %liB", (long)buffer.st_size + 1);
 		exit(EXIT_FAILURE);
 	}
 	fd = open(path, O_RDONLY);
@@ -116,7 +116,7 @@ Object	*loadLevel(char *path, char **bg)
 	for (int i = 1; lines[i] && strcmp(lines[i], ""); i += (9 + DAMAGES_TYPE_NB)) {
 		objs = realloc(objs, sizeof(*objs) * (i / (9 + DAMAGES_TYPE_NB) + 2));
 		if (!objs) {
-			printf("%s: Couldn't allocate %liB", FATAL, sizeof(*objs) * (i / (9 + DAMAGES_TYPE_NB) + 2));
+			printf("%s: Couldn't allocate %liB", FATAL, (long)sizeof(*objs) * (i / (9 + DAMAGES_TYPE_NB) + 2));
 			exit(EXIT_FAILURE);
 		}
 		memset(&objs[i / (9 + DAMAGES_TYPE_NB)], 0, sizeof(*objs));

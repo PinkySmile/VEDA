@@ -109,225 +109,225 @@ Button	create_button(Button_config config, game_t *game, bool createName)
 	return (button);
 }
 
-char	*getKeyString(int keyID)
+char	*getKeyString(unsigned char keyID)
 {
 	switch (keyID) {
-	case (int)sfKeyUnknown:
-		return ("Unknown key");
-	case (int)sfKeyA:
+	case (unsigned char)sfKeyUnknown:
+		return ("None");
+	case (unsigned char)sfKeyA:
 		return ("A");
-	case (int)sfKeyB:
+	case (unsigned char)sfKeyB:
 		return ("B");
-	case (int)sfKeyC:
+	case (unsigned char)sfKeyC:
 		return ("C");
-	case (int)sfKeyD:
+	case (unsigned char)sfKeyD:
 		return ("D");
-	case (int)sfKeyE:
+	case (unsigned char)sfKeyE:
 		return ("E");
-	case (int)sfKeyF:
+	case (unsigned char)sfKeyF:
 		return ("F");
-	case (int)sfKeyG:
+	case (unsigned char)sfKeyG:
 		return ("G");
-	case (int)sfKeyH:
+	case (unsigned char)sfKeyH:
 		return ("H");
-	case (int)sfKeyI:
+	case (unsigned char)sfKeyI:
 		return ("I");
-	case (int)sfKeyJ:
+	case (unsigned char)sfKeyJ:
 		return ("J");
-	case (int)sfKeyK:
+	case (unsigned char)sfKeyK:
 		return ("K");
-	case (int)sfKeyL:
+	case (unsigned char)sfKeyL:
 		return ("L");
-	case (int)sfKeyM:
+	case (unsigned char)sfKeyM:
 		return ("M");
-	case (int)sfKeyN:
+	case (unsigned char)sfKeyN:
 		return ("N");
-	case (int)sfKeyO:
+	case (unsigned char)sfKeyO:
 		return ("O");
-	case (int)sfKeyP:
+	case (unsigned char)sfKeyP:
 		return ("P");
-	case (int)sfKeyQ:
+	case (unsigned char)sfKeyQ:
 		return ("Q");
-	case (int)sfKeyR:
+	case (unsigned char)sfKeyR:
 		return ("R");
-	case (int)sfKeyS:
+	case (unsigned char)sfKeyS:
 		return ("S");
-	case (int)sfKeyT:
+	case (unsigned char)sfKeyT:
 		return ("T");
-	case (int)sfKeyU:
+	case (unsigned char)sfKeyU:
 		return ("U");
-	case (int)sfKeyV:
+	case (unsigned char)sfKeyV:
 		return ("V");
-	case (int)sfKeyW:
+	case (unsigned char)sfKeyW:
 		return ("W");
-	case (int)sfKeyX:
+	case (unsigned char)sfKeyX:
 		return ("X");
-	case (int)sfKeyY:
+	case (unsigned char)sfKeyY:
 		return ("Y");
-	case (int)sfKeyZ:
+	case (unsigned char)sfKeyZ:
 		return ("Z");
-	case (int)sfKeyNum0:
+	case (unsigned char)sfKeyNum0:
 		return ("0");
-	case (int)sfKeyNum1:
+	case (unsigned char)sfKeyNum1:
 		return ("1");
-	case (int)sfKeyNum2:
+	case (unsigned char)sfKeyNum2:
 		return ("2");
-	case (int)sfKeyNum3:
+	case (unsigned char)sfKeyNum3:
 		return ("3");
-	case (int)sfKeyNum4:
+	case (unsigned char)sfKeyNum4:
 		return ("4");
-	case (int)sfKeyNum5:
+	case (unsigned char)sfKeyNum5:
 		return ("5");
-	case (int)sfKeyNum6:
+	case (unsigned char)sfKeyNum6:
 		return ("6");
-	case (int)sfKeyNum7:
+	case (unsigned char)sfKeyNum7:
 		return ("7");
-	case (int)sfKeyNum8:
+	case (unsigned char)sfKeyNum8:
 		return ("8");
-	case (int)sfKeyNum9:
+	case (unsigned char)sfKeyNum9:
 		return ("9");
-	case (int)sfKeyEscape:
+	case (unsigned char)sfKeyEscape:
 		return ("Esc");
-	case (int)sfKeyLControl:
+	case (unsigned char)sfKeyLControl:
 		return ("Left CTRL");
-	case (int)sfKeyRControl:
+	case (unsigned char)sfKeyRControl:
 		return ("Right CTRL");
-	case (int)sfKeyLShift:
+	case (unsigned char)sfKeyLShift:
 		return ("Left Shift");
-	case (int)sfKeyRShift:
+	case (unsigned char)sfKeyRShift:
 		return ("Right Shift");
-	case (int)sfKeyLAlt:
+	case (unsigned char)sfKeyLAlt:
 		return ("Left Alt");
-	case (int)sfKeyRAlt:
+	case (unsigned char)sfKeyRAlt:
 		return ("Right Alt");
-	case (int)sfKeyLSystem:
+	case (unsigned char)sfKeyLSystem:
 		return ("Left OS Key");
-	case (int)sfKeyRSystem:
+	case (unsigned char)sfKeyRSystem:
 		return ("Right OS Key");
-	case (int)sfKeyMenu:
+	case (unsigned char)sfKeyMenu:
 		return ("Menu");
-	case (int)sfKeyLBracket:
+	case (unsigned char)sfKeyLBracket:
 		return ("[");
-	case (int)sfKeyRBracket:
+	case (unsigned char)sfKeyRBracket:
 		return ("]");
-	case (int)sfKeySemiColon:
+	case (unsigned char)sfKeySemiColon:
 		return (";");
-	case (int)sfKeyComma:
+	case (unsigned char)sfKeyComma:
 		return (",");
-	case (int)sfKeyPeriod:
+	case (unsigned char)sfKeyPeriod:
 		return (".");
-	case (int)sfKeyQuote:
+	case (unsigned char)sfKeyQuote:
 		return ("'");
-	case (int)sfKeySlash:
+	case (unsigned char)sfKeySlash:
 		return ("/");
-	case (int)sfKeyBackSlash:
+	case (unsigned char)sfKeyBackSlash:
 		return ("\\");
-	case (int)sfKeyTilde:
+	case (unsigned char)sfKeyTilde:
 		return ("~");
-	case (int)sfKeyEqual:
+	case (unsigned char)sfKeyEqual:
 		return ("=");
-	case (int)sfKeyDash:
+	case (unsigned char)sfKeyDash:
 		return ("-");
-	case (int)sfKeySpace:
+	case (unsigned char)sfKeySpace:
 		return ("Space");
-	case (int)sfKeyReturn:
+	case (unsigned char)sfKeyReturn:
 		return ("Return");
-	case (int)sfKeyBack:
+	case (unsigned char)sfKeyBack:
 		return ("Backspace");
-	case (int)sfKeyTab:
+	case (unsigned char)sfKeyTab:
 		return ("Tab");
-	case (int)sfKeyPageUp:
+	case (unsigned char)sfKeyPageUp:
 		return ("Page Up");
-	case (int)sfKeyPageDown:
+	case (unsigned char)sfKeyPageDown:
 		return ("Page Down");
-	case (int)sfKeyEnd:
+	case (unsigned char)sfKeyEnd:
 		return ("End");
-	case (int)sfKeyHome:
+	case (unsigned char)sfKeyHome:
 		return ("Home");
-	case (int)sfKeyInsert:
+	case (unsigned char)sfKeyInsert:
 		return ("Insert");
-	case (int)sfKeyDelete:
+	case (unsigned char)sfKeyDelete:
 		return ("Del");
-	case (int)sfKeyAdd:
+	case (unsigned char)sfKeyAdd:
 		return ("+");
-	case (int)sfKeySubtract:
+	case (unsigned char)sfKeySubtract:
 		return ("Minus");
-	case (int)sfKeyMultiply:
+	case (unsigned char)sfKeyMultiply:
 		return ("*");
-	case (int)sfKeyDivide:
+	case (unsigned char)sfKeyDivide:
 		return ("Divide");
-	case (int)sfKeyLeft:
+	case (unsigned char)sfKeyLeft:
 		return ("Left Arrow");
-	case (int)sfKeyRight:
+	case (unsigned char)sfKeyRight:
 		return ("Right Arrow");
-	case (int)sfKeyUp:
+	case (unsigned char)sfKeyUp:
 		return ("Up Arrow");
-	case (int)sfKeyDown:
+	case (unsigned char)sfKeyDown:
 		return ("Down Arrow");
-	case (int)sfKeyNumpad0:
+	case (unsigned char)sfKeyNumpad0:
 		return ("Pad 0");
-	case (int)sfKeyNumpad1:
+	case (unsigned char)sfKeyNumpad1:
 		return ("Pad 1");
-	case (int)sfKeyNumpad2:
+	case (unsigned char)sfKeyNumpad2:
 		return ("Pad 2");
-	case (int)sfKeyNumpad3:
+	case (unsigned char)sfKeyNumpad3:
 		return ("Pad 3");
-	case (int)sfKeyNumpad4:
+	case (unsigned char)sfKeyNumpad4:
 		return ("Pad 4");
-	case (int)sfKeyNumpad5:
+	case (unsigned char)sfKeyNumpad5:
 		return ("Pad 5");
-	case (int)sfKeyNumpad6:
+	case (unsigned char)sfKeyNumpad6:
 		return ("Pad 6");
-	case (int)sfKeyNumpad7:
+	case (unsigned char)sfKeyNumpad7:
 		return ("Pad 7");
-	case (int)sfKeyNumpad8:
+	case (unsigned char)sfKeyNumpad8:
 		return ("Pad 8");
-	case (int)sfKeyNumpad9:
+	case (unsigned char)sfKeyNumpad9:
 		return ("Pad 9");
-	case (int)sfKeyF1:
+	case (unsigned char)sfKeyF1:
 		return ("F1");
-	case (int)sfKeyF2:
+	case (unsigned char)sfKeyF2:
 		return ("F2");
-	case (int)sfKeyF3:
+	case (unsigned char)sfKeyF3:
 		return ("F3");
-	case (int)sfKeyF4:
+	case (unsigned char)sfKeyF4:
 		return ("F4");
-	case (int)sfKeyF5:
+	case (unsigned char)sfKeyF5:
 		return ("F5");
-	case (int)sfKeyF6:
+	case (unsigned char)sfKeyF6:
 		return ("F6");
-	case (int)sfKeyF7:
+	case (unsigned char)sfKeyF7:
 		return ("F7");
-	case (int)sfKeyF8:
+	case (unsigned char)sfKeyF8:
 		return ("F8");
-	case (int)sfKeyF9:
+	case (unsigned char)sfKeyF9:
 		return ("F9");
-	case (int)sfKeyF10:
+	case (unsigned char)sfKeyF10:
 		return ("F10");
-	case (int)sfKeyF11:
+	case (unsigned char)sfKeyF11:
 		return ("F11");
-	case (int)sfKeyF12:
+	case (unsigned char)sfKeyF12:
 		return ("F12");
-	case (int)sfKeyF13:
+	case (unsigned char)sfKeyF13:
 		return ("F13");
-	case (int)sfKeyF14:
+	case (unsigned char)sfKeyF14:
 		return ("F14");
-	case (int)sfKeyF15:
+	case (unsigned char)sfKeyF15:
 		return ("F15");
-	case (int)sfKeyPause:
+	case (unsigned char)sfKeyPause:
 		return ("Pause");
-	case 101:
+	case 201:
 		return ("Joystick Up");
-	case 102:
+	case 202:
 		return ("Joystick Down");
-	case 103:
+	case 203:
 		return ("Joystick Left");
-	case 104:
+	case 204:
 		return ("Joystick Right");
 	default:
-		if (keyID >= 105)
-			return (concatf("Joystick %i", keyID - 105));
-		return ("Unknown key");
+		if (keyID >= 205)
+			return (concatf("Con. Button %i", keyID - 205));
+		return (concatf("Key %i", keyID));
 	}
 }
 
@@ -343,7 +343,7 @@ Button	*loadButtons(game_t *game)
 	printf("%s: Loading %i buttons\n", INFO, len + langs + NB_OF_KEYS);
 	buttons = malloc(sizeof(*buttons) * (len + langs + NB_OF_KEYS + 1));
 	if (!buttons) {
-		printf("%s: Couldn't malloc %liB for buttons\n", FATAL, sizeof(*buttons) * (len + langs + NB_OF_KEYS + 1));
+		printf("%s: Couldn't malloc %liB for buttons\n", FATAL, (long)sizeof(*buttons) * (len + langs + NB_OF_KEYS + 1));
 		exit(EXIT_FAILURE);
 	}
 	game->languagesConf.y = langs;

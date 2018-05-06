@@ -28,7 +28,7 @@ Array	loadMusics(game_t *game)
 	printf("%s: Loading %i musics\n", INFO, len);
 	musics = malloc(sizeof(*musics) * len);
 	if (!musics) {
-		printf("%s: Couldn't allocate %liB of memory\n", FATAL, sizeof(*musics) * len);
+		printf("%s: Couldn't allocate %liB of memory\n", FATAL, (long)sizeof(*musics) * len);
 		exit(EXIT_FAILURE);
 	}
 	array.length = len;
@@ -51,7 +51,7 @@ Array	loadSfx(game_t *game)
 	printf("%s: Loading %i sfx sounds\n", INFO, len);
 	sfx = malloc(sizeof(*sfx) * len);
 	if (!sfx) {
-		printf("%s: Couldn't allocate %liB of memory\n", FATAL, sizeof(*sfx) * len);
+		printf("%s: Couldn't allocate %liB of memory\n", FATAL, (long)sizeof(*sfx) * len);
 		exit(EXIT_FAILURE);
 	}
 	array.length = len;

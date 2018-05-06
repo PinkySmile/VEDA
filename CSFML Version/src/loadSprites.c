@@ -40,7 +40,7 @@ Array	loadSprites(game_t *game)
 	printf("%s: Loading %i textures\n", INFO, len);
 	sprites = malloc(sizeof(*sprites) * len);
 	if (!sprites) {
-		printf("%s: Couldn't allocate %liB of memory\n", FATAL, sizeof(*sprites) * len);
+		printf("%s: Couldn't allocate %liB of memory\n", FATAL, (long)sizeof(*sprites) * len);
 		exit(EXIT_FAILURE);
 	}
 	array.length = len;

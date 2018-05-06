@@ -14,7 +14,7 @@ Array	loadFonts(game_t *game)
 	printf("%s: Loading %i fonts\n", INFO, len);
 	fonts = malloc(sizeof(*fonts) * len);
 	if (!fonts) {
-		printf("%s: Couldn't allocate %liB of memory\n", FATAL, sizeof(*fonts) * len);
+		printf("%s: Couldn't allocate %liB of memory\n", FATAL, (long)sizeof(*fonts) * len);
 		exit(EXIT_FAILURE);
 	}
 	array.length = len;

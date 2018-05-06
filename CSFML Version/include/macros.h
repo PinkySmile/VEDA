@@ -14,8 +14,8 @@
 #define FULLSCREEN		1
 #define BORDERLESS_WINDOW	2
 
-#define READ_WRITE_RIGHTS	0666
+#define READ_WRITE_RIGHTS	0660
 
-#define NB_OF_KEYS	10
+#define NB_OF_KEYS	20
 
 #endif

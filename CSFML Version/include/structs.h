@@ -55,6 +55,29 @@ enum fonts {
 	SOMETHING,
 };
 
+enum keys {
+	KEY_UP,
+	KEY_DOWN,
+	KEY_LEFT,
+	KEY_RIGHT,
+	KEY_INVENTORY,
+	KEY_PAUSE,
+	KEY_INTERACT,
+	KEY_ATTACK,
+	KEY_ACHIEV,
+	KEY_POW,
+	KEY_UPGRADE,
+	KEY_OB1,
+	KEY_OB2,
+	KEY_OB3,
+	KEY_OB4,
+	KEY_OB5,
+	KEY_OB6,
+	KEY_OB7,
+	KEY_OB8,
+	KEY_SPRINT,
+};
+
 enum musics {
 	GAME_OVER,
 	MACABRE,
@@ -154,6 +177,7 @@ typedef struct {
 	int		position;
 	int		state;
 	int		animation;
+	float		speed;
 	sfVector2f	pointToGo;
 	sfClock		*animationClock;
 	sfClock		*stateClock;
@@ -191,7 +215,7 @@ typedef struct {
 	char		sfxVolume;
 	char		windowMode;
 	sfVector2i	windowSize;
-	char		keys[NB_OF_KEYS];
+	unsigned char	keys[NB_OF_KEYS];
 	char		lang_id[256];
 	char		playerName[16];
 } Settings;
