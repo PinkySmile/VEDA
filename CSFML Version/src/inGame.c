@@ -246,6 +246,7 @@ void	execAction(game_t *game, Object obj)
 
 float	isPressed(int keyID)
 {
+	sfJoystick_update();
 	if (keyID <= 200)
 		return (sfKeyboard_isKeyPressed(keyID));
 	else if (keyID > 204)
