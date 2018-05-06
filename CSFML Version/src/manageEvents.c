@@ -30,7 +30,7 @@ void	manageEvents(game_t *game)
 			if (event.joystickMove.position < 3 && event.joystickMove.position > -3)
 				continue;
 			sfJoystick_update();
-			if (game->selected >= 0 && game->menu == 2) {
+			if (game->selected - game->languagesConf.y - game->languagesConf.x >= 0 && game->selected - game->languagesConf.y - game->languagesConf.x < 4 && game->menu == 2) {
 				for (int i = 0; i < 4; i++) {
 					game->settings.keys[i] = 201 + i;
 					game->buttons[i + game->languagesConf.y + game->languagesConf.x].content = getKeyString(201 + i);
