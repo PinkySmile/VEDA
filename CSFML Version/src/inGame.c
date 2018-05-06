@@ -249,7 +249,7 @@ float	isPressed(int keyID)
 	if (keyID <= 200)
 		return (sfKeyboard_isKeyPressed(keyID));
 	else if (keyID > 204)
-		return (sfJoystick_isButtonPressed(0, keyID - 105));
+		return (sfJoystick_isButtonPressed(0, keyID - 205));
 	else if (keyID == 201)
 		return (sfJoystick_getAxisPosition(0, sfJoystickY) > -3 ? 0 : -sfJoystick_getAxisPosition(0, sfJoystickY) / 100);
 	else if (keyID == 202)

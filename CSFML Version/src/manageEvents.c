@@ -27,9 +27,9 @@ void	manageEvents(game_t *game)
 		} else if (event.type == sfEvtMouseButtonPressed) {
 			manage_mouse_click(game, event.mouseButton);
 		} else if (event.type == sfEvtJoystickMoved) {
+			sfJoystick_update();
 			if (event.joystickMove.position < 3 && event.joystickMove.position > -3)
 				continue;
-			sfJoystick_update();
 			if (game->selected - game->languagesConf.y - game->languagesConf.x >= 0 && game->selected - game->languagesConf.y - game->languagesConf.x < 4 && game->menu == 2) {
 				for (int i = 0; i < 4; i++) {
 					game->settings.keys[i] = 201 + i;
@@ -39,6 +39,7 @@ void	manageEvents(game_t *game)
 				game->selected = -1;
 			}
 		} else if (event.type == sfEvtJoystickButtonPressed) {
+			sfJoystick_update();
 			if (game->menu == 1 && game->settings.keys[KEY_PAUSE] == event.joystickButton.button + 205) {
 				back_on_title_screen(game, -1);
 				continue;
