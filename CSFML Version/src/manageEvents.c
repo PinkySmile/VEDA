@@ -27,6 +27,8 @@ void	manageEvents(game_t *game)
 		} else if (event.type == sfEvtMouseButtonPressed) {
 			manage_mouse_click(game, event.mouseButton);
 		} else if (event.type == sfEvtJoystickMoved) {
+			if (event.joystickMove.position < 3 && event.joystickMove.position > -3)
+				continue;
 			sfJoystick_update();
 			if (game->selected >= 0 && game->menu == 2) {
 				for (int i = 0; i < 4; i++) {
@@ -43,7 +45,7 @@ void	manageEvents(game_t *game)
 			}
 			if (game->selected - game->languagesConf.y - game->languagesConf.x >= 0 && game->selected - game->languagesConf.y - game->languagesConf.x < 4 && game->menu == 2)
 				for (int i = 0; i < 4; i++)
-					if (game->settings.keys[i] >= 201 && game->settings.keys[i] <= 24) {
+					if (game->settings.keys[i] >= 201 && game->settings.keys[i] <= 204) {
 						for (int i = 0; i < 4; i++) {
 							game->settings.keys[i] = -1;
 							game->buttons[i + game->languagesConf.y + game->languagesConf.x].content = getKeyString(-1);

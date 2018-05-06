@@ -251,12 +251,12 @@ float	isPressed(int keyID)
 	else if (keyID > 204)
 		return (sfJoystick_isButtonPressed(0, keyID - 105));
 	else if (keyID == 201)
-		return (sfJoystick_getAxisPosition(0, sfJoystickY) > 0 ? 0 : -sfJoystick_getAxisPosition(0, sfJoystickY) / 100);
+		return (sfJoystick_getAxisPosition(0, sfJoystickY) > -3 ? 0 : -sfJoystick_getAxisPosition(0, sfJoystickY) / 100);
 	else if (keyID == 202)
-		return (sfJoystick_getAxisPosition(0, sfJoystickY) < 0 ? 0 : sfJoystick_getAxisPosition(0, sfJoystickY) / 100);
+		return (sfJoystick_getAxisPosition(0, sfJoystickY) < 3 ? 0 : sfJoystick_getAxisPosition(0, sfJoystickY) / 100);
 	else if (keyID == 203)
-		return (sfJoystick_getAxisPosition(0, sfJoystickX) > 0 ? 0 : -sfJoystick_getAxisPosition(0, sfJoystickX) / 100);
-	return (sfJoystick_getAxisPosition(0, sfJoystickX) < 0 ? 0 : sfJoystick_getAxisPosition(0, sfJoystickX) / 100);
+		return (sfJoystick_getAxisPosition(0, sfJoystickX) > -3 ? 0 : -sfJoystick_getAxisPosition(0, sfJoystickX) / 100);
+	return (sfJoystick_getAxisPosition(0, sfJoystickX) < 3 ? 0 : sfJoystick_getAxisPosition(0, sfJoystickX) / 100);
 }
 
 void	movePlayer(game_t *game)
