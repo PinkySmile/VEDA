@@ -10,3 +10,6 @@ Save
 Controls
 Yes
 No
+Fullscreen
+Borderless window
+Windowed

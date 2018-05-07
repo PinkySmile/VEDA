@@ -79,10 +79,7 @@ void	disp_buttons(game_t *game)
 			        blue += 15;
 			        green += 15;
 			}
-			if (game->selected == i)
-				sfText_setColor(game->text, (sfColor){0, 125, 0, 255});
-			else
-				sfText_setColor(game->text, (sfColor){0, 0, 0, 255});
+			sfText_setColor(game->text, buttons[i].textColor);
 			text(buttons[i].content, game, buttons[i].pos.x + 10, buttons[i].pos.y + 8);
 		}
 	}
@@ -101,6 +98,7 @@ Button	create_button(Button_config config, game_t *game, bool createName)
 	button.displayed = config.disabled;
 	button.active = config.disabled;
 	button.color = config.color;
+	button.textColor = config.textColor;
 	if (button.rect) {
 		sfRectangleShape_setSize(button.rect, button.size);
 		sfRectangleShape_setPosition(button.rect, button.pos);
@@ -353,23 +351,23 @@ Button	*loadButtons(game_t *game)
 		displayLoadingBar(game, 6, MAX_STEPS, i, len + langs + NB_OF_KEYS, "Creating buttons");
 		buttons[i] = create_button(button_config[i], game, true);
 	}
+	config.textColor = (sfColor){0, 0, 0, 255};
+	config.disabled = false;
+	config.color = (sfColor){255, 255, 0, 255};
+	config.callback = &changeLanguage;
 	for (int i = 0; game->languages && game->languages[i].name; i++) {
 		displayLoadingBar(game, 6, MAX_STEPS, i + len, len + langs + NB_OF_KEYS, "Creating buttons");
 		config.pos = (sfVector2f){300 - strlen(game->languages[i].name) * 7, 50 * i + 10};
 		config.size = (sfVector2f){40 + strlen(game->languages[i].name) * 7, 40};
-		config.color = (sfColor){255, 255, 0, 255};
-		config.callback = &changeLanguage;
-		config.disabled = false;
 		buttons[i + len] = create_button(config, game, false);
 		buttons[i + len].content = game->languages[i].name;
 	}
+	config.size = (sfVector2f){150, 40};
+	config.color = (sfColor){255, 255, 255, 255};
+	config.callback = &changeKey;
 	for (int i = 0; i < NB_OF_KEYS; i++) {
 		displayLoadingBar(game, 6, MAX_STEPS, i + len + langs, len + langs + NB_OF_KEYS, "Creating buttons");
 		config.pos = (sfVector2f){115 + i / 10 * 272, i % 10 * 48 + 5};
-		config.size = (sfVector2f){150, 40};
-		config.color = (sfColor){255, 255, 255, 255};
-		config.callback = &changeKey;
-		config.disabled = false;
 		buttons[i + len + langs] = create_button(config, game, false);
 		buttons[i + len + langs].content = "";
 	}

@@ -10,6 +10,9 @@
 #include <stdio.h>
 #include <errno.h>
 #include <unistd.h>
+#ifdef __MINGW32__
+#include <windows.h>
+#endif
 
 void	displayLoadingBar(game_t *game, int step, int maxSteps, int file, int maxFiles, char *status)
 {
@@ -59,7 +62,7 @@ char	*getVersion()
 	printf("%s: Loading version string\n", INFO);
 	if (fd < 0 || !version) {
 		free(version);
-		printf("%s: data/version.txt: %s\n", ERROR, strerror(errno));
+		printf("[ERROR] : data/version.txt: %s\n", strerror(errno));
 		close(fd);
 		version = strdup("?.?.?.?");
 		if (!version)
@@ -91,21 +94,30 @@ void	initGame(game_t *game)
 	} else if (game->settings.windowMode == BORDERLESS_WINDOW) {
 		style = sfNone;
 		mode = sfVideoMode_getDesktopMode();
-	} else
+	} else {
 		style = sfTitlebar | sfClose;
+		mode.width = game->settings.windowSize.x;
+		mode.height = game->settings.windowSize.y;
+	}
 	game->baseScale.x = (float)mode.width / 640.0;
 	game->baseScale.y = (float)mode.height / 480.0;
 	if (image)
 		icon = sfImage_getPixelsPtr(image);
 	else
-		printf("%s: Couldn't load icon image\n", ERROR);
+		printf("[ERROR] : Couldn't load icon image\n");
 	if (!title) {
 		printf("%s: Couldn't create window title\n", FATAL);
+		#ifdef __MINGW32__
+		MessageBox(NULL, "Couldn't create window title", "Window error", 0);
+		#endif
 		exit(EXIT_FAILURE);
 	}
 	game->window = sfRenderWindow_create(mode, title, style, NULL);
 	if (!game->window) {
 		printf("%s: Couldn't create window\n", FATAL);
+		#ifdef __MINGW32__
+		MessageBox(NULL, "Couldn't create window object", "Window error", 0);
+		#endif
 		exit(EXIT_FAILURE);
 	}
 	if (icon)

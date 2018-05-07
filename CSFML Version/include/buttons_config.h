@@ -11,6 +11,7 @@ const Button_config	button_config[] = {
 		{10, 10},
 		{150, 40},
 		{205, 205, 205, 255},
+		{0, 0, 0, 255},
 		&play_button,
 		true
 	},
@@ -19,6 +20,7 @@ const Button_config	button_config[] = {
 		{10, 60},
 		{150, 40},
 		{205, 205, 205, 255},
+		{0, 0, 0, 255},
 		&settings_button,
 		true
 	},
@@ -27,6 +29,7 @@ const Button_config	button_config[] = {
 		{10, 110},
 		{150, 40},
 		{205, 205, 205, 255},
+		{0, 0, 0, 255},
 		&quit_button,
 		true
 	},
@@ -35,6 +38,7 @@ const Button_config	button_config[] = {
 		{10, 60},
 		{150, 40},
 		{125, 125, 125, 255},
+		{0, 0, 0, 255},
 		&settings_button,
 		false
 	},
@@ -43,6 +47,7 @@ const Button_config	button_config[] = {
 		{200, 10},
 		{150, 40},
 		{205, 205, 205, 255},
+		{0, 0, 0, 255},
 		&options_button,
 		false
 	},
@@ -51,6 +56,7 @@ const Button_config	button_config[] = {
 		{200, 60},
 		{150, 40},
 		{205, 205, 205, 255},
+		{0, 0, 0, 255},
 		&audio_button,
 		false
 	},
@@ -59,6 +65,7 @@ const Button_config	button_config[] = {
 		{200, 110},
 		{150, 40},
 		{205, 205, 205, 255},
+		{0, 0, 0, 255},
 		&lang_button,
 		false
 	},
@@ -67,6 +74,7 @@ const Button_config	button_config[] = {
 		{200, 160},
 		{150, 40},
 		{205, 205, 205, 255},
+		{0, 0, 0, 255},
 		&controls_button,
 		false
 	},
@@ -75,6 +83,7 @@ const Button_config	button_config[] = {
 		{200, 210},
 		{150, 40},
 		{205, 205, 205, 255},
+		{0, 0, 0, 255},
 		&back_on_title_screen,
 		false
 	},
@@ -83,7 +92,35 @@ const Button_config	button_config[] = {
 		{540, 440},
 		{100, 40},
 		{205, 205, 205, 255},
+		{0, 0, 0, 255},
 		&back_on_title_screen,
+		false
+	},
+	{
+		WINDOWED_BUTTON,
+		{10, 110},
+		{200, 40},
+		{205, 205, 205, 255},
+		{0, 0, 0, 255},
+		&windowed,
+		false
+	},
+	{
+		FULLSCREEN_BUTTON,
+		{10, 10},
+		{200, 40},
+		{205, 205, 205, 255},
+		{0, 0, 0, 255},
+		&fullScreen,
+		false
+	},
+	{
+		BORDERLESS_BUTTON,
+		{10, 60},
+		{200, 40},
+		{205, 205, 205, 255},
+		{0, 0, 0, 255},
+		&borderless,
 		false
 	},
 	{
@@ -91,6 +128,7 @@ const Button_config	button_config[] = {
 		{0, 0},
 		{0, 0},
 		{0, 0, 0, 0},
+		{0, 0, 0, 255},
 		NULL,
 		false
 	}

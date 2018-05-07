@@ -4,6 +4,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
+#ifdef __MINGW32__
+#include <windows.h>
+#endif
 
 void	back_on_title_screen(game_t *game, int buttonID)
 {
@@ -33,6 +36,24 @@ void	play_button(game_t *game, int buttonID)
 		sfMusic_stop(((sfMusic **)game->musics.content)[MAIN_MENU_MUSIC]);
 }
 
+void	fullScreen(game_t *game, int buttonID)
+{
+	(void)buttonID;
+	changeScreenMode(game, FULLSCREEN);
+}
+
+void	borderless(game_t *game, int buttonID)
+{
+	(void)buttonID;
+	changeScreenMode(game, BORDERLESS_WINDOW);
+}
+
+void	windowed(game_t *game, int buttonID)
+{
+	(void)buttonID;
+	changeScreenMode(game, WINDOWED);
+}
+
 void	changeKey(game_t *game, int buttonID)
 {
 	if (game->selected >= 0)
@@ -43,9 +64,68 @@ void	changeKey(game_t *game, int buttonID)
 	game->buttons[game->selected].content = "<Press a key>";
 }
 
+void	changeScreenMode(game_t *game, int new)
+{
+	char		*title = concat("VEDA version ", getVersion(), false, true);
+	sfVideoMode	mode = {640, 480, 32};
+	sfWindowStyle	style;
+	const sfUint8	*icon = NULL;
+
+	game->selected = 0;
+	if (game->icon.image)
+		icon = sfImage_getPixelsPtr(game->icon.image);
+	else
+		printf("[ERROR] : Couldn't load icon image\n");
+	if (!title) {
+		printf("%s: Couldn't create window title\n", FATAL);
+		#ifdef __MINGW32__
+		MessageBox(NULL, "Couldn't create window title", "Window error", 0);
+		#endif
+		exit(EXIT_FAILURE);
+	}
+	if (game->settings.windowMode == new)
+		return;
+	game->settings.windowMode = new;
+	if (game->settings.windowMode == FULLSCREEN) {
+		style = sfFullscreen;
+		mode = sfVideoMode_getDesktopMode();
+	} else if (game->settings.windowMode == BORDERLESS_WINDOW) {
+		style = sfNone;
+		mode = sfVideoMode_getDesktopMode();
+	} else {
+		style = sfTitlebar | sfClose;
+		mode.width = game->settings.windowSize.x;
+		mode.height = game->settings.windowSize.y;
+	}
+	game->baseScale.x = (float)mode.width / 640.0;
+	game->baseScale.y = (float)mode.height / 480.0;
+	sfRenderWindow_close(game->window);
+	sfRenderWindow_destroy(game->window);
+	game->window = sfRenderWindow_create(mode, title, style, NULL);
+	if (!game->window) {
+		printf("%s: Couldn't create window\n", FATAL);
+		#ifdef __MINGW32__
+		MessageBox(NULL, "Couldn't create window object", "Window error", 0);
+		#endif
+		exit(EXIT_FAILURE);
+	}
+	if (icon)
+		sfRenderWindow_setIcon(game->window, 32, 32, icon);
+}
+
 void	options_button(game_t *game, int buttonID)
 {
-
+	(void)buttonID;
+	game->menu = 4;
+	game->selected = 0;
+	for (int i = 0; game->buttons[i].content; i++) {
+		game->buttons[i].active = false;
+		game->buttons[i].displayed = false;
+	}
+	for (int i = 9; i <= 12; i++) {
+		game->buttons[i].active = true;
+		game->buttons[i].displayed = true;
+	}
 }
 
 void	audio_button(game_t *game, int buttonID)
@@ -102,72 +182,6 @@ void	settings_button(game_t *game, int buttonID)
 	for (int i = 3; i < 9; i++) {
 		game->buttons[i].active = i != 3;
 		game->buttons[i].displayed = true;
-	}
-}
-
-void	audio(game_t *game)
-{
-	char	*nbrs[2];
-
-	for (int i = 0; i < 640; i += ((Sprite *)game->sprites.content)[MENU_BACKGROUND].size.x) {
-		if (((Sprite *)game->sprites.content)[MENU_BACKGROUND].size.x == 0)
-			break;
-		for (int j = 0; j < 640; j += ((Sprite *)game->sprites.content)[MENU_BACKGROUND].size.y) {
-			image(game, ((Sprite *)game->sprites.content)[MENU_BACKGROUND].sprite, i, j, -1, -1);
-			if (((Sprite *)game->sprites.content)[MENU_BACKGROUND].size.y == 0)
-				break;
-		}
-	}
-	sfRectangleShape_setFillColor(game->rectangle, (sfColor){100, 100, 100, 255});
-	rect(game, 0, 0, 512, 48);
-	rect(game, 0, 48, 512, 48);
-	rect(game, 0, 0, 512, 48);
-	rect(game, 0, 48, 512, 48);
-	sfRectangleShape_setFillColor(game->rectangle, (sfColor){255, 255, 255, 255});
-	rect(game, 140, 14, 300, 20);
-	rect(game, 140, 62, 300, 20);
-	sfRectangleShape_setFillColor(game->rectangle, (sfColor){255, 0, 0, 255});
-	rect(game, 130 + game->settings.sfxVolume * 3, 6, 20, 36);
-	rect(game, 130 + game->settings.musicVolume * 3, 54, 20, 36);
-	text("Sound effects", game, 5, 8);
-	text("Musics", game, 5, 56);
-	nbrs[0] = concatf("%i%%", game->settings.sfxVolume);
-	nbrs[1] = concatf("%i%%", game->settings.musicVolume);
-	if (nbrs[0])
-		text(nbrs[0], game, 455, 8);
-	if (nbrs[1])
-		text(nbrs[1], game, 455, 56);
-	free(nbrs[0]);
-	free(nbrs[1]);
-}
-
-void	controls(game_t *game)
-{
-	for (int i = 0; i < 640; i += ((Sprite *)game->sprites.content)[MENU_BACKGROUND].size.x) {
-		if (((Sprite *)game->sprites.content)[MENU_BACKGROUND].size.x == 0)
-			break;
-		for (int j = 0; j < 640; j += ((Sprite *)game->sprites.content)[MENU_BACKGROUND].size.y) {
-			image(game, ((Sprite *)game->sprites.content)[MENU_BACKGROUND].sprite, i, j, -1, -1);
-			if (((Sprite *)game->sprites.content)[MENU_BACKGROUND].size.y == 0)
-				break;
-		}
-	}
-	if (getLanguage(game->languages, game->settings.lang_id) < 0 || game->languages[getLanguage(game->languages, game->settings.lang_id)].keys == NULL)
-		return;
-	for (int i = 0; game->languages[getLanguage(game->languages, game->settings.lang_id)].keys[i] && i < NB_OF_KEYS; i++) {
-		sfRectangleShape_setFillColor(game->rectangle, (sfColor){100, 100, 100, 255});
-		rect(game, i / 10 * 272, i % 10 * 48, 272, 48);
-		sfText_setCharacterSize(game->text, 17);
-		sfText_setColor(game->text, (sfColor){255, 255, 255, 255});
-		if (game->settings.keys[i] == (unsigned char)-1)
-			sfText_setColor(game->text, (sfColor){0, 0, 0, 255});
-		else
-			for (int j = 0; j < NB_OF_KEYS; j++)
-				if ((j != i && game->settings.keys[j] == game->settings.keys[i])) {
-					sfText_setColor(game->text, (sfColor){255, 0, 0, 255});
-					break;
-				}
-		text(game->languages[getLanguage(game->languages, game->settings.lang_id)].keys[i], game, 5 + i / 10 * 272, i % 10 * 48 + 15);
 	}
 }
 

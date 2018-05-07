@@ -33,12 +33,15 @@ Object		*loadLevel(char *path, char **bg_path);
 char		*getKeyString(unsigned char keyID);
 void		setVolumes(Array sounds, float volume);
 float		isPressed(int keyID);
+char		*getVersion();
+void		changeScreenMode(game_t *game, int new);
 
 //Menu functions
 void		mainMenu(game_t *game);
 void		inGame(game_t *game);
 void		controls(game_t *game);
 void		audio(game_t *game);
+void		options(game_t *game);
 
 //callbacks
 void		play_button(game_t *game, int buttonId);
@@ -51,5 +54,8 @@ void		controls_button(game_t *game, int buttonID);
 void		back_on_title_screen(game_t *game, int buttonID);
 void		changeLanguage(game_t *game, int buttonID);
 void		changeKey(game_t *game, int buttonID);
+void		fullScreen(game_t *game, int buttonID);
+void		borderless(game_t *game, int buttonID);
+void		windowed(game_t *game, int buttonID);
 
 #endif

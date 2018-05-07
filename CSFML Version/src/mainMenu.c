@@ -20,4 +20,9 @@ void	mainMenu(game_t *game)
 				break;
 		}
 	}
+	if (game->debug && game->text) {
+		sfText_setColor(game->text, (sfColor){255, 255, 255, 255});
+		text("Debug mode", game, 520, 17);
+		sfText_setColor(game->text, (sfColor){0, 0, 0, 255});
+	}
 }

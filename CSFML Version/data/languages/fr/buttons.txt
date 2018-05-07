@@ -10,3 +10,6 @@ Sauvegarder
 Contrôles
 Oui
 Non
+Plein écran
+Fenêtré sans bord
+Fenêtré

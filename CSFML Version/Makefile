@@ -19,6 +19,7 @@ SRC = 	main.c		\
 	clic_button.c	\
 	loadLevel.c	\
 	inGame.c	\
+	settings.c	\
 
 OBJ =	$(SRC:%.c=src/%.o)
 

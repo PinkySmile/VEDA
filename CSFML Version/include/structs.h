@@ -234,6 +234,7 @@ typedef struct {
 	sfVector2f	pos;
 	sfVector2f	size;
 	sfColor		color;
+	sfColor		textColor;
 	void		(*callback)(game_t *, int);
 	bool		disabled;
 } Button_config;
@@ -243,6 +244,7 @@ typedef struct {
 	sfVector2f		pos;
 	sfVector2f		size;
 	sfColor			color;
+	sfColor			textColor;
 	void			(*callback)(game_t *, int);
 	sfRectangleShape	*rect;
 	bool			displayed;

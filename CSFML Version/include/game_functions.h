@@ -5,4 +5,5 @@ void	(* const game_functions[])(game_t *game) = {
 	&inGame,
 	&controls,
 	&audio,
+	&options,
 };

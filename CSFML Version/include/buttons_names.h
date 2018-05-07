@@ -22,6 +22,9 @@ enum buttons_names {
 	CONTROLS,
 	YES,
 	NO,
+	FULLSCREEN_BUTTON,
+	BORDERLESS_BUTTON,
+	WINDOWED_BUTTON,
 };
 
 #endif
