@@ -263,8 +263,8 @@ Object	*loadLevel(char *path)
 			objs[i / 3].invulnerabiltyTime = EPICBATTLE_START;
 		} else if (objs[i / 3].id == 11) {
 			objs[i / 3].action = DEAL_DAMAGES;
-			objs[i / 3].damages[TRUE_DAMAGE] = 3;
-			objs[i / 3].invulnerabiltyTime = 0;
+			objs[i / 3].damages[TRUE_DAMAGE] = -3;
+			objs[i / 3].invulnerabiltyTime = 5;
 			objs[i / 3].footstepSound = MUD1;
 			objs[i / 3].footstepVariance = 4;
 		} else if (objs[i / 3].id == 12) {

@@ -6,7 +6,11 @@
 #include <stdio.h>
 #include "structs.h"
 #include "functions.h"
+#include "concatf.h"
 #include "macros.h"
+#ifdef __MINGW32__
+#include <windows.h>
+#endif
 
 #ifndef SIGBUS
 #define SIGBUS 7
@@ -59,10 +63,13 @@ void	sighandler(int signum)
 		printf("%s: Caught signal %i (%s). Exiting.\n", INFO, signum, strsignal(signum));
 	} else {
 		printf("%s: Caught signal %i (%s). Aborting !\n", FATAL, signum, strsignal(signum));
-		signal(signum, NULL);
-		raise(signum);
-		exit(EXIT_FAILURE); //In case the crash trashed the raise function
+		#ifdef __MINGW32__
+		MessageBox(NULL, concatf("Error: Caught signal %i\n\n\nClick OK to close the program", signum), strsignal(signum), 0);
+		#endif
+		exit(EXIT_FAILURE);
 		exit(128 + signum); //In case the first one fail
+		signal(signum, NULL);
+		raise(signum); //In case the crash trashed the exit function
 		signal(11, NULL);
 		*(char *)NULL = *(char *)NULL; //Let's do this kernel. Come on, I wait you !
 	}

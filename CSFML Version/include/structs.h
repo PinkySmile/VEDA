@@ -197,6 +197,7 @@ typedef struct {
 	Array		inventory;
 	Item		wornItems[5];
 	char		name[16];
+	float		invulnerabiltyTime;
 	int		damageDisplay[DAMAGES_TYPE_NB];
 	sfClock		*damageClock[DAMAGES_TYPE_NB];
 	Dialog		dialogs;

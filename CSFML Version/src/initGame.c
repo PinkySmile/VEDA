@@ -137,7 +137,7 @@ void	initGame(game_t *game)
 	player.movement.stateClock = sfClock_create();
 	player.stats.energyRegenClock = sfClock_create();
 	player.stats.energyRegen = 1;
-	player.stats.energyUsedBySprint = 8;
+	player.stats.energyUsedBySprint = 1;
 	player.stats.sprintSpeed = 2;
 	player.stats.timeBeforeEnergyUse = 1;
 	player.stats.life = 332;
