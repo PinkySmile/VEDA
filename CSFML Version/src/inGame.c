@@ -23,7 +23,7 @@ void	displayLowerLayer(game_t *game)
 				rec.left = (map[i].id - 1) * 16 % 640;
 				rec.top = (map[i].id - 1) * 16 / 640;
 				sfSprite_setTextureRect(((Sprite *)sprites.content)[OBJECTS].sprite, rec);
-				image(game, ((Sprite *)sprites.content)[OBJECTS].sprite,  map[i].pos.x + cam.x, map[i].pos.y + cam.y, 16, 16);
+				image(game, ((Sprite *)sprites.content)[OBJECTS].sprite, map[i].pos.x + cam.x, map[i].pos.y + cam.y, 16, 16);
 			}
 			if (game->debug) {
 				if (game->text) {
@@ -80,7 +80,7 @@ void	displayUpperLayer(game_t *game)
 					rec.left = (map[i].id - 1) * 16 % 640;
 					rec.top = (map[i].id - 1) * 16 / 640;
 					sfSprite_setTextureRect(((Sprite *)sprites.content)[OBJECTS].sprite, rec);
-					image(game, ((Sprite *)sprites.content)[OBJECTS].sprite,  map[i].pos.x + cam.x, map[i].pos.y + cam.y, 16, 16);
+					image(game, ((Sprite *)sprites.content)[OBJECTS].sprite, map[i].pos.x + cam.x, map[i].pos.y + cam.y, 16, 16);
 				}
 				if (game->debug) {
 					if (game->text) {
@@ -96,12 +96,19 @@ void	displayUpperLayer(game_t *game)
 			newLayer = newLayer || map[i].layer > layer;
 		}
 	}
-	for (int i = 0; game->debug && map && map[i].layer; i++)
+	for (int i = 0; game->debug && map && map[i].layer; i++) {
 		if (map[i].solid && map[i].pos.x + cam.x > -32 && map[i].pos.x + cam.x < 672 && map[i].pos.y + cam.y > -32 && map[i].pos.y + cam.y < 672) {
 			sfRectangleShape_setFillColor(game->rectangle, (sfColor){255, 0, 255, 125});
-			sfRectangleShape_setOutlineColor(game->rectangle, (sfColor){0, 0, 0, 125});
 			rect(game, map[i].pos.x + cam.x + 1, map[i].pos.y + cam.y + 1, 14, 14);
 		}
+		if (((Sprite *)sprites.content)[MUSICS].sprite && map[i].action == CHANGE_MUSIC && map[i].pos.x + cam.x > -32 && map[i].pos.x + cam.x < 672 && map[i].pos.y + cam.y > -32 && map[i].pos.y + cam.y < 672)
+			image(game, ((Sprite *)sprites.content)[MUSICS].sprite, map[i].pos.x + cam.x, map[i].pos.y + cam.y, 16, 16);
+		else if (((Sprite *)sprites.content)[CROSS].sprite && map[i].action == DEAL_DAMAGES && map[i].pos.x + cam.x > -32 && map[i].pos.x + cam.x < 672 && map[i].pos.y + cam.y > -32 && map[i].pos.y + cam.y < 672) {
+			sfRectangleShape_setFillColor(game->rectangle, (sfColor){0, 0, 255, 175});
+			rect(game, map[i].pos.x + cam.x + 3, map[i].pos.y + cam.y + 3, 10, 10);
+		} else if (((Sprite *)sprites.content)[CUTSCENE].sprite && map[i].action == LAUNCH_CUTSCENE && map[i].pos.x + cam.x > -32 && map[i].pos.x + cam.x < 672 && map[i].pos.y + cam.y > -32 && map[i].pos.y + cam.y < 672)
+			image(game, ((Sprite *)sprites.content)[CUTSCENE].sprite, map[i].pos.x + cam.x, map[i].pos.y + cam.y, 16, 16);
+	}
 }
 
 void	drawLifeBar(game_t *game)
@@ -321,7 +328,8 @@ void	movePlayer(game_t *game)
 			player->movement.pos.x -= player->stats.sprintSpeed * (isPressed(game->settings.keys[KEY_LEFT]) - isPressed(game->settings.keys[KEY_RIGHT])) - 1;
 			if (!mooved)
 				player->movement.speed += player->stats.sprintSpeed * (isPressed(game->settings.keys[KEY_LEFT]) - isPressed(game->settings.keys[KEY_RIGHT])) - 1;
-			player->stats.energyClock++;
+			if (isPressed(game->settings.keys[KEY_LEFT]) - isPressed(game->settings.keys[KEY_RIGHT]) != 0)
+				player->stats.energyClock++;
 		}
 		mooved = true;
 	}
@@ -339,7 +347,8 @@ void	movePlayer(game_t *game)
 			player->movement.pos.x += player->stats.sprintSpeed * (isPressed(game->settings.keys[KEY_RIGHT]) - isPressed(game->settings.keys[KEY_LEFT])) - 1;
 			if (!mooved)
 				player->movement.speed += player->stats.sprintSpeed * (isPressed(game->settings.keys[KEY_RIGHT]) - isPressed(game->settings.keys[KEY_LEFT])) - 1;
-			player->stats.energyClock++;
+			if (isPressed(game->settings.keys[KEY_RIGHT]) - isPressed(game->settings.keys[KEY_LEFT]) != 0)
+				player->stats.energyClock++;
 		}
 		mooved = true;
 	}
@@ -357,7 +366,8 @@ void	movePlayer(game_t *game)
 			player->movement.pos.y -= player->stats.sprintSpeed * (isPressed(game->settings.keys[KEY_UP]) - isPressed(game->settings.keys[KEY_DOWN])) - 1;
 			if (!mooved)
 				player->movement.speed += player->stats.sprintSpeed * (isPressed(game->settings.keys[KEY_UP]) - isPressed(game->settings.keys[KEY_DOWN])) - 1;
-			player->stats.energyClock++;
+			if (isPressed(game->settings.keys[KEY_UP]) - isPressed(game->settings.keys[KEY_DOWN]) != 0)
+				player->stats.energyClock++;
 		}
 		mooved = true;
 	}
@@ -375,7 +385,8 @@ void	movePlayer(game_t *game)
 			player->movement.pos.y += player->stats.sprintSpeed * (isPressed(game->settings.keys[KEY_DOWN]) - isPressed(game->settings.keys[KEY_UP])) - 1;
 			if (!mooved)
 				player->movement.speed += player->stats.sprintSpeed * (isPressed(game->settings.keys[KEY_DOWN]) - isPressed(game->settings.keys[KEY_UP])) - 1;
-			player->stats.energyClock++;
+			if (isPressed(game->settings.keys[KEY_DOWN]) - isPressed(game->settings.keys[KEY_UP]) != 0)
+				player->stats.energyClock++;
 		}
 		mooved = true;
 	}

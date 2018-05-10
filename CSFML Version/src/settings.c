@@ -41,6 +41,15 @@ void	audio(game_t *game)
 
 void	options(game_t *game)
 {
+	for (int i = 0; i < 640; i += ((Sprite *)game->sprites.content)[MENU_BACKGROUND].size.x) {
+		if (((Sprite *)game->sprites.content)[MENU_BACKGROUND].size.x == 0)
+			break;
+		for (int j = 0; j < 640; j += ((Sprite *)game->sprites.content)[MENU_BACKGROUND].size.y) {
+			image(game, ((Sprite *)game->sprites.content)[MENU_BACKGROUND].sprite, i, j, -1, -1);
+			if (((Sprite *)game->sprites.content)[MENU_BACKGROUND].size.y == 0)
+				break;
+		}
+	}
 	for (int i = 0; i <= 2; i++) {
 		if (game->settings.windowMode == i) {
 			game->buttons[i + 10].textColor = (sfColor){0, 120, 0, 255};

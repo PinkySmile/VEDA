@@ -36,6 +36,10 @@ enum textures {
 	GOD_EATER,
 	LIFE_BAR,
 	ENERGY_BAR,
+	CUTSCENE,
+	MUSICS,
+	TRIGGER,
+	CROSS,
 };
 
 enum directions {

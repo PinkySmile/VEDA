@@ -45,38 +45,38 @@ enum musics {
 };
 
 const bool	solidObjects[] = {
-	true,
-	false,
-	false,
-	false,
-	false,
-	false,
-	false,
-	false,
-	false,
-	false,
-	false,
-	false,
-	false,
-	true,
-	false,
-	false,
-	false,
-	false,
-	false,
-	false,
-	false,
-	false,
-	false,
-	false,
-	false,
-	false,
-	true,
-	false,
-	false,
-	false,
-	false,
-	false,
+	true,  //1
+	false, //2
+	false, //3
+	false, //4
+	false, //5
+	false, //6
+	false, //7
+	false, //8
+	false, //9
+	false, //10
+	false, //11
+	false, //12
+	false, //13
+	true,  //14
+	false, //15
+	false, //16
+	false, //17
+	false, //18
+	false, //19
+	true,  //20
+	false, //21
+	false, //22
+	false, //23
+	false, //24
+	false, //25
+	false, //26
+	true,  //27
+	true,  //28
+	false, //29
+	false, //30
+	false, //31
+	false, //32
 };
 
 enum sfx {
@@ -106,6 +106,9 @@ typedef struct {
 const Layer_config	layer[] = {
 	{30, 1},
 	{31, 27},
+	{19, 19},
+	{29, 29},
+	{18, 18},
 	{-1, -1},
 };
 

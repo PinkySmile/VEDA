@@ -136,7 +136,7 @@ void	destroyStruct(game_t *game)
 			sfClock_destroy(((Character *)game->characters.content)[i].damageClock[j]);
 	}
 	for (int i = 0; i < NB_OF_KEYS; i++)
-		if (game->settings.keys[i] >= 101 && (game->settings.keys[i] < 201 || game->settings.keys[i] > 204))
+		if (game->settings.keys[i] > 204)
 			free(game->buttons[i + game->languagesConf.y + game->languagesConf.x].content);
 	free(game->buttons);
 	free(game->characters.content);
@@ -149,15 +149,14 @@ int	main(int argc, char **args)
 
 	srand((long)&game);
 	window = &game.window;
-	signal(SIGINT, &sighandler);
+	signal(SIGINT,  &sighandler);
 	signal(SIGQUIT, &sighandler);
-	signal(SIGILL, &sighandler);
+	signal(SIGILL,  &sighandler);
 	signal(SIGABRT, &sighandler);
-	signal(SIGBUS, &sighandler);
-	signal(SIGFPE, &sighandler);
+	signal(SIGBUS,  &sighandler);
+	signal(SIGFPE,  &sighandler);
 	signal(SIGSEGV, &sighandler);
 	signal(SIGTERM, &sighandler);
-	signal(11, &sighandler);
 	printf("%s: Initializating game\n", INFO);
 	initGame(&game);
 	game.debug = (argc == 2 && !strcmp("debug", args[1]));
