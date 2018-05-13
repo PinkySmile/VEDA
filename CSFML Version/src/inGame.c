@@ -263,6 +263,8 @@ void	execAction(game_t *game, Object obj)
 			break;
 		}
 	}
+	if (obj.footstepSound != IRON)
+		game->stepSound = obj.footstepSound + rand() % obj.footstepVariance;
 	switch(obj.action) {
 	case DEAL_DAMAGES:
 		for (int i = 0; i < DAMAGES_TYPE_NB; i++) {
@@ -301,6 +303,7 @@ void	movePlayer(game_t *game)
 	Object		*map = game->map;
 	bool		mooved = false;
 
+	game->stepSound = IRON;
 	memset(&player->movement.blocked, 0, sizeof(player->movement.blocked));
 	for (int i = 0; map && map[i].layer; i++) {
 		if (map[i].solid) {
@@ -414,6 +417,8 @@ void	inGame(game_t *game)
 	displayHUD(game);
 	if (player->movement.state == MOVING && sfTime_asSeconds(sfClock_getElapsedTime(player->movement.animationClock)) >= 0.1 / player->movement.speed) {
 		player->movement.animation = !player->movement.animation;
+		if (((sfMusic **)game->sfx.content)[game->stepSound])
+			sfMusic_play(((sfMusic **)game->sfx.content)[game->stepSound]);
 		sfClock_restart(player->movement.animationClock);
 	} else if (player->movement.state == MOVING && sfTime_asSeconds(sfClock_getElapsedTime(player->movement.stateClock)) >= 0.3) {
 		player->movement.state = STATIC;

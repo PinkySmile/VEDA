@@ -64,7 +64,7 @@ void	sighandler(int signum)
 	} else {
 		printf("%s: Caught signal %i (%s). Aborting !\n", FATAL, signum, strsignal(signum));
 		#ifdef __MINGW32__
-		MessageBox(NULL, concatf("Error: Caught signal %i\n\n\nClick OK to close the program", signum), strsignal(signum), 0);
+		MessageBox(NULL, concatf("Error: Caught signal %i (%s)\n\n\nClick OK to close the program", signum, strsignal(signum)), strsignal(signum), 0);
 		#endif
 		exit(EXIT_FAILURE);
 		exit(128 + signum); //In case the first one fail

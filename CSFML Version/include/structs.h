@@ -294,6 +294,7 @@ struct game_s {
 	Array			fonts;
 	sfVector2f		baseScale;
 	sfVector2i		cam;
+	enum sfx		stepSound;
 	Array			characters;
 	Button			*buttons;
 	Icon			icon;
