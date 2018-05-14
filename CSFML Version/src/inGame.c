@@ -285,7 +285,7 @@ void	execAction(game_t *game, Object obj)
 			break;
 		}
 	}
-	if (obj.footstepSound != IRON)
+	if (obj.footstepSound > game->stepSound)
 		game->stepSound = obj.footstepSound + rand() % obj.footstepVariance;
 	switch(obj.action) {
 	case DEAL_DAMAGES:

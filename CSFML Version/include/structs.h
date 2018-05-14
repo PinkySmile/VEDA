@@ -264,7 +264,7 @@ typedef struct {
 	int		damages[DAMAGES_TYPE_NB];
 	float		invulnerabiltyTime;
 	int		action;
-	int		footstepSound;
+	enum sfx	footstepSound;
 	int		footstepVariance;
 } Object;
 
@@ -305,7 +305,7 @@ struct game_s {
 	sfVector2i		languagesConf;
 	bool			debug;
 	int			selected;
-	float			var;
+	float			trashCan;
 };
 
 #endif

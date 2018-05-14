@@ -128,7 +128,7 @@ void	initGame(game_t *game)
 		exit(EXIT_FAILURE);
 	}
 	game->text = sfText_create();
-	if (!game->rectangle) {
+	if (!game->text) {
 		printf("%s: Couldn't create text object\n", FATAL);
 		exit(EXIT_FAILURE);
 	}
@@ -172,6 +172,5 @@ void	initGame(game_t *game)
 	game->languages = loadLanguages(game);
 	game->buttons = loadButtons(game);
 	sfRenderWindow_setFramerateLimit(game->window, 60);
-	game->var = 1;
 	free(title);
 }

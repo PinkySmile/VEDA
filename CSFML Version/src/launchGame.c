@@ -26,9 +26,16 @@ void	launchGame(game_t *game)
 			loopCount = 0;
 			oldTime = time(NULL);
 		}
-		if (frameRate && (game->settings.dispFramerate || game->debug)) {
+		if (game->settings.dispFramerate) {
+			sfText_setCharacterSize(game->text, 10);
 			sfText_setColor(game->text, (sfColor){255, 255, 255, 255});
-			text(frameRate, game, 0, 0);
+			text(frameRate, game, 2, 0);
+		}
+		if (game->debug) {
+			sfText_setCharacterSize(game->text, 10);
+			sfText_setColor(game->text, (sfColor){255, 255, 255, 255});
+			text("Debug mode", game, 580, 0);
+			sfText_setColor(game->text, (sfColor){0, 0, 0, 255});
 		}
 		sfRenderWindow_display(game->window);
 	}

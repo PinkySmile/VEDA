@@ -33,10 +33,8 @@ void	disp_buttons(game_t *game)
 	int		blue;
 	int		green;
 
-	if (game->text) {
-		sfText_setCharacterSize(game->text, 20);
-		sfText_setScale(game->text, game->baseScale);
-	}
+	sfText_setCharacterSize(game->text, 20);
+	sfText_setScale(game->text, game->baseScale);
 	for (int i = 0; buttons && buttons[i].content; i++) {
 		if (buttons[i].displayed && buttons[i].rect) {
 			color.a = buttons[i].color.a;
