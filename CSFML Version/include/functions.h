@@ -57,5 +57,6 @@ void		changeKey(game_t *game, int buttonID);
 void		fullScreen(game_t *game, int buttonID);
 void		borderless(game_t *game, int buttonID);
 void		windowed(game_t *game, int buttonID);
+void		FPS_button(game_t *game, int buttonID);
 
 #endif

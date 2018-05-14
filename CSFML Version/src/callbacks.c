@@ -111,6 +111,7 @@ void	changeScreenMode(game_t *game, int new)
 	}
 	if (icon)
 		sfRenderWindow_setIcon(game->window, 32, 32, icon);
+	sfRenderWindow_setFramerateLimit(game->window, 60);
 }
 
 void	options_button(game_t *game, int buttonID)
@@ -122,10 +123,16 @@ void	options_button(game_t *game, int buttonID)
 		game->buttons[i].active = false;
 		game->buttons[i].displayed = false;
 	}
-	for (int i = 9; i <= 12; i++) {
+	for (int i = 9; i <= 13; i++) {
 		game->buttons[i].active = true;
 		game->buttons[i].displayed = true;
 	}
+}
+
+void	FPS_button(game_t *game, int buttonID)
+{
+	(void)buttonID;
+	game->settings.dispFramerate = !game->settings.dispFramerate;
 }
 
 void	audio_button(game_t *game, int buttonID)
@@ -193,7 +200,9 @@ void	changeLanguage(game_t *game, int buttonID)
 		sfRectangleShape_destroy(game->buttons[i].rect);
 	}
 	free(game->buttons);
+	sfRenderWindow_setFramerateLimit(game->window, -1);
 	game->buttons = loadButtons(game);
+	sfRenderWindow_setFramerateLimit(game->window, 60);
 	for (int i = 0; game->buttons[i].content; i++) {
 		game->buttons[i].active = false;
 		game->buttons[i].displayed = false;

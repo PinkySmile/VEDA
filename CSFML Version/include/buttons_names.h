@@ -25,6 +25,7 @@ enum buttons_names {
 	FULLSCREEN_BUTTON,
 	BORDERLESS_BUTTON,
 	WINDOWED_BUTTON,
+	DISP_FPS,
 };
 
 #endif

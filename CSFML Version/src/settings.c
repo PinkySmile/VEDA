@@ -59,6 +59,10 @@ void	options(game_t *game)
 			game->buttons[i + 10].color = (sfColor){205, 205, 205, 255};
 		}
 	}
+	if (game->settings.dispFramerate)
+		game->buttons[13].color = (sfColor){0, 255, 0, 255};
+	else
+		game->buttons[13].color = (sfColor){255, 0, 0, 255};
 }
 
 void	controls(game_t *game)

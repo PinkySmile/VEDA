@@ -13,3 +13,4 @@ No
 Fullscreen
 Borderless window
 Windowed
+Display frame rate

@@ -223,6 +223,7 @@ typedef struct {
 	unsigned char	keys[NB_OF_KEYS];
 	char		lang_id[256];
 	char		playerName[16];
+	bool		dispFramerate;
 } Settings;
 
 typedef struct {

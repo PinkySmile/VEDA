@@ -124,6 +124,15 @@ const Button_config	button_config[] = {
 		false
 	},
 	{
+		DISP_FPS,
+		{10, 160},
+		{200, 40},
+		{205, 205, 205, 255},
+		{0, 0, 0, 255},
+		&FPS_button,
+		false
+	},
+	{
 		-1,
 		{0, 0},
 		{0, 0},
