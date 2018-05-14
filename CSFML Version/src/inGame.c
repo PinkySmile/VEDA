@@ -52,8 +52,14 @@ void	displayCharacters(game_t *game)
 		if (!player.invulnerabiltyTime || var % 5 <= 3) {
 			rec.top = (player.movement.position / 2 + (player.movement.state * 2) + (player.movement.animation * 2)) * 32;
 			rec.left = (player.movement.position % 2) * 32;
-			sfSprite_setTextureRect(((Sprite *)sprites.content)[MALE_CHARACTER + player.texture].sprite, rec);
-			image(game, ((Sprite *)sprites.content)[MALE_CHARACTER + player.texture].sprite,  player.movement.pos.x + cam.x, player.movement.pos.y + cam.y, 16, 32);
+			if (((Sprite *)sprites.content)[MALE_CHARACTER + player.texture].sprite) {
+				sfSprite_setTextureRect(((Sprite *)sprites.content)[MALE_CHARACTER + player.texture].sprite, rec);
+				image(game, ((Sprite *)sprites.content)[MALE_CHARACTER + player.texture].sprite,  player.movement.pos.x + cam.x, player.movement.pos.y + cam.y, 16, 32);
+			} else {
+				sfRectangleShape_setOutlineColor(game->rectangle, (sfColor){0, 0, 0, 0});
+				sfRectangleShape_setFillColor(game->rectangle, (sfColor){i * 2 % 256, ((i * 10) >> 8) * 10 % 256, i * 2 % 256, 255});
+				rect(game, player.movement.pos.x + cam.x, player.movement.pos.y + cam.y, 16, 32);
+			}
 		}
 	}
 	var = var >= 4 ? 0 : var + 1;
@@ -120,18 +126,26 @@ void	drawLifeBar(game_t *game)
 	int		b = 0;
 	sfIntRect	rec = {0, 0, 16, 16};
 
-	for (int i = 1 ; i <= ((Character *)game->characters.content)[0].stats.lifeMax ; i++) {
+	for (int i = 1 ; i <= ((Character *)game->characters.content)[0].stats.lifeMax; i++) {
 		if (lifeBuffer <= 10 && lifeBuffer > 0)
 			rec.left = 48 + 160 * h + 16 * (10 - lifeBuffer);
 		else if (lifeBuffer >= 10)
 			rec.left = 48 + 160 * h;
 		else
 			rec.left = 528;
-		sfSprite_setTextureRect(((Sprite *)game->sprites.content)[LIFE_BAR].sprite, rec);
-		image(game, ((Sprite *)game->sprites.content)[LIFE_BAR].sprite, x, 465 - y, 16, 16);
-		rec.left = 16 * h;
-		sfSprite_setTextureRect(((Sprite *)game->sprites.content)[LIFE_BAR].sprite, rec);
-		image(game, ((Sprite *)game->sprites.content)[LIFE_BAR].sprite, x, 465 - y, 16, 16);
+		if (((Sprite *)game->sprites.content)[LIFE_BAR].sprite) {
+			sfSprite_setTextureRect(((Sprite *)game->sprites.content)[LIFE_BAR].sprite, rec);
+			image(game, ((Sprite *)game->sprites.content)[LIFE_BAR].sprite, x, 465 - y, 16, 16);
+			rec.left = 16 * h;
+			sfSprite_setTextureRect(((Sprite *)game->sprites.content)[LIFE_BAR].sprite, rec);
+			image(game, ((Sprite *)game->sprites.content)[LIFE_BAR].sprite, x, 465 - y, 16, 16);
+		} else {
+			sfRectangleShape_setFillColor(game->rectangle, (sfColor){h == 0 ? 255 : 0, h == 1 ? 255 : 0, h == 2 ? 255 : 0, 255});
+			if (lifeBuffer <= 10 && lifeBuffer > 0)
+				rect(game, x, 465 - y + 16 - 16 * lifeBuffer / 10, 16, 16 * lifeBuffer / 10);
+			else if (lifeBuffer >= 10)
+				rect(game, x, 465 - y, 16, 16);
+		}
 		if (b == 0)
 			x = x + 15;
 		if (b == 1) {
@@ -175,11 +189,19 @@ void	drawEnergyBar(game_t *game)
 			rec.left = 48 + 160 * h;
 		else
 			rec.left = 528;
-		sfSprite_setTextureRect(((Sprite *)game->sprites.content)[ENERGY_BAR].sprite, rec);
-		image(game, ((Sprite *)game->sprites.content)[ENERGY_BAR].sprite, 625 - x, 465 - y, 16, 16);
-		rec.left = 16 * h;
-		sfSprite_setTextureRect(((Sprite *)game->sprites.content)[ENERGY_BAR].sprite, rec);
-		image(game, ((Sprite *)game->sprites.content)[ENERGY_BAR].sprite, 625 - x, 465 - y, 16, 16);
+		if (((Sprite *)game->sprites.content)[ENERGY_BAR].sprite) {
+			sfSprite_setTextureRect(((Sprite *)game->sprites.content)[ENERGY_BAR].sprite, rec);
+			image(game, ((Sprite *)game->sprites.content)[ENERGY_BAR].sprite, 625 - x, 465 - y, 16, 16);
+			rec.left = 16 * h;
+			sfSprite_setTextureRect(((Sprite *)game->sprites.content)[ENERGY_BAR].sprite, rec);
+			image(game, ((Sprite *)game->sprites.content)[ENERGY_BAR].sprite, 625 - x, 465 - y, 16, 16);
+		} else {
+			sfRectangleShape_setFillColor(game->rectangle, (sfColor){h == 0 ? 255 : 0, h == 1 ? 255 : 0, h == 2 ? 255 : 0, 255});
+			if (energyBuffer <= 10 && energyBuffer > 0)
+				rect(game, 625 - x, 465 - y + 16 - 16 * energyBuffer / 10, 16, 16 * energyBuffer / 10);
+			else if (energyBuffer >= 10)
+				rect(game, 625 - x, 465 - y, 16, 16);
+		}
 		if (b == 0)
 			x = x + 15;
 		if (b == 1) {

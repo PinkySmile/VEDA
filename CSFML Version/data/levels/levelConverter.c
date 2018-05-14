@@ -255,6 +255,8 @@ Object	*loadLevel(char *path)
 			objs[i / 3].action = DEAL_DAMAGES;
 			objs[i / 3].damages[FIRE_DAMAGE] = 10;
 			objs[i / 3].invulnerabiltyTime = 10;
+			objs[i / 3].footstepSound = MUD1;
+			objs[i / 3].footstepVariance = 4;
 		} else if (objs[i / 3].id == 8) {
 			objs[i / 3].action = CHANGE_MUSIC;
 			objs[i / 3].invulnerabiltyTime = MYSTERIOUS;
@@ -268,8 +270,6 @@ Object	*loadLevel(char *path)
 			objs[i / 3].action = DEAL_DAMAGES;
 			objs[i / 3].damages[TRUE_DAMAGE] = -3;
 			objs[i / 3].invulnerabiltyTime = 5;
-			objs[i / 3].footstepSound = MUD1;
-			objs[i / 3].footstepVariance = 4;
 		} else if (objs[i / 3].id == 12) {
 			objs[i / 3].action = CHANGE_MUSIC;
 			objs[i / 3].damages[FIRE_DAMAGE] = 10;
@@ -305,7 +305,7 @@ void	saveLevel(char *path, Object *objs)
 	printf("Writing header (%s) (%i chars)\n", header, write(fd, header, strlen(header)));
 	for (int i = 0; objs[i].layer; i++) {
 		ln = 0;
-		buffer = concatf("\r%i\r%i\r%i\r%i\r%i\r%i\r%f\r%i\r%i\r%i\r%i\r%i\r%i\r%i\r%i\r%i", objs[i].id, objs[i].pos.x, objs[i].pos.y, objs[i].layer, objs[i].solid, objs[i].action, objs[i].invulnerabiltyTime, objs[i].damages[0], objs[i].damages[1], objs[i].damages[2], objs[i].damages[3], objs[i].damages[4], objs[i].damages[5], objs[i].damages[6], objs[i].footstepSound, objs[i].footstepVariance);
+		buffer = concatf("\r%i\r%i\r%i\r%i\r%i\r%i\r%f\r%i\r%i\r%i\r%i\r%i\r%i\r%i\r%i\r%i", objs[i].id, objs[i].pos.x, objs[i].pos.y, objs[i].layer, objs[i].solid, objs[i].action, objs[i].invulnerabiltyTime, objs[i].footstepSound, objs[i].footstepVariance, objs[i].damages[0], objs[i].damages[1], objs[i].damages[2], objs[i].damages[3], objs[i].damages[4], objs[i].damages[5], objs[i].damages[6]);
 		buf = concatf("%S", buffer);
 		for (int i = 0; buffer[i]; ln += buffer[i] == '\r', i++);
 		printf("Writing object %i (%s) (%i chars and %i lines)\n", i, buf, write(fd, buffer, strlen(buffer)), ln);

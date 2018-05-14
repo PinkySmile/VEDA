@@ -45,15 +45,24 @@ CC =	gcc
 
 RULE =	all
 
+RES =	
+
+windows:RES = icon.res
+windows:icon.res all
+
+icon.res:
+	windres icon.rc -O coff -o icon.res
+
 all:    $(NAME)
 
 $(NAME):$(OBJ)
 	$(MAKE) -C lib/concatf $(RULE)
-	$(CC) -o $(NAME) $(OBJ) $(LDFLAGS)
+	$(CC) -o $(NAME) $(OBJ) $(LDFLAGS) $(RES)
 
 clean:
 	$(MAKE) -C lib/concatf clean
 	$(RM) $(OBJ)
+	$(RM) icon.res
 
 fclean:	clean
 	$(MAKE) -C lib/concatf fclean

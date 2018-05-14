@@ -62,7 +62,7 @@ char	*getVersion()
 	printf("%s: Loading version string\n", INFO);
 	if (fd < 0 || !version) {
 		free(version);
-		printf("[ERROR] : data/version.txt: %s\n", strerror(errno));
+		printf("[ERROR]: data/version.txt: %s\n", strerror(errno));
 		close(fd);
 		version = strdup("?.?.?.?");
 		if (!version)
@@ -104,7 +104,7 @@ void	initGame(game_t *game)
 	if (image)
 		icon = sfImage_getPixelsPtr(image);
 	else
-		printf("[ERROR] : Couldn't load icon image\n");
+		printf("[ERROR]: Couldn't load icon image\n");
 	if (!title) {
 		printf("%s: Couldn't create window title\n", FATAL);
 		#ifdef __MINGW32__
@@ -173,6 +173,5 @@ void	initGame(game_t *game)
 	game->buttons = loadButtons(game);
 	sfRenderWindow_setFramerateLimit(game->window, 60);
 	game->var = 1;
-	sfMusic_setPitch(((sfMusic **)game->musics.content)[MAIN_MENU_MUSIC], 1);
 	free(title);
 }

@@ -106,6 +106,7 @@ Object	*loadLevel(char *path, char **bg)
 		printf("%s: %s: %s\n", ERROR, path, strerror(errno));
 		return (NULL);
 	}
+	printf("%s: One object is %i lines long\n", INFO, 9 + DAMAGES_TYPE_NB);
 	read(fd, file_buffer, buffer.st_size);
 	close(fd);
 	objs = malloc(sizeof(*objs));
@@ -147,10 +148,10 @@ Object	*loadLevel(char *path, char **bg)
 		objs[i / (9 + DAMAGES_TYPE_NB)].solid = atoi(lines[i + 4]);
 		objs[i / (9 + DAMAGES_TYPE_NB)].action = atoi(lines[i + 5]);
 		objs[i / (9 + DAMAGES_TYPE_NB)].invulnerabiltyTime = atof(lines[i + 6]);
-		objs[i / (9 + DAMAGES_TYPE_NB)].footstepSound = atof(lines[i + DAMAGES_TYPE_NB + 1]);
-		objs[i / (9 + DAMAGES_TYPE_NB)].footstepVariance = atof(lines[i + DAMAGES_TYPE_NB + 2]);
+		objs[i / (9 + DAMAGES_TYPE_NB)].footstepSound = atoi(lines[i + 7]);
+		objs[i / (9 + DAMAGES_TYPE_NB)].footstepVariance = atoi(lines[i + 8]);
 		for (int j = 0; j < DAMAGES_TYPE_NB; j++)
-			objs[i / (9 + DAMAGES_TYPE_NB)].damages[j] = atoi(lines[i + 7 + j]);
+			objs[i / (9 + DAMAGES_TYPE_NB)].damages[j] = atoi(lines[i + 9 + j]);
 		if (objs[i / (9 + DAMAGES_TYPE_NB)].layer <= 0) {
 			printf("%s: Invalid line %i (", ERROR, i + 4);
 			showStr(lines[i + 3]);
