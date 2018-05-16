@@ -17,16 +17,14 @@ void	audio(game_t *game)
 		}
 	}
 	sfRectangleShape_setFillColor(game->rectangle, (sfColor){100, 100, 100, 255});
-	rect(game, 0, 0, 512, 48);
-	rect(game, 0, 48, 512, 48);
-	rect(game, 0, 0, 512, 48);
-	rect(game, 0, 48, 512, 48);
+	rect(game, 0, 0, 512, 96);
 	sfRectangleShape_setFillColor(game->rectangle, (sfColor){255, 255, 255, 255});
 	rect(game, 140, 14, 300, 20);
 	rect(game, 140, 62, 300, 20);
 	sfRectangleShape_setFillColor(game->rectangle, (sfColor){255, 0, 0, 255});
 	rect(game, 130 + game->settings.sfxVolume * 3, 6, 20, 36);
 	rect(game, 130 + game->settings.musicVolume * 3, 54, 20, 36);
+	sfText_setCharacterSize(game->text, 20);
 	text("Sound effects", game, 5, 8);
 	text("Musics", game, 5, 56);
 	nbrs[0] = concatf("%i%%", game->settings.sfxVolume);
