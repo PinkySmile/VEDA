@@ -5,15 +5,26 @@
 #include <string.h>
 #include <errno.h>
 #include <fcntl.h>
+#include <sys/types.h>
+#include <sys/stat.h>
 
 void		saveSettings(game_t *game)
 {
-	int	fd;
+	int		fd;
+	struct stat	st;
 
 	printf("%s: Saving settings\n", INFO);
-	fd = open("data/settings.dat", O_WRONLY | O_CREAT, READ_WRITE_RIGHTS);
+	if (stat("save", &st) == -1) {
+		printf("%s: Creating folder \"save\"\n", INFO);
+		#ifdef __MINGW32__
+			mkdir("save");
+		#else
+			mkdir("save", 0766);
+		#endif
+	}
+	fd = open("save/settings.dat", O_WRONLY | O_CREAT, READ_WRITE_RIGHTS);
 	if (fd < 0) {
-		printf("%s: Couldn't save settings (data/settings.dat: %s)\n", ERROR, strerror(errno));
+		printf("%s: Couldn't save settings (save/settings.dat: %s)\n", ERROR, strerror(errno));
 		return;
 	}
 	write(fd, &game->settings, sizeof(game->settings));
@@ -26,10 +37,10 @@ Settings	loadSettings()
 	int		fd;
 
 	printf("%s: Loading settings\n", INFO);
-	fd = open("data/settings.dat", O_RDONLY);
+	fd = open("save/settings.dat", O_RDONLY);
 	memset(&settings, 0, sizeof(settings));
 	if (fd < 0) {
-		printf("%s: Couldn't load settings (data/settings.dat: %s)\n", ERROR, strerror(errno));
+		printf("%s: Couldn't load settings (save/settings.dat: %s)\n", ERROR, strerror(errno));
 		memset(&settings.keys, -1, NB_OF_KEYS);
 		settings.sfxVolume = 100;
 		settings.musicVolume = 100;
