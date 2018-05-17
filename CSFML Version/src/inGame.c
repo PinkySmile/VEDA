@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include <string.h>
+#include <time.h>
 
 void	displayLowerLayer(game_t *game)
 {
@@ -432,11 +433,18 @@ void	movePlayer(game_t *game)
 void	inGame(game_t *game)
 {
 	Character	*player = &((Character *)game->characters.content)[0];
+	char		*tmp = NULL;
 
 	displayLowerLayer(game);
 	displayCharacters(game);
 	displayUpperLayer(game);
 	displayHUD(game);
+	if (game->debug) {
+		tmp = concatf("X: %f\nY: %f\n", player->movement.pos.x, player->movement.pos.y);
+		sfText_setColor(game->text, time(NULL) % 2 ? (sfColor){255, 255, 255, 255} : (sfColor){0, 0, 0, 255});
+		text(tmp, game, 0, game->settings.dispFramerate ? 10 : 0);
+		free(tmp);
+	}
 	if (player->movement.state == MOVING && sfTime_asSeconds(sfClock_getElapsedTime(player->movement.animationClock)) >= 0.1 / player->movement.speed) {
 		player->movement.animation = !player->movement.animation;
 		if (((sfMusic **)game->sfx.content)[game->stepSound])
