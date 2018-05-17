@@ -9,14 +9,14 @@
 #include "concatf.h"
 #include "macros.h"
 #ifdef __MINGW32__
-#include <windows.h>
+#	include <windows.h>
 #endif
 
 #ifndef SIGBUS
-#define SIGBUS 7
+#	define SIGBUS 7
 #endif
 #ifndef SIGQUIT
-#define SIGQUIT 3
+#	define SIGQUIT 3
 #endif
 
 sfRenderWindow	**window;
@@ -64,12 +64,11 @@ void	sighandler(int signum)
 	} else {
 		printf("%s: Caught signal %i (%s). Aborting !\n", FATAL, signum, strsignal(signum));
 		#ifdef __MINGW32__
-		MessageBox(NULL, concatf("Error: Caught signal %i (%s)\n\n\nClick OK to close the program", signum, strsignal(signum)), "Fatal Error", 0);
+			MessageBox(NULL, concatf("Error: Caught signal %i (%s)\n\n\nClick OK to close the program", signum, strsignal(signum)), "Fatal Error", 0);
 		#endif
 		exit(EXIT_FAILURE);
 		exit(128 + signum); //In case the first one fail
-		signal(signum, NULL);
-		raise(signum); //In case the crash trashed the exit function
+		raise(SIGKILL); //In case the crash trashed the exit function
 		signal(11, NULL);
 		*(char *)NULL = *(char *)NULL; //Let's do this kernel. Come on, I wait you !
 	}
@@ -136,7 +135,7 @@ void	destroyStruct(game_t *game)
 			sfClock_destroy(((Character *)game->characters.content)[i].damageClock[j]);
 	}
 	for (int i = 0; i < NB_OF_KEYS; i++)
-		if (game->settings.keys[i] > 204)
+		if (game->settings.keys[i] > 204 && game->settings.keys[i] != (unsigned char)-1)
 			free(game->buttons[i + game->languagesConf.y + game->languagesConf.x].content);
 	free(game->buttons);
 	free(game->characters.content);

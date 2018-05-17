@@ -5,7 +5,7 @@
 #include <string.h>
 #include <stdio.h>
 #ifdef __MINGW32__
-#include <windows.h>
+	#include <windows.h>
 #endif
 
 void	back_on_title_screen(game_t *game, int buttonID)
@@ -32,6 +32,7 @@ void	play_button(game_t *game, int buttonID)
 		game->buttons[i].displayed = false;
 	}
 	game->map = loadLevel("data/levels/test/level/floor0.lvl", &game->bg);
+	loadGame(game);
 	if (((sfMusic **)game->musics.content)[MAIN_MENU_MUSIC] && sfMusic_getStatus(((sfMusic **)game->musics.content)[MAIN_MENU_MUSIC]) == sfPlaying)
 		sfMusic_stop(((sfMusic **)game->musics.content)[MAIN_MENU_MUSIC]);
 }
@@ -59,7 +60,7 @@ void	changeKey(game_t *game, int buttonID)
 	if (game->selected >= 0)
 		game->buttons[game->selected].content = getKeyString(game->settings.keys[game->selected - game->languagesConf.y - game->languagesConf.x]);
 	game->selected = buttonID;
-	if (game->settings.keys[game->selected - game->languagesConf.y - game->languagesConf.x] >= 101 && (game->settings.keys[game->selected - game->languagesConf.y - game->languagesConf.x] < 201 || game->settings.keys[game->selected - game->languagesConf.y - game->languagesConf.x] > 204))
+	if (game->settings.keys[game->selected - game->languagesConf.y - game->languagesConf.x] > 204 && game->settings.keys[game->selected - game->languagesConf.y - game->languagesConf.x] != (unsigned char)-1)
 		free(game->buttons[game->selected].content);
 	game->buttons[game->selected].content = "<Press a key>";
 }
@@ -79,7 +80,7 @@ void	changeScreenMode(game_t *game, int new)
 	if (!title) {
 		printf("%s: Couldn't create window title\n", FATAL);
 		#ifdef __MINGW32__
-		MessageBox(NULL, "Couldn't create window title", "Window error", 0);
+			MessageBox(NULL, "Couldn't create window title", "Window error", 0);
 		#endif
 		exit(EXIT_FAILURE);
 	}
@@ -105,7 +106,7 @@ void	changeScreenMode(game_t *game, int new)
 	if (!game->window) {
 		printf("%s: Couldn't create window\n", FATAL);
 		#ifdef __MINGW32__
-		MessageBox(NULL, "Couldn't create window object", "Window error", 0);
+			MessageBox(NULL, "Couldn't create window object", "Window error", 0);
 		#endif
 		exit(EXIT_FAILURE);
 	}
@@ -218,5 +219,6 @@ void	changeLanguage(game_t *game, int buttonID)
 void	quit_button(game_t *game, int buttonID)
 {
 	(void)buttonID;
+	saveGame(game);
 	sfRenderWindow_close(game->window);
 }

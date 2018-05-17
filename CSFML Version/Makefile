@@ -20,6 +20,7 @@ SRC = 	main.c		\
 	loadLevel.c	\
 	inGame.c	\
 	settings.c	\
+	saveFileMgr.c	\
 
 OBJ =	$(SRC:%.c=src/%.o)
 
@@ -47,13 +48,13 @@ RULE =	all
 
 RES =	
 
+all:    $(NAME)
+
 windows:RES = icon.res
 windows:icon.res all
 
 icon.res:
 	windres icon.rc -O coff -o icon.res
-
-all:    $(NAME)
 
 $(NAME):$(OBJ)
 	$(MAKE) -C lib/concatf $(RULE)
