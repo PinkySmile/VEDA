@@ -68,7 +68,7 @@ void	sighandler(int signum)
 		#endif
 		exit(EXIT_FAILURE);
 		exit(128 + signum); //In case the first one fail
-		raise(SIGKILL); //In case the crash trashed the exit function
+		raise(signum); //In case the crash trashed the exit function
 		signal(11, NULL);
 		*(char *)NULL = *(char *)NULL; //Let's do this kernel. Come on, I wait you !
 	}
