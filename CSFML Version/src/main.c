@@ -8,9 +8,6 @@
 #include "functions.h"
 #include "concatf.h"
 #include "macros.h"
-#ifdef __MINGW32__
-#	include <windows.h>
-#endif
 
 #ifndef SIGBUS
 #	define SIGBUS 7
@@ -63,9 +60,7 @@ void	sighandler(int signum)
 		printf("%s: Caught signal %i (%s). Exiting.\n", INFO, signum, strsignal(signum));
 	} else {
 		printf("%s: Caught signal %i (%s). Aborting !\n", FATAL, signum, strsignal(signum));
-		#ifdef __MINGW32__
-			MessageBox(NULL, concatf("Error: Caught signal %i (%s)\n\n\nClick OK to close the program", signum, strsignal(signum)), "Fatal Error", 0);
-		#endif
+		dispMsg("Fatal Error", concatf("Error: Caught signal %i (%s)\n\n\nClick OK to close the program", signum, strsignal(signum)), 0);
 		exit(EXIT_FAILURE);
 		exit(128 + signum); //In case the first one fail
 		raise(signum); //In case the crash trashed the exit function

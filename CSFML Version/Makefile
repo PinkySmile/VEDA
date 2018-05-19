@@ -21,6 +21,7 @@ SRC = 	main.c		\
 	inGame.c	\
 	settings.c	\
 	saveFileMgr.c	\
+	dispMsg.c	\
 
 OBJ =	$(SRC:%.c=src/%.o)
 

@@ -5,8 +5,10 @@
 #include <string.h>
 #include <stdbool.h>
 #include <errno.h>
+#include <stdlib.h>
 #include "structs.h"
 #include "macros.h"
+#include "functions.h"
 
 bool	saveGame(game_t *game)
 {
@@ -14,6 +16,7 @@ bool	saveGame(game_t *game)
 	struct stat	st;
 	bool		success = false;
 	Character	player = ((Character *)game->characters.content)[0];
+	int		len;
 
 	printf("%s: Saving game\n", INFO);
 	if (stat("save", &st) == -1) {
@@ -37,6 +40,9 @@ bool	saveGame(game_t *game)
 	player.movement.stateClock = NULL;
 	player.stats.energyRegenClock = NULL;
 	write(fd, &player, sizeof(player));
+	for (len = 0; game->map[len].layer; len++);
+	write(fd, &len, sizeof(len));
+	write(fd, game->map, sizeof(*game->map) * len);
 	close(fd);
 	return (true);
 }
@@ -45,6 +51,9 @@ void	loadGame(game_t *game)
 {
 	int		fd;
 	Character	player;
+	int		len = 0;
+	bool		use = false;
+	int		readBytes = 0;
 
 	printf("%s: Loading game\n", INFO);
 	fd = open("save/game.dat", O_RDONLY);
@@ -52,7 +61,40 @@ void	loadGame(game_t *game)
 		printf("%s: Cannot open save file (save/game.dat: %s)\n", ERROR, strerror(errno));
 		return;
 	}
-	read(fd, &player, sizeof(player));
+	readBytes = read(fd, &player, sizeof(player));
+	printf("%s: Read %iB of the save file out of %liB\n", INFO, readBytes, (long)sizeof(player));
+	if (readBytes != sizeof(player) && !use) {
+		printf("%s: Corrupted save file detected\n", ERROR);
+		use = (dispMsg("Error", CORRUPTED_SAVE_MSG, 4) == 6);
+		if (!use)
+			return;
+	}
+	readBytes = read(fd, &len, sizeof(len));
+	printf("%s: Read %iB of the save file out of %liB\n", INFO, readBytes, (long)sizeof(len));
+	if (readBytes != sizeof(len) && !use) {
+		printf("%s: Corrupted save file detected\n", ERROR);
+		use = (dispMsg("Error", CORRUPTED_SAVE_MSG, 4) == 6);
+		if (!use)
+			return;
+	}
+	free(game->map);
+	game->map = malloc((len + 1) * sizeof(*game->map));
+	if (!game->map) {
+		printf("%s: Couldn't alloc %liB\n", FATAL, (long)(len * sizeof(*game->map)));
+		exit(EXIT_FAILURE);
+	}
+	readBytes = read(fd, game->map, len * sizeof(*game->map));
+	printf("%s: Read %iB of the save file out of %iB\n", INFO, readBytes, len * sizeof(*game->map));
+	if (readBytes != (int)(len * sizeof(*game->map)) && !use) {
+		printf("%s: Corrupted save file detected\n", ERROR);
+		use = (dispMsg("Error", CORRUPTED_SAVE_MSG, 4) == 6);
+		if (!use) {
+			free(game->map);
+			game->map = NULL;
+			return;
+		}
+	}
+	game->map[readBytes / sizeof(*game->map)].layer = 0;
 	player.movement.animationClock = ((Character *)game->characters.content)[0].movement.animationClock;
 	player.movement.stateClock = ((Character *)game->characters.content)[0].movement.stateClock;
 	player.stats.energyRegenClock = ((Character *)game->characters.content)[0].stats.energyRegenClock;

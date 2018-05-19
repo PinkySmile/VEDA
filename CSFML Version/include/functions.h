@@ -20,6 +20,7 @@ void		setVolumes(Array sounds, float volume);
 float		isPressed(int keyID);
 char		*getVersion();
 void		changeScreenMode(game_t *game, int new);
+int		dispMsg(char *title, char *content, int variate);
 
 //Init game struct
 void		initGame	(game_t *game);
@@ -38,7 +39,7 @@ void	text		(char *str, game_t *game, int x, int y);
 void	rect		(game_t *game, int x, int y, int width, int height);
 
 //Save/Load functions
-void		saveGame	(game_t *game);
+bool		saveGame	(game_t *game);
 void		loadGame	(game_t *game);
 void		saveSettings	(game_t *game);
 Settings	loadSettings	(void);

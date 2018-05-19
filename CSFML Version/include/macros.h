@@ -14,7 +14,9 @@
 #define FULLSCREEN		1
 #define BORDERLESS_WINDOW	2
 
-#define READ_WRITE_RIGHTS	0660
+#define READ_WRITE_RIGHTS	0664
+
+#define CORRUPTED_SAVE_MSG	"The save file is either corrupted or invalid (maybe too old ?)\n\nDo you want to use the save file anyway ?\nNote that this can make things really glitchy or even crash the game"
 
 #define NB_OF_KEYS	20
 

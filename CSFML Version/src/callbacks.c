@@ -4,9 +4,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
-#ifdef __MINGW32__
-	#include <windows.h>
-#endif
 
 void	back_on_title_screen(game_t *game, int buttonID)
 {
@@ -31,8 +28,9 @@ void	play_button(game_t *game, int buttonID)
 		game->buttons[i].active = false;
 		game->buttons[i].displayed = false;
 	}
-	game->map = loadLevel("data/levels/test/level/floor0.lvl", &game->bg);
 	loadGame(game);
+	if (!game->map)
+		game->map = loadLevel("data/levels/test/level/floor0.lvl", &game->bg);
 	if (((sfMusic **)game->musics.content)[MAIN_MENU_MUSIC] && sfMusic_getStatus(((sfMusic **)game->musics.content)[MAIN_MENU_MUSIC]) == sfPlaying)
 		sfMusic_stop(((sfMusic **)game->musics.content)[MAIN_MENU_MUSIC]);
 }
@@ -79,9 +77,7 @@ void	changeScreenMode(game_t *game, int new)
 		printf("[ERROR] : Couldn't load icon image\n");
 	if (!title) {
 		printf("%s: Couldn't create window title\n", FATAL);
-		#ifdef __MINGW32__
-			MessageBox(NULL, "Couldn't create window title", "Window error", 0);
-		#endif
+		dispMsg("Window error", "Couldn't create window title", 0);
 		exit(EXIT_FAILURE);
 	}
 	if (game->settings.windowMode == new)
@@ -105,9 +101,7 @@ void	changeScreenMode(game_t *game, int new)
 	game->window = sfRenderWindow_create(mode, title, style, NULL);
 	if (!game->window) {
 		printf("%s: Couldn't create window\n", FATAL);
-		#ifdef __MINGW32__
-			MessageBox(NULL, "Couldn't create window object", "Window error", 0);
-		#endif
+		dispMsg("Window error", "Couldn't create window object", 0);
 		exit(EXIT_FAILURE);
 	}
 	if (icon)
@@ -219,6 +213,5 @@ void	changeLanguage(game_t *game, int buttonID)
 void	quit_button(game_t *game, int buttonID)
 {
 	(void)buttonID;
-	saveGame(game);
 	sfRenderWindow_close(game->window);
 }

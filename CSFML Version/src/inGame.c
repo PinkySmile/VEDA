@@ -434,16 +434,21 @@ void	inGame(game_t *game)
 {
 	Character	*player = &((Character *)game->characters.content)[0];
 	char		*tmp = NULL;
+	static int	color = 255;
 
 	displayLowerLayer(game);
 	displayCharacters(game);
 	displayUpperLayer(game);
 	displayHUD(game);
 	if (game->debug) {
+		sfText_setCharacterSize(game->text, 10);
 		tmp = concatf("X: %f\nY: %f\n", player->movement.pos.x, player->movement.pos.y);
-		sfText_setColor(game->text, time(NULL) % 2 ? (sfColor){255, 255, 255, 255} : (sfColor){0, 0, 0, 255});
+		sfText_setColor(game->text, (sfColor){abs(color), abs(color), abs(color), 255});
 		text(tmp, game, 0, game->settings.dispFramerate ? 10 : 0);
 		free(tmp);
+		color--;
+		if (color < -255)
+			color *= -1;
 	}
 	if (player->movement.state == MOVING && sfTime_asSeconds(sfClock_getElapsedTime(player->movement.animationClock)) >= 0.1 / player->movement.speed) {
 		player->movement.animation = !player->movement.animation;
