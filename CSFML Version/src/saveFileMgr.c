@@ -31,6 +31,8 @@ bool	saveGame(game_t *game)
 			return (false);
 		}
 	}
+	remove("save/game.dat.old");
+	rename("save/game.dat", "save/game.dat.old");
 	fd = open("save/game.dat", O_WRONLY | O_CREAT, READ_WRITE_RIGHTS);
 	if (fd < 0) {
 		printf("%s: Cannot open save file (save/game.dat: %s)\n", ERROR, strerror(errno));
@@ -54,6 +56,10 @@ void	loadGame(game_t *game)
 	int		len = 0;
 	bool		use = false;
 	int		readBytes = 0;
+	int		totalRead = 0;
+	int		tmp = 0;
+	int		old = 0;
+	int count = 0;
 
 	printf("%s: Loading game\n", INFO);
 	fd = open("save/game.dat", O_RDONLY);
@@ -61,18 +67,18 @@ void	loadGame(game_t *game)
 		printf("%s: Cannot open save file (save/game.dat: %s)\n", ERROR, strerror(errno));
 		return;
 	}
-	readBytes = read(fd, &player, sizeof(player));
-	printf("%s: Read %iB of the save file out of %liB\n", INFO, readBytes, (long)sizeof(player));
+	totalRead += readBytes = read(fd, &player, sizeof(player));
 	if (readBytes != sizeof(player) && !use) {
 		printf("%s: Corrupted save file detected\n", ERROR);
+		close(fd);
 		use = (dispMsg("Error", CORRUPTED_SAVE_MSG, 4) == 6);
 		if (!use)
 			return;
 	}
-	readBytes = read(fd, &len, sizeof(len));
-	printf("%s: Read %iB of the save file out of %liB\n", INFO, readBytes, (long)sizeof(len));
+	totalRead += readBytes = read(fd, &len, sizeof(len));
 	if (readBytes != sizeof(len) && !use) {
 		printf("%s: Corrupted save file detected\n", ERROR);
+		close(fd);
 		use = (dispMsg("Error", CORRUPTED_SAVE_MSG, 4) == 6);
 		if (!use)
 			return;
@@ -81,12 +87,24 @@ void	loadGame(game_t *game)
 	game->map = malloc((len + 1) * sizeof(*game->map));
 	if (!game->map) {
 		printf("%s: Couldn't alloc %liB\n", FATAL, (long)(len * sizeof(*game->map)));
+		close(fd);
 		exit(EXIT_FAILURE);
 	}
-	readBytes = read(fd, game->map, len * sizeof(*game->map));
-	printf("%s: Read %iB of the save file out of %iB\n", INFO, readBytes, len * sizeof(*game->map));
+	for (unsigned int i = 0; i < sizeof(*game->map) * len; ) {
+		old = lseek(fd, 0, SEEK_CUR);
+		tmp = read(fd, &((char *)game->map)[i], 100);
+		//if (lseek(fd, 0, SEEK_CUR) - old != 1)
+		//	printf("%i: i: %i, pos: %li, old: %i\n", count++, i, lseek(fd, 0, SEEK_CUR), old);
+		i += tmp > 0 ? tmp : 1;
+		//i++;
+		if (lseek(fd, 0, SEEK_CUR) - old == 0)
+			break;
+		readBytes = i;
+	}
+	printf("%i, %i\n", readBytes, (int)(len * sizeof(*game->map)));
 	if (readBytes != (int)(len * sizeof(*game->map)) && !use) {
 		printf("%s: Corrupted save file detected\n", ERROR);
+		close(fd);
 		use = (dispMsg("Error", CORRUPTED_SAVE_MSG, 4) == 6);
 		if (!use) {
 			free(game->map);
@@ -101,5 +119,6 @@ void	loadGame(game_t *game)
 	for (int j = 0; j < DAMAGES_TYPE_NB; j++)
 		player.damageClock[j] = ((Character *)game->characters.content)[0].damageClock[j];
 	((Character *)game->characters.content)[0] = player;
+	printf("%s: Done\n", INFO);
 	close(fd);
 }

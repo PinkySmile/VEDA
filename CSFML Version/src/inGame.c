@@ -75,8 +75,9 @@ void	displayUpperLayer(game_t *game)
 	bool		newLayer = true;
 	char		*buffer = NULL;
 
-	for (int layer = 2; newLayer; layer++) {
+	for (int nextLayer, layer = 2; newLayer; layer = nextLayer) {
 		newLayer = false;
+		nextLayer = 0;
 		for (int i = 0; map && map[i].layer; i++) {
 			if (map[i].layer == layer && map[i].pos.x + cam.x > -32 && map[i].pos.x + cam.x < 672 && map[i].pos.y + cam.y > -32 && map[i].pos.y + cam.y < 672) {
 				if (!((Sprite *)sprites.content)[OBJECTS].sprite) {
@@ -100,6 +101,7 @@ void	displayUpperLayer(game_t *game)
 					free(buffer);
 				}
 			}
+			nextLayer = map[i].layer > layer && (map[i].layer < nextLayer || nextLayer == 0) ? map[i].layer : nextLayer;
 			newLayer = newLayer || map[i].layer > layer;
 		}
 	}
