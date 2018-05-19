@@ -92,11 +92,8 @@ void	loadGame(game_t *game)
 	}
 	for (unsigned int i = 0; i < sizeof(*game->map) * len; ) {
 		old = lseek(fd, 0, SEEK_CUR);
-		tmp = read(fd, &((char *)game->map)[i], 100);
-		//if (lseek(fd, 0, SEEK_CUR) - old != 1)
-		//	printf("%i: i: %i, pos: %li, old: %i\n", count++, i, lseek(fd, 0, SEEK_CUR), old);
+		tmp = read(fd, &((char *)game->map)[i], 1);
 		i += tmp > 0 ? tmp : 1;
-		//i++;
 		if (lseek(fd, 0, SEEK_CUR) - old == 0)
 			break;
 		readBytes = i;
