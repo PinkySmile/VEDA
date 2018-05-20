@@ -59,7 +59,6 @@ void	loadGame(game_t *game)
 	int		totalRead = 0;
 	int		tmp = 0;
 	int		old = 0;
-	int count = 0;
 
 	printf("%s: Loading game\n", INFO);
 	fd = open("save/game.dat", O_RDONLY);
@@ -90,14 +89,18 @@ void	loadGame(game_t *game)
 		close(fd);
 		exit(EXIT_FAILURE);
 	}
-	for (unsigned int i = 0; i < sizeof(*game->map) * len; ) {
-		old = lseek(fd, 0, SEEK_CUR);
-		tmp = read(fd, &((char *)game->map)[i], 1);
-		i += tmp > 0 ? tmp : 1;
-		if (lseek(fd, 0, SEEK_CUR) - old == 0)
-			break;
-		readBytes = i;
-	}
+	#ifdef __MINGW32__
+		for (unsigned int i = 0; i < sizeof(*game->map) * len; ) {
+			old = lseek(fd, 0, SEEK_CUR);
+			tmp = read(fd, &((char *)game->map)[i], 1);
+			i += tmp > 0 ? tmp : 1;
+			if (lseek(fd, 0, SEEK_CUR) - old == 0)
+				break;
+			readBytes = i;
+		}
+	#else
+		readBytes = read(fd, game->map, sizeof(*game->map) * len);
+	#endif
 	printf("%i, %i\n", readBytes, (int)(len * sizeof(*game->map)));
 	if (readBytes != (int)(len * sizeof(*game->map)) && !use) {
 		printf("%s: Corrupted save file detected\n", ERROR);
@@ -109,7 +112,7 @@ void	loadGame(game_t *game)
 			return;
 		}
 	}
-	game->map[readBytes / sizeof(*game->map)].layer = 0;
+	game->map[len].layer = 0;
 	player.movement.animationClock = ((Character *)game->characters.content)[0].movement.animationClock;
 	player.movement.stateClock = ((Character *)game->characters.content)[0].movement.stateClock;
 	player.stats.energyRegenClock = ((Character *)game->characters.content)[0].stats.energyRegenClock;
