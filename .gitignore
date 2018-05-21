@@ -4,6 +4,7 @@ desktop.ini
 *.o
 *.a
 *.dat
+*.res
 *.lnk
 VEDA
 VEDA.exe
