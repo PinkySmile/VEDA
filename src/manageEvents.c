@@ -2,12 +2,13 @@
 #include "functions.h"
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 
 
 void	setVolumes(Array sounds, float volume)
 {
 	sfMusic	**musics = sounds.content;
-	
+
 	for (int i = 0; i < sounds.length; i++)
 		if (musics[i])
 			sfMusic_setVolume(musics[i], volume);
@@ -26,6 +27,11 @@ void	manageEvents(game_t *game)
 			for (int i = 0; i < game->musics.length; i++)
 				if (((sfMusic **)game->musics.content)[i] && sfMusic_getStatus(((sfMusic **)game->musics.content)[MAIN_MENU_MUSIC]) == sfPlaying)
 					sfMusic_stop(((sfMusic **)game->musics.content)[i]);
+		} else if (event.type == sfEvtTextEntered) {
+			if (event.text.unicode == 8 && game->bufPos > 0)
+				game->buffer[--game->bufPos] = 0;
+			else
+				game->buffer[game->bufPos < game->bufSize ? game->bufPos++ : game->bufPos - 1] = event.text.unicode;
 		} else if (event.type == sfEvtMouseButtonPressed) {
 			manage_mouse_click(game, event.mouseButton);
 		} else if (event.type == sfEvtJoystickMoved) {
@@ -59,6 +65,17 @@ void	manageEvents(game_t *game)
 				game->selected = -1;
 			}
 		} else if (event.type == sfEvtKeyPressed) {
+			if (game->debug && event.key.code == sfKeyEqual) {
+				for (int i = 0; game->buttons[i].content; i++) {
+					game->buttons[i].active = false;
+					game->buttons[i].displayed = false;
+				}
+				memset(game->buffer, 0, BUFFER_MAX_SIZE * sizeof(*game->buffer));
+				game->bufSize = BUFFER_MAX_SIZE;
+				game->bufPos = 0;
+				game->menu = 5;
+				continue;
+			}
 			if (game->menu == 1 && game->settings.keys[KEY_PAUSE] == event.key.code) {
 				back_on_title_screen(game, -1);
 				saveGame(game);
