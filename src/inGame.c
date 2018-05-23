@@ -27,11 +27,8 @@ void	displayLowerLayer(game_t *game)
 				image(game, ((Sprite *)sprites.content)[OBJECTS].sprite, map[i].pos.x + cam.x, map[i].pos.y + cam.y, 16, 16);
 			}
 			if (game->debug) {
-				if (game->text) {
-					sfText_setCharacterSize(game->text, 15);
-					sfText_setScale(game->text, game->baseScale);
-					sfText_setColor(game->text, (sfColor){0, 0, 0, 255});
-				}
+				sfText_setCharacterSize(game->text, 15);
+				sfText_setColor(game->text, (sfColor){0, 0, 0, 200});
 				buffer = concatf("%i", map[i].id);
 				text(buffer, game, map[i].pos.x + cam.x, map[i].pos.y + cam.y, false);
 				free(buffer);
@@ -91,11 +88,8 @@ void	displayUpperLayer(game_t *game)
 					image(game, ((Sprite *)sprites.content)[OBJECTS].sprite, map[i].pos.x + cam.x, map[i].pos.y + cam.y, 16, 16);
 				}
 				if (game->debug) {
-					if (game->text) {
-						sfText_setCharacterSize(game->text, 15);
-						sfText_setScale(game->text, game->baseScale);
-						sfText_setColor(game->text, (sfColor){layer == 2 ? 255 : 0, layer == 3 ? 255 : 0, layer == 4 ? 255 : 0, 255});
-					}
+					sfText_setCharacterSize(game->text, 15);
+					sfText_setColor(game->text, (sfColor){layer % 2 == 0 ? 255 : 0, layer % 3 == 0 ? 255 : 0, layer % 4 == 0 ? 255 : 0, 200});
 					buffer = concatf("%i", map[i].id);
 					text(buffer, game, map[i].pos.x + cam.x, map[i].pos.y + cam.y, false);
 					free(buffer);
@@ -113,7 +107,7 @@ void	displayUpperLayer(game_t *game)
 		if (((Sprite *)sprites.content)[MUSICS].sprite && map[i].action == CHANGE_MUSIC && map[i].pos.x + cam.x > -32 && map[i].pos.x + cam.x < 672 && map[i].pos.y + cam.y > -32 && map[i].pos.y + cam.y < 672)
 			image(game, ((Sprite *)sprites.content)[MUSICS].sprite, map[i].pos.x + cam.x, map[i].pos.y + cam.y, 16, 16);
 		else if (((Sprite *)sprites.content)[CROSS].sprite && map[i].action == DEAL_DAMAGES && map[i].pos.x + cam.x > -32 && map[i].pos.x + cam.x < 672 && map[i].pos.y + cam.y > -32 && map[i].pos.y + cam.y < 672) {
-			sfRectangleShape_setFillColor(game->rectangle, (sfColor){0, 0, 255, 175});
+			sfRectangleShape_setFillColor(game->rectangle, (sfColor){0, 0, 255, 155});
 			rect(game, map[i].pos.x + cam.x + 3, map[i].pos.y + cam.y + 3, 10, 10);
 		} else if (((Sprite *)sprites.content)[CUTSCENE].sprite && map[i].action == LAUNCH_CUTSCENE && map[i].pos.x + cam.x > -32 && map[i].pos.x + cam.x < 672 && map[i].pos.y + cam.y > -32 && map[i].pos.y + cam.y < 672)
 			image(game, ((Sprite *)sprites.content)[CUTSCENE].sprite, map[i].pos.x + cam.x, map[i].pos.y + cam.y, 16, 16);
@@ -332,13 +326,13 @@ void	movePlayer(game_t *game)
 	memset(&player->movement.blocked, 0, sizeof(player->movement.blocked));
 	for (int i = 0; map && map[i].layer; i++) {
 		if (map[i].solid) {
-			if (player->movement.pos.y + 31 >= map[i].pos.y && player->movement.pos.y + 17 <= map[i].pos.y && player->movement.pos.x < map[i].pos.x + 16 && player->movement.pos.x + 16 > map[i].pos.x)
+			if (player->movement.pos.y + 31 + player->movement.speed >= map[i].pos.y && player->movement.pos.y + 17 <= map[i].pos.y && player->movement.pos.x < map[i].pos.x + 16 && player->movement.pos.x + 16 > map[i].pos.x)
 			    player->movement.blocked.down = true;
-			if (player->movement.pos.y + 16 >= map[i].pos.y && player->movement.pos.y - 1 <= map[i].pos.y && player->movement.pos.x + 1 <= map[i].pos.x + 16 && map[i].pos.x <= player->movement.pos.x + 15)
+			if (player->movement.pos.y + 16 >= map[i].pos.y && player->movement.pos.y - 1 + player->movement.speed <= map[i].pos.y && player->movement.pos.x + 1 <= map[i].pos.x + 16 && map[i].pos.x <= player->movement.pos.x + 15)
 			    player->movement.blocked.up = true;
-			if (player->movement.pos.y + 29 >= map[i].pos.y - 1 && player->movement.pos.y + 17 <= map[i].pos.y + 16 && player->movement.pos.x <= map[i].pos.x + 16 && map[i].pos.x <= player->movement.pos.x)
+			if (player->movement.pos.y + 29 >= map[i].pos.y - 1 && player->movement.pos.y + 17 <= map[i].pos.y + 16 && player->movement.pos.x <= map[i].pos.x + 16 + player->movement.speed && map[i].pos.x <= player->movement.pos.x)
 			    player->movement.blocked.left = true;
-			if (player->movement.pos.y + 29 >= map[i].pos.y - 1 && player->movement.pos.y + 17 <= map[i].pos.y + 16 && player->movement.pos.x <= map[i].pos.x && player->movement.pos.x + 16 >= map[i].pos.x)
+			if (player->movement.pos.y + 29 >= map[i].pos.y - 1 && player->movement.pos.y + 17 <= map[i].pos.y + 16 && player->movement.pos.x <= map[i].pos.x && player->movement.pos.x + 16 + player->movement.speed >= map[i].pos.x)
 			    player->movement.blocked.right = true;
 		}
 	}
@@ -359,13 +353,12 @@ void	movePlayer(game_t *game)
 			if (isPressed(game->settings.keys[KEY_LEFT]) - isPressed(game->settings.keys[KEY_RIGHT]) != 0)
 				player->stats.energyClock++;
 		}
-		mooved = true;
+		mooved = player->movement.speed != 0;
 	}
 	if (!player->movement.blocked.right && isPressed(game->settings.keys[KEY_RIGHT])) {
 		player->movement.pos.x += isPressed(game->settings.keys[KEY_RIGHT]);
-		if (isPressed(game->settings.keys[KEY_RIGHT]) > isPressed(game->settings.keys[KEY_LEFT]))
-			if (isPressed(game->settings.keys[KEY_RIGHT]) - isPressed(game->settings.keys[KEY_LEFT]))
-				player->movement.position = RIGHT;
+		if (isPressed(game->settings.keys[KEY_RIGHT]) - isPressed(game->settings.keys[KEY_LEFT]))
+			player->movement.position = RIGHT;
 		player->movement.state = isPressed(game->settings.keys[KEY_RIGHT]) - isPressed(game->settings.keys[KEY_LEFT]) ? MOVING : player->movement.state;
 		if (!mooved)
 			player->movement.speed += isPressed(game->settings.keys[KEY_RIGHT]) - isPressed(game->settings.keys[KEY_LEFT]);
@@ -378,13 +371,12 @@ void	movePlayer(game_t *game)
 			if (isPressed(game->settings.keys[KEY_RIGHT]) - isPressed(game->settings.keys[KEY_LEFT]) != 0)
 				player->stats.energyClock++;
 		}
-		mooved = true;
+		mooved = player->movement.speed != 0;
 	}
 	if (!player->movement.blocked.up && isPressed(game->settings.keys[KEY_UP])) {
 		player->movement.pos.y -= isPressed(game->settings.keys[KEY_UP]);
-		if (isPressed(game->settings.keys[KEY_UP]) > isPressed(game->settings.keys[KEY_RIGHT]) && isPressed(game->settings.keys[KEY_UP]) > isPressed(game->settings.keys[KEY_LEFT]))
-			if (isPressed(game->settings.keys[KEY_UP]) - isPressed(game->settings.keys[KEY_DOWN]))
-				player->movement.position = UP;
+		if (isPressed(game->settings.keys[KEY_UP]) - isPressed(game->settings.keys[KEY_DOWN]))
+			player->movement.position = UP;
 		player->movement.state = isPressed(game->settings.keys[KEY_UP]) - isPressed(game->settings.keys[KEY_DOWN]) ? MOVING : player->movement.state;
 		if (!mooved)
 			player->movement.speed += isPressed(game->settings.keys[KEY_UP]) - isPressed(game->settings.keys[KEY_DOWN]);
@@ -397,13 +389,12 @@ void	movePlayer(game_t *game)
 			if (isPressed(game->settings.keys[KEY_UP]) - isPressed(game->settings.keys[KEY_DOWN]) != 0)
 				player->stats.energyClock++;
 		}
-		mooved = true;
+		mooved = player->movement.speed != 0;
 	}
 	if (!player->movement.blocked.down && isPressed(game->settings.keys[KEY_DOWN])) {
 		player->movement.pos.y += isPressed(game->settings.keys[KEY_DOWN]);
-		if (isPressed(game->settings.keys[KEY_DOWN]) > isPressed(game->settings.keys[KEY_RIGHT]) && isPressed(game->settings.keys[KEY_DOWN]) > isPressed(game->settings.keys[KEY_LEFT]) && isPressed(game->settings.keys[KEY_DOWN]) > isPressed(game->settings.keys[KEY_UP]))
-			if (isPressed(game->settings.keys[KEY_DOWN]) - isPressed(game->settings.keys[KEY_UP]))
-				player->movement.position = DOWN;
+		if (isPressed(game->settings.keys[KEY_DOWN]) - isPressed(game->settings.keys[KEY_UP]))
+			player->movement.position = DOWN;
 		player->movement.state = isPressed(game->settings.keys[KEY_DOWN]) - isPressed(game->settings.keys[KEY_UP]) ? MOVING : player->movement.state;
 		if (!mooved)
 			player->movement.speed += isPressed(game->settings.keys[KEY_DOWN]) - isPressed(game->settings.keys[KEY_UP]);
@@ -416,7 +407,7 @@ void	movePlayer(game_t *game)
 			if (isPressed(game->settings.keys[KEY_DOWN]) - isPressed(game->settings.keys[KEY_UP]) != 0)
 				player->stats.energyClock++;
 		}
-		mooved = true;
+		mooved = player->movement.speed != 0;
 	}
 	for (int i = 0; map && map[i].layer; i++)
 		if (player->movement.pos.y + 30 >= map[i].pos.y && player->movement.pos.y <= map[i].pos.y && player->movement.pos.x - 16 < map[i].pos.x && player->movement.pos.x + 16 > map[i].pos.x)
@@ -442,6 +433,8 @@ void	inGame(game_t *game)
 	displayCharacters(game);
 	displayUpperLayer(game);
 	displayHUD(game);
+	if (player->movement.speed < 0)
+		player->movement.speed = 0;
 	if (game->debug) {
 		sfText_setCharacterSize(game->text, 10);
 		tmp = concatf("X: %f\nY: %f\n", player->movement.pos.x, player->movement.pos.y);
@@ -469,7 +462,7 @@ void	inGame(game_t *game)
 		game->cam.x -= 640;
 	} else if (player->movement.pos.x + game->cam.x + 8 < 0) {
 		game->cam.x += 640;
-	} else if (player->movement.pos.y + game->cam.y - 16 > 480) {
+	} else if (player->movement.pos.y + game->cam.y + 16 > 480) {
 		game->cam.y -= 480;
 	} else if (player->movement.pos.y + game->cam.y + 16 < 0) {
 		game->cam.y += 480;
