@@ -1,25 +1,12 @@
-﻿Speilen
-
+Speilen
 Einstellungen
 Verlassen
-
 Optionen
 Klingen
-Zurück
+Zur�ck
 Sprache
-
-
 Stornieren
 Speichern
 Steuert
-
-
-Speichern
-
 Ja
 Nein
-Add a character
-Select an object
-Zurück
-
-Zurück

@@ -1,0 +1,482 @@
+src/saveFileMgr.c:	Character	player = ((Character *)game->characters.content)[0];
+src/saveFileMgr.c:	for (len = 0; game->map[len].layer; len++);
+src/saveFileMgr.c:	write(fd, game->map, sizeof(*game->map) * len);
+src/saveFileMgr.c:	free(game->map);
+src/saveFileMgr.c:	game->map = malloc((len + 1) * sizeof(*game->map));
+src/saveFileMgr.c:	if (!game->map) {
+src/saveFileMgr.c:		printf("%s: Couldn't alloc %liB\n", FATAL, (long)(len * sizeof(*game->map)));
+src/saveFileMgr.c:		for (unsigned int i = 0; i < sizeof(*game->map) * len; ) {
+src/saveFileMgr.c:			tmp = read(fd, &((char *)game->map)[i], 1);
+src/saveFileMgr.c:		readBytes = read(fd, game->map, sizeof(*game->map) * len);
+src/saveFileMgr.c:	printf("%i, %i\n", readBytes, (int)(len * sizeof(*game->map)));
+src/saveFileMgr.c:	if (readBytes != (int)(len * sizeof(*game->map)) && !use) {
+src/saveFileMgr.c:			free(game->map);
+src/saveFileMgr.c:			game->map = NULL;
+src/saveFileMgr.c:	game->map[len].layer = 0;
+src/saveFileMgr.c:	player.movement.animationClock = ((Character *)game->characters.content)[0].movement.animationClock;
+src/saveFileMgr.c:	player.movement.stateClock = ((Character *)game->characters.content)[0].movement.stateClock;
+src/saveFileMgr.c:	player.stats.energyRegenClock = ((Character *)game->characters.content)[0].stats.energyRegenClock;
+src/saveFileMgr.c:		player.damageClock[j] = ((Character *)game->characters.content)[0].damageClock[j];
+src/saveFileMgr.c:	((Character *)game->characters.content)[0] = player;
+src/loadFonts.c:			setFont(game->text, fonts[ARIAL]);
+src/manageEvents.c:	while (sfRenderWindow_pollEvent(game->window, &event)) {
+src/manageEvents.c:			sfRenderWindow_close(game->window);
+src/manageEvents.c:			if (game->menu == 1)
+src/manageEvents.c:			for (int i = 0; i < game->musics.length; i++)
+src/manageEvents.c:				if (((sfMusic **)game->musics.content)[i] && sfMusic_getStatus(((sfMusic **)game->musics.content)[MAIN_MENU_MUSIC]) == sfPlaying)
+src/manageEvents.c:					sfMusic_stop(((sfMusic **)game->musics.content)[i]);
+src/manageEvents.c:				game->buffer[--game->bufPos] = 0;
+src/manageEvents.c:				game->buffer[game->bufPos < game->bufSize ? game->bufPos++ : game->bufPos - 1] = event.text.unicode;
+src/manageEvents.c:			if (game->selected - game->languagesConf.y - game->languagesConf.x >= 0 && game->selected - game->languagesConf.y - game->languagesConf.x < 4 && game->menu == 2) {
+src/manageEvents.c:					game->settings.keys[i] = 201 + i;
+src/manageEvents.c:					game->buttons[i + game->languagesConf.y + game->languagesConf.x].content = getKeyString(201 + i);
+src/manageEvents.c:				game->buttons[game->selected].content = getKeyString(game->settings.keys[game->selected - game->languagesConf.y - game->languagesConf.x]);
+src/manageEvents.c:				game->selected = -1;
+src/manageEvents.c:			if (game->menu == 1 && game->settings.keys[KEY_PAUSE] == event.joystickButton.button + 205) {
+src/manageEvents.c:			if (game->selected - game->languagesConf.y - game->languagesConf.x >= 0 && game->selected - game->languagesConf.y - game->languagesConf.x < 4 && game->menu == 2)
+src/manageEvents.c:					if (game->settings.keys[i] >= 201 && game->settings.keys[i] <= 204) {
+src/manageEvents.c:							game->settings.keys[i] = -1;
+src/manageEvents.c:							game->buttons[i + game->languagesConf.y + game->languagesConf.x].content = getKeyString(-1);
+src/manageEvents.c:			if (game->selected >= 0 && game->menu == 2) {
+src/manageEvents.c:				game->settings.keys[game->selected - game->languagesConf.y - game->languagesConf.x] = event.joystickButton.button + 205;
+src/manageEvents.c:				game->buttons[game->selected].content = getKeyString(event.joystickButton.button + 205);
+src/manageEvents.c:				game->selected = -1;
+src/manageEvents.c:			if (game->debug && event.key.code == sfKeyEqual) {
+src/manageEvents.c:				for (int i = 0; game->buttons[i].content; i++) {
+src/manageEvents.c:					game->buttons[i].active = false;
+src/manageEvents.c:					game->buttons[i].displayed = false;
+src/manageEvents.c:				memset(game->buffer, 0, BUFFER_MAX_SIZE * sizeof(*game->buffer));
+src/manageEvents.c:				game->bufSize = BUFFER_MAX_SIZE;
+src/manageEvents.c:				game->bufPos = 0;
+src/manageEvents.c:				game->menu = 5;
+src/manageEvents.c:			if (game->menu == 1 && game->settings.keys[KEY_PAUSE] == event.key.code) {
+src/manageEvents.c:			if (game->selected - game->languagesConf.y - game->languagesConf.x >= 0 && game->selected - game->languagesConf.y - game->languagesConf.x < 4 && game->menu == 2)
+src/manageEvents.c:					if (game->settings.keys[i] >= 201 && game->settings.keys[i] <= 204) {
+src/manageEvents.c:							game->settings.keys[i] = -1;
+src/manageEvents.c:							game->buttons[i + game->languagesConf.y + game->languagesConf.x].content = getKeyString(-1);
+src/manageEvents.c:			if (game->selected >= 0 && game->menu == 2) {
+src/manageEvents.c:				game->settings.keys[game->selected - game->languagesConf.y - game->languagesConf.x] = event.key.code;
+src/manageEvents.c:				game->buttons[game->selected].content = getKeyString(event.key.code);
+src/manageEvents.c:				game->selected = -1;
+src/manageEvents.c:			if (game->selected == 1 && game->menu == 3) {
+src/manageEvents.c:					game->settings.sfxVolume = 0;
+src/manageEvents.c:					game->settings.sfxVolume = 100;
+src/manageEvents.c:					game->settings.sfxVolume = (event.mouseMove.x - 140) / 3;
+src/manageEvents.c:				setVolumes(game->sfx, game->settings.sfxVolume);
+src/manageEvents.c:				if (((sfMusic **)game->sfx.content)[DIRT1 + random % 4])
+src/manageEvents.c:					sfMusic_play(((sfMusic **)game->sfx.content)[DIRT1 + random % 4]);
+src/manageEvents.c:			} else if (game->selected == 2 && game->menu == 3) {
+src/manageEvents.c:					game->settings.musicVolume = 0;
+src/manageEvents.c:					game->settings.musicVolume = 100;
+src/manageEvents.c:					game->settings.musicVolume = (event.mouseMove.x - 140) / 3;
+src/manageEvents.c:				setVolumes(game->musics, game->settings.musicVolume);
+src/manageEvents.c:			if (game->menu == 3)
+src/manageEvents.c:				game->selected = -1;
+src/inGame.c:	Object		*map = game->map;
+src/inGame.c:	Array		sprites = game->sprites;
+src/inGame.c:	sfVector2i	cam = game->cam;
+src/inGame.c:				sfRectangleShape_setOutlineColor(game->rectangle, (sfColor){0, 0, 0, 0});
+src/inGame.c:				sfRectangleShape_setFillColor(game->rectangle, (sfColor){((map[i].id * 10) >> 16) * 20 % 256, ((map[i].id * 10) >> 8) * 10 % 256, map[i].id * 10 % 256, 255});
+src/inGame.c:			if (game->debug) {
+src/inGame.c:				if (game->text) {
+src/inGame.c:					sfText_setCharacterSize(game->text, 15);
+src/inGame.c:					sfText_setScale(game->text, game->baseScale);
+src/inGame.c:					sfText_setColor(game->text, (sfColor){0, 0, 0, 255});
+src/inGame.c:	Array		sprites = game->sprites;
+src/inGame.c:	sfVector2i	cam = game->cam;
+src/inGame.c:	for (int i = 0; i < game->characters.length; i++) {
+src/inGame.c:		player = ((Character *)game->characters.content)[i];
+src/inGame.c:				sfRectangleShape_setOutlineColor(game->rectangle, (sfColor){0, 0, 0, 0});
+src/inGame.c:				sfRectangleShape_setFillColor(game->rectangle, (sfColor){i * 2 % 256, ((i * 10) >> 8) * 10 % 256, i * 2 % 256, 255});
+src/inGame.c:	Object		*map = game->map;
+src/inGame.c:	Array		sprites = game->sprites;
+src/inGame.c:	sfVector2i	cam = game->cam;
+src/inGame.c:					sfRectangleShape_setOutlineColor(game->rectangle, (sfColor){0, 0, 0, 0});
+src/inGame.c:					sfRectangleShape_setFillColor(game->rectangle, (sfColor){((map[i].id * 10) >> 16) * 20 % 256, ((map[i].id * 10) >> 8) * 10 % 256, map[i].id * 10 % 256, 255});
+src/inGame.c:				if (game->debug) {
+src/inGame.c:					if (game->text) {
+src/inGame.c:						sfText_setCharacterSize(game->text, 15);
+src/inGame.c:						sfText_setScale(game->text, game->baseScale);
+src/inGame.c:						sfText_setColor(game->text, (sfColor){layer == 2 ? 255 : 0, layer == 3 ? 255 : 0, layer == 4 ? 255 : 0, 255});
+src/inGame.c:	for (int i = 0; game->debug && map && map[i].layer; i++) {
+src/inGame.c:			sfRectangleShape_setFillColor(game->rectangle, (sfColor){255, 0, 255, 125});
+src/inGame.c:			sfRectangleShape_setFillColor(game->rectangle, (sfColor){0, 0, 255, 175});
+src/inGame.c:	int		lifeBuffer = ((Character *)game->characters.content)[0].stats.life;
+src/inGame.c:	for (int i = 1 ; i <= ((Character *)game->characters.content)[0].stats.lifeMax; i++) {
+src/inGame.c:		if (((Sprite *)game->sprites.content)[LIFE_BAR].sprite) {
+src/inGame.c:			sfSprite_setTextureRect(((Sprite *)game->sprites.content)[LIFE_BAR].sprite, rec);
+src/inGame.c:			image(game, ((Sprite *)game->sprites.content)[LIFE_BAR].sprite, x, 465 - y, 16, 16);
+src/inGame.c:			sfSprite_setTextureRect(((Sprite *)game->sprites.content)[LIFE_BAR].sprite, rec);
+src/inGame.c:			image(game, ((Sprite *)game->sprites.content)[LIFE_BAR].sprite, x, 465 - y, 16, 16);
+src/inGame.c:			sfRectangleShape_setFillColor(game->rectangle, (sfColor){h == 0 ? 255 : 0, h == 1 ? 255 : 0, h == 2 ? 255 : 0, 255});
+src/inGame.c:	int		energyBuffer = ((Character *)game->characters.content)[0].stats.energy;
+src/inGame.c:	for (int i = 1 ; i <= ((Character *)game->characters.content)[0].stats.maxEnergy ; i++) {
+src/inGame.c:		if (((Sprite *)game->sprites.content)[ENERGY_BAR].sprite) {
+src/inGame.c:			sfSprite_setTextureRect(((Sprite *)game->sprites.content)[ENERGY_BAR].sprite, rec);
+src/inGame.c:			image(game, ((Sprite *)game->sprites.content)[ENERGY_BAR].sprite, 625 - x, 465 - y, 16, 16);
+src/inGame.c:			sfSprite_setTextureRect(((Sprite *)game->sprites.content)[ENERGY_BAR].sprite, rec);
+src/inGame.c:			image(game, ((Sprite *)game->sprites.content)[ENERGY_BAR].sprite, 625 - x, 465 - y, 16, 16);
+src/inGame.c:			sfRectangleShape_setFillColor(game->rectangle, (sfColor){h == 0 ? 255 : 0, h == 1 ? 255 : 0, h == 2 ? 255 : 0, 255});
+src/inGame.c:	Character	*player = &((Character *)game->characters.content)[0];
+src/inGame.c:	if (obj.footstepSound > game->stepSound)
+src/inGame.c:		game->stepSound = obj.footstepSound + rand() % obj.footstepVariance;
+src/inGame.c:	Character	*player = &((Character *)game->characters.content)[0];
+src/inGame.c:	Object		*map = game->map;
+src/inGame.c:	game->stepSound = IRON;
+src/inGame.c:	if (!player->movement.blocked.left && isPressed(game->settings.keys[KEY_LEFT])) {
+src/inGame.c:		player->movement.pos.x -= isPressed(game->settings.keys[KEY_LEFT]);
+src/inGame.c:		if (isPressed(game->settings.keys[KEY_LEFT]) - isPressed(game->settings.keys[KEY_RIGHT]))
+src/inGame.c:		player->movement.state = isPressed(game->settings.keys[KEY_LEFT]) - isPressed(game->settings.keys[KEY_RIGHT]) ? MOVING : player->movement.state;
+src/inGame.c:			player->movement.speed += isPressed(game->settings.keys[KEY_LEFT]) - isPressed(game->settings.keys[KEY_RIGHT]);
+src/inGame.c:		if (isPressed(game->settings.keys[KEY_LEFT]) - isPressed(game->settings.keys[KEY_RIGHT]))
+src/inGame.c:		if (isPressed(game->settings.keys[KEY_SPRINT]) && player->stats.energy >= player->stats.sprintSpeed) {
+src/inGame.c:			player->movement.pos.x -= player->stats.sprintSpeed * (isPressed(game->settings.keys[KEY_LEFT]) - isPressed(game->settings.keys[KEY_RIGHT])) - 1;
+src/inGame.c:				player->movement.speed += player->stats.sprintSpeed * (isPressed(game->settings.keys[KEY_LEFT]) - isPressed(game->settings.keys[KEY_RIGHT])) - 1;
+src/inGame.c:			if (isPressed(game->settings.keys[KEY_LEFT]) - isPressed(game->settings.keys[KEY_RIGHT]) != 0)
+src/inGame.c:	if (!player->movement.blocked.right && isPressed(game->settings.keys[KEY_RIGHT])) {
+src/inGame.c:		player->movement.pos.x += isPressed(game->settings.keys[KEY_RIGHT]);
+src/inGame.c:		if (isPressed(game->settings.keys[KEY_RIGHT]) > isPressed(game->settings.keys[KEY_LEFT]))
+src/inGame.c:			if (isPressed(game->settings.keys[KEY_RIGHT]) - isPressed(game->settings.keys[KEY_LEFT]))
+src/inGame.c:		player->movement.state = isPressed(game->settings.keys[KEY_RIGHT]) - isPressed(game->settings.keys[KEY_LEFT]) ? MOVING : player->movement.state;
+src/inGame.c:			player->movement.speed += isPressed(game->settings.keys[KEY_RIGHT]) - isPressed(game->settings.keys[KEY_LEFT]);
+src/inGame.c:		if (isPressed(game->settings.keys[KEY_RIGHT]) - isPressed(game->settings.keys[KEY_LEFT]))
+src/inGame.c:		if (isPressed(game->settings.keys[KEY_SPRINT]) && player->stats.energy >= player->stats.sprintSpeed) {
+src/inGame.c:			player->movement.pos.x += player->stats.sprintSpeed * (isPressed(game->settings.keys[KEY_RIGHT]) - isPressed(game->settings.keys[KEY_LEFT])) - 1;
+src/inGame.c:				player->movement.speed += player->stats.sprintSpeed * (isPressed(game->settings.keys[KEY_RIGHT]) - isPressed(game->settings.keys[KEY_LEFT])) - 1;
+src/inGame.c:			if (isPressed(game->settings.keys[KEY_RIGHT]) - isPressed(game->settings.keys[KEY_LEFT]) != 0)
+src/inGame.c:	if (!player->movement.blocked.up && isPressed(game->settings.keys[KEY_UP])) {
+src/inGame.c:		player->movement.pos.y -= isPressed(game->settings.keys[KEY_UP]);
+src/inGame.c:		if (isPressed(game->settings.keys[KEY_UP]) > isPressed(game->settings.keys[KEY_RIGHT]) && isPressed(game->settings.keys[KEY_UP]) > isPressed(game->settings.keys[KEY_LEFT]))
+src/inGame.c:			if (isPressed(game->settings.keys[KEY_UP]) - isPressed(game->settings.keys[KEY_DOWN]))
+src/inGame.c:		player->movement.state = isPressed(game->settings.keys[KEY_UP]) - isPressed(game->settings.keys[KEY_DOWN]) ? MOVING : player->movement.state;
+src/inGame.c:			player->movement.speed += isPressed(game->settings.keys[KEY_UP]) - isPressed(game->settings.keys[KEY_DOWN]);
+src/inGame.c:		if (isPressed(game->settings.keys[KEY_UP]) - isPressed(game->settings.keys[KEY_DOWN]))
+src/inGame.c:		if (isPressed(game->settings.keys[KEY_SPRINT]) && player->stats.energy >= player->stats.sprintSpeed) {
+src/inGame.c:			player->movement.pos.y -= player->stats.sprintSpeed * (isPressed(game->settings.keys[KEY_UP]) - isPressed(game->settings.keys[KEY_DOWN])) - 1;
+src/inGame.c:				player->movement.speed += player->stats.sprintSpeed * (isPressed(game->settings.keys[KEY_UP]) - isPressed(game->settings.keys[KEY_DOWN])) - 1;
+src/inGame.c:			if (isPressed(game->settings.keys[KEY_UP]) - isPressed(game->settings.keys[KEY_DOWN]) != 0)
+src/inGame.c:	if (!player->movement.blocked.down && isPressed(game->settings.keys[KEY_DOWN])) {
+src/inGame.c:		player->movement.pos.y += isPressed(game->settings.keys[KEY_DOWN]);
+src/inGame.c:		if (isPressed(game->settings.keys[KEY_DOWN]) > isPressed(game->settings.keys[KEY_RIGHT]) && isPressed(game->settings.keys[KEY_DOWN]) > isPressed(game->settings.keys[KEY_LEFT]) && isPressed(game->settings.keys[KEY_DOWN]) > isPressed(game->settings.keys[KEY_UP]))
+src/inGame.c:			if (isPressed(game->settings.keys[KEY_DOWN]) - isPressed(game->settings.keys[KEY_UP]))
+src/inGame.c:		player->movement.state = isPressed(game->settings.keys[KEY_DOWN]) - isPressed(game->settings.keys[KEY_UP]) ? MOVING : player->movement.state;
+src/inGame.c:			player->movement.speed += isPressed(game->settings.keys[KEY_DOWN]) - isPressed(game->settings.keys[KEY_UP]);
+src/inGame.c:		if (isPressed(game->settings.keys[KEY_DOWN]) - isPressed(game->settings.keys[KEY_UP]))
+src/inGame.c:		if (isPressed(game->settings.keys[KEY_SPRINT]) && player->stats.energy >= player->stats.sprintSpeed) {
+src/inGame.c:			player->movement.pos.y += player->stats.sprintSpeed * (isPressed(game->settings.keys[KEY_DOWN]) - isPressed(game->settings.keys[KEY_UP])) - 1;
+src/inGame.c:				player->movement.speed += player->stats.sprintSpeed * (isPressed(game->settings.keys[KEY_DOWN]) - isPressed(game->settings.keys[KEY_UP])) - 1;
+src/inGame.c:			if (isPressed(game->settings.keys[KEY_DOWN]) - isPressed(game->settings.keys[KEY_UP]) != 0)
+src/inGame.c:	Character	*player = &((Character *)game->characters.content)[0];
+src/inGame.c:	if (game->debug) {
+src/inGame.c:		sfText_setCharacterSize(game->text, 10);
+src/inGame.c:		sfText_setColor(game->text, (sfColor){abs(color), abs(color), abs(color), 255});
+src/inGame.c:		text(tmp, game, 0, game->settings.dispFramerate ? 10 : 0, false);
+src/inGame.c:		if (((sfMusic **)game->sfx.content)[game->stepSound])
+src/inGame.c:			sfMusic_play(((sfMusic **)game->sfx.content)[game->stepSound]);
+src/inGame.c:	if (player->movement.pos.x + game->cam.x + 8 > 640) {
+src/inGame.c:		game->cam.x -= 640;
+src/inGame.c:	} else if (player->movement.pos.x + game->cam.x + 8 < 0) {
+src/inGame.c:		game->cam.x += 640;
+src/inGame.c:	} else if (player->movement.pos.y + game->cam.y - 16 > 480) {
+src/inGame.c:		game->cam.y -= 480;
+src/inGame.c:	} else if (player->movement.pos.y + game->cam.y + 16 < 0) {
+src/inGame.c:		game->cam.y += 480;
+src/callbacks.c:	for (int i = 0; game->buttons[i].content; i++) {
+src/callbacks.c:		game->buttons[i].active = false;
+src/callbacks.c:		game->buttons[i].displayed = false;
+src/callbacks.c:		game->buttons[i].active = true;
+src/callbacks.c:		game->buttons[i].displayed = true;
+src/callbacks.c:	game->menu = 0;
+src/callbacks.c:	game->menu = 1;
+src/callbacks.c:	free(game->map);
+src/callbacks.c:	for (int i = 0; game->buttons[i].content; i++) {
+src/callbacks.c:		game->buttons[i].active = false;
+src/callbacks.c:		game->buttons[i].displayed = false;
+src/callbacks.c:	if (!game->map)
+src/callbacks.c:		game->map = loadLevel("data/levels/test/level/floor0.lvl", &game->bg);
+src/callbacks.c:	if (((sfMusic **)game->musics.content)[MAIN_MENU_MUSIC] && sfMusic_getStatus(((sfMusic **)game->musics.content)[MAIN_MENU_MUSIC]) == sfPlaying)
+src/callbacks.c:		sfMusic_stop(((sfMusic **)game->musics.content)[MAIN_MENU_MUSIC]);
+src/callbacks.c:	if (game->selected >= 0)
+src/callbacks.c:		game->buttons[game->selected].content = getKeyString(game->settings.keys[game->selected - game->languagesConf.y - game->languagesConf.x]);
+src/callbacks.c:	game->selected = buttonID;
+src/callbacks.c:	if (game->settings.keys[game->selected - game->languagesConf.y - game->languagesConf.x] > 204 && game->settings.keys[game->selected - game->languagesConf.y - game->languagesConf.x] != (unsigned char)-1)
+src/callbacks.c:		free(game->buttons[game->selected].content);
+src/callbacks.c:	game->buttons[game->selected].content = "<Press a key>";
+src/callbacks.c:	game->selected = 0;
+src/callbacks.c:	if (game->icon.image)
+src/callbacks.c:		icon = sfImage_getPixelsPtr(game->icon.image);
+src/callbacks.c:	if (game->settings.windowMode == new)
+src/callbacks.c:	game->settings.windowMode = new;
+src/callbacks.c:	if (game->settings.windowMode == FULLSCREEN) {
+src/callbacks.c:	} else if (game->settings.windowMode == BORDERLESS_WINDOW) {
+src/callbacks.c:		mode.width = game->settings.windowSize.x;
+src/callbacks.c:		mode.height = game->settings.windowSize.y;
+src/callbacks.c:	game->baseScale.x = (float)mode.width / 640.0;
+src/callbacks.c:	game->baseScale.y = (float)mode.height / 480.0;
+src/callbacks.c:	sfRenderWindow_close(game->window);
+src/callbacks.c:	sfRenderWindow_destroy(game->window);
+src/callbacks.c:	game->window = sfRenderWindow_create(mode, title, style, NULL);
+src/callbacks.c:	if (!game->window) {
+src/callbacks.c:		sfRenderWindow_setIcon(game->window, 32, 32, icon);
+src/callbacks.c:	sfRenderWindow_setFramerateLimit(game->window, 60);
+src/callbacks.c:	game->menu = 4;
+src/callbacks.c:	game->selected = 0;
+src/callbacks.c:	for (int i = 0; game->buttons[i].content; i++) {
+src/callbacks.c:		game->buttons[i].active = false;
+src/callbacks.c:		game->buttons[i].displayed = false;
+src/callbacks.c:		game->buttons[i].active = true;
+src/callbacks.c:		game->buttons[i].displayed = true;
+src/callbacks.c:	game->settings.dispFramerate = !game->settings.dispFramerate;
+src/callbacks.c:	game->menu = 3;
+src/callbacks.c:	game->selected = 0;
+src/callbacks.c:	for (int i = 0; game->buttons[i].content; i++) {
+src/callbacks.c:		game->buttons[i].active = false;
+src/callbacks.c:		game->buttons[i].displayed = false;
+src/callbacks.c:	game->buttons[9].active = true;
+src/callbacks.c:	game->buttons[9].displayed = true;
+src/callbacks.c:	for (int i = 0; game->buttons[i].content; i++) {
+src/callbacks.c:		game->buttons[i].active = false;
+src/callbacks.c:		game->buttons[i].displayed = false;
+src/callbacks.c:	game->buttons[9].active = true;
+src/callbacks.c:	game->buttons[9].displayed = true;
+src/callbacks.c:	for (int i = 0; i < game->languagesConf.y; i++) {
+src/callbacks.c:		game->buttons[i + game->languagesConf.x].active = true;
+src/callbacks.c:		game->buttons[i + game->languagesConf.x].displayed = true;
+src/callbacks.c:	game->selected = -1;
+src/callbacks.c:	for (int i = 0; game->buttons[i].content; i++) {
+src/callbacks.c:		game->buttons[i].active = false;
+src/callbacks.c:		game->buttons[i].displayed = false;
+src/callbacks.c:		game->buttons[i + game->languagesConf.x + game->languagesConf.y].active = true;
+src/callbacks.c:		game->buttons[i + game->languagesConf.x + game->languagesConf.y].displayed = true;
+src/callbacks.c:		game->buttons[i + game->languagesConf.x + game->languagesConf.y].content = getKeyString(game->settings.keys[i]);
+src/callbacks.c:	game->buttons[9].active = true;
+src/callbacks.c:	game->buttons[9].displayed = true;
+src/callbacks.c:	game->menu = 2;
+src/callbacks.c:	for (int i = 0; game->buttons[i].content; i++)
+src/callbacks.c:		game->buttons[i].active = false;
+src/callbacks.c:		game->buttons[i].active = i != 3;
+src/callbacks.c:		game->buttons[i].displayed = true;
+src/callbacks.c:	strcpy(game->settings.lang_id, game->languages[buttonID - game->languagesConf.x].id);
+src/callbacks.c:	for (int i = 0; game->buttons[i].content; i++) {
+src/callbacks.c:		sfRectangleShape_destroy(game->buttons[i].rect);
+src/callbacks.c:	free(game->buttons);
+src/callbacks.c:	sfRenderWindow_setFramerateLimit(game->window, -1);
+src/callbacks.c:	game->buttons = loadButtons(game);
+src/callbacks.c:	sfRenderWindow_setFramerateLimit(game->window, 60);
+src/callbacks.c:	for (int i = 0; game->buttons[i].content; i++) {
+src/callbacks.c:		game->buttons[i].active = false;
+src/callbacks.c:		game->buttons[i].displayed = false;
+src/callbacks.c:	game->buttons[9].active = true;
+src/callbacks.c:	game->buttons[9].displayed = true;
+src/callbacks.c:	for (int i = 0; i < game->languagesConf.y; i++) {
+src/callbacks.c:		game->buttons[i + game->languagesConf.x].active = true;
+src/callbacks.c:		game->buttons[i + game->languagesConf.x].displayed = true;
+src/callbacks.c:	sfRenderWindow_close(game->window);
+src/main.c:	for (int i = 0; i < game->sprites.length; i++) {
+src/main.c:		if (((Sprite *)game->sprites.content)[i].sprite != NULL)
+src/main.c:			sfSprite_destroy(((Sprite *)game->sprites.content)[i].sprite);
+src/main.c:		if (((Sprite *)game->sprites.content)[i].texture != NULL)
+src/main.c:			sfTexture_destroy(((Sprite *)game->sprites.content)[i].texture);
+src/main.c:	free(game->sprites.content);
+src/main.c:	for (int i = 0; i < game->musics.length; i++) {
+src/main.c:		if (((sfMusic **)game->musics.content)[i] != NULL)
+src/main.c:			sfMusic_destroy(((sfMusic **)game->musics.content)[i]);
+src/main.c:	free(game->musics.content);
+src/main.c:	for (int i = 0; i < game->sfx.length; i++) {
+src/main.c:		if (((sfMusic **)game->sfx.content)[i] != NULL)
+src/main.c:			sfMusic_destroy(((sfMusic **)game->sfx.content)[i]);
+src/main.c:	free(game->sfx.content);
+src/main.c:	for (int i = 0; i < game->fonts.length; i++) {
+src/main.c:		if (((sfFont **)game->fonts.content)[i] != NULL)
+src/main.c:			sfFont_destroy(((sfFont **)game->fonts.content)[i]);
+src/main.c:	free(game->fonts.content);
+src/main.c:	sfRectangleShape_destroy(game->rectangle);
+src/main.c:	sfRenderWindow_destroy(game->window);
+src/main.c:	sfText_destroy(game->text);
+src/main.c:	sfImage_destroy(game->icon.image);
+src/main.c:	sfTexture_destroy(game->icon.texture);
+src/main.c:	sfSprite_destroy(game->icon.sprite);
+src/main.c:	for (int i = 0; game->buttons[i].content; i++) {
+src/main.c:		sfRectangleShape_destroy(game->buttons[i].rect);
+src/main.c:	for (int i = 0; game->languages && game->languages[i].name; i++) {
+src/main.c:		printf("%s: Destroying language %i (%s)\n", INFO, i, game->languages[i].name);
+src/main.c:		for (int j = 0; game->languages[i].buttons && game->languages[i].buttons[j]; j++)
+src/main.c:			free(game->languages[i].buttons[j]);
+src/main.c:		for (int j = 0; game->languages[i].items && game->languages[i].items[j]; j++)
+src/main.c:			free(game->languages[i].items[j]);
+src/main.c:		for (int j = 0; game->languages[i].keys && game->languages[i].keys[j]; j++)
+src/main.c:			free(game->languages[i].keys[j]);
+src/main.c:		free(game->languages[i].buttons);
+src/main.c:		free(game->languages[i].keys);
+src/main.c:		free(game->languages[i].items);
+src/main.c:		free(game->languages[i].name);
+src/main.c:	for (int i = 0; i < game->characters.length; i++) {
+src/main.c:		printf("%s: Destroying character %i (%s)\n", INFO, i, ((Character *)game->characters.content)[i].name);
+src/main.c:		sfClock_destroy(((Character *)game->characters.content)[i].movement.animationClock);
+src/main.c:		sfClock_destroy(((Character *)game->characters.content)[i].movement.stateClock);
+src/main.c:		sfClock_destroy(((Character *)game->characters.content)[i].stats.energyRegenClock);
+src/main.c:			sfClock_destroy(((Character *)game->characters.content)[i].damageClock[j]);
+src/main.c:		if (game->settings.keys[i] > 204 && game->settings.keys[i] != (unsigned char)-1)
+src/main.c:			free(game->buttons[i + game->languagesConf.y + game->languagesConf.x].content);
+src/main.c:	free(game->buttons);
+src/main.c:	free(game->characters.content);
+src/main.c:	free(game->languages);
+src/load_buttons.c:	if (getLanguage(game->languages, game->settings.lang_id) < 0 || game->languages[getLanguage(game->languages, game->settings.lang_id)].buttons == NULL)
+src/load_buttons.c:	for (; game->languages[getLanguage(game->languages, game->settings.lang_id)].buttons[len]; len++);
+src/load_buttons.c:	if (nameId < len && game->languages[getLanguage(game->languages, game->settings.lang_id)].buttons[nameId])
+src/load_buttons.c:		return (game->languages[getLanguage(game->languages, game->settings.lang_id)].buttons[nameId]);
+src/load_buttons.c:	Button		*buttons = game->buttons;
+src/load_buttons.c:	sfRenderWindow	*window = game->window;
+src/load_buttons.c:	sfText_setCharacterSize(game->text, 20);
+src/load_buttons.c:	sfText_setScale(game->text, game->baseScale);
+src/load_buttons.c:				sfVector2f	realSize = {size.x * game->baseScale.x, size.y * game->baseScale.y};
+src/load_buttons.c:				sfVector2f	realPos = {pos.x * game->baseScale.x, pos.y * game->baseScale.y};
+src/load_buttons.c:			sfText_setColor(game->text, buttons[i].textColor);
+src/load_buttons.c:	for (; game->languages && game->languages[langs].name; langs++);
+src/load_buttons.c:	game->languagesConf.y = langs;
+src/load_buttons.c:	game->languagesConf.x = len;
+src/load_buttons.c:	for (int i = 0; game->languages && game->languages[i].name; i++) {
+src/load_buttons.c:		config.pos = (sfVector2f){300 - strlen(game->languages[i].name) * 7, 50 * i + 10};
+src/load_buttons.c:		config.size = (sfVector2f){40 + strlen(game->languages[i].name) * 7, 40};
+src/load_buttons.c:		buttons[i + len].content = game->languages[i].name;
+src/clic_button.c:	sfVector2f	size = {button.size.x * game->baseScale.x, button.size.y * game->baseScale.y};
+src/clic_button.c:	sfVector2f	pos = {button.pos.x * game->baseScale.x, button.pos.y * game->baseScale.y};
+src/clic_button.c:	for (int i = 0; game->buttons[i].content; i++)
+src/clic_button.c:		if (button_is_clicked(game->buttons[i], pos, game)) {
+src/clic_button.c:			printf("%s: Clicked on button %i (%s)\n", INFO, i, game->buttons[i].content);
+src/clic_button.c:			game->buttons[i].callback(game, i);
+src/clic_button.c:	if (game->menu == 3) {
+src/clic_button.c:		if (pos.x >= 140 * game->baseScale.x && pos.x <= 440 * game->baseScale.x && pos.y >= 4 * game->baseScale.y && pos.y <= 44 * game->baseScale.y) {
+src/clic_button.c:			game->selected = 1;
+src/clic_button.c:		} else if (pos.x >= 140 * game->baseScale.x && pos.x <= 440 * game->baseScale.x && pos.y >= 52 * game->baseScale.y && pos.y <= 92 * game->baseScale.y) {
+src/clic_button.c:			game->selected = 2;
+src/settings.c:	for (int i = 0; i < 640; i += ((Sprite *)game->sprites.content)[MENU_BACKGROUND].size.x) {
+src/settings.c:		if (((Sprite *)game->sprites.content)[MENU_BACKGROUND].size.x == 0)
+src/settings.c:		for (int j = 0; j < 640; j += ((Sprite *)game->sprites.content)[MENU_BACKGROUND].size.y) {
+src/settings.c:			image(game, ((Sprite *)game->sprites.content)[MENU_BACKGROUND].sprite, i, j, -1, -1);
+src/settings.c:			if (((Sprite *)game->sprites.content)[MENU_BACKGROUND].size.y == 0)
+src/settings.c:	sfRectangleShape_setFillColor(game->rectangle, (sfColor){100, 100, 100, 255});
+src/settings.c:	sfRectangleShape_setFillColor(game->rectangle, (sfColor){255, 255, 255, 255});
+src/settings.c:	sfRectangleShape_setFillColor(game->rectangle, (sfColor){255, 0, 0, 255});
+src/settings.c:	rect(game, 130 + game->settings.sfxVolume * 3, 6, 20, 36);
+src/settings.c:	rect(game, 130 + game->settings.musicVolume * 3, 54, 20, 36);
+src/settings.c:	sfText_setCharacterSize(game->text, 20);
+src/settings.c:	nbrs[0] = concatf("%i%%", game->settings.sfxVolume);
+src/settings.c:	nbrs[1] = concatf("%i%%", game->settings.musicVolume);
+src/settings.c:	for (int i = 0; i < 640; i += ((Sprite *)game->sprites.content)[MENU_BACKGROUND].size.x) {
+src/settings.c:		if (((Sprite *)game->sprites.content)[MENU_BACKGROUND].size.x == 0)
+src/settings.c:		for (int j = 0; j < 640; j += ((Sprite *)game->sprites.content)[MENU_BACKGROUND].size.y) {
+src/settings.c:			image(game, ((Sprite *)game->sprites.content)[MENU_BACKGROUND].sprite, i, j, -1, -1);
+src/settings.c:			if (((Sprite *)game->sprites.content)[MENU_BACKGROUND].size.y == 0)
+src/settings.c:		if (game->settings.windowMode == i) {
+src/settings.c:			game->buttons[i + 10].textColor = (sfColor){0, 120, 0, 255};
+src/settings.c:			game->buttons[i + 10].color = (sfColor){220, 220, 0, 255};
+src/settings.c:			game->buttons[i + 10].textColor = (sfColor){0, 0, 0, 255};
+src/settings.c:			game->buttons[i + 10].color = (sfColor){205, 205, 205, 255};
+src/settings.c:	if (game->settings.dispFramerate)
+src/settings.c:		game->buttons[13].color = (sfColor){0, 255, 0, 255};
+src/settings.c:		game->buttons[13].color = (sfColor){255, 0, 0, 255};
+src/settings.c:	for (int i = 0; i < 640; i += ((Sprite *)game->sprites.content)[MENU_BACKGROUND].size.x) {
+src/settings.c:		if (((Sprite *)game->sprites.content)[MENU_BACKGROUND].size.x == 0)
+src/settings.c:		for (int j = 0; j < 640; j += ((Sprite *)game->sprites.content)[MENU_BACKGROUND].size.y) {
+src/settings.c:			image(game, ((Sprite *)game->sprites.content)[MENU_BACKGROUND].sprite, i, j, -1, -1);
+src/settings.c:			if (((Sprite *)game->sprites.content)[MENU_BACKGROUND].size.y == 0)
+src/settings.c:	if (getLanguage(game->languages, game->settings.lang_id) < 0 || game->languages[getLanguage(game->languages, game->settings.lang_id)].keys == NULL)
+src/settings.c:	for (int i = 0; game->languages[getLanguage(game->languages, game->settings.lang_id)].keys[i] && i < NB_OF_KEYS; i++) {
+src/settings.c:		sfRectangleShape_setFillColor(game->rectangle, (sfColor){100, 100, 100, 255});
+src/settings.c:		sfText_setCharacterSize(game->text, 17);
+src/settings.c:		sfText_setColor(game->text, (sfColor){255, 255, 255, 255});
+src/settings.c:		if (game->settings.keys[i] == (unsigned char)-1)
+src/settings.c:			sfText_setColor(game->text, (sfColor){0, 0, 0, 255});
+src/settings.c:				if ((j != i && game->settings.keys[j] == game->settings.keys[i])) {
+src/settings.c:					sfText_setColor(game->text, (sfColor){255, 0, 0, 255});
+src/settings.c:		text(game->languages[getLanguage(game->languages, game->settings.lang_id)].keys[i], game, 5 + i / 10 * 272, i % 10 * 48 + 15, false);
+src/change_buffer.c:	sfUint32	*buffer = getCleanedString(game->buffer, time(NULL) % 2);
+src/change_buffer.c:	sfText_setColor(game->text, (sfColor){255, 255, 255, 255});
+src/change_buffer.c:	sfText_setCharacterSize(game->text, 15);
+src/launchGame.c:	while (sfRenderWindow_isOpen(game->window)) {
+src/launchGame.c:		sfRenderWindow_clear(game->window, (sfColor){0, 0, 0, 255});
+src/launchGame.c:		game_functions[game->menu](game);
+src/launchGame.c:		if (game->settings.dispFramerate) {
+src/launchGame.c:			sfText_setCharacterSize(game->text, 10);
+src/launchGame.c:			sfText_setColor(game->text, (sfColor){255, 255, 255, 255});
+src/launchGame.c:		if (game->debug) {
+src/launchGame.c:			sfText_setCharacterSize(game->text, 10);
+src/launchGame.c:			sfText_setColor(game->text, (sfColor){255, 255, 255, 255});
+src/launchGame.c:			sfText_setColor(game->text, (sfColor){0, 0, 0, 255});
+src/launchGame.c:		sfRenderWindow_display(game->window);
+src/initGame.c:	if (game->text) {
+src/initGame.c:		sfText_setColor(game->text, (sfColor){255, 255, 255, 255});
+src/initGame.c:		sfText_setCharacterSize(game->text, 15);
+src/initGame.c:	sfRectangleShape_setFillColor(game->rectangle, (sfColor){150, 150, 150, 255});
+src/initGame.c:	sfRectangleShape_setPosition(game->rectangle, pos);
+src/initGame.c:	sfRectangleShape_setSize(game->rectangle, size);
+src/initGame.c:	sfRenderWindow_clear(game->window, (sfColor){0, 0, 0, 255});
+src/initGame.c:	sfRectangleShape_setFillColor(game->rectangle, (sfColor){0, 0, 0, 255});
+src/initGame.c:	sfRectangleShape_setFillColor(game->rectangle, (sfColor){0, 0, 255, 255});
+src/initGame.c:	sfRectangleShape_setFillColor(game->rectangle, (sfColor){0, 255, 0, 255});
+src/initGame.c:	image(game, game->icon.sprite, 256, 100, 128, 128);
+src/initGame.c:	sfRenderWindow_display(game->window);
+src/initGame.c:	game->settings = loadSettings();
+src/initGame.c:	if (game->settings.windowMode == FULLSCREEN) {
+src/initGame.c:	} else if (game->settings.windowMode == BORDERLESS_WINDOW) {
+src/initGame.c:		mode.width = game->settings.windowSize.x;
+src/initGame.c:		mode.height = game->settings.windowSize.y;
+src/initGame.c:	game->baseScale.x = (float)mode.width / 640.0;
+src/initGame.c:	game->baseScale.y = (float)mode.height / 480.0;
+src/initGame.c:	game->window = sfRenderWindow_create(mode, title, style, NULL);
+src/initGame.c:	if (!game->window) {
+src/initGame.c:		sfRenderWindow_setIcon(game->window, 32, 32, icon);
+src/initGame.c:	game->rectangle = sfRectangleShape_create();
+src/initGame.c:	if (!game->rectangle) {
+src/initGame.c:	game->text = sfText_create();
+src/initGame.c:	if (!game->text) {
+src/initGame.c:	game->icon.image = image;
+src/initGame.c:		game->icon.texture = sfTexture_createFromImage(image, NULL);
+src/initGame.c:	game->icon.sprite = sfSprite_create();
+src/initGame.c:	if (game->icon.sprite && game->icon.texture)
+src/initGame.c:		sfSprite_setTexture(game->icon.sprite, game->icon.texture, sfTrue);
+src/initGame.c:	game->characters.content = malloc(sizeof(Character));
+src/initGame.c:	if (!game->characters.content) {
+src/initGame.c:	game->characters.length = 1;
+src/initGame.c:	game->selected = -1;
+src/initGame.c:	memset(game->buffer, 0, BUFFER_MAX_SIZE * sizeof(*game->buffer));
+src/initGame.c:	game->bufSize = BUFFER_MAX_SIZE;
+src/initGame.c:	strcpy(player.name, game->settings.playerName);
+src/initGame.c:	((Character *)game->characters.content)[0] = player;
+src/initGame.c:	game->fonts = loadFonts(game);
+src/initGame.c:	game->sprites = loadSprites(game);
+src/initGame.c:	game->musics = loadMusics(game);
+src/initGame.c:	setVolumes(game->musics, game->settings.musicVolume);
+src/initGame.c:	game->sfx = loadSfx(game);
+src/initGame.c:	setVolumes(game->sfx, game->settings.sfxVolume);
+src/initGame.c:	game->languages = loadLanguages(game);
+src/initGame.c:	game->buttons = loadButtons(game);
+src/initGame.c:	sfRenderWindow_setFramerateLimit(game->window, 60);
+src/mainMenu.c:	//sfMusic_setPitch(((sfMusic **)game->musics.content)[MAIN_MENU_MUSIC], var);
+src/mainMenu.c:	if (!sfRenderWindow_isOpen(game->window))
+src/mainMenu.c:	if (((sfMusic **)game->musics.content)[MAIN_MENU_MUSIC] && sfMusic_getStatus(((sfMusic **)game->musics.content)[MAIN_MENU_MUSIC]) != sfPlaying)
+src/mainMenu.c:		sfMusic_play(((sfMusic **)game->musics.content)[MAIN_MENU_MUSIC]);
+src/mainMenu.c:	for (int i = 0; i < 640; i += ((Sprite *)game->sprites.content)[MENU_BACKGROUND].size.x) {
+src/mainMenu.c:		if (((Sprite *)game->sprites.content)[MENU_BACKGROUND].size.x == 0)
+src/mainMenu.c:		for (int j = 0; j < 640; j += ((Sprite *)game->sprites.content)[MENU_BACKGROUND].size.y) {
+src/mainMenu.c:			image(game, ((Sprite *)game->sprites.content)[MENU_BACKGROUND].sprite, i, j, -1, -1);
+src/mainMenu.c:			if (((Sprite *)game->sprites.content)[MENU_BACKGROUND].size.y == 0)
+src/settingsMgr.c:	write(fd, &game->settings, sizeof(game->settings));
+src/drawSprite.c:	sfVector2f	pos = {x * game->baseScale.x, y * game->baseScale.y};
+src/drawSprite.c:	sfVector2f	size = {width * game->baseScale.x, height * game->baseScale.y};
+src/drawSprite.c:	sfRectangleShape_setPosition(game->rectangle, pos);
+src/drawSprite.c:	sfRectangleShape_setSize(game->rectangle, size);
+src/drawSprite.c:	sfRenderWindow_drawRectangleShape(game->window, game->rectangle, NULL);
+src/drawSprite.c:	sfVector2f	pos = {x * game->baseScale.x, y * game->baseScale.y};
+src/drawSprite.c:		scale = (sfVector2f){width / rect.width * game->baseScale.x, height / rect.height * game->baseScale.y};
+src/drawSprite.c:			scale.x = game->baseScale.x;
+src/drawSprite.c:			scale.y = game->baseScale.y;
+src/drawSprite.c:		sfRenderWindow_drawSprite(game->window, sprite, NULL);
+src/drawSprite.c:	sfVector2f	pos = {x * game->baseScale.x, y * game->baseScale.y};
+src/drawSprite.c:	if (str && sfText_getFont(game->text)) {
+src/drawSprite.c:			sfText_setUnicodeString(game->text, (sfUint32 *)str);
+src/drawSprite.c:			sfText_setString(game->text, str);
+src/drawSprite.c:		sfText_setPosition(game->text, pos);
+src/drawSprite.c:		sfText_setScale(game->text, game->baseScale);
+src/drawSprite.c:		sfRenderWindow_drawText(game->window, game->text, 0);

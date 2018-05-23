@@ -1,25 +1,16 @@
-ï»¿Jouer
-
-ParamÃ¨tres
+Jouer
+Paramètres
 Quitter
-
 Options
 Audio
 Retour
 Langue
-
-
 Annuler
 Sauvegarder
-Controles
-
-
-Sauvegarder
-
+Contrôles
 Oui
 Non
-Ajouter un personnage
-Menu des objets
-Retour
-
-Retour
+Plein écran
+Fenêtré sans bord
+Fenêtré
+Afficher les IPS
