@@ -46,6 +46,26 @@ Settings	loadSettings()
 		settings.musicVolume = 100;
 		settings.windowSize.x = 640;
 		settings.windowSize.y = 480;
+		settings.keys[0] = sfKeyZ;
+		settings.keys[1] = sfKeyS;
+		settings.keys[2] = sfKeyQ;
+		settings.keys[3] = sfKeyD;
+		settings.keys[4] = sfKeyI;
+		settings.keys[5] = sfKeyEscape;
+		settings.keys[6] = sfKeyF;
+		settings.keys[7] = sfKeyC;
+		settings.keys[8] = sfKeyB;
+		settings.keys[9] = sfKeyP;
+		settings.keys[10] = sfKeyU;
+		settings.keys[11] = sfKeyNum1;
+		settings.keys[12] = sfKeyNum2;
+		settings.keys[13] = sfKeyNum3;
+		settings.keys[14] = sfKeyNum4;
+		settings.keys[15] = sfKeyNum5;
+		settings.keys[16] = sfKeyNum6;
+		settings.keys[17] = sfKeyNum7;
+		settings.keys[18] = sfKeyNum8;
+		settings.keys[19] = sfKeyLShift;
 		strcpy(settings.lang_id, "en");
 	} else
 		read(fd, &settings, sizeof(settings));
