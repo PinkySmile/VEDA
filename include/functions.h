@@ -17,7 +17,7 @@ int		getLanguage(Language *languages, char *lang_id);
 void		manage_mouse_click(game_t *game, sfMouseButtonEvent event);
 char		*getKeyString(unsigned char keyID);
 void		setVolumes(Array sounds, float volume);
-float		isPressed(int keyID);
+float		isPressed(int keyID, sfRenderWindow *window);
 char		*getVersion();
 void		changeScreenMode(game_t *game, int new);
 int		dispMsg(char *title, char *content, int variate);

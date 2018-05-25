@@ -30,7 +30,7 @@ void	manageEvents(game_t *game)
 		} else if (event.type == sfEvtTextEntered) {
 			if (event.text.unicode == 8 && game->bufPos > 0)
 				game->buffer[--game->bufPos] = 0;
-			else
+			else if (event.text.unicode != 8)
 				game->buffer[game->bufPos < game->bufSize ? game->bufPos++ : game->bufPos - 1] = event.text.unicode;
 		} else if (event.type == sfEvtMouseButtonPressed) {
 			manage_mouse_click(game, event.mouseButton);

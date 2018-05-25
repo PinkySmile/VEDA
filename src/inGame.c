@@ -300,8 +300,10 @@ void	execAction(game_t *game, Object obj)
 	}
 }
 
-float	isPressed(int keyID)
+float	isPressed(int keyID, sfRenderWindow *window)
 {
+	if (!sfRenderWindow_hasFocus(window))
+		return (0);
 	sfJoystick_update();
 	if (keyID <= 200)
 		return (sfKeyboard_isKeyPressed(keyID));
@@ -337,74 +339,74 @@ void	movePlayer(game_t *game)
 		}
 	}
 	player->movement.speed = 0;
-	if (!player->movement.blocked.left && isPressed(game->settings.keys[KEY_LEFT])) {
-		player->movement.pos.x -= isPressed(game->settings.keys[KEY_LEFT]);
-		if (isPressed(game->settings.keys[KEY_LEFT]) - isPressed(game->settings.keys[KEY_RIGHT]))
+	if (!player->movement.blocked.left && isPressed(game->settings.keys[KEY_LEFT], game->window)) {
+		player->movement.pos.x -= isPressed(game->settings.keys[KEY_LEFT], game->window);
+		if (isPressed(game->settings.keys[KEY_LEFT], game->window) - isPressed(game->settings.keys[KEY_RIGHT], game->window))
 			player->movement.position = LEFT;
-		player->movement.state = isPressed(game->settings.keys[KEY_LEFT]) - isPressed(game->settings.keys[KEY_RIGHT]) ? MOVING : player->movement.state;
+		player->movement.state = isPressed(game->settings.keys[KEY_LEFT], game->window) - isPressed(game->settings.keys[KEY_RIGHT], game->window) ? MOVING : player->movement.state;
 		if (!mooved)
-			player->movement.speed += isPressed(game->settings.keys[KEY_LEFT]) - isPressed(game->settings.keys[KEY_RIGHT]);
-		if (isPressed(game->settings.keys[KEY_LEFT]) - isPressed(game->settings.keys[KEY_RIGHT]))
+			player->movement.speed += isPressed(game->settings.keys[KEY_LEFT], game->window) - isPressed(game->settings.keys[KEY_RIGHT], game->window);
+		if (isPressed(game->settings.keys[KEY_LEFT], game->window) - isPressed(game->settings.keys[KEY_RIGHT], game->window))
 			sfClock_restart(player->movement.stateClock);
-		if (isPressed(game->settings.keys[KEY_SPRINT]) && player->stats.energy >= player->stats.sprintSpeed) {
-			player->movement.pos.x -= player->stats.sprintSpeed * (isPressed(game->settings.keys[KEY_LEFT]) - isPressed(game->settings.keys[KEY_RIGHT])) - 1;
-			if (!mooved)
-				player->movement.speed += player->stats.sprintSpeed * (isPressed(game->settings.keys[KEY_LEFT]) - isPressed(game->settings.keys[KEY_RIGHT])) - 1;
-			if (isPressed(game->settings.keys[KEY_LEFT]) - isPressed(game->settings.keys[KEY_RIGHT]) != 0)
+		if (isPressed(game->settings.keys[KEY_SPRINT], game->window) && player->stats.energy >= player->stats.sprintSpeed) {
+			player->movement.pos.x -= player->stats.sprintSpeed * (isPressed(game->settings.keys[KEY_LEFT], game->window) - isPressed(game->settings.keys[KEY_RIGHT], game->window)) - 1;
+			if (!mooved && isPressed(game->settings.keys[KEY_LEFT], game->window) - isPressed(game->settings.keys[KEY_RIGHT], game->window))
+				player->movement.speed += player->stats.sprintSpeed * (isPressed(game->settings.keys[KEY_LEFT], game->window) - isPressed(game->settings.keys[KEY_RIGHT], game->window)) - 1;
+			if (isPressed(game->settings.keys[KEY_LEFT], game->window) - isPressed(game->settings.keys[KEY_RIGHT], game->window) != 0)
 				player->stats.energyClock++;
 		}
 		mooved = player->movement.speed != 0;
 	}
-	if (!player->movement.blocked.right && isPressed(game->settings.keys[KEY_RIGHT])) {
-		player->movement.pos.x += isPressed(game->settings.keys[KEY_RIGHT]);
-		if (isPressed(game->settings.keys[KEY_RIGHT]) - isPressed(game->settings.keys[KEY_LEFT]))
+	if (!player->movement.blocked.right && isPressed(game->settings.keys[KEY_RIGHT], game->window)) {
+		player->movement.pos.x += isPressed(game->settings.keys[KEY_RIGHT], game->window);
+		if (isPressed(game->settings.keys[KEY_RIGHT], game->window) - isPressed(game->settings.keys[KEY_LEFT], game->window))
 			player->movement.position = RIGHT;
-		player->movement.state = isPressed(game->settings.keys[KEY_RIGHT]) - isPressed(game->settings.keys[KEY_LEFT]) ? MOVING : player->movement.state;
+		player->movement.state = isPressed(game->settings.keys[KEY_RIGHT], game->window) - isPressed(game->settings.keys[KEY_LEFT], game->window) ? MOVING : player->movement.state;
 		if (!mooved)
-			player->movement.speed += isPressed(game->settings.keys[KEY_RIGHT]) - isPressed(game->settings.keys[KEY_LEFT]);
-		if (isPressed(game->settings.keys[KEY_RIGHT]) - isPressed(game->settings.keys[KEY_LEFT]))
+			player->movement.speed += isPressed(game->settings.keys[KEY_RIGHT], game->window) - isPressed(game->settings.keys[KEY_LEFT], game->window);
+		if (isPressed(game->settings.keys[KEY_RIGHT], game->window) - isPressed(game->settings.keys[KEY_LEFT], game->window))
 			sfClock_restart(player->movement.stateClock);
-		if (isPressed(game->settings.keys[KEY_SPRINT]) && player->stats.energy >= player->stats.sprintSpeed) {
-			player->movement.pos.x += player->stats.sprintSpeed * (isPressed(game->settings.keys[KEY_RIGHT]) - isPressed(game->settings.keys[KEY_LEFT])) - 1;
-			if (!mooved)
-				player->movement.speed += player->stats.sprintSpeed * (isPressed(game->settings.keys[KEY_RIGHT]) - isPressed(game->settings.keys[KEY_LEFT])) - 1;
-			if (isPressed(game->settings.keys[KEY_RIGHT]) - isPressed(game->settings.keys[KEY_LEFT]) != 0)
+		if (isPressed(game->settings.keys[KEY_SPRINT], game->window) && player->stats.energy >= player->stats.sprintSpeed) {
+			player->movement.pos.x += player->stats.sprintSpeed * (isPressed(game->settings.keys[KEY_RIGHT], game->window) - isPressed(game->settings.keys[KEY_LEFT], game->window)) - 1;
+			if (!mooved && isPressed(game->settings.keys[KEY_RIGHT], game->window) - isPressed(game->settings.keys[KEY_LEFT], game->window))
+				player->movement.speed += player->stats.sprintSpeed * (isPressed(game->settings.keys[KEY_RIGHT], game->window) - isPressed(game->settings.keys[KEY_LEFT], game->window)) - 1;
+			if (isPressed(game->settings.keys[KEY_RIGHT], game->window) - isPressed(game->settings.keys[KEY_LEFT], game->window) != 0)
 				player->stats.energyClock++;
 		}
 		mooved = player->movement.speed != 0;
 	}
-	if (!player->movement.blocked.up && isPressed(game->settings.keys[KEY_UP])) {
-		player->movement.pos.y -= isPressed(game->settings.keys[KEY_UP]);
-		if (isPressed(game->settings.keys[KEY_UP]) - isPressed(game->settings.keys[KEY_DOWN]))
+	if (!player->movement.blocked.up && isPressed(game->settings.keys[KEY_UP], game->window)) {
+		player->movement.pos.y -= isPressed(game->settings.keys[KEY_UP], game->window);
+		if (isPressed(game->settings.keys[KEY_UP], game->window) - isPressed(game->settings.keys[KEY_DOWN], game->window))
 			player->movement.position = UP;
-		player->movement.state = isPressed(game->settings.keys[KEY_UP]) - isPressed(game->settings.keys[KEY_DOWN]) ? MOVING : player->movement.state;
+		player->movement.state = isPressed(game->settings.keys[KEY_UP], game->window) - isPressed(game->settings.keys[KEY_DOWN], game->window) ? MOVING : player->movement.state;
 		if (!mooved)
-			player->movement.speed += isPressed(game->settings.keys[KEY_UP]) - isPressed(game->settings.keys[KEY_DOWN]);
-		if (isPressed(game->settings.keys[KEY_UP]) - isPressed(game->settings.keys[KEY_DOWN]))
+			player->movement.speed += isPressed(game->settings.keys[KEY_UP], game->window) - isPressed(game->settings.keys[KEY_DOWN], game->window);
+		if (isPressed(game->settings.keys[KEY_UP], game->window) - isPressed(game->settings.keys[KEY_DOWN], game->window))
 			sfClock_restart(player->movement.stateClock);
-		if (isPressed(game->settings.keys[KEY_SPRINT]) && player->stats.energy >= player->stats.sprintSpeed) {
-			player->movement.pos.y -= player->stats.sprintSpeed * (isPressed(game->settings.keys[KEY_UP]) - isPressed(game->settings.keys[KEY_DOWN])) - 1;
-			if (!mooved)
-				player->movement.speed += player->stats.sprintSpeed * (isPressed(game->settings.keys[KEY_UP]) - isPressed(game->settings.keys[KEY_DOWN])) - 1;
-			if (isPressed(game->settings.keys[KEY_UP]) - isPressed(game->settings.keys[KEY_DOWN]) != 0)
+		if (isPressed(game->settings.keys[KEY_SPRINT], game->window) && player->stats.energy >= player->stats.sprintSpeed) {
+			player->movement.pos.y -= player->stats.sprintSpeed * (isPressed(game->settings.keys[KEY_UP], game->window) - isPressed(game->settings.keys[KEY_DOWN], game->window)) - 1;
+			if (!mooved && isPressed(game->settings.keys[KEY_UP], game->window) - isPressed(game->settings.keys[KEY_DOWN], game->window))
+				player->movement.speed += player->stats.sprintSpeed * (isPressed(game->settings.keys[KEY_UP], game->window) - isPressed(game->settings.keys[KEY_DOWN], game->window)) - 1;
+			if (isPressed(game->settings.keys[KEY_UP], game->window) - isPressed(game->settings.keys[KEY_DOWN], game->window) != 0)
 				player->stats.energyClock++;
 		}
 		mooved = player->movement.speed != 0;
 	}
-	if (!player->movement.blocked.down && isPressed(game->settings.keys[KEY_DOWN])) {
-		player->movement.pos.y += isPressed(game->settings.keys[KEY_DOWN]);
-		if (isPressed(game->settings.keys[KEY_DOWN]) - isPressed(game->settings.keys[KEY_UP]))
+	if (!player->movement.blocked.down && isPressed(game->settings.keys[KEY_DOWN], game->window)) {
+		player->movement.pos.y += isPressed(game->settings.keys[KEY_DOWN], game->window);
+		if (isPressed(game->settings.keys[KEY_DOWN], game->window) - isPressed(game->settings.keys[KEY_UP], game->window))
 			player->movement.position = DOWN;
-		player->movement.state = isPressed(game->settings.keys[KEY_DOWN]) - isPressed(game->settings.keys[KEY_UP]) ? MOVING : player->movement.state;
+		player->movement.state = isPressed(game->settings.keys[KEY_DOWN], game->window) - isPressed(game->settings.keys[KEY_UP], game->window) ? MOVING : player->movement.state;
 		if (!mooved)
-			player->movement.speed += isPressed(game->settings.keys[KEY_DOWN]) - isPressed(game->settings.keys[KEY_UP]);
-		if (isPressed(game->settings.keys[KEY_DOWN]) - isPressed(game->settings.keys[KEY_UP]))
+			player->movement.speed += isPressed(game->settings.keys[KEY_DOWN], game->window) - isPressed(game->settings.keys[KEY_UP], game->window);
+		if (isPressed(game->settings.keys[KEY_DOWN], game->window) - isPressed(game->settings.keys[KEY_UP], game->window))
 			sfClock_restart(player->movement.stateClock);
-		if (isPressed(game->settings.keys[KEY_SPRINT]) && player->stats.energy >= player->stats.sprintSpeed) {
-			player->movement.pos.y += player->stats.sprintSpeed * (isPressed(game->settings.keys[KEY_DOWN]) - isPressed(game->settings.keys[KEY_UP])) - 1;
-			if (!mooved)
-				player->movement.speed += player->stats.sprintSpeed * (isPressed(game->settings.keys[KEY_DOWN]) - isPressed(game->settings.keys[KEY_UP])) - 1;
-			if (isPressed(game->settings.keys[KEY_DOWN]) - isPressed(game->settings.keys[KEY_UP]) != 0)
+		if (isPressed(game->settings.keys[KEY_SPRINT], game->window) && player->stats.energy >= player->stats.sprintSpeed) {
+			player->movement.pos.y += player->stats.sprintSpeed * (isPressed(game->settings.keys[KEY_DOWN], game->window) - isPressed(game->settings.keys[KEY_UP], game->window)) - 1;
+			if (!mooved && isPressed(game->settings.keys[KEY_DOWN], game->window) - isPressed(game->settings.keys[KEY_UP], game->window))
+				player->movement.speed += player->stats.sprintSpeed * (isPressed(game->settings.keys[KEY_DOWN], game->window) - isPressed(game->settings.keys[KEY_UP], game->window)) - 1;
+			if (isPressed(game->settings.keys[KEY_DOWN], game->window) - isPressed(game->settings.keys[KEY_UP], game->window) != 0)
 				player->stats.energyClock++;
 		}
 		mooved = player->movement.speed != 0;
