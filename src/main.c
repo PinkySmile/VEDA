@@ -17,6 +17,7 @@
 #endif
 
 sfRenderWindow	**window;
+game_t		*gameStruct;
 
 char	*strsignal(int signum)
 {
@@ -47,25 +48,6 @@ char	*strsignal(int signum)
 		return ("Terminated");
 	default:
 		return ("Unknown signal");
-	}
-}
-
-void	sighandler(int signum)
-{
-	if (signum == SIGINT || signum == SIGTERM) {
-		if (*window)
-			sfRenderWindow_close(*window);
-		else
-			exit(EXIT_SUCCESS);
-		printf("%s: Caught signal %i (%s). Exiting.\n", INFO, signum, strsignal(signum));
-	} else {
-		printf("%s: Caught signal %i (%s). Aborting !\n", FATAL, signum, strsignal(signum));
-		dispMsg("Fatal Error", concatf("Error: Caught signal %i (%s)\n\n\nClick OK to close the program", signum, strsignal(signum)), 0);
-		exit(EXIT_FAILURE);
-		exit(128 + signum); //In case the first one fail
-		raise(signum); //In case the crash trashed the exit function
-		signal(11, NULL);
-		*(char *)NULL = *(char *)NULL; //Let's do this kernel. Come on, I wait you !
 	}
 }
 
@@ -137,10 +119,36 @@ void	destroyStruct(game_t *game)
 	free(game->languages);
 }
 
+void	sighandler(int signum)
+{
+	if (signum == 21) {
+		saveGame(gameStruct);
+		destroyStruct(gameStruct);
+		printf("%s: Goodbye !", INFO);
+		exit(EXIT_SUCCESS);
+	}
+	if (signum == SIGINT || signum == SIGTERM) {
+		if (sfRenderWindow_isOpen(*window))
+			sfRenderWindow_close(*window);
+		else
+			exit(EXIT_SUCCESS);
+		printf("%s: Caught signal %i (%s). Exiting.\n", INFO, signum, strsignal(signum));
+	} else {
+		printf("%s: Caught signal %i (%s). Aborting !\n", FATAL, signum, strsignal(signum));
+		dispMsg("Fatal Error", concatf("Error: Caught signal %i (%s)\n\n\nClick OK to close the program", signum, strsignal(signum)), 0);
+		exit(EXIT_FAILURE);
+		signal(signum, NULL);
+		raise(signum); //In case the crash trashed the exit function
+		signal(11, NULL);
+		*(char *)NULL = *(char *)NULL; //Let's do this kernel. Come on, I wait you !
+	}
+}
+
 int	main(int argc, char **args)
 {
 	game_t	game;
 
+	gameStruct = &game;
 	srand((long)&game);
 	window = &game.window;
 	signal(SIGINT,  &sighandler);
@@ -151,6 +159,7 @@ int	main(int argc, char **args)
 	signal(SIGFPE,  &sighandler);
 	signal(SIGSEGV, &sighandler);
 	signal(SIGTERM, &sighandler);
+	//signal(21,	&sighandler);
 	printf("%s: Initializating game\n", INFO);
 	initGame(&game);
 	game.debug = (argc == 2 && !strcmp("debug", args[1]));

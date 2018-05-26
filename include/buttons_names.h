@@ -26,6 +26,7 @@ enum buttons_names {
 	BORDERLESS_BUTTON,
 	WINDOWED_BUTTON,
 	DISP_FPS,
+	CONFIRM,
 };
 
 #endif

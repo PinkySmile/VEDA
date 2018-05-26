@@ -43,3 +43,16 @@ void	buf_modif(game_t *game)
 	text((char *)buffer, game, 10, 10, true);
 	free(buffer);
 }
+
+void	changeName(game_t *game)
+{
+	sfUint32	*buffer = getCleanedString(game->buffer, time(NULL) % 2);
+
+	sfText_setColor(game->text, (sfColor){255, 255, 255, 255});
+	sfText_setCharacterSize(game->text, 20);
+	text("How do people call you ?", game, 50, 50, false);
+	sfText_setCharacterSize(game->text, 15);
+	sfText_setColor(game->text, (sfColor){100, 100, 100, 255});
+	text((char *)buffer, game, 100, 100, true);
+	free(buffer);
+}

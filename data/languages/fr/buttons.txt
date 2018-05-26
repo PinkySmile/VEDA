@@ -14,3 +14,4 @@ Plein écran
 Fenêtré sans bord
 Fenêtré
 Afficher les IPS
+Confirmer

@@ -52,6 +52,7 @@ void	controls	(game_t *game);
 void	audio		(game_t *game);
 void	options		(game_t *game);
 void	buf_modif	(game_t *game);
+void	changeName	(game_t *game);
 
 //callbacks
 void	play_button		(game_t *game, int buttonId);
@@ -68,5 +69,6 @@ void	fullScreen		(game_t *game, int buttonID);
 void	borderless		(game_t *game, int buttonID);
 void	windowed		(game_t *game, int buttonID);
 void	FPS_button		(game_t *game, int buttonID);
+void	changePlayerName	(game_t *game, int buttonID);
 
 #endif

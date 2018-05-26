@@ -200,7 +200,7 @@ typedef struct {
 	Stats		stats;
 	Array		inventory;
 	Item		wornItems[5];
-	char		name[16];
+	char		name[17];
 	float		invulnerabiltyTime;
 	int		damageDisplay[DAMAGES_TYPE_NB];
 	sfClock		*damageClock[DAMAGES_TYPE_NB];

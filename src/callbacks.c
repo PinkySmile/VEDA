@@ -21,18 +21,39 @@ void	back_on_title_screen(game_t *game, int buttonID)
 
 void	play_button(game_t *game, int buttonID)
 {
-	(void)buttonID;
-	game->menu = 1;
-	free(game->map);
+	loadGame(game);
 	for (int i = 0; game->buttons[i].content; i++) {
 		game->buttons[i].active = false;
 		game->buttons[i].displayed = false;
 	}
-	loadGame(game);
+	(void)buttonID;
+	if (strcmp(((Character *)game->characters.content)[0].name, "") == 0) {
+		game->menu = 6;
+		game->bufSize = 16;
+		game->buttons[9].active = true;
+		game->buttons[9].displayed = true;
+		game->buttons[14].active = true;
+		game->buttons[14].displayed = true;
+	} else
+		game->menu = 1;
+	free(game->map);
+	game->map = NULL;
 	if (!game->map)
 		game->map = loadLevel("data/levels/test/level/floor0.lvl", &game->bg);
 	if (((sfMusic **)game->musics.content)[MAIN_MENU_MUSIC] && sfMusic_getStatus(((sfMusic **)game->musics.content)[MAIN_MENU_MUSIC]) == sfPlaying)
 		sfMusic_stop(((sfMusic **)game->musics.content)[MAIN_MENU_MUSIC]);
+}
+
+void	changePlayerName(game_t *game, int buttonID)
+{
+	(void)buttonID;
+	for (int i = 0; game->buffer[i]; i++)
+		((Character *)game->characters.content)[0].name[i] = game->buffer[i] % 255;
+	game->menu = 1;
+	for (int i = 0; game->buttons[i].content; i++) {
+		game->buttons[i].active = false;
+		game->buttons[i].displayed = false;
+	}
 }
 
 void	fullScreen(game_t *game, int buttonID)

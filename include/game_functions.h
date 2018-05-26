@@ -7,4 +7,5 @@ void	(* const game_functions[])(game_t *game) = {
 	&audio,
 	&options,
 	&buf_modif,
+	&changeName,
 };

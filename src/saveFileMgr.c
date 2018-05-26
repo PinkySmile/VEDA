@@ -16,7 +16,6 @@ bool	saveGame(game_t *game)
 	struct stat	st;
 	bool		success = false;
 	Character	player = ((Character *)game->characters.content)[0];
-	int		len;
 
 	printf("%s: Saving game\n", INFO);
 	if (stat("save", &st) == -1) {
@@ -42,9 +41,6 @@ bool	saveGame(game_t *game)
 	player.movement.stateClock = NULL;
 	player.stats.energyRegenClock = NULL;
 	write(fd, &player, sizeof(player));
-	for (len = 0; game->map[len].layer; len++);
-	write(fd, &len, sizeof(len));
-	write(fd, game->map, sizeof(*game->map) * len);
 	close(fd);
 	return (true);
 }
@@ -53,12 +49,9 @@ void	loadGame(game_t *game)
 {
 	int		fd;
 	Character	player;
-	int		len = 0;
 	bool		use = false;
 	int		readBytes = 0;
 	int		totalRead = 0;
-	int		tmp = 0;
-	int		old = 0;
 
 	printf("%s: Loading game\n", INFO);
 	fd = open("save/game.dat", O_RDONLY);
@@ -74,45 +67,6 @@ void	loadGame(game_t *game)
 		if (!use)
 			return;
 	}
-	totalRead += readBytes = read(fd, &len, sizeof(len));
-	if (readBytes != sizeof(len) && !use) {
-		printf("%s: Corrupted save file detected\n", ERROR);
-		close(fd);
-		use = (dispMsg("Error", CORRUPTED_SAVE_MSG, 4) == 6);
-		if (!use)
-			return;
-	}
-	free(game->map);
-	game->map = malloc((len + 1) * sizeof(*game->map));
-	if (!game->map) {
-		printf("%s: Couldn't alloc %liB\n", FATAL, (long)(len * sizeof(*game->map)));
-		close(fd);
-		exit(EXIT_FAILURE);
-	}
-	#ifdef __MINGW32__
-		for (unsigned int i = 0; i < sizeof(*game->map) * len; ) {
-			old = lseek(fd, 0, SEEK_CUR);
-			tmp = read(fd, &((char *)game->map)[i], 1);
-			i += tmp > 0 ? tmp : 1;
-			if (lseek(fd, 0, SEEK_CUR) - old == 0)
-				break;
-			readBytes = i;
-		}
-	#else
-		readBytes = read(fd, game->map, sizeof(*game->map) * len);
-	#endif
-	printf("%i, %i\n", readBytes, (int)(len * sizeof(*game->map)));
-	if (readBytes != (int)(len * sizeof(*game->map)) && !use) {
-		printf("%s: Corrupted save file detected\n", ERROR);
-		close(fd);
-		use = (dispMsg("Error", CORRUPTED_SAVE_MSG, 4) == 6);
-		if (!use) {
-			free(game->map);
-			game->map = NULL;
-			return;
-		}
-	}
-	game->map[len].layer = 0;
 	player.movement.animationClock = ((Character *)game->characters.content)[0].movement.animationClock;
 	player.movement.stateClock = ((Character *)game->characters.content)[0].movement.stateClock;
 	player.stats.energyRegenClock = ((Character *)game->characters.content)[0].stats.energyRegenClock;
