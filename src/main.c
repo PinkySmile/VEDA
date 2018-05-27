@@ -159,7 +159,6 @@ int	main(int argc, char **args)
 	signal(SIGFPE,  &sighandler);
 	signal(SIGSEGV, &sighandler);
 	signal(SIGTERM, &sighandler);
-	//signal(21,	&sighandler);
 	printf("%s: Initializating game\n", INFO);
 	initGame(&game);
 	game.debug = (argc == 2 && !strcmp("debug", args[1]));

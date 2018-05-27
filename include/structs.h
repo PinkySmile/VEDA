@@ -304,6 +304,7 @@ struct game_s {
 	char			*bg;
 	sfVector2i		languagesConf;
 	bool			debug;
+	bool			characterChosed;
 	int			selected;
 	float			trashCan;
 	sfUint32		buffer[BUFFER_MAX_SIZE + 1];

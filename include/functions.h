@@ -53,6 +53,7 @@ void	audio		(game_t *game);
 void	options		(game_t *game);
 void	buf_modif	(game_t *game);
 void	changeName	(game_t *game);
+void	chooseCharacter	(game_t *game);
 
 //callbacks
 void	play_button		(game_t *game, int buttonId);

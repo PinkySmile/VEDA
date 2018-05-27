@@ -40,7 +40,18 @@ bool	saveGame(game_t *game)
 	player.movement.animationClock = NULL;
 	player.movement.stateClock = NULL;
 	player.stats.energyRegenClock = NULL;
-	write(fd, &player, sizeof(player));
+	if (write(fd, &player, sizeof(player)) != sizeof(player)) {
+		printf("%s: Couldn't write save file\n", ERROR);
+		close(fd);
+		dispMsg("Error", "Couldn't write to save file\nNo space on disk ?", 4);
+		return (false);
+	}
+	if (write(fd, &game->characterChosed, sizeof(game->characterChosed)) != sizeof(game->characterChosed)) {
+		printf("%s: Couldn't write save file\n", ERROR);
+		close(fd);
+		dispMsg("Error", "Couldn't write to save file\nNo space on disk ?", 4);
+		return (false);
+	}
 	close(fd);
 	return (true);
 }
@@ -50,8 +61,6 @@ void	loadGame(game_t *game)
 	int		fd;
 	Character	player;
 	bool		use = false;
-	int		readBytes = 0;
-	int		totalRead = 0;
 
 	printf("%s: Loading game\n", INFO);
 	fd = open("save/game.dat", O_RDONLY);
@@ -59,13 +68,22 @@ void	loadGame(game_t *game)
 		printf("%s: Cannot open save file (save/game.dat: %s)\n", ERROR, strerror(errno));
 		return;
 	}
-	totalRead += readBytes = read(fd, &player, sizeof(player));
-	if (readBytes != sizeof(player) && !use) {
+	if (read(fd, &player, sizeof(player)) != sizeof(player) && !use) {
+		printf("%s: Corrupted save file detected\n", ERROR);
+		use = (dispMsg("Error", CORRUPTED_SAVE_MSG, 4) == 6);
+		if (!use) {
+			close(fd);
+			return;
+		}
+	}
+	if (read(fd, &game->characterChosed, sizeof(game->characterChosed)) != sizeof(game->characterChosed) && !use) {
 		printf("%s: Corrupted save file detected\n", ERROR);
 		close(fd);
 		use = (dispMsg("Error", CORRUPTED_SAVE_MSG, 4) == 6);
-		if (!use)
+		if (!use) {
+			close(fd);
 			return;
+		}
 	}
 	player.movement.animationClock = ((Character *)game->characters.content)[0].movement.animationClock;
 	player.movement.stateClock = ((Character *)game->characters.content)[0].movement.stateClock;

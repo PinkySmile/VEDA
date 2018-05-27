@@ -330,7 +330,7 @@ void	movePlayer(game_t *game)
 		if (map[i].solid) {
 			if (player->movement.pos.y + 31 + player->movement.speed >= map[i].pos.y && player->movement.pos.y + 17 <= map[i].pos.y && player->movement.pos.x < map[i].pos.x + 16 && player->movement.pos.x + 16 > map[i].pos.x)
 			    player->movement.blocked.down = true;
-			if (player->movement.pos.y + 16 >= map[i].pos.y && player->movement.pos.y - 1 + player->movement.speed <= map[i].pos.y && player->movement.pos.x + 1 <= map[i].pos.x + 16 && map[i].pos.x <= player->movement.pos.x + 15)
+			if (player->movement.pos.y + 16 + player->movement.speed >= map[i].pos.y && player->movement.pos.y - 1 <= map[i].pos.y && player->movement.pos.x + 1 <= map[i].pos.x + 16 && map[i].pos.x <= player->movement.pos.x + 15)
 			    player->movement.blocked.up = true;
 			if (player->movement.pos.y + 29 >= map[i].pos.y - 1 && player->movement.pos.y + 17 <= map[i].pos.y + 16 && player->movement.pos.x <= map[i].pos.x + 16 + player->movement.speed && map[i].pos.x <= player->movement.pos.x)
 			    player->movement.blocked.left = true;

@@ -34,6 +34,7 @@ void	play_button(game_t *game, int buttonID)
 		game->buttons[9].displayed = true;
 		game->buttons[14].active = true;
 		game->buttons[14].displayed = true;
+		memset(game->buffer, 0, sizeof(*game->buffer) * 17);
 	} else
 		game->menu = 1;
 	free(game->map);
@@ -87,7 +88,7 @@ void	changeKey(game_t *game, int buttonID)
 void	changeScreenMode(game_t *game, int new)
 {
 	char		*title = concat("VEDA version ", getVersion(), false, true);
-	sfVideoMode	mode = {640, 480, 32};
+	sfVideoMode	mode = {game->settings.windowSize.x, game->settings.windowSize.y, 32};
 	sfWindowStyle	style;
 	const sfUint8	*icon = NULL;
 
@@ -110,11 +111,8 @@ void	changeScreenMode(game_t *game, int new)
 	} else if (game->settings.windowMode == BORDERLESS_WINDOW) {
 		style = sfNone;
 		mode = sfVideoMode_getDesktopMode();
-	} else {
+	} else
 		style = sfTitlebar | sfClose;
-		mode.width = game->settings.windowSize.x;
-		mode.height = game->settings.windowSize.y;
-	}
 	game->baseScale.x = (float)mode.width / 640.0;
 	game->baseScale.y = (float)mode.height / 480.0;
 	sfRenderWindow_close(game->window);
