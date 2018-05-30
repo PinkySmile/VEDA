@@ -35,7 +35,7 @@ char	*showstr(char const *str)
 	char	*result = strdup("");
 
 	for (int i = 0; str[i] != '\0'; i++) {
-		if (str[i] < 37 || str[i] > 176) {
+		if (str[i] < 32 || str[i] == 127) {
 			result = concat(result, sub_strings(str, start, i - 1, NULL), true, true);
 			start = i + 1;
 			result = concat(result, concat(display_missing_zeros(str[i]), my_putnbrbase(str[i], "01234567"), true, true), true, true);
