@@ -64,6 +64,7 @@ Object	*loadLevel(char *path, char **bg)
 	char	*line = malloc(1);
 	size_t	n = 1;
 	int	temp = 0;
+	int	len = 0;
 
 	printf("%s: Loading %s !\n", INFO, path);
 	if (!line) {
@@ -75,8 +76,14 @@ Object	*loadLevel(char *path, char **bg)
 		return (NULL);
 	}
 	*line = 0;
-	getline(&line, &n, stream);
-	*bg = strdup(line);
+	;
+	if (getline(&line, &n, stream) > 0) {
+		if (line[strlen(line) - 2] == '\r')
+			line[strlen(line) - 2] = 0;
+		else if (line[strlen(line) - 1] == '\r' || line[strlen(line) - 1] == '\n')
+			line[strlen(line) - 1] = 0;
+	}
+	*bg = line ? strdup(line) : NULL;
 	for (int i = 0; getline(&line, &n, stream) > 0; i++) {
 		if (line[strlen(line) - 2] == '\r')
 			line[strlen(line) - 2] = 0;
@@ -94,9 +101,19 @@ Object	*loadLevel(char *path, char **bg)
 		}
 		memset(&objs[i], 0, sizeof(*objs) * 2);
 		temp = 0;
+		for (len = 0; nbrs[len]; len++);
+		if (len != 9 + DAMAGES_TYPE_NB) {
+			printf("%s: Invalid line %i: \"", ERROR, i);
+			showStr(line);
+			printf("\". A line should contain %i elements but %i were found\n", 9 + DAMAGES_TYPE_NB, len);
+			free(objs);
+			free(line);
+			fclose(stream);
+			return (NULL);
+		}
 		for (int j = 0; j < (9 + DAMAGES_TYPE_NB); j++) {
 			if (!is_nbr(nbrs[j])) {
-				printf("%s: Invalid line %i: col %i \"", ERROR, i, temp);
+				printf("%s: Invalid line %i: col %i \"", ERROR, i + 2, temp);
 				showStr(nbrs[j]);
 				printf("\"\n");
 				free(objs);
@@ -118,7 +135,7 @@ Object	*loadLevel(char *path, char **bg)
 		for (int j = 0; j < DAMAGES_TYPE_NB; j++)
 			objs[i].damages[j]	= atoi(nbrs[9 + j]);
 		if (objs[i].layer <= 0) {
-			printf("%s: Invalid line %i: col %i \"", ERROR, i, strlen(nbrs[0]) + strlen(nbrs[1]) + strlen(nbrs[2]) + 3);
+			printf("%s: Invalid line %i: col %i \"", ERROR, i + 2, strlen(nbrs[0]) + strlen(nbrs[1]) + strlen(nbrs[2]) + 3);
 			showStr(nbrs[3]);
 			printf("\": Expected value greater than 0\n");
 			free(objs);
@@ -129,13 +146,6 @@ Object	*loadLevel(char *path, char **bg)
 		free(*nbrs);
 		free(nbrs);
 		objs[i + 1].layer = 0;
-		free(line);
-		line = malloc(1);
-		n = 1;
-		if (!line) {
-			printf("%s: Couldn't allocate 1B\n", FATAL);
-			exit(EXIT_FAILURE);
-		}
 	}
 	if (nbrs)
 		free(*nbrs);

@@ -21,6 +21,8 @@ void	back_on_title_screen(game_t *game, int buttonID)
 
 void	play_button(game_t *game, int buttonID)
 {
+	free(game->map);
+	game->map = NULL;
 	loadGame(game);
 	for (int i = 0; game->buttons[i].content; i++) {
 		game->buttons[i].active = false;
@@ -37,10 +39,10 @@ void	play_button(game_t *game, int buttonID)
 		memset(game->buffer, 0, sizeof(*game->buffer) * 17);
 	} else
 		game->menu = 1;
-	free(game->map);
-	game->map = NULL;
-	if (!game->map)
+	if (!game->map) {
 		game->map = loadLevel("data/levels/test/level/floor0.lvl", &game->bg);
+		game->loadedMap = strdup("data/levels/test/level/floor0.lvl");
+	}
 	if (((sfMusic **)game->musics.content)[MAIN_MENU_MUSIC] && sfMusic_getStatus(((sfMusic **)game->musics.content)[MAIN_MENU_MUSIC]) == sfPlaying)
 		sfMusic_stop(((sfMusic **)game->musics.content)[MAIN_MENU_MUSIC]);
 }
