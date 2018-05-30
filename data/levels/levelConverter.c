@@ -169,7 +169,7 @@ bool	is_nbr(char *nbr)
 void	showStr(char *str)
 {
 	for (int i = 0; str[i]; i++) {
-		if (str[i] == 127 || str[i] < 32)
+		if (str[i] == 127 || str[i] < ' ')
 			printf("\\0%o", (unsigned char)str[i]);
 		else
 			printf("%c", str[i]);
@@ -227,10 +227,12 @@ Object	*loadLevel(char *path)
 				printf("Invalid line %i (", i + j + 1);
 				showStr(lines[i + j]);
 				printf(")\n");
-				for (; lines[i] && strcmp(lines[i], ""); i++) {
-					printf("\tLine %i: ", i);
-					showStr(lines[i]);
+				for (int k = 0; lines[i + j + k] && strcmp(lines[j + i + k], "") && k < 11; k++) {
+					printf("\tLine %i: ", i + j + k);
+					showStr(lines[i + j + k]);
 					printf("\n");
+					if (k == 10)
+						printf("\t...\n");
 				}
 				free(objs);
 				free(lines[0]);
@@ -305,7 +307,7 @@ void	saveLevel(char *path, Object *objs)
 	printf("Writing header (%s) (%i chars)\n", header, write(fd, header, strlen(header)));
 	for (int i = 0; objs[i].layer; i++) {
 		ln = 0;
-		buffer = concatf("\r%i\r%i\r%i\r%i\r%i\r%i\r%f\r%i\r%i\r%i\r%i\r%i\r%i\r%i\r%i\r%i", objs[i].id, objs[i].pos.x, objs[i].pos.y, objs[i].layer, objs[i].solid, objs[i].action, objs[i].invulnerabiltyTime, objs[i].footstepSound, objs[i].footstepVariance, objs[i].damages[0], objs[i].damages[1], objs[i].damages[2], objs[i].damages[3], objs[i].damages[4], objs[i].damages[5], objs[i].damages[6]);
+		buffer = concatf("\n%i %i %i %i %i %i %f %i %i %i %i %i %i %i %i %i", objs[i].id, objs[i].pos.x, objs[i].pos.y, objs[i].layer, objs[i].solid, objs[i].action, objs[i].invulnerabiltyTime, objs[i].footstepSound, objs[i].footstepVariance, objs[i].damages[0], objs[i].damages[1], objs[i].damages[2], objs[i].damages[3], objs[i].damages[4], objs[i].damages[5], objs[i].damages[6]);
 		buf = concatf("%S", buffer);
 		for (int i = 0; buffer[i]; ln += buffer[i] == '\r', i++);
 		printf("Writing object %i (%s) (%i chars and %i lines)\n", i, buf, write(fd, buffer, strlen(buffer)), ln);
