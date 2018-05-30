@@ -96,6 +96,7 @@ enum musics {
 	EUGRT_START,
 	EUGRT_LOOP,
 	UMLAUT,
+	DANMAKU,
 };
 
 enum sfx {
@@ -307,6 +308,7 @@ struct game_s {
 	bool			characterChosed;
 	int			selected;
 	float			trashCan;
+	char			*loadedMap;
 	sfUint32		buffer[BUFFER_MAX_SIZE + 1];
 	int			bufPos;
 	int			bufSize;
