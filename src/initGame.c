@@ -80,7 +80,7 @@ void	initGame(game_t *game)
 {
 	char		*title = concat("VEDA version ", getVersion(), false, true);
 	const sfUint8	*icon = NULL;
-	sfImage		*image = sfImage_createFromFile("data/misc/icon.png");
+	sfImage		*image = sfImage_createFromFile("data/icon/icon.png");
 	sfVideoMode	mode = {640, 480, 32};
 	sfWindowStyle	style;
 	Character	player;
