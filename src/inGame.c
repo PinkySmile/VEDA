@@ -116,14 +116,14 @@ void	displayUpperLayer(game_t *game)
 
 void	drawLifeBar(game_t *game)
 {
-	int		lifeBuffer = ((Character *)game->characters.content)[0].stats.life;
+	int		lifeBuffer = getPlayer(game->characters.content, game->characters.length)->stats.life;
 	int		x = 0;
 	int		y = 0;
 	int		h = 0;
 	int		b = 0;
 	sfIntRect	rec = {0, 0, 16, 16};
 
-	for (int i = 1 ; i <= ((Character *)game->characters.content)[0].stats.lifeMax; i++) {
+	for (int i = 1 ; i <= getPlayer(game->characters.content, game->characters.length)->stats.lifeMax; i++) {
 		if (lifeBuffer <= 10 && lifeBuffer > 0)
 			rec.left = 48 + 160 * h + 16 * (10 - lifeBuffer);
 		else if (lifeBuffer >= 10)
@@ -172,14 +172,14 @@ void	drawLifeBar(game_t *game)
 
 void	drawEnergyBar(game_t *game)
 {
-	int		energyBuffer = ((Character *)game->characters.content)[0].stats.energy;
+	int		energyBuffer = getPlayer(game->characters.content, game->characters.length)->stats.energy;
 	int		x = 0;
 	int		y = 0;
 	int		h = 0;
 	int		b = 0;
 	sfIntRect	rec = {0, 0, 16, 16};
 
-	for (int i = 1 ; i <= ((Character *)game->characters.content)[0].stats.maxEnergy ; i++) {
+	for (int i = 1 ; i <= getPlayer(game->characters.content, game->characters.length)->stats.maxEnergy ; i++) {
 		if (energyBuffer <= 10 && energyBuffer > 0)
 			rec.left = 48 + 160 * h + 16 * (10 - energyBuffer);
 		else if (energyBuffer >= 10)
@@ -264,7 +264,7 @@ void	dealDamages(Character *character, int damages, int damageType)
 
 void	execAction(game_t *game, Object obj)
 {
-	Character	*player = &((Character *)game->characters.content)[0];
+	Character	*player = getPlayer(game->characters.content, game->characters.length);
 
 	if (obj.solid) {
 		switch(player->movement.position) {
@@ -318,9 +318,17 @@ float	isPressed(int keyID, sfRenderWindow *window)
 	return (sfJoystick_getAxisPosition(0, sfJoystickX) < 3 ? 0 : sfJoystick_getAxisPosition(0, sfJoystickX) / 100);
 }
 
+Character	*getPlayer(Character *array, int len)
+{
+	for (int i = 0; i < len; i++)
+		if (array[i].isPlayer)
+			return (&array[i]);
+	return (array);
+}
+
 void	movePlayer(game_t *game)
 {
-	Character	*player = &((Character *)game->characters.content)[0];
+	Character	*player = getPlayer(game->characters.content, game->characters.length);
 	Object		*map = game->map;
 	bool		mooved = false;
 
@@ -329,13 +337,13 @@ void	movePlayer(game_t *game)
 	for (int i = 0; map && map[i].layer; i++) {
 		if (map[i].solid) {
 			if (player->movement.pos.y + 31 + player->movement.speed >= map[i].pos.y && player->movement.pos.y + 17 <= map[i].pos.y && player->movement.pos.x < map[i].pos.x + 16 && player->movement.pos.x + 16 > map[i].pos.x)
-			    player->movement.blocked.down = true;
+				player->movement.blocked.down = true;
 			if (player->movement.pos.y + 16 + player->movement.speed >= map[i].pos.y && player->movement.pos.y - 1 <= map[i].pos.y && player->movement.pos.x + 1 <= map[i].pos.x + 16 && map[i].pos.x <= player->movement.pos.x + 15)
-			    player->movement.blocked.up = true;
+				player->movement.blocked.up = true;
 			if (player->movement.pos.y + 29 >= map[i].pos.y - 1 && player->movement.pos.y + 17 <= map[i].pos.y + 16 && player->movement.pos.x <= map[i].pos.x + 16 + player->movement.speed && map[i].pos.x <= player->movement.pos.x)
-			    player->movement.blocked.left = true;
+				player->movement.blocked.left = true;
 			if (player->movement.pos.y + 29 >= map[i].pos.y - 1 && player->movement.pos.y + 17 <= map[i].pos.y + 16 && player->movement.pos.x <= map[i].pos.x && player->movement.pos.x + 16 + player->movement.speed >= map[i].pos.x)
-			    player->movement.blocked.right = true;
+				player->movement.blocked.right = true;
 		}
 	}
 	player->movement.speed = 0;
@@ -427,7 +435,7 @@ void	movePlayer(game_t *game)
 
 void	inGame(game_t *game)
 {
-	Character	*player = &((Character *)game->characters.content)[0];
+	Character	*player = getPlayer(game->characters.content, game->characters.length);
 	char		*tmp = NULL;
 	static int	color = 255;
 

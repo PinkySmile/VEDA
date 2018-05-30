@@ -27,7 +27,7 @@ void	play_button(game_t *game, int buttonID)
 		game->buttons[i].displayed = false;
 	}
 	(void)buttonID;
-	if (strcmp(((Character *)game->characters.content)[0].name, "") == 0) {
+	if (strcmp(getPlayer(game->characters.content, game->characters.length)->name, "") == 0) {
 		game->menu = 6;
 		game->bufSize = 16;
 		game->buttons[9].active = true;
@@ -47,9 +47,11 @@ void	play_button(game_t *game, int buttonID)
 
 void	changePlayerName(game_t *game, int buttonID)
 {
+	Character	*player = getPlayer(game->characters.content, game->characters.length);
+
 	(void)buttonID;
 	for (int i = 0; game->buffer[i]; i++)
-		((Character *)game->characters.content)[0].name[i] = game->buffer[i] % 255;
+		player->name[i] = game->buffer[i] % 255;
 	game->menu = 1;
 	for (int i = 0; game->buttons[i].content; i++) {
 		game->buttons[i].active = false;

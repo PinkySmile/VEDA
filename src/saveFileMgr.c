@@ -15,7 +15,7 @@ bool	saveGame(game_t *game)
 	int		fd;
 	struct stat	st;
 	bool		success = false;
-	Character	player = ((Character *)game->characters.content)[0];
+	Character	player = *getPlayer(game->characters.content, game->characters.length);
 
 	printf("%s: Saving game\n", INFO);
 	if (stat("save", &st) == -1) {
@@ -85,12 +85,12 @@ void	loadGame(game_t *game)
 			return;
 		}
 	}
-	player.movement.animationClock = ((Character *)game->characters.content)[0].movement.animationClock;
-	player.movement.stateClock = ((Character *)game->characters.content)[0].movement.stateClock;
-	player.stats.energyRegenClock = ((Character *)game->characters.content)[0].stats.energyRegenClock;
+	player.movement.animationClock = getPlayer(game->characters.content, game->characters.length)->movement.animationClock;
+	player.movement.stateClock = getPlayer(game->characters.content, game->characters.length)->movement.stateClock;
+	player.stats.energyRegenClock = getPlayer(game->characters.content, game->characters.length)->stats.energyRegenClock;
 	for (int j = 0; j < DAMAGES_TYPE_NB; j++)
-		player.damageClock[j] = ((Character *)game->characters.content)[0].damageClock[j];
-	((Character *)game->characters.content)[0] = player;
+		player.damageClock[j] = getPlayer(game->characters.content, game->characters.length)->damageClock[j];
+	*getPlayer(game->characters.content, game->characters.length) = player;
 	printf("%s: Done\n", INFO);
 	close(fd);
 }

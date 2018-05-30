@@ -21,6 +21,7 @@ float		isPressed(int keyID, sfRenderWindow *window);
 char		*getVersion();
 void		changeScreenMode(game_t *game, int new);
 int		dispMsg(char *title, char *content, int variate);
+Character	*getPlayer(Character *characters, int len);
 
 //Init game struct
 void		initGame	(game_t *game);
