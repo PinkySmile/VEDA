@@ -31,7 +31,6 @@ void	saveLevel(char *path, Object *objs, char *header)
 		write(fd, buffer, strlen(buffer));
 		free(buffer);
 	}
-	write(fd, "\x1a", 1);
 	close(fd);
 }
 
@@ -100,6 +99,7 @@ bool	saveGame(game_t *game)
 	}
 	close(fd);
 	buffer = concat(game->loadedMap, ".sav", false, false);
+	remove(buffer);
 	saveLevel(buffer, game->map, game->bg);
 	free(buffer);
 	return (true);
