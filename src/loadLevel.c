@@ -16,7 +16,7 @@ char	**split(char *str, char sep)
 	char	**result;
 	int	len = 2;
 	int	buf = 1;
-	
+
 	for (int i = 0; str[i]; len += str[i++] == sep);
 	result = malloc(len * sizeof(*result));
 	if (result) {
@@ -147,9 +147,6 @@ Object	*loadLevel(char *path, char **bg)
 		free(nbrs);
 		objs[i + 1].layer = 0;
 	}
-	if (nbrs)
-		free(*nbrs);
-	free(nbrs);
 	free(line);
 	fclose(stream);
 	return (objs);
