@@ -121,12 +121,6 @@ void	destroyStruct(game_t *game)
 
 void	sighandler(int signum)
 {
-	if (signum == 21) {
-		saveGame(gameStruct);
-		destroyStruct(gameStruct);
-		printf("%s: Goodbye !", INFO);
-		exit(EXIT_SUCCESS);
-	}
 	if (signum == SIGINT || signum == SIGTERM) {
 		if (sfRenderWindow_isOpen(*window))
 			sfRenderWindow_close(*window);

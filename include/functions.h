@@ -22,6 +22,7 @@ char		*getVersion();
 void		changeScreenMode(game_t *game, int new);
 int		dispMsg(char *title, char *content, int variate);
 Character	*getPlayer(Character *characters, int len);
+char		**split(char *str, char separator);
 
 //Init game struct
 void		initGame	(game_t *game);
@@ -40,7 +41,7 @@ void	text		(char *str, game_t *game, int x, int y, bool isUnicode);
 void	rect		(game_t *game, int x, int y, int width, int height);
 
 //Save/Load functions
-bool		saveGame	(game_t *game);
+bool		saveGame	(game_t *game, bool level);
 void		loadGame	(game_t *game);
 void		saveSettings	(game_t *game);
 Settings	loadSettings	(void);

@@ -135,7 +135,7 @@ Object	*loadLevel(char *path, char **bg)
 		for (int j = 0; j < DAMAGES_TYPE_NB; j++)
 			objs[i].damages[j]	= atoi(nbrs[9 + j]);
 		if (objs[i].layer <= 0) {
-			printf("%s: Invalid line %i: col %i \"", ERROR, i + 2, strlen(nbrs[0]) + strlen(nbrs[1]) + strlen(nbrs[2]) + 3);
+			printf("%s: Invalid line %i: col %i \"", ERROR, i + 2, (int)(strlen(nbrs[0]) + strlen(nbrs[1]) + strlen(nbrs[2]) + 3));
 			showStr(nbrs[3]);
 			printf("\": Expected value greater than 0\n");
 			free(objs);

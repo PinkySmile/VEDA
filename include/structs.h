@@ -118,10 +118,34 @@ enum sfx {
 	MUD4,
 };
 
+typedef enum {
+	BOOLEAN,
+	STRING,
+	FLOAT,
+	ARRAY,
+	DICT,
+	LIST,
+	INT,
+} types_t;
+
 typedef struct {
 	void	*content;
 	int	length;
 } Array;
+
+typedef struct {
+	char	*index;
+	void	*content;
+	types_t	type;
+} Dict;
+
+typedef struct list_s List;
+struct list_s {
+	types_t	type;
+	void	*data;
+	List	*next;
+	List	*prev;
+};
 
 typedef struct {
 	sfSprite	*sprite;
@@ -227,12 +251,6 @@ typedef struct {
 	bool		dispFramerate;
 } Settings;
 
-typedef struct {
-	char	*index;
-	void	*content;
-	char	type;
-} Dict;
-
 typedef struct game_s game_t;
 
 typedef struct {
@@ -274,14 +292,6 @@ typedef struct {
 	sfSprite	*sprite;
 	sfImage		*image;
 } Icon;
-
-typedef struct list_s List;
-
-struct list_s {
-	void	*data;
-	List	*next;
-	List	*prev;
-};
 
 struct game_s {
 	sfRenderWindow		*window;

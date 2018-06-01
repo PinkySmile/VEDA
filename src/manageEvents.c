@@ -23,7 +23,7 @@ void	manageEvents(game_t *game)
 		if (event.type == sfEvtClosed) {
 			sfRenderWindow_close(game->window);
 			if (game->menu == 1)
-				saveGame(game);
+				saveGame(game, true);
 			for (int i = 0; i < game->musics.length; i++)
 				if (((sfMusic **)game->musics.content)[i] && sfMusic_getStatus(((sfMusic **)game->musics.content)[MAIN_MENU_MUSIC]) == sfPlaying)
 					sfMusic_stop(((sfMusic **)game->musics.content)[i]);
@@ -78,7 +78,7 @@ void	manageEvents(game_t *game)
 			}
 			if (game->menu == 1 && game->settings.keys[KEY_PAUSE] == event.key.code) {
 				back_on_title_screen(game, -1);
-				saveGame(game);
+				saveGame(game, true);
 				continue;
 			}
 			if (game->selected - game->languagesConf.y - game->languagesConf.x >= 0 && game->selected - game->languagesConf.y - game->languagesConf.x < 4 && game->menu == 2)
