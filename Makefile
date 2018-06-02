@@ -2,7 +2,6 @@ NAME =	VEDA
 
 SRC = 	main.c		\
 	initGame.c	\
-	concat.c	\
 	loadSprites.c	\
 	loadSounds.c	\
 	launchGame.c	\

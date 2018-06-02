@@ -2,6 +2,7 @@ NAME =	libconcatf.a
 
 FILE =	my_strlen_rec.c			\
 	concatf.c			\
+	concat.c			\
 	float_to_str.c			\
 	my_putnbr_base.c		\
 	my_putbase.c			\
