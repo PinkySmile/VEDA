@@ -37,6 +37,8 @@ LDFLAGS =			\
 	-lm			\
 	-lconcatf		\
 	-L lib/concatf		\
+	-lconfigParser		\
+	-L lib/configParser	\
 
 CFLAGS= $(INC)	\
 	-W	\
@@ -59,15 +61,18 @@ icon.res:
 
 $(NAME):$(OBJ)
 	$(MAKE) -C lib/concatf $(RULE)
+	$(MAKE) -C lib/configParser $(RULE)
 	$(CC) -o $(NAME) $(OBJ) $(LDFLAGS) $(RES)
 
 clean:
 	$(MAKE) -C lib/concatf clean
+	$(MAKE) -C lib/configParser clean
 	$(RM) $(OBJ)
 	$(RM) icon.res
 
 fclean:	clean
 	$(MAKE) -C lib/concatf fclean
+	$(MAKE) -C lib/configParser fclean
 	$(RM) $(NAME) $(NAME).exe
 
 re:	fclean all

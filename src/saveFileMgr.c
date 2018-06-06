@@ -28,22 +28,22 @@ void	saveLevel(char *path, Object *objs, char *header)
 	write(fd, header, strlen(header));
 	for (int i = 0; objs[i].layer; i++) {
 		buffer = concatf("\n%i %i %i %i %i %i %f %i %i %i %i %i %i %i %i %i",
-				 objs[i].id,
-				 objs[i].pos.x,
-				 objs[i].pos.y,
-				 objs[i].layer,
-				 objs[i].solid,
-				 objs[i].action,
-				 objs[i].invulnerabiltyTime,
-				 objs[i].footstepSound,
-				 objs[i].footstepVariance,
-				 objs[i].damages[0],
-				 objs[i].damages[1],
-				 objs[i].damages[2],
-				 objs[i].damages[3],
-				 objs[i].damages[4],
-				 objs[i].damages[5],
-				 objs[i].damages[6]
+				objs[i].id,
+				objs[i].pos.x,
+				objs[i].pos.y,
+				objs[i].layer,
+				objs[i].solid,
+				objs[i].action,
+				objs[i].invulnerabiltyTime,
+				objs[i].footstepSound,
+				objs[i].footstepVariance,
+				objs[i].damages[0],
+				objs[i].damages[1],
+				objs[i].damages[2],
+				objs[i].damages[3],
+				objs[i].damages[4],
+				objs[i].damages[5],
+				objs[i].damages[6]
 			);
 		write(fd, buffer, strlen(buffer));
 		free(buffer);
