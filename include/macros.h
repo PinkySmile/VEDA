@@ -1,6 +1,8 @@
 #ifndef __MACROS_H_
 #define __MACROS_H_
 
+#include "configParser.h"
+
 #define EXIT_SUCCESS 0
 #define EXIT_FAILURE 1
 
@@ -14,6 +16,8 @@
 #define WINDOWED		0
 #define FULLSCREEN		1
 #define BORDERLESS_WINDOW	2
+
+#define	PARSER_INFOS	((ParserInfos[1]) {{'{', '}', '{', '}', ',', '=', "\"'", "--", NULL, false, false}})
 
 #define READ_WRITE_RIGHTS	0664
 

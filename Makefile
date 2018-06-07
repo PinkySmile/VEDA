@@ -25,8 +25,9 @@ SRC = 	main.c		\
 
 OBJ =	$(SRC:%.c=src/%.o)
 
-INC =	-Iinclude		\
-	-Ilib/concatf/include	\
+INC =	-Iinclude			\
+	-Ilib/concatf/include		\
+	-Ilib/configParser/include	\
 
 LDFLAGS =			\
 	-lcsfml-audio		\
