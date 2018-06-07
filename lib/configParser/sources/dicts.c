@@ -2,7 +2,7 @@
 #include <string.h>
 #include <malloc.h>
 
-ParserDict	*ParserDict_getElement(ParserDict *list, char *index)
+ParserObj	*ParserObj_getElement(ParserObj *list, char *index)
 {
 	for (; list; list = list->next)
 		if (strcmp(list->index, index) == 0)
@@ -10,7 +10,7 @@ ParserDict	*ParserDict_getElement(ParserDict *list, char *index)
 	return (NULL);
 }
 
-bool	ParserDict_addElement(ParserDict *list, void *data, ParserTypes type, char *index)
+bool	ParserObj_addElement(ParserObj *list, void *data, ParserTypes type, char *index)
 {
 	for (; list->next; list = list->next) {
 		if (!list->index)
@@ -34,9 +34,9 @@ bool	ParserDict_addElement(ParserDict *list, void *data, ParserTypes type, char 
 	return (true);
 }
 
-void	destroyDictEntry(ParserDict *list)
+void	destroyObjEntry(ParserObj *list)
 {
-	ParserDict	buff;
+	ParserObj	buff;
 
 	memset(&buff, 0, sizeof(buff));
 	Parser_destroyData(list->data, list->type);
@@ -55,16 +55,16 @@ void	destroyDictEntry(ParserDict *list)
 	free(list);
 }
 
-void	ParserDict_delElement(ParserDict *list, char *index)
+void	ParserObj_delElement(ParserObj *list, char *index)
 {
 	for (; list; list = list->next)
 		if (strcmp(list->index, index) == 0) {
-			destroyDictEntry(list);
+			destroyObjEntry(list);
 			return;
 		}
 }
 
-void	ParserDict_destroy(ParserDict *list)
+void	ParserObj_destroy(ParserObj *list)
 {
 	for (; list->next; list = list->next) {
 		Parser_destroyData(list->data, list->type);

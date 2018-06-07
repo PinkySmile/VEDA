@@ -28,8 +28,8 @@ int	getSizeOf(ParserTypes type)
 	case ParserArrayType:
 		size = sizeof(ParserArray);
 		break;
-	case ParserDictType:
-		size = sizeof(ParserDict);
+	case ParserObjType:
+		size = sizeof(ParserObj);
 		break;
 	case ParserListType:
 		size = sizeof(ParserList);
@@ -58,8 +58,8 @@ void	Parser_destroyData(void *data, ParserTypes type)
 	case ParserArrayType:
 		ParserArray_destroy(data);
 		break;
-	case ParserDictType:
-		ParserDict_destroy(data);
+	case ParserObjType:
+		ParserObj_destroy(data);
 		break;
 	case ParserListType:
 		ParserList_destroy(data);

@@ -8,7 +8,7 @@ typedef enum {
 	ParserStringType,
 	ParserFloatType,
 	ParserArrayType,
-	ParserDictType,
+	ParserObjType,
 	ParserListType,
 	ParserIntType,
 } ParserTypes;
@@ -22,13 +22,13 @@ typedef struct {
 	int	length;
 } ParserString;	//String
 
-typedef struct StructParserDict ParserDict;
-struct StructParserDict {
+typedef struct StructParserObj ParserObj;
+struct StructParserObj {
 	char		*index;
 	void		*data;
 	ParserTypes	type;
-	ParserDict	*next;
-	ParserDict	*prev;
+	ParserObj	*next;
+	ParserObj	*prev;
 };
 
 typedef struct StructParserList ParserList;
@@ -54,24 +54,27 @@ typedef struct {
 } ParserResult;
 
 typedef struct {
-	char	dictOpen;       //The dict opening character    (by default it's '{')
-	char	dictClose;      //The dict closing character    (by default it's '}')
-	char	arrOpen;        //The array opening character   (by default it's '[')
-	char	arrClose;       //The array opening character   (by default it's ']')
-	char	separator;      //The separator character       (by default it's ',')
-	char	eqChar;         //The equal char                (by default it's ':')
-	char	*strChar;       //The string chars              (by default it's '"' and ''')
-	bool	listToArray;    /*By default, arrays are converted to linked lists.
-                                  You can make lists become arrays. This is not recommended
-                                  since lists containing different types will not be converted.
-                                  You can still try to convert a list to an array later with
-                                  ParserList_convertToArray(list)*/
-	bool	compact;	//If true, will take the least space as possible (no spaces, \n, ...)
+	char	objOpen;              //The obj opening character    (by default it's '{')
+	char	objClose;             //The obj closing character    (by default it's '}')
+	char	arrOpen;              //The array opening character   (by default it's '[')
+	char	arrClose;             //The array opening character   (by default it's ']')
+	char	separator;            //The separator character       (by default it's ',')
+	char	eqChar;               //The equal char                (by default it's ':')
+	char	*strChar;             //The string chars              (by default it's '"' and ''')
+	char	*singLineComment;     //Single line comments
+	char	*multLineCommentStart;//Multi line comments start.
+	char	*multLineCommentEnd;  //Multi line comments end.
+	bool	listToArray;          /*By default, arrays are converted to linked lists.
+                                        You can make lists become arrays. This is not recommended
+                                        since lists containing different types will not be converted.
+                                        You can still try to convert a list to an array later with
+                                        ParserList_convertToArray(list)*/
+	bool	compact;              //If true, will take the least space as possible (no spaces, \n, ...)
 } ParserInfos;
 
 //This is a default configuration to parse some json files
-#define JSON_COMPACT		((ParserInfos[1]) {{'{', '}', '[', ']', ',', ':', "\"'", false, true}})
-#define JSON_NOT_COMPACT	((ParserInfos[1]) {{'{', '}', '[', ']', ',', ':', "\"'", false, false}})
+#define JSON_COMPACT		((ParserInfos[1]) {{'{', '}', '[', ']', ',', ':', "\"'", "//", "/*", "*/", false, true}})
+#define JSON_NOT_COMPACT	((ParserInfos[1]) {{'{', '}', '[', ']', ',', ':', "\"'", "//", "/*", "*/", false, false}})
 
 /////////////////////
 //Parsing functions//
@@ -191,31 +194,31 @@ void	ParserList_destroy(ParserList *list);
 
 
 
-/////////////////////////////
-//Dict management functions//
-/////////////////////////////
+////////////////////////////
+//Obj management functions//
+////////////////////////////
 
 //////////////////////////////////////////////////////////
 //Returns a pointer to the link at the index or NULL    //
 //if not found                                          //
 //////////////////////////////////////////////////////////
-ParserDict	*ParserDict_getElement(ParserDict *list, char *index);
+ParserObj	*ParserObj_getElement(ParserObj *list, char *index);
 
 //////////////////////////////////////////////////////////
 // Add the given list to the index in the list. Returns //
 //     true if added successfully and false if not      //
 //////////////////////////////////////////////////////////
-bool	ParserDict_addElement(ParserDict *list, void *data, ParserTypes type, char *index);
+bool	ParserObj_addElement(ParserObj *list, void *data, ParserTypes type, char *index);
 
 //////////////////////////////////////////////////////////
 //       Deletes the given index in the list.           //
 //////////////////////////////////////////////////////////
-void	ParserDict_delElement(ParserDict *list, char *index);
+void	ParserObj_delElement(ParserObj *list, char *index);
 
 //////////////////////////////////////////////////////////
-//              Destroys the given dict                 //
+//               Destroys the given obj                 //
 //////////////////////////////////////////////////////////
-void	ParserDict_destroy(ParserDict *list);
+void	ParserObj_destroy(ParserObj *list);
 
 
 
