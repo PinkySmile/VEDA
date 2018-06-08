@@ -156,6 +156,7 @@ bool	isFloat(char *str, ParserInfos *infos)
 {
 	int	i = 0;
 
+	for (; str[i] == '-' || str[i] == '+'; i++);
 	for (; isdigit(str[i]); i++);
 	if (i == 0)
 		return (false);
@@ -169,6 +170,7 @@ bool	isNbr(char *str, ParserInfos *infos)
 {
 	int	i = 0;
 
+	for (; str[i] == '-' || str[i] == '+'; i++);
 	for (; isdigit(str[i]); i++);
 	if (i == 0)
 		return (false);
@@ -343,10 +345,11 @@ ParserResult	getValue(char *str, ParserInfos *infos)
 		if (!result.data)
 			return (ERROR_RESULT("Alloc error"));
 		*(ParserInt *)result.data = atoi(str);
+		for (; str[index] == '-' || str[index] == '+'; index++);
 		for (; isdigit(str[index]); index++);
-		if (str[index + 1] != infos->separator && str[index + 1] != infos->objClose && str[index + 1] != infos->arrClose && str[index + 1]) {
+		if (str[index] != infos->separator && str[index] != infos->objClose && str[index] != infos->arrClose && str[index]) {
 			ParserInt_destroy(result.data);
-			printf("ParserError: Unexpected '%c' found after an integer\n", str[index + 1]);
+			printf("ParserError: Unexpected '%c' found after an integer\n", str[index]);
 			return (ERROR_RESULT("Unexpected character found after an integer"));
 		}
 	} else if (isFloat(str, infos)) {
@@ -355,13 +358,14 @@ ParserResult	getValue(char *str, ParserInfos *infos)
 		if (!result.data)
 			return (ERROR_RESULT("Alloc error"));
 		*(ParserFloat *)result.data = atof(str);
+		for (; str[index] == '-' || str[index] == '+'; index++);
 		for (; isdigit(str[index]); index++);
 		if (str[index] == '.')
 			index++;
 		for (; isdigit(str[index]); index++);
-		if (str[index + 1] != infos->separator && str[index + 1] != infos->objClose && str[index + 1] != infos->arrClose && str[index + 1]) {
+		if (str[index] != infos->separator && str[index] != infos->objClose && str[index] != infos->arrClose && str[index]) {
 			ParserFloat_destroy(result.data);
-			printf("ParserError: Unexpected '%c' found after a float\n", str[index + 1]);
+			printf("ParserError: Unexpected '%c' found after a float\n", str[index]);
 			return (ERROR_RESULT("Unexpected character found after a float"));
 		}
 	} else if (isInString(*str, infos->strChar) >= 0) {
