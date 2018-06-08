@@ -35,8 +35,8 @@ char    *int_to_str(int nb)
 	current_digit = get_nbrlen(nb);
 	digit_pos = current_digit - 1;
 	while (digit_pos >= 0) {
-		current_digit = number_left / pow(10, digit_pos);
-		str[pos] = current_digit + 48;
+		current_digit = number_left / (int)pow(10, digit_pos);
+		str[pos] = current_digit + '0';
 		pos++;
 		number_left -= current_digit * pow(10, digit_pos);
 		digit_pos--;
