@@ -12,6 +12,29 @@ ParserList	*ParserList_getElement(ParserList *list, int index)
 	return (list);
 }
 
+ParserArray	ParserList_toArray(ParserList *list)
+{
+	ParserArray	result = {NULL, 0, ParserBooleanType};
+	int		len = 0;
+	int		index = 0;
+	
+	result.type = list->type;
+	if (!list->data)
+		return (result);
+	for (ParserList *l = list; l; l = l->next, len++)
+		if (result.type != l->type)
+			return ((ParserArray){NULL, -1, ParserBooleanType});
+	result.content = malloc(len * getSizeOf(result.type));
+	if (!result.content)
+		return ((ParserArray){NULL, -1, ParserBooleanType});
+	result.length = len;
+	memset(result.content, 0, len * getSizeOf(result.type));
+	for (ParserList *l = list; l; l = l->next, index += getSizeOf(result.type))
+		for (int i = 0; i < getSizeOf(result.type) && l->data; i++)
+			((char *)result.content)[i + index] = ((char *)l->data)[i];
+	return (result);
+}
+
 bool	ParserList_addElement(ParserList *list, void *data, ParserTypes type, int index)
 {
 	ParserList	*buffer;

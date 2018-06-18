@@ -339,6 +339,17 @@ ParserResult	getValue(char *str, ParserInfos *infos)
 			printf("ParserError: Unexpected '%c' found after an array\n", str[index + 1]);
 			return (ERROR_RESULT("Unexpected character found after an array"));
 		}
+		if (infos->listToArray) {
+			result.type = ParserArrayType;
+			result.data = malloc(sizeof(ParserArray));
+			*(ParserArray *)result.data = ParserList_toArray(list);
+			if (((ParserArray *)result.data)->length >= 0)
+				ParserList_destroy(list);
+			else {
+				free(result.data);
+				result.data = list;
+			}
+		}
 	} else if (isNbr(str, infos)) {
 		result.type = ParserIntType;
 		result.data = malloc(sizeof(ParserInt));
