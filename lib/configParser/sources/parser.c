@@ -6,7 +6,9 @@
 #include <ctype.h>
 #include <errno.h>
 #include <sys/stat.h>
+#include <stdlib.h>
 #include <fcntl.h>
+#include <unistd.h>
 
 #define ERROR_RESULT(message)	((ParserResult){NULL, 0, message})
 
