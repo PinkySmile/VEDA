@@ -45,7 +45,7 @@ bool		saveGame	(game_t *game, bool level);
 void		loadGame	(game_t *game);
 void		saveSettings	(game_t *game);
 Settings	loadSettings	(void);
-Object		*loadLevel	(char *path, char **bg_path);
+void		loadLevel	(char *path, game_t *game);
 
 //Menu functions
 void	mainMenu	(game_t *game);

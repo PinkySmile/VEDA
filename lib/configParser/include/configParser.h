@@ -149,9 +149,12 @@ void	Parser_printElement(void *data, ParserTypes type, ParserInfos *infos);
 
 
 
-//////////////////////////////
-//Array management functions//
-//////////////////////////////
+/////////////////////////////////////////////////////
+//          Array management functions             //
+// /!\ These arrays are not NULL terminated !  /!\ //
+//A 0 length array will see his pointer set to NULL//
+//TLDR: Don't try to access a 0 length array       //
+/////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////
 //Returns a pointer to the element at the index in the  //
@@ -169,6 +172,13 @@ void	ParserArray_destroy(ParserArray *array);
 /////////////////////////////
 //List management functions//
 /////////////////////////////
+
+//////////////////////////////////////////////////////////
+//Transforms a ParserList into a ParserArray.           //
+//This will fail if all elements doesn't have the same  //
+//type. Returns an array of length -1 on failure.       //
+//////////////////////////////////////////////////////////
+ParserArray	ParserList_toArray(ParserList *list);
 
 //////////////////////////////////////////////////////////
 //Returns a pointer to the link at the index or NULL    //
