@@ -1,5 +1,7 @@
 #include "structs.h"
 #include "macros.h"
+#include "concatf.h
+#include "configParser.h"
 #include <errno.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -56,7 +58,7 @@ void	showStr(char *str)
 	}
 }
 
-Object	*loadLevel(char *path, char **bg)
+Object	*loadMap(char *path, char **bg)
 {
 	Object	*objs = NULL;
 	FILE	*stream = fopen(path, "r");
@@ -76,7 +78,6 @@ Object	*loadLevel(char *path, char **bg)
 		return (NULL);
 	}
 	*line = 0;
-	;
 	if (getline(&line, &n, stream) > 0) {
 		if (line[strlen(line) - 2] == '\r')
 			line[strlen(line) - 2] = 0;
@@ -150,4 +151,56 @@ Object	*loadLevel(char *path, char **bg)
 	free(line);
 	fclose(stream);
 	return (objs);
+}
+
+Array	loadCharacters(char *path)
+{
+	Array		characters = {NULL, 0};
+	ParserResult	result = Parser_parserFile(path, NULL);
+	ParserArray	array;
+	ParserObj	*obj;
+	char		*buffer = NULL;
+	Character	buff;
+	
+	if (result.error) {
+		buffer = concatf("Error: Cannot load file %s: %s\n", path, result.error);
+		dispMsg("Loading error", buffer, 0);
+		free(buffer);
+	} else if (result.type != ParserListType) {
+		buffer = concatf("Error: Cannot load file %s: Invalid type\n", path, result.error);
+		dispMsg("Loading error", buffer, 0);
+		free(buffer);
+	} else {
+		array = ParserList_toArray(result.data);
+		ParserList_destroy(result.data);
+		if (array.length < 0) {
+			buffer = concatf("Error: Cannot load file %s: Invalid array types\n", pat);
+			dispMsg("Loading error", buffer, 0);
+			free(buffer);
+		} else if (array.type != ParserObjType) {
+			buffer = concatf("Error: Cannot load file %s: Invalid array type\n", path);
+			dispMsg("Loading error", buffer, 0);
+			free(buffer);
+		} else {
+			characters.length = array.length;
+			characters.data = malloc(array.length * sizeof(Character));
+			for (int i = 0; i < array.length; i++) {
+				obj = ParserArray_getElement(result.data, i);
+			}
+		}
+	}
+	return (characters);
+}
+
+void	loadLevel(char *path, game_t *game)
+{
+	char	*buffer = concatf("%s/level/floor0.lvl", path);
+
+	free(game->map);
+	game->map = loadMap(buffer, &game->bg);
+	free(buffer);
+	free(game->characters.content);
+	buffer = concatf("%s/characters.chr", path);
+	game->characters = loadCharacters(buffer);
+	free(buffer);
 }

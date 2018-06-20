@@ -40,8 +40,8 @@ void	play_button(game_t *game, int buttonID)
 	} else
 		game->menu = 1;
 	if (!game->map) {
-		game->map = loadLevel("data/levels/test/level/floor0.lvl", &game->bg);
-		game->loadedMap = strdup("data/levels/test/level/floor0.lvl");
+		loadLevel("data/levels/test", game);
+		game->loadedMap = strdup("data/levels/test");
 	}
 	if (((sfMusic **)game->musics.content)[MAIN_MENU_MUSIC] && sfMusic_getStatus(((sfMusic **)game->musics.content)[MAIN_MENU_MUSIC]) == sfPlaying)
 		sfMusic_stop(((sfMusic **)game->musics.content)[MAIN_MENU_MUSIC]);

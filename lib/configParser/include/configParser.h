@@ -48,7 +48,7 @@ typedef struct {
 typedef struct {
 	void		*data;	//This is NULL when something went wrong
 	ParserTypes	type;
-	char		*error;	/*This is NULL is everything went good
+	char		*error;	/*This is NULL if everything went good
 				  (So if data is NULL, error shouldn't be)
 				  This is the error found when parsing the file or string*/
 } ParserResult;

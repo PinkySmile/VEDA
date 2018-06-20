@@ -17,7 +17,7 @@
 #define FULLSCREEN		1
 #define BORDERLESS_WINDOW	2
 
-#define	PARSER_INFOS	((ParserInfos[1]) {{'{', '}', '{', '}', ',', '=', "\"'", "--", NULL, false, false}})
+#define	PARSER_INFOS		((ParserInfos[1]) {{'{', '}', '{', '}', ',', '=', "\"'", "--", NULL, NULL, false, false}})
 
 #define READ_WRITE_RIGHTS	0664
 

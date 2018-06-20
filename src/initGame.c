@@ -138,6 +138,7 @@ void	initGame(game_t *game)
 	game->icon.sprite = sfSprite_create();
 	if (game->icon.sprite && game->icon.texture)
 		sfSprite_setTexture(game->icon.sprite, game->icon.texture, sfTrue);
+	memset(&game->characters, 0, sizeof(game->characters));/*
 	game->characters.content = malloc(sizeof(Character));
 	if (!game->characters.content) {
 		printf("%s: Couldn't create player object\n", FATAL);
@@ -159,12 +160,12 @@ void	initGame(game_t *game)
 	player.movement.canMove = true;
 	player.isPlayer = true;
 	player.texture = 0;
-	memset(game->buffer, 0, BUFFER_MAX_SIZE * sizeof(*game->buffer));
-	game->bufSize = BUFFER_MAX_SIZE;
 	strcpy(player.name, game->settings.playerName);
 	for (int i = 0; i < DAMAGES_TYPE_NB; i++)
 		player.damageClock[i] = sfClock_create();
-	((Character *)game->characters.content)[0] = player;
+	((Character *)game->characters.content)[0] = player;*/
+	memset(game->buffer, 0, BUFFER_MAX_SIZE * sizeof(*game->buffer));
+	game->bufSize = BUFFER_MAX_SIZE;
 	game->fonts = loadFonts(game);
 	game->sprites = loadSprites(game);
 	game->musics = loadMusics(game);

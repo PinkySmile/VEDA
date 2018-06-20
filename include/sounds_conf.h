@@ -15,6 +15,7 @@ const Music_config	musics_conf[] = {
 	{"data/sound/Musics/eugrt_start.ogg", sfFalse},
 	{"data/sound/Musics/eugrt_loop.ogg", sfTrue},
 	{"data/sound/Musics/Umlaut.ogg", sfTrue},
+	{"data/sound/Musics/th06_15.ogg", sfTrue},
 	{NULL, sfFalse}
 };
 
