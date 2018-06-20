@@ -56,7 +56,6 @@ bool	saveGame(game_t *game, bool level)
 	int		fd;
 	struct stat	st;
 	bool		success = false;
-	Character	player = *getPlayer(game->characters.content, game->characters.length);
 	int		len = 0;
 	char		*buffer = NULL;
 
@@ -84,15 +83,6 @@ bool	saveGame(game_t *game, bool level)
 		buffer = concatf("Cannot open save file (save/game.dat: %s)\n", strerror(errno));
 		dispMsg("Error", buffer, 0);
 		free(buffer);
-		return (false);
-	}
-	player.movement.animationClock = NULL;
-	player.movement.stateClock = NULL;
-	player.stats.energyRegenClock = NULL;
-	if (write(fd, &player, sizeof(player)) != sizeof(player)) {
-		printf("%s: Couldn't write save file\n", ERROR);
-		close(fd);
-		dispMsg("Error", "Couldn't write to save file\nNo space on disk ?", 0);
 		return (false);
 	}
 	if (write(fd, &game->characterChosed, sizeof(game->characterChosed)) != sizeof(game->characterChosed)) {
@@ -156,11 +146,6 @@ void	loadGame(game_t *game)
 			return;
 		}
 	}
-	player.movement.animationClock = getPlayer(game->characters.content, game->characters.length)->movement.animationClock;
-	player.movement.stateClock = getPlayer(game->characters.content, game->characters.length)->movement.stateClock;
-	player.stats.energyRegenClock = getPlayer(game->characters.content, game->characters.length)->stats.energyRegenClock;
-	for (int j = 0; j < DAMAGES_TYPE_NB; j++)
-		player.damageClock[j] = getPlayer(game->characters.content, game->characters.length)->damageClock[j];
 	free(game->map);
 	free(game->bg);
 	free(game->loadedMap);
@@ -182,9 +167,9 @@ void	loadGame(game_t *game)
 		game->loadedMap[len] = 0;
 		buffer = concat(game->loadedMap, ".sav", false, false);
 		if (stat(buffer, &st) != -1)
-			game->map = loadLevel(buffer, &game->bg);
+			loadLevel(buffer, game);
 		else if (stat(game->loadedMap, &st) != -1)
-			game->map = loadLevel(game->loadedMap, &game->bg);
+			loadLevel(game->loadedMap, game);
 		else if (!use) {
 			printf("%s: Corrupted save file detected: Saved map not found\n", ERROR);
 			use = (dispMsg("Error", CORRUPTED_SAVE_MSG, 4) == 6);
@@ -204,6 +189,19 @@ void	loadGame(game_t *game)
 		free(buffer);
 	}
 	close(fd);
+	if (getPlayer(game->characters.content, game->characters.length)) {
+		player.movement.animationClock = getPlayer(game->characters.content, game->characters.length)->movement.animationClock;
+		player.movement.stateClock = getPlayer(game->characters.content, game->characters.length)->movement.stateClock;
+		player.stats.energyRegenClock = getPlayer(game->characters.content, game->characters.length)->stats.energyRegenClock;
+		for (int j = 0; j < DAMAGES_TYPE_NB; j++)
+			player.damageClock[j] = getPlayer(game->characters.content, game->characters.length)->damageClock[j];
+	} else {
+		player.movement.animationClock = sfClock_create();
+		player.movement.stateClock = sfClock_create();
+		player.stats.energyRegenClock = sfClock_create();
+		for (int j = 0; j < DAMAGES_TYPE_NB; j++)
+			player.damageClock[j] = sfClock_create();
+	}
 	*getPlayer(game->characters.content, game->characters.length) = player;
 	printf("%s: Done\n", INFO);
 }
