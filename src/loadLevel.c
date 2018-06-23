@@ -1,6 +1,6 @@
 #include "structs.h"
 #include "macros.h"
-#include "concatf.h
+#include "concatf.h"
 #include "configParser.h"
 #include <errno.h>
 #include <stdlib.h>
@@ -156,12 +156,12 @@ Object	*loadMap(char *path, char **bg)
 Array	loadCharacters(char *path)
 {
 	Array		characters = {NULL, 0};
-	ParserResult	result = Parser_parserFile(path, NULL);
+	ParserResult	result = Parser_parseFile(path, NULL);
 	ParserArray	array;
 	ParserObj	*obj;
 	char		*buffer = NULL;
 	Character	buff;
-	
+
 	if (result.error) {
 		buffer = concatf("Error: Cannot load file %s: %s\n", path, result.error);
 		dispMsg("Loading error", buffer, 0);
@@ -174,7 +174,7 @@ Array	loadCharacters(char *path)
 		array = ParserList_toArray(result.data);
 		ParserList_destroy(result.data);
 		if (array.length < 0) {
-			buffer = concatf("Error: Cannot load file %s: Invalid array types\n", pat);
+			buffer = concatf("Error: Cannot load file %s: Invalid array types\n", path);
 			dispMsg("Loading error", buffer, 0);
 			free(buffer);
 		} else if (array.type != ParserObjType) {
@@ -183,7 +183,7 @@ Array	loadCharacters(char *path)
 			free(buffer);
 		} else {
 			characters.length = array.length;
-			characters.data = malloc(array.length * sizeof(Character));
+			characters.content = malloc(array.length * sizeof(Character));
 			for (int i = 0; i < array.length; i++) {
 				obj = ParserArray_getElement(result.data, i);
 			}
