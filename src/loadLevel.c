@@ -1,6 +1,7 @@
 #include "structs.h"
 #include "macros.h"
 #include "concatf.h"
+#include "functions.h"
 #include "configParser.h"
 #include <errno.h>
 #include <stdlib.h>
@@ -160,6 +161,7 @@ Array	loadCharacters(char *path)
 	ParserArray	array;
 	ParserObj	*obj;
 	char		*buffer = NULL;
+	ParserObj	*objBuffer;
 	Character	buff;
 
 	if (result.error) {
@@ -170,9 +172,9 @@ Array	loadCharacters(char *path)
 		buffer = concatf("Error: Cannot load file %s: Invalid type\n", path, result.error);
 		dispMsg("Loading error", buffer, 0);
 		free(buffer);
+		Parser_destroyData(result.data, result.type);
 	} else {
 		array = ParserList_toArray(result.data);
-		ParserList_destroy(result.data);
 		if (array.length < 0) {
 			buffer = concatf("Error: Cannot load file %s: Invalid array types\n", path);
 			dispMsg("Loading error", buffer, 0);
@@ -182,12 +184,52 @@ Array	loadCharacters(char *path)
 			dispMsg("Loading error", buffer, 0);
 			free(buffer);
 		} else {
+			Parser_printElement(result.data, result.type, NULL);
+			Parser_printElement(&array, ParserArrayType, NULL);
 			characters.length = array.length;
 			characters.content = malloc(array.length * sizeof(Character));
+			memset(characters.content, 0, array.length * sizeof(Character));
 			for (int i = 0; i < array.length; i++) {
-				obj = ParserArray_getElement(result.data, i);
+				memset(&buff, 0, sizeof(buff));
+				obj = ParserArray_getElement(&array, i);
+				objBuffer = ParserObj_getElement(obj, "name");
+				if (objBuffer) {
+					if (objBuffer->type != ParserStringType)
+						printf("%s: Field \"name\" in character %i has an invalid type\n", ERROR, i);
+					else
+						strncmp(buff.name, ParserString_toCharStar(objBuffer->data), 32);
+				} else
+					printf("%s: Character %i has no field \"name\"\n", WARNING, i);
+				objBuffer = ParserObj_getElement(obj, "sprite_id");
+				if (objBuffer) {
+					if (objBuffer->type != ParserIntType)
+						printf("%s: Field \"sprite_id\" in character %i has an invalid type\n", ERROR, i);
+					else
+						buff.texture = ParserInt_toInt(objBuffer->data);
+				} else
+					printf("%s: Character %i has no field \"sprite_id\"\n", WARNING, i);
+				objBuffer = ParserObj_getElement(obj, "x_pos");
+				if (objBuffer) {
+					if (objBuffer->type != ParserIntType)
+						printf("%s: Field \"x_pos\" in character %i has an invalid type\n", ERROR, i);
+					else
+						buff.movement.pos.x = ParserInt_toInt(objBuffer->data);
+				} else
+					printf("%s: Character %i has no field \"x_pos\"\n", WARNING, i);
+				objBuffer = ParserObj_getElement(obj, "y_pos");
+				if (objBuffer) {
+					if (objBuffer->type != ParserIntType)
+						printf("%s: Field \"y_pos\" in character %i has an invalid type\n", ERROR, i);
+					else
+				        	buff.movement.pos.y = ParserInt_toInt(objBuffer->data);
+				} else
+					printf("%s: Character %i has no field \"y_pos\"\n", WARNING, i);
+
 			}
 		}
+		free(array.content);
+		Parser_destroyData(result.data, result.type);
+
 	}
 	return (characters);
 }
@@ -202,5 +244,10 @@ void	loadLevel(char *path, game_t *game)
 	free(game->characters.content);
 	buffer = concatf("%s/characters.chr", path);
 	game->characters = loadCharacters(buffer);
+	if (!game->characters.content) {
+		game->characters.content = malloc(sizeof(Character));
+		game->characters.length = 1;
+	}
+	((Character *)game->characters.content)[0].isPlayer = true;
 	free(buffer);
 }

@@ -24,7 +24,7 @@
 		"base_life" : 100,
 		"sprite_id" : 3,
 		"battle_script" : "data/battle/scripts/alexandre.battle",
-		"dialogs" : "data/dialogs/alexandre.json"
+		"dialogs" : "data/dialogs/alexandre.json",
 		"x_pos" : 50,
 		"y_pos" : 50,
 		"attack" : 100,

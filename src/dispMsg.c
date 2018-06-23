@@ -44,8 +44,10 @@ int	dispMsg(char *title, char *content, int variate)
 				if (event.type == sfEvtMouseButtonPressed) {
 					if (event.mouseButton.button == sfMouseLeft && event.mouseButton.y >= 150 && event.mouseButton.y <= 170) {
 						buttonClicked = (event.mouseButton.x - 400 + 70 * nbOfButtons) / 70;
-						if (buttonClicked >= 0 && buttonClicked < nbOfButtons)
-							return (nbOfButtons == 2 ? (buttonClicked == 0 ? 4 : 5) : 0);
+						if (buttonClicked >= 0 && buttonClicked < nbOfButtons) {
+							clicked = nbOfButtons == 2 ? (buttonClicked == 0 ? 4 : 5) : 0;
+							sfRenderWindow_close(win);
+						}
 					}
 				}
 			}
@@ -73,6 +75,10 @@ int	dispMsg(char *title, char *content, int variate)
 			}
 			sfRenderWindow_display(win);
 		}
+		sfRenderWindow_destroy(win);
+		sfFont_destroy(font);
+		sfText_destroy(text);
+		sfRectangleShape_destroy(rect);
 		return (clicked);
 	#endif
 }

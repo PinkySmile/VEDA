@@ -6,9 +6,10 @@
 #define EXIT_SUCCESS 0
 #define EXIT_FAILURE 1
 
-#define INFO	"[INFO] "
-#define ERROR	"[ERROR]"
-#define FATAL	"[FATAL]"
+#define INFO	"[INFO]   "
+#define ERROR	"[ERROR]  "
+#define FATAL	"[FATAL]  "
+#define WARNING	"[WARNING]"
 
 #define BUFFER_MAX_SIZE	100
 #define MAX_STEPS	6

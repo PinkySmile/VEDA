@@ -153,7 +153,7 @@ void	Parser_printElement(void *data, ParserTypes type, ParserInfos *infos);
 //          Array management functions             //
 // /!\ These arrays are not NULL terminated !  /!\ //
 //A 0 length array will see his pointer set to NULL//
-//TLDR: Don't try to access a 0 length array       //
+//TLDR: Don't try to access < 0 length arrays      //
 /////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////
