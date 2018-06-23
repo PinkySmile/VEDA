@@ -129,14 +129,6 @@ void	loadGame(game_t *game)
 		printf("%s: Cannot open save file (save/game.dat: %s)\n", ERROR, strerror(errno));
 		return;
 	}
-	if (read(fd, &player, sizeof(player)) != sizeof(player) && !use) {
-		printf("%s: Corrupted save file detected: Unexpected <EOF> player\n", ERROR);
-		use = (dispMsg("Error", CORRUPTED_SAVE_MSG, 4) == 6);
-		if (!use) {
-			close(fd);
-			return;
-		}
-	}
 	if (read(fd, &game->characterChosed, sizeof(game->characterChosed)) != sizeof(game->characterChosed) && !use) {
 		printf("%s: Corrupted save file detected: Unexpected <EOF> sex\n", ERROR);
 		close(fd);

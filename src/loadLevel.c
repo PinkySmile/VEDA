@@ -184,8 +184,6 @@ Array	loadCharacters(char *path)
 			dispMsg("Loading error", buffer, 0);
 			free(buffer);
 		} else {
-			Parser_printElement(result.data, result.type, NULL);
-			Parser_printElement(&array, ParserArrayType, NULL);
 			characters.length = array.length;
 			characters.content = malloc(array.length * sizeof(Character));
 			memset(characters.content, 0, array.length * sizeof(Character));
@@ -224,7 +222,13 @@ Array	loadCharacters(char *path)
 				        	buff.movement.pos.y = ParserInt_toInt(objBuffer->data);
 				} else
 					printf("%s: Character %i has no field \"y_pos\"\n", WARNING, i);
-
+				buff.movement.canMove = true;
+				buff.movement.animationClock = sfClock_create();
+				buff.movement.stateClock = sfClock_create();
+				buff.stats.energyRegenClock = sfClock_create();
+				for (int i = 0; i < DAMAGES_TYPE_NB; i++)
+					buff.damageClock[i] = sfClock_create();
+				((Character *)characters.content)[i] = buff;
 			}
 		}
 		free(array.content);
