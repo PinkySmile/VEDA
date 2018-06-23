@@ -30,6 +30,8 @@ INC =	-Iinclude			\
 	-Ilib/configParser/include	\
 
 LDFLAGS =			\
+	-L lib/configParser	\
+	-L lib/concatf		\
 	-lcsfml-audio		\
 	-lcsfml-graphics	\
 	-lcsfml-network		\
@@ -37,9 +39,7 @@ LDFLAGS =			\
 	-lcsfml-window		\
 	-lm			\
 	-lconcatf		\
-	-L lib/concatf		\
 	-lconfigParser		\
-	-L lib/configParser	\
 
 CFLAGS= $(INC)	\
 	-W	\
@@ -82,5 +82,5 @@ dbg:	CFLAGS += -g -O0
 dbg:	RULE = dbg
 dbg:	re
 
-epi:	LDFLAGS = -lc_graph_prog -lm -lconcatf -L lib/concatf
+epi:	LDFLAGS = -lc_graph_prog -lm -lconcatf -L lib/concatf -L lib/configParser -lconfigParser
 epi:	dbg
