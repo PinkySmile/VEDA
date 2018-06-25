@@ -9,7 +9,7 @@ int	isInString(char c, char *str);
 
 char	*transformString(char *str, int length, ParserInfos *infos)
 {
-	char	*result = "";
+	char	*result = strdup("");
 	char	*buffer = NULL;
 
 	for (int i = 0; i < length; i++) {
@@ -36,7 +36,7 @@ char	*transformString(char *str, int length, ParserInfos *infos)
 		else if (str[i] == '\0')
 			result = concatf("%s\\x00", result);
 		else
-			result = concatf("%s\\x%s%x",result, str[i] > 15 ? "" : "0", str[i]);
+			result = concatf("%s\\x%s%x", result, str[i] > 15 ? "" : "0", str[i]);
 		free(buffer);
 		buffer = result;
 	}
@@ -156,6 +156,9 @@ char	*dataToString(void *data, ParserTypes type, ParserInfos *infos, int indenta
 		break;
 	case ParserIntType:
 		result = concatf("%i", *(ParserInt *)data);
+		break;
+	case ParserNullType:
+		result = strdup("null");
 		break;
 	}
 	free(indent);

@@ -11,6 +11,7 @@ typedef enum {
 	ParserObjType,
 	ParserListType,
 	ParserIntType,
+	ParserNullType,
 } ParserTypes;
 
 typedef bool    ParserBoolean;
