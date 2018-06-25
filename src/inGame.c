@@ -166,6 +166,8 @@ void	drawLifeBar(game_t *game)
 			h = 0;
 			y = y + 45;
 		}
+		if (y > 500)
+			break;
 		lifeBuffer = lifeBuffer - 10;
 	}
 }
@@ -222,6 +224,8 @@ void	drawEnergyBar(game_t *game)
 			h = 0;
 			y = y + 45;
 		}
+		if (y > 500)
+			break;
 		energyBuffer = energyBuffer - 10;
 	}
 }
@@ -345,6 +349,8 @@ void	movePlayer(game_t *game)
 			if (player->movement.pos.y + 29 >= map[i].pos.y - 1 && player->movement.pos.y + 17 <= map[i].pos.y + 16 && player->movement.pos.x <= map[i].pos.x && player->movement.pos.x + 16 + player->movement.speed >= map[i].pos.x)
 				player->movement.blocked.right = true;
 		}
+		if (player->movement.pos.y + 30 >= map[i].pos.y && player->movement.pos.y <= map[i].pos.y && player->movement.pos.x - 16 < map[i].pos.x && player->movement.pos.x + 16 > map[i].pos.x)
+			execAction(game, map[i]);
 	}
 	player->movement.speed = 0;
 	if (!player->movement.blocked.left && isPressed(game->settings.keys[KEY_LEFT], game->window)) {
@@ -419,10 +425,7 @@ void	movePlayer(game_t *game)
 		}
 		mooved = player->movement.speed != 0;
 	}
-	for (int i = 0; map && map[i].layer; i++)
-		if (player->movement.pos.y + 30 >= map[i].pos.y && player->movement.pos.y <= map[i].pos.y && player->movement.pos.x - 16 < map[i].pos.x && player->movement.pos.x + 16 > map[i].pos.x)
-			execAction(game, map[i]);
-	while (player->stats.energyClock >= player->stats.timeBeforeEnergyUse) {
+	while (player->stats.energyClock >= player->stats.timeBeforeEnergyUse && player->stats.timeBeforeEnergyUse) {
 		player->stats.energyClock -= player->stats.timeBeforeEnergyUse;
 		player->stats.energy -= player->stats.energyUsedBySprint;
 		sfClock_restart(player->stats.energyRegenClock);

@@ -1,5 +1,8 @@
 #include "structs.h"
 #include "macros.h"
+#include "concatf.h"
+#include "functions.h"
+#include "configParser.h"
 #include <errno.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -56,7 +59,7 @@ void	showStr(char *str)
 	}
 }
 
-Object	*loadLevel(char *path, char **bg)
+Object	*loadMap(char *path, char **bg)
 {
 	Object	*objs = NULL;
 	FILE	*stream = fopen(path, "r");
@@ -76,7 +79,6 @@ Object	*loadLevel(char *path, char **bg)
 		return (NULL);
 	}
 	*line = 0;
-	;
 	if (getline(&line, &n, stream) > 0) {
 		if (line[strlen(line) - 2] == '\r')
 			line[strlen(line) - 2] = 0;
@@ -150,4 +152,114 @@ Object	*loadLevel(char *path, char **bg)
 	free(line);
 	fclose(stream);
 	return (objs);
+}
+
+Array	loadCharacters(char *path)
+{
+	Array		characters = {NULL, 0};
+	ParserResult	result = Parser_parseFile(path, NULL);
+	ParserArray	array;
+	ParserObj	*obj;
+	char		*buffer = NULL;
+	ParserObj	*objBuffer;
+	Character	buff;
+
+	if (result.error) {
+		buffer = concatf("Error: Cannot load file %s: %s\n", path, result.error);
+		dispMsg("Loading error", buffer, 0);
+		free(buffer);
+	} else if (result.type != ParserListType) {
+		buffer = concatf("Error: Cannot load file %s: Invalid type\n", path, result.error);
+		dispMsg("Loading error", buffer, 0);
+		free(buffer);
+		Parser_destroyData(result.data, result.type);
+	} else {
+		array = ParserList_toArray(result.data);
+		if (array.length < 0) {
+			buffer = concatf("Error: Cannot load file %s: Invalid array types\n", path);
+			dispMsg("Loading error", buffer, 0);
+			free(buffer);
+		} else if (array.type != ParserObjType) {
+			buffer = concatf("Error: Cannot load file %s: Invalid array type\n", path);
+			dispMsg("Loading error", buffer, 0);
+			free(buffer);
+		} else {
+			characters.length = array.length;
+			characters.content = malloc(array.length * sizeof(Character));
+			memset(characters.content, 0, array.length * sizeof(Character));
+			for (int i = 0; i < array.length; i++) {
+				memset(&buff, 0, sizeof(buff));
+				obj = ParserArray_getElement(&array, i);
+				objBuffer = ParserObj_getElement(obj, "name");
+				if (objBuffer) {
+					if (objBuffer->type != ParserStringType)
+						printf("%s: Field \"name\" in character %i has an invalid type\n", ERROR, i);
+					else
+						strncpy(buff.name, ParserString_toCharStar(objBuffer->data), 32);
+				} else
+					printf("%s: Character %i has no field \"name\"\n", WARNING, i);
+				objBuffer = ParserObj_getElement(obj, "sprite_id");
+				if (objBuffer) {
+					if (objBuffer->type != ParserIntType)
+						printf("%s: Field \"sprite_id\" in character %i has an invalid type\n", ERROR, i);
+					else
+						buff.texture = ParserInt_toInt(objBuffer->data);
+				} else
+					printf("%s: Character %i has no field \"sprite_id\"\n", WARNING, i);
+				objBuffer = ParserObj_getElement(obj, "x_pos");
+				if (objBuffer) {
+					if (objBuffer->type != ParserIntType)
+						printf("%s: Field \"x_pos\" in character %i has an invalid type\n", ERROR, i);
+					else
+						buff.movement.pos.x = ParserInt_toInt(objBuffer->data);
+				} else
+					printf("%s: Character %i has no field \"x_pos\"\n", WARNING, i);
+				objBuffer = ParserObj_getElement(obj, "y_pos");
+				if (objBuffer) {
+					if (objBuffer->type != ParserIntType)
+						printf("%s: Field \"y_pos\" in character %i has an invalid type\n", ERROR, i);
+					else
+				        	buff.movement.pos.y = ParserInt_toInt(objBuffer->data);
+				} else
+					printf("%s: Character %i has no field \"y_pos\"\n", WARNING, i);
+				objBuffer = ParserObj_getElement(obj, "battle_script");
+				if (objBuffer) {
+					if (objBuffer->type != ParserStringType)
+						printf("%s: Field \"battle_script\" in character %i has an invalid type\n", ERROR, i);
+					else
+				        	buff.battleScript = strdup(ParserString_toCharStar(objBuffer->data));
+				} else
+					printf("%s: Character %i has no field \"battle_script\"\n", WARNING, i);
+				buff.movement.canMove = true;
+				buff.movement.animationClock = sfClock_create();
+				buff.movement.stateClock = sfClock_create();
+				buff.stats.energyRegenClock = sfClock_create();
+				for (int j = 0; j < DAMAGES_TYPE_NB; j++)
+					buff.damageClock[j] = sfClock_create();
+				((Character *)characters.content)[i] = buff;
+			}
+		}
+		free(array.content);
+		Parser_destroyData(result.data, result.type);
+
+	}
+	return (characters);
+}
+
+void	loadLevel(char *path, game_t *game)
+{
+	char	*buffer = concatf("%s/level/floor0.lvl", path);
+
+	free(game->map);
+	game->map = loadMap(buffer, &game->bg);
+	free(buffer);
+	free(game->characters.content);
+	buffer = concatf("%s/characters.chr", path);
+	game->characters = loadCharacters(buffer);
+	if (!game->characters.content) {
+		game->characters.content = malloc(sizeof(Character));
+		game->characters.length = 1;
+	}
+	((Character *)game->characters.content)[0].isPlayer = true;
+	free(buffer);
 }

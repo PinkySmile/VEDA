@@ -21,6 +21,7 @@ void	back_on_title_screen(game_t *game, int buttonID)
 
 void	play_button(game_t *game, int buttonID)
 {
+	(void)buttonID;
 	free(game->map);
 	game->map = NULL;
 	loadGame(game);
@@ -28,10 +29,14 @@ void	play_button(game_t *game, int buttonID)
 		game->buttons[i].active = false;
 		game->buttons[i].displayed = false;
 	}
-	(void)buttonID;
+	if (!game->map || !game->characters.content) {
+		loadLevel("data/levels/test", game);
+		game->loadedMap = strdup("data/levels/test");
+	}
 	if (strcmp(getPlayer(game->characters.content, game->characters.length)->name, "") == 0) {
 		game->menu = 6;
-		game->bufSize = 16;
+		game->bufPos = 0;
+		game->bufSize = 32;
 		game->buttons[9].active = true;
 		game->buttons[9].displayed = true;
 		game->buttons[14].active = true;
@@ -39,10 +44,6 @@ void	play_button(game_t *game, int buttonID)
 		memset(game->buffer, 0, sizeof(*game->buffer) * 17);
 	} else
 		game->menu = 1;
-	if (!game->map) {
-		game->map = loadLevel("data/levels/test/level/floor0.lvl", &game->bg);
-		game->loadedMap = strdup("data/levels/test/level/floor0.lvl");
-	}
 	if (((sfMusic **)game->musics.content)[MAIN_MENU_MUSIC] && sfMusic_getStatus(((sfMusic **)game->musics.content)[MAIN_MENU_MUSIC]) == sfPlaying)
 		sfMusic_stop(((sfMusic **)game->musics.content)[MAIN_MENU_MUSIC]);
 }
@@ -52,6 +53,7 @@ void	changePlayerName(game_t *game, int buttonID)
 	Character	*player = getPlayer(game->characters.content, game->characters.length);
 
 	(void)buttonID;
+	memset(player->name, 0, 33);
 	for (int i = 0; game->buffer[i]; i++)
 		player->name[i] = game->buffer[i] % 255;
 	game->menu = 1;

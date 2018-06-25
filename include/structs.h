@@ -201,11 +201,13 @@ typedef struct {
 	Stats		stats;
 	Array		inventory;
 	Item		wornItems[5];
-	char		name[17];
+	char		name[33];
 	float		invulnerabiltyTime;
 	int		damageDisplay[DAMAGES_TYPE_NB];
 	sfClock		*damageClock[DAMAGES_TYPE_NB];
 	Dialog		dialogs;
+	char		*battleScript;
+	char		**dialogsStrings;
 } Character;
 
 typedef struct {

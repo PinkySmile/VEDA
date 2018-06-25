@@ -16,8 +16,8 @@
 #	define SIGQUIT 3
 #endif
 
-sfRenderWindow	**window;
-game_t		*gameStruct;
+sfRenderWindow	**window = NULL;
+game_t		*gameStruct = NULL;
 
 char	*strsignal(int signum)
 {
@@ -122,7 +122,7 @@ void	destroyStruct(game_t *game)
 void	sighandler(int signum)
 {
 	if (signum == SIGINT || signum == SIGTERM) {
-		if (sfRenderWindow_isOpen(*window))
+		if (window && *window && sfRenderWindow_isOpen(*window))
 			sfRenderWindow_close(*window);
 		else
 			exit(EXIT_SUCCESS);

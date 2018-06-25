@@ -56,9 +56,12 @@ bool	saveGame(game_t *game, bool level)
 	int		fd;
 	struct stat	st;
 	bool		success = false;
-	Character	player = *getPlayer(game->characters.content, game->characters.length);
 	int		len = 0;
 	char		*buffer = NULL;
+	void		*buff = NULL;
+	ParserObj	*obj = NULL;
+	Character	charac;
+	ParserList	*result = malloc(sizeof(ParserList));
 
 	printf("%s: Saving game\n", INFO);
 	if (stat("save", &st) == -1) {
@@ -69,8 +72,8 @@ bool	saveGame(game_t *game, bool level)
 			success = (mkdir("save", 0766) == 0);
 		#endif
 		if (!success) {
-			printf("%s: Counldn't create folder \"save\" (%s)\n", ERROR, strerror(errno));
-			buffer = concatf("Counldn't create folder \"save\" (%s)", strerror(errno));
+			printf("%s: Couldn't create folder \"save\" (%s)\n", ERROR, strerror(errno));
+			buffer = concatf("Couldn't create folder \"save\" (%s)", strerror(errno));
 			dispMsg("Error", buffer, 4);
 			free(buffer);
 			return (false);
@@ -84,15 +87,6 @@ bool	saveGame(game_t *game, bool level)
 		buffer = concatf("Cannot open save file (save/game.dat: %s)\n", strerror(errno));
 		dispMsg("Error", buffer, 0);
 		free(buffer);
-		return (false);
-	}
-	player.movement.animationClock = NULL;
-	player.movement.stateClock = NULL;
-	player.stats.energyRegenClock = NULL;
-	if (write(fd, &player, sizeof(player)) != sizeof(player)) {
-		printf("%s: Couldn't write save file\n", ERROR);
-		close(fd);
-		dispMsg("Error", "Couldn't write to save file\nNo space on disk ?", 0);
 		return (false);
 	}
 	if (write(fd, &game->characterChosed, sizeof(game->characterChosed)) != sizeof(game->characterChosed)) {
@@ -115,6 +109,48 @@ bool	saveGame(game_t *game, bool level)
 		return (false);
 	}
 	close(fd);
+	if (result) {
+		memset(result, 0, sizeof(*result));
+		for (int i = 0; i < game->characters.length; i++) {
+			charac = ((Character *)game->characters.content)[i];
+			obj = malloc(sizeof(*obj));
+			if (!obj) {
+				printf("%s: Cannot save: alloc error\n", ERROR);
+				dispMsg("Error", "Cannot save: alloc error\n", 0);
+				return (false);
+			}
+			memset(obj, 0, sizeof(*obj));
+			buff = malloc(sizeof(ParserString));
+			if (buff) {
+				((ParserString *)buff)->length = strlen(charac.name);
+				((ParserString *)buff)->content = strdup(charac.name);
+			}
+			ParserObj_addElement(obj, buff, ParserStringType, strdup("name"));
+			buff = malloc(sizeof(ParserInt));
+			if (buff)
+				*(int *)buff = charac.movement.pos.x;
+			ParserObj_addElement(obj, buff, ParserIntType, strdup("x_pos"));
+			buff = malloc(sizeof(ParserInt));
+			if (buff)
+				*(int *)buff = charac.movement.pos.y;
+			ParserObj_addElement(obj, buff, ParserIntType, strdup("y_pos"));
+			buff = malloc(sizeof(ParserInt));
+			if (buff)
+				*(int *)buff = charac.texture;
+			ParserObj_addElement(obj, buff, ParserIntType, strdup("sprite_id"));
+			buff = malloc(sizeof(ParserString));
+			if (buff) {
+				((ParserString *)buff)->length = strlen(charac.battleScript ? charac.battleScript : "");
+				((ParserString *)buff)->content = strdup(charac.battleScript ? charac.battleScript : "");
+			}
+			ParserObj_addElement(obj, buff, ParserStringType, strdup("battle_script"));
+			ParserList_addElement(result, obj, ParserObjType, -1);
+		}
+		buffer = concatf("%s-characters.sav", game->loadedMap);
+		Parser_createFile(buffer, result, ParserListType, NULL);
+		ParserList_destroy(result);
+		free(buffer);
+	}
 	if (level) {
 		buffer = concat(game->loadedMap, ".sav", false, false);
 		remove(buffer);
@@ -127,7 +163,6 @@ bool	saveGame(game_t *game, bool level)
 void	loadGame(game_t *game)
 {
 	int		fd;
-	Character	player;
 	bool		use = false;
 	char		*buffer;
 	int		len = 0;
@@ -139,14 +174,6 @@ void	loadGame(game_t *game)
 		printf("%s: Cannot open save file (save/game.dat: %s)\n", ERROR, strerror(errno));
 		return;
 	}
-	if (read(fd, &player, sizeof(player)) != sizeof(player) && !use) {
-		printf("%s: Corrupted save file detected: Unexpected <EOF> player\n", ERROR);
-		use = (dispMsg("Error", CORRUPTED_SAVE_MSG, 4) == 6);
-		if (!use) {
-			close(fd);
-			return;
-		}
-	}
 	if (read(fd, &game->characterChosed, sizeof(game->characterChosed)) != sizeof(game->characterChosed) && !use) {
 		printf("%s: Corrupted save file detected: Unexpected <EOF> sex\n", ERROR);
 		close(fd);
@@ -156,11 +183,6 @@ void	loadGame(game_t *game)
 			return;
 		}
 	}
-	player.movement.animationClock = getPlayer(game->characters.content, game->characters.length)->movement.animationClock;
-	player.movement.stateClock = getPlayer(game->characters.content, game->characters.length)->movement.stateClock;
-	player.stats.energyRegenClock = getPlayer(game->characters.content, game->characters.length)->stats.energyRegenClock;
-	for (int j = 0; j < DAMAGES_TYPE_NB; j++)
-		player.damageClock[j] = getPlayer(game->characters.content, game->characters.length)->damageClock[j];
 	free(game->map);
 	free(game->bg);
 	free(game->loadedMap);
@@ -181,11 +203,18 @@ void	loadGame(game_t *game)
 	} else {
 		game->loadedMap[len] = 0;
 		buffer = concat(game->loadedMap, ".sav", false, false);
-		if (stat(buffer, &st) != -1)
-			game->map = loadLevel(buffer, &game->bg);
-		else if (stat(game->loadedMap, &st) != -1)
-			game->map = loadLevel(game->loadedMap, &game->bg);
-		else if (!use) {
+		if (stat(buffer, &st) != -1) {
+			free(game->map);
+			game->map = loadMap(buffer, &game->bg);
+			free(buffer);
+			free(game->characters.content);
+			buffer = concatf("%s-characters.sav", game->loadedMap);
+			game->characters = loadCharacters(buffer);
+			if (game->characters.content)
+				((Character *)game->characters.content)[0].isPlayer = true;
+		} else if (stat(game->loadedMap, &st) != -1) {
+			loadLevel(game->loadedMap, game);
+		} else if (!use) {
 			printf("%s: Corrupted save file detected: Saved map not found\n", ERROR);
 			use = (dispMsg("Error", CORRUPTED_SAVE_MSG, 4) == 6);
 			if (!use) {
@@ -193,7 +222,7 @@ void	loadGame(game_t *game)
 				return;
 			}
 		}
-		if (!game->map && !use) {
+		if ((!game->map || !game->characters.content) && !use) {
 			printf("%s: Corrupted save file detected: Saved map has invalid data\n", ERROR);
 			use = (dispMsg("Error", CORRUPTED_SAVE_MSG, 4) == 6);
 			if (!use) {
@@ -204,6 +233,5 @@ void	loadGame(game_t *game)
 		free(buffer);
 	}
 	close(fd);
-	*getPlayer(game->characters.content, game->characters.length) = player;
 	printf("%s: Done\n", INFO);
 }
