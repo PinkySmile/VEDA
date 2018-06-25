@@ -48,6 +48,7 @@ void	manageEvents(game_t *game)
 		} else if (event.type == sfEvtJoystickButtonPressed) {
 			if (game->menu == 1 && game->settings.keys[KEY_PAUSE] == event.joystickButton.button + 205) {
 				back_on_title_screen(game, -1);
+				saveGame(game, true);
 				continue;
 			}
 			if (game->selected - game->languagesConf.y - game->languagesConf.x >= 0 && game->selected - game->languagesConf.y - game->languagesConf.x < 4 && game->menu == 2)

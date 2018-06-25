@@ -45,7 +45,7 @@ int	dispMsg(char *title, char *content, int variate)
 					if (event.mouseButton.button == sfMouseLeft && event.mouseButton.y >= 150 && event.mouseButton.y <= 170) {
 						buttonClicked = (event.mouseButton.x - 400 + 70 * nbOfButtons) / 70;
 						if (buttonClicked >= 0 && buttonClicked < nbOfButtons) {
-							clicked = nbOfButtons == 2 ? (buttonClicked == 0 ? 4 : 5) : 0;
+							clicked = nbOfButtons == 2 ? (buttonClicked == 0 ? 6 : 5) : 0;
 							sfRenderWindow_close(win);
 						}
 					}

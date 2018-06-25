@@ -206,6 +206,8 @@ typedef struct {
 	int		damageDisplay[DAMAGES_TYPE_NB];
 	sfClock		*damageClock[DAMAGES_TYPE_NB];
 	Dialog		dialogs;
+	char		*battleScript;
+	char		**dialogsStrings;
 } Character;
 
 typedef struct {

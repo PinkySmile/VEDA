@@ -46,6 +46,8 @@ void		loadGame	(game_t *game);
 void		saveSettings	(game_t *game);
 Settings	loadSettings	(void);
 void		loadLevel	(char *path, game_t *game);
+Array		loadCharacters	(char *path);
+Object		*loadMap	(char *path, char **bg);
 
 //Menu functions
 void	mainMenu	(game_t *game);

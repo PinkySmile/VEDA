@@ -195,7 +195,7 @@ Array	loadCharacters(char *path)
 					if (objBuffer->type != ParserStringType)
 						printf("%s: Field \"name\" in character %i has an invalid type\n", ERROR, i);
 					else
-						strncmp(buff.name, ParserString_toCharStar(objBuffer->data), 32);
+						strncpy(buff.name, ParserString_toCharStar(objBuffer->data), 32);
 				} else
 					printf("%s: Character %i has no field \"name\"\n", WARNING, i);
 				objBuffer = ParserObj_getElement(obj, "sprite_id");
@@ -222,12 +222,20 @@ Array	loadCharacters(char *path)
 				        	buff.movement.pos.y = ParserInt_toInt(objBuffer->data);
 				} else
 					printf("%s: Character %i has no field \"y_pos\"\n", WARNING, i);
+				objBuffer = ParserObj_getElement(obj, "battle_script");
+				if (objBuffer) {
+					if (objBuffer->type != ParserStringType)
+						printf("%s: Field \"battle_script\" in character %i has an invalid type\n", ERROR, i);
+					else
+				        	buff.battleScript = strdup(ParserString_toCharStar(objBuffer->data));
+				} else
+					printf("%s: Character %i has no field \"battle_script\"\n", WARNING, i);
 				buff.movement.canMove = true;
 				buff.movement.animationClock = sfClock_create();
 				buff.movement.stateClock = sfClock_create();
 				buff.stats.energyRegenClock = sfClock_create();
-				for (int i = 0; i < DAMAGES_TYPE_NB; i++)
-					buff.damageClock[i] = sfClock_create();
+				for (int j = 0; j < DAMAGES_TYPE_NB; j++)
+					buff.damageClock[j] = sfClock_create();
 				((Character *)characters.content)[i] = buff;
 			}
 		}

@@ -29,13 +29,14 @@ void	play_button(game_t *game, int buttonID)
 		game->buttons[i].active = false;
 		game->buttons[i].displayed = false;
 	}
-	if (!game->map) {
+	if (!game->map || !game->characters.content) {
 		loadLevel("data/levels/test", game);
 		game->loadedMap = strdup("data/levels/test");
 	}
 	if (strcmp(getPlayer(game->characters.content, game->characters.length)->name, "") == 0) {
 		game->menu = 6;
-		game->bufSize = 16;
+		game->bufPos = 0;
+		game->bufSize = 32;
 		game->buttons[9].active = true;
 		game->buttons[9].displayed = true;
 		game->buttons[14].active = true;
@@ -52,6 +53,7 @@ void	changePlayerName(game_t *game, int buttonID)
 	Character	*player = getPlayer(game->characters.content, game->characters.length);
 
 	(void)buttonID;
+	memset(player->name, 0, 33);
 	for (int i = 0; game->buffer[i]; i++)
 		player->name[i] = game->buffer[i] % 255;
 	game->menu = 1;

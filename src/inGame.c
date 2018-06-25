@@ -166,6 +166,8 @@ void	drawLifeBar(game_t *game)
 			h = 0;
 			y = y + 45;
 		}
+		if (y > 500)
+			break;
 		lifeBuffer = lifeBuffer - 10;
 	}
 }
@@ -222,6 +224,8 @@ void	drawEnergyBar(game_t *game)
 			h = 0;
 			y = y + 45;
 		}
+		if (y > 500)
+			break;
 		energyBuffer = energyBuffer - 10;
 	}
 }
