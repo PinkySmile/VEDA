@@ -37,20 +37,23 @@ ParserArray	ParserList_toArray(ParserList *list)
 
 bool	ParserList_addElement(ParserList *list, void *data, ParserTypes type, int index)
 {
-	ParserList	*buffer;
+	ParserList	*buffer = NULL;
 	int		len = 0;
 
-	for (ParserList *buf; buf->next; buf = buf->next, len++);
+	for (ParserList *buf = list; buf; buf = buf->next, len++);
 	index = (index % len + len) % len;
 	for (int i = 0; i++ < index; list = list->next);
-	buffer = list->next;
-	list->next = malloc(sizeof(*list->next));
-	if (!list->next)
-		return (false);
-	list->next->data = data;
-	list->next->type = type;
-	list->next->prev = list;
-	list->next->next = buffer;
+	if (list->data) {
+		buffer = list->next;
+		list->next = malloc(sizeof(*list->next));
+		if (!list->next)
+			return (false);
+		list = list->next;
+		list->next = buffer;
+	}
+	list->data = data;
+	list->type = type;
+	list->prev = list;
 	return (true);
 }
 
