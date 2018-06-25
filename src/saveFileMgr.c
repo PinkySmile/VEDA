@@ -157,7 +157,6 @@ bool	saveGame(game_t *game, bool level)
 		saveLevel(buffer, game->map, game->bg);
 		free(buffer);
 	}
-	free(result);
 	return (true);
 }
 
