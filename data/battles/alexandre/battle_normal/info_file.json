@@ -1,0 +1,14 @@
+{
+	"type": "DANEMAKU",
+	"battle_name": "Normal",
+	"boss_name": "Alexandre",
+	"boss_sprite_sheet": 7,
+	"boss_script": "data/battles/alexandre/battle_normal/boss.lua",
+	"projectiles": "data/battles/alexandre/battle_normal/bullets.json",
+	"action_script": "data/battles/alexandre/battle_normal/actions.lua",
+	"music": 13,
+	"player_hitbox": {
+		"x": 4,
+		"y": 4,
+	}
+}

@@ -1,0 +1,22 @@
+[
+	{
+		"sprite_sheet": "data/battles/alexandre/battle_normal/bullets/bullet_1.png",
+		"sprite_size": {
+			"x": 32,
+			"y": 32,
+		},
+		"bullet_size": {
+			"x": 16,
+			"y": 16,
+		},
+		"hitbox_size": {
+			"x": 4,
+			"y": 4,
+		}
+		"base_speed": 0,
+		"base_acceleration": 10,
+		"rotation_speed": 10,
+		"base_angle": 0,
+		"animation_speed": 10,
+	},
+]
