@@ -143,16 +143,16 @@ bool	saveGame(game_t *game, bool level)
 				((ParserString *)buff)->length = strlen(charac.battleScript ? charac.battleScript : "");
 				((ParserString *)buff)->content = strdup(charac.battleScript ? charac.battleScript : "");
 			}
-			ParserObj_addElement(obj, buff, ParserStringType, strdup("battle_script"));
+			ParserObj_addElement(obj, buff, ParserStringType, strdup("battle_info"));
 			ParserList_addElement(result, obj, ParserObjType, -1);
 		}
-		buffer = concatf("%s-characters.sav", game->loadedMap);
+		buffer = concatf("%s/characters-save.json", game->loadedMap);
 		Parser_createFile(buffer, result, ParserListType, NULL);
 		ParserList_destroy(result);
 		free(buffer);
 	}
 	if (level) {
-		buffer = concat(game->loadedMap, ".sav", false, false);
+		buffer = concat(game->loadedMap, "/level/floor0.sav", false, false);
 		remove(buffer);
 		saveLevel(buffer, game->map, game->bg);
 		free(buffer);
@@ -202,13 +202,13 @@ void	loadGame(game_t *game)
 			return;
 	} else {
 		game->loadedMap[len] = 0;
-		buffer = concat(game->loadedMap, ".sav", false, false);
+		buffer = concat(game->loadedMap, "/level/floor0.sav", false, false);
 		if (stat(buffer, &st) != -1) {
 			free(game->map);
 			game->map = loadMap(buffer, &game->bg);
 			free(buffer);
 			free(game->characters.content);
-			buffer = concatf("%s-characters.sav", game->loadedMap);
+			buffer = concatf("%s/characters-save.json", game->loadedMap);
 			game->characters = loadCharacters(buffer);
 			if (game->characters.content)
 				((Character *)game->characters.content)[0].isPlayer = true;
