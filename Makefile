@@ -22,6 +22,7 @@ SRC = 	main.c		\
 	saveFileMgr.c	\
 	dispMsg.c	\
 	change_buffer.c	\
+	battle.c	\
 
 OBJ =	$(SRC:%.c=src/%.o)
 
@@ -50,9 +51,12 @@ CC =	gcc
 
 RULE =	all
 
+LIBS =	lib/configParser/libconfigParser.a	\
+	lib/concatf/libconcatf.a		\
+
 RES =	
 
-all:    $(NAME)
+all:	$(LIBS) $(NAME)
 
 windows:RES = icon.res
 windows:icon.res all
@@ -60,9 +64,13 @@ windows:icon.res all
 icon.res:
 	windres icon.rc -O coff -o icon.res
 
-$(NAME):$(OBJ)
-	$(MAKE) -C lib/concatf $(RULE)
+lib/configParser/libconfigParser.a:
 	$(MAKE) -C lib/configParser $(RULE)
+
+lib/concatf/libconcatf.a:
+	$(MAKE) -C lib/concatf $(RULE)
+
+$(NAME):$(OBJ)
 	$(CC) -o $(NAME) $(OBJ) $(LDFLAGS) $(RES)
 
 clean:
@@ -72,15 +80,19 @@ clean:
 	$(RM) icon.res
 
 fclean:	clean
+	$(RM) $(NAME) $(NAME).exe
+
+ffclean:fclean
 	$(MAKE) -C lib/concatf fclean
 	$(MAKE) -C lib/configParser fclean
-	$(RM) $(NAME) $(NAME).exe
 
 re:	fclean all
 
 dbg:	CFLAGS += -g -O0
 dbg:	RULE = dbg
-dbg:	re
+dbg:	ffclean all
 
 epi:	LDFLAGS = -lc_graph_prog -lm -lconcatf -L lib/concatf -L lib/configParser -lconfigParser
-epi:	dbg
+epi:	CFLAGS += -g -O0
+epi:	RULE = dbg
+epi:	re

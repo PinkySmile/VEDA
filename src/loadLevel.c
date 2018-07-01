@@ -222,14 +222,14 @@ Array	loadCharacters(char *path)
 				        	buff.movement.pos.y = ParserInt_toInt(objBuffer->data);
 				} else
 					printf("%s: Character %i has no field \"y_pos\"\n", WARNING, i);
-				objBuffer = ParserObj_getElement(obj, "battle_script");
+				objBuffer = ParserObj_getElement(obj, "battle_info");
 				if (objBuffer) {
 					if (objBuffer->type != ParserStringType)
 						printf("%s: Field \"battle_script\" in character %i has an invalid type\n", ERROR, i);
 					else
 				        	buff.battleScript = strdup(ParserString_toCharStar(objBuffer->data));
 				} else
-					printf("%s: Character %i has no field \"battle_script\"\n", WARNING, i);
+					printf("%s: Character %i has no field \"battle_info\"\n", WARNING, i);
 				buff.movement.canMove = true;
 				buff.movement.animationClock = sfClock_create();
 				buff.movement.stateClock = sfClock_create();

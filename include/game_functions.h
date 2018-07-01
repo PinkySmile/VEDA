@@ -8,4 +8,5 @@ void	(* const game_functions[])(game_t *game) = {
 	&options,
 	&buf_modif,
 	&changeName,
+	&battle,
 };

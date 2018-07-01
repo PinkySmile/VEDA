@@ -25,7 +25,7 @@ CFLAGS=	$(INC)	\
 
 CC =	gcc
 
-all: $(NAME)
+all:	$(NAME)
 
 $(NAME):$(OBJ)
 	$(AR) rc $(NAME) $(OBJ)

@@ -14,3 +14,4 @@ levelConverter
 levelConverter.exe
 save
 *.exe
+*characters-save.json
