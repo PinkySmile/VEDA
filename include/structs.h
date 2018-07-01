@@ -271,6 +271,21 @@ typedef struct {
 	sfImage		*image;
 } Icon;
 
+typedef struct {
+	Sprite		sprite;
+	sfVector2f	pos;
+	float		speed;
+	float		acceleration;
+	float		facingAngle;
+} Projectile;
+
+typedef struct {
+	Character	boss;
+	Character	*player;
+	Array	 	projectiles;
+	char		*script;
+} Battle;
+
 struct game_s {
 	sfRenderWindow		*window;
 	int			menu;
@@ -300,6 +315,7 @@ struct game_s {
 	sfUint32		buffer[BUFFER_MAX_SIZE + 1];
 	int			bufPos;
 	int			bufSize;
+	Battle			battle_infos,
 };
 
 #endif
