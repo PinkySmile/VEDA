@@ -315,7 +315,7 @@ struct game_s {
 	sfUint32		buffer[BUFFER_MAX_SIZE + 1];
 	int			bufPos;
 	int			bufSize;
-	Battle			battle_infos,
+	Battle			battle_infos;
 };
 
 #endif

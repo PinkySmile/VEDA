@@ -1,8 +1,16 @@
+#include "functions.h"
+#include "concatf.h"
+#include "structs.h"
+#include "configParser.h"
+#include <string.h>
+#include <stdio.h>
+#include <stdlib.h>
+
 Battle	loadBattleScript(char *path)
 {
 	Battle		battle;
-	ParserResult	file = Parser_parserFile(path);
-	
+	ParserResult	file = Parser_parseFile(path, NULL);
+
 	memset(&battle, 0, sizeof(battle));
 	if (file.error) {
 		printf("%s: %s\n", ERROR, file.error);
@@ -16,5 +24,5 @@ Battle	loadBattleScript(char *path)
 
 void	battle(game_t *game)
 {
-	
+
 }
