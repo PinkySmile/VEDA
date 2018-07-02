@@ -22,12 +22,26 @@ Battle	invalidData(char *path, char *message)
 	return battle;
 }
 
+Array	invalidDataArray(char *path, char *message)
+{
+	char	*buffer;
+
+	printf("%s: %s: %s\n", ERROR, path, message);
+	buffer = concatf("Error: File '%s' contains invalid battle data:\n%s", path, message);
+	dispMsg("Battle Error", buffer, 0);
+	free(buffer);
+	return (Array){NULL, -1};
+}
+
 Array	loadProjectiles(char *path)
 {
 	ParserResult	result = Parser_parseFile(path, JSON_TO_ARRAY);
-	char		*buffer;
+	ParserObj	*buffer;
+	ParserObj	*buffer2;
+	ParserObj	*currProjectile;
+	Projectile	projBuffer;
 	Array		array;
-	
+
 	if (result.error) {
 		printf("%s: %s\n", ERROR, result.error);
 		result.error = concatf("Error: Couldn't load file '%s':\n%s\n", path, result.error);
@@ -36,31 +50,126 @@ Array	loadProjectiles(char *path)
 		return (Array){NULL, -1};
 	} else if (result.type != ParserArrayType) {
 		printf("%s: %s: Invalid type\n", ERROR, path);
-		buffer = concatf("Error");
-		dispMsg("Battle Error", buffer, 0);
+		buffer = (void *)concatf("Error: %s: Invalid type found in the file\n", path);
+		dispMsg("Battle Error", (void *)buffer, 0);
 		free(buffer);
 		return (Array){NULL, -1};
-	}/*
-	{
-		"sprite_sheet": "data/battles/alexandre/battle_normal/bullets/bullet_1.png",
-		"sprite_size": {
-			"x": 32,
-			"y": 32,
-		},
-		"bullet_size": {
-			"x": 16,
-			"y": 16,
-		},
-		"hitbox_size": {
-			"x": 4,
-			"y": 4,
-		}
-		"base_speed": 0,
-		"base_acceleration": 10,
-		"rotation_speed": 10,
-		"base_angle": 0,
-		"animation_speed": 10,
-	}*/
+	} else if (((ParserArray *)result.data)->type != ParserObjType) {
+		printf("%s: %s: Invalid type\n", ERROR, path);
+		buffer = (void *)concatf("Error: %s: Array contains invalid data\n", path);
+		dispMsg("Battle Error", (void *)buffer, 0);
+		free(buffer);
+		return (Array){NULL, -1};
+	}
+	array.length = ((ParserArray *)result.data)->length;
+	array.content = malloc(array.length * sizeof(Projectile));
+	memset(array.content, 0, array.length * sizeof(Projectile));
+	for (int i = 0; i < array.length; i++) {
+		currProjectile = ParserArray_getElement(result.data, i);
+		if (buffer = ParserObj_getElement(currProjectile, "sprite_sheet")) {
+			if (buffer->type == ParserStringType) {
+				projBuffer.sprite = createSprite((Sprite_config)
+				{
+					ParserString_toCharStar(buffer->data),
+				        (sfVector2f){1, 1},
+					(sfVector2i){0, 0},
+					(sfVector2i){0, 0},
+				});
+				projBuffer.needToDestroySprite = true;
+			} else if (buffer->type == ParserIntType) {
+				projBuffer.sprite = ((Sprite *)game.sprites.content)[ParserInt_toInt(buffer->data) % game.sprites.length];
+			} else
+				return invalidDataArray(path, "Invalid type for field \"sprite_sheet\"");
+		} else
+			printf("%s: Field \"sprite_sheet\" is missing", WARNING);
+		if (buffer = ParserObj_getElement(currProjectile, "sprite_size")) {
+			if (buffer->type == ParserObjType) {
+				if (buffer2 = ParserObj_getElement(buffer, "x")) {
+					if (buffer->type == ParserIntType) {
+						projBuffer.sprite.rect.width = ParserInt_toInt(buffer2->data);
+					} else
+						return invalidDataArray(path, "Invalid type for field \"x\" in \"sprite_size\"");
+				} else
+					printf("%s: Field \"x\" is missing in \"sprite_size\"", WARNING);
+				if (buffer2 = ParserObj_getElement(buffer, "y")) {
+					if (buffer->type == ParserIntType) {
+						projBuffer.sprite.rect.height = ParserInt_toInt(buffer2->data);
+					} else
+						return invalidDataArray(path, "Invalid type for field \"y\" in \"sprite_size\"");
+				} else
+					printf("%s: Field \"y\" is missing in \"sprite_size\"", WARNING);
+			} else
+				return invalidDataArray(path, "Invalid type for field \"sprite_size\"");
+		} else
+			printf("%s: Field \"sprite_size\" is missing", WARNING);
+		if (buffer = ParserObj_getElement(currProjectile, "hitbox_size")) {
+			if (buffer->type == ParserObjType) {
+				if (buffer2 = ParserObj_getElement(buffer, "x")) {
+					if (buffer->type == ParserIntType) {
+						projBuffer.sprite.rect.width = ParserInt_toInt(buffer2->data);
+					} else
+						return invalidDataArray(path, "Invalid type for field \"x\" in \"hitbox_size\"");
+				} else
+					printf("%s: Field \"x\" is missing in \"hitbox_size\"", WARNING);
+				if (buffer2 = ParserObj_getElement(buffer, "y")) {
+					if (buffer->type == ParserIntType) {
+						projBuffer.sprite.rect.height = ParserInt_toInt(buffer2->data);
+					} else
+						return invalidDataArray(path, "Invalid type for field \"y\" in \"hitbox_size\"");
+				} else
+					printf("%s: Field \"y\" is missing in \"hitbox_size\"", WARNING);
+			} else
+				return invalidDataArray(path, "Invalid type for field \"hitbox_size\"");
+		} else
+			printf("%s: Field \"hitbox_size\" is missing", WARNING);
+		if (buffer = ParserObj_getElement(currProjectile, "base_speed")) {
+		        if (buffer->type == ParserIntType) {
+				projBuffer.speed = ParserInt_toInt(buffer->data);
+			} else if (buffer->type == ParserFloatType) {
+				projBuffer.speed = ParserFloat_toFloat(buffer->data);
+			} else
+				return invalidDataArray(path, "Invalid type for field \"base_speed\"");
+		} else
+			printf("%s: Field \"base_speed\" is missing", WARNING);
+		if (buffer = ParserObj_getElement(currProjectile, "base_acceleration")) {
+		        if (buffer->type == ParserIntType) {
+				projBuffer.acceleration = ParserInt_toInt(buffer->data);
+			} else if (buffer->type == ParserFloatType) {
+				projBuffer.acceleration = ParserFloat_toFloat(buffer->data);
+			} else
+				return invalidDataArray(path, "Invalid type for field \"base_acceleration\"");
+		} else
+			printf("%s: Field \"base_acceleration\" is missing", WARNING);
+		if (buffer = ParserObj_getElement(currProjectile, "rotation_speed")) {
+		        if (buffer->type == ParserIntType) {
+				projBuffer.rotaSpeed = ParserInt_toInt(buffer->data);
+			} else if (buffer->type == ParserFloatType) {
+				projBuffer.rotaSpeed = ParserFloat_toFloat(buffer->data);
+			} else
+				return invalidDataArray(path, "Invalid type for field \"rotation_speed\"");
+		} else
+			printf("%s: Field \"rotation_speed\" is missing", WARNING);
+		if (buffer = ParserObj_getElement(currProjectile, "base_angle")) {
+		        if (buffer->type == ParserIntType) {
+				projBuffer.angle = ParserInt_toInt(buffer->data);
+			} else if (buffer->type == ParserFloatType) {
+				projBuffer.angle = ParserFloat_toFloat(buffer->data);
+			} else
+				return invalidDataArray(path, "Invalid type for field \"base_angle\"");
+		} else
+			printf("%s: Field \"base_angle\" is missing", WARNING);
+		if (buffer = ParserObj_getElement(currProjectile, "animation_speed")) {
+		        if (buffer->type == ParserIntType) {
+				projBuffer.animSpeed = ParserInt_toInt(buffer->data);
+			} else if (buffer->type == ParserFloatType) {
+				projBuffer.animSpeed = ParserFloat_toFloat(buffer->data);
+			} else
+				return invalidDataArray(path, "Invalid type for field \"animation_speed\"");
+		} else
+			printf("%s: Field \"animation_speed\" is missing", WARNING);
+		projBuffer.clock = sfClock_create();
+		((Projectile *)array.content)[i] = projBuffer;
+	}
 	return array;
 }
 
