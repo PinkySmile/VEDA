@@ -42,10 +42,11 @@ LDFLAGS =			\
 	-lconcatf		\
 	-lconfigParser		\
 
-CFLAGS= $(INC)	\
-	-W	\
-	-Wall	\
-	-Wextra	\
+CFLAGS= $(INC)		\
+	-W		\
+	-Wall		\
+	-Wextra		\
+	-Wno-parentheses\
 
 CC =	gcc
 
