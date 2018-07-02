@@ -16,8 +16,7 @@
 #	define SIGQUIT 3
 #endif
 
-sfRenderWindow	**window = NULL;
-game_t		*gameStruct = NULL;
+game_t		game;
 
 char	*strsignal(int signum)
 {
@@ -122,8 +121,8 @@ void	destroyStruct(game_t *game)
 void	sighandler(int signum)
 {
 	if (signum == SIGINT || signum == SIGTERM) {
-		if (window && *window && sfRenderWindow_isOpen(*window))
-			sfRenderWindow_close(*window);
+		if (game.window && sfRenderWindow_isOpen(game.window))
+			sfRenderWindow_close(game.window);
 		else
 			exit(EXIT_SUCCESS);
 		printf("%s: Caught signal %i (%s). Exiting.\n", INFO, signum, strsignal(signum));
@@ -140,11 +139,8 @@ void	sighandler(int signum)
 
 int	main(int argc, char **args)
 {
-	game_t	game;
-
-	gameStruct = &game;
+	game.window = NULL;
 	srand((long)&game);
-	window = &game.window;
 	signal(SIGINT,  &sighandler);
 	signal(SIGQUIT, &sighandler);
 	signal(SIGILL,  &sighandler);

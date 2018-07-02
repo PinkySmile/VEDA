@@ -76,6 +76,7 @@ typedef struct {
 //This is a default configuration to parse some json files
 #define JSON_COMPACT		((ParserInfos[1]) {{'{', '}', '[', ']', ',', ':', "\"'", "//", "/*", "*/", false, true}})
 #define JSON_NOT_COMPACT	((ParserInfos[1]) {{'{', '}', '[', ']', ',', ':', "\"'", "//", "/*", "*/", false, false}})
+#define JSON_TO_ARRAY		((ParserInfos[1]) {{'{', '}', '[', ']', ',', ':', "\"'", "//", "/*", "*/", true, false}})
 
 /////////////////////
 //Parsing functions//

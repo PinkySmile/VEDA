@@ -96,7 +96,12 @@ enum musics {
 	EUGRT_START,
 	EUGRT_LOOP,
 	UMLAUT,
-	DANMAKU,
+	DANMAKU_MUSIC,
+};
+
+enum battles {
+	BATTLE_ERROR = -1,
+	DANMAKU_BATTLE,
 };
 
 enum sfx {
@@ -272,18 +277,27 @@ typedef struct {
 } Icon;
 
 typedef struct {
+	int		bankID;
 	Sprite		sprite;
 	sfVector2f	pos;
 	float		speed;
 	float		acceleration;
 	float		facingAngle;
+	bool		needToDestroySprite;
 } Projectile;
 
 typedef struct {
+	enum battles	type;
 	Character	boss;
 	Character	*player;
+	Sprite		bossSprite;
 	Array	 	projectiles;
+	Array		projectileBank;
+	bool		needToDestroySprite;
+	bool		needToDestroyMusic;
+	sfMusic		*music;
 	char		*script;
+	char		*name;
 } Battle;
 
 struct game_s {

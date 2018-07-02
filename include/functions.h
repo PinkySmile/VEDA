@@ -32,6 +32,7 @@ Array		loadSfx		(game_t *game);
 Array		loadFonts	(game_t *game);
 Button		*loadButtons	(game_t *game);
 Language	*loadLanguages	(game_t *game);
+Sprite		createSprite(Sprite_config config);
 void		displayLoadingBar(game_t *game, int step, int maxSteps, int file, int maxFiles, char *status);
 
 //Display functions

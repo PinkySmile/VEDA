@@ -3,7 +3,9 @@ function onProjectileDie(projectile)
 end
 
 function onProjectileHit(projectile, target)
-
+	if projectile.owner == target.id then
+		return
+	end
 end
 
 function onBossDie()
@@ -11,8 +13,8 @@ function onBossDie()
 end
 
 function onPlayerShoot(player, mousePos)
-	addProjectile(player.position.x + 4, player.position.y, 0)
-	addProjectile(player.position.x - 4, player.position.y, 0)
+	addProjectile(player.position.x + 4, player.position.y, 0, player.id)
+	addProjectile(player.position.x - 4, player.position.y, 0, player.id)
 end
 
 function onPlayerMove(player, direction)
@@ -30,6 +32,7 @@ end
 
 function bossAI(boss)
 	while true do
-		yield(boss)
+		updateBoss(boss)
+		yield()
 	end
 end
