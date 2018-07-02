@@ -24,7 +24,7 @@ char    *int_to_str(int nb)
 {
 	int	current_digit;
 	int	digit_pos;
-	int	number_left;
+	float	number_left;
 	int	pos = 0;
 	char	*str = malloc(12);
 
@@ -35,7 +35,7 @@ char    *int_to_str(int nb)
 	current_digit = get_nbrlen(nb);
 	digit_pos = current_digit - 1;
 	while (digit_pos >= 0) {
-		current_digit = number_left / (int)pow(10, digit_pos);
+		current_digit = number_left / pow(10, digit_pos);
 		str[pos] = current_digit + '0';
 		pos++;
 		number_left -= current_digit * pow(10, digit_pos);
