@@ -292,8 +292,10 @@ typedef struct {
 typedef struct {
 	enum battles	type;
 	Character	boss;
-	Character	*player;
+	sfVector2f	bossHitbox;
 	Sprite		bossSprite;
+	Character	*player;
+	sfVector2f	playerHitbox;
 	Array	 	projectiles;
 	Array		projectileBank;
 	bool		needToDestroySprite;

@@ -241,8 +241,87 @@ Battle	loadBattleScript(char *path)
 		} else
 			return invalidData(path, "Invalid type for field \"projectiles\"");
 	} else
-		return invalidData(path, "Field \"projectiles\" is missing");/*
-	{
+		return invalidData(path, "Field \"projectiles\" is missing");
+	if (buffer = ParserObj_getElement(file.data, "base_script")) {
+		if (buffer->type == ParserStringType) {
+			battle.script = strdup(ParserString_toCharStar(buffer->data));
+		} else
+			return invalidData(path, "Invalid type for field \"base_script\"");
+	} else
+		return invalidData(path, "Field \"base_script\" is missing");
+	if (buffer = ParserObj_getElement(file.data, "music")) {
+		if (buffer->type == ParserStringType) {
+			battle.music = createMusic((Music_config){
+				ParserString_toCharStar(buffer->data),
+				true,
+			});
+		} else if (buffer->type == ParserIntType) {
+			battle.music = ((sfMusic **)game.musics.content)[ParserInt_toInt(buffer->data) % game.musics.length];
+		} else
+			return invalidData(path, "Invalid type for field \"music\"");
+	} else
+		printf("%s: Field \"boss_sprite_sheet\" is missing", WARNING);
+	if (buffer = ParserObj_getElement(file.data, "boss_sprite_size")) {
+		if (buffer->type == ParserObjType) {
+			if (buffer2 = ParserObj_getElement(buffer, "x")) {
+				if (buffer->type == ParserIntType) {
+					battle.bossSprite.rect.width = ParserInt_toInt(buffer2->data);
+				} else
+					return invalidData(path, "Invalid type for field \"x\" in \"boss_sprite_size\"");
+			} else
+				printf("%s: Field \"x\" is missing in \"boss_sprite_size\"", WARNING);
+			if (buffer2 = ParserObj_getElement(buffer, "y")) {
+				if (buffer->type == ParserIntType) {
+					battle.bossSprite.rect.height = ParserInt_toInt(buffer2->data);
+				} else
+					return invalidData(path, "Invalid type for field \"y\" in \"boss_sprite_size\"");
+			} else
+				printf("%s: Field \"y\" is missing in \"boss_sprite_size\"", WARNING);
+		} else
+			return invalidData(path, "Invalid type for field \"boss_sprite_size\"");
+	} else
+		printf("%s: Field \"boss_sprite_size\" is missing", WARNING);
+	if (buffer = ParserObj_getElement(file.data, "boss_hitbox")) {
+		if (buffer->type == ParserObjType) {
+			if (buffer2 = ParserObj_getElement(buffer, "x")) {
+				if (buffer->type == ParserIntType) {
+					battle.bossHitbox.x = ParserInt_toInt(buffer2->data);
+				} else
+					return invalidData(path, "Invalid type for field \"x\" in \"boss_hitbox\"");
+			} else
+				printf("%s: Field \"x\" is missing in \"boss_hitbox\"", WARNING);
+			if (buffer2 = ParserObj_getElement(buffer, "y")) {
+				if (buffer->type == ParserIntType) {
+					battle.bossHitbox.y = ParserInt_toInt(buffer2->data);
+				} else
+					return invalidData(path, "Invalid type for field \"y\" in \"boss_hitbox\"");
+			} else
+				printf("%s: Field \"y\" is missing in \"boss_hitbox\"", WARNING);
+		} else
+			return invalidData(path, "Invalid type for field \"boss_hitbox\"");
+	} else
+		printf("%s: Field \"boss_hitbox\" is missing", WARNING);
+	if (buffer = ParserObj_getElement(file.data, "player_hitbox")) {
+		if (buffer->type == ParserObjType) {
+			if (buffer2 = ParserObj_getElement(buffer, "x")) {
+				if (buffer->type == ParserIntType) {
+					battle.playerHitbox.x = ParserInt_toInt(buffer2->data);
+				} else
+					return invalidData(path, "Invalid type for field \"x\" in \"player_hitbox\"");
+			} else
+				printf("%s: Field \"x\" is missing in \"player_hitbox\"", WARNING);
+			if (buffer2 = ParserObj_getElement(buffer, "y")) {
+				if (buffer->type == ParserIntType) {
+					battle.playerHitbox.y = ParserInt_toInt(buffer2->data);
+				} else
+					return invalidData(path, "Invalid type for field \"y\" in \"player_hitbox\"");
+			} else
+				printf("%s: Field \"y\" is missing in \"player_hitbox\"", WARNING);
+		} else
+			return invalidData(path, "Invalid type for field \"player_hitbox\"");
+	} else
+		printf("%s: Field \"boss_hitbox\" is missing", WARNING);
+/*	{
 		"projectiles": "data/battles/alexandre/battle_normal/bullets.json",
 		"base_script": "data/battles/alexandre/battle_normal/actions.lua",
 		"music": 13,
