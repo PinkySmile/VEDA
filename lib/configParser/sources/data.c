@@ -4,11 +4,44 @@
 void	*copyData(void *data, int size)
 {
 	char	*new = malloc(size);
-	
+
 	if (new)
 		for (int i = 0; i < size; i++)
 			new[i] = ((char *)data)[i];
 	return (new);
+}
+
+char	*typeToString(ParserTypes type)
+{
+	char	*name = "Unknown";
+
+	switch(type) {
+	case ParserBooleanType:
+		name = "boolean";
+		break;
+	case ParserStringType:
+		name = "string";
+		break;
+	case ParserFloatType:
+		name = "float";
+		break;
+	case ParserArrayType:
+		name = "array";
+		break;
+	case ParserObjType:
+		name = "object";
+		break;
+	case ParserListType:
+		name = "list";
+		break;
+	case ParserIntType:
+		name = "int";
+		break;
+	case ParserNullType:
+		name = "null";
+		break;
+	}
+	return (name);
 }
 
 int	getSizeOf(ParserTypes type)

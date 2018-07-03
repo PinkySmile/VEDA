@@ -345,9 +345,12 @@ ParserResult	getValue(char *str, ParserInfos *infos)
 			result.type = ParserArrayType;
 			result.data = malloc(sizeof(ParserArray));
 			*(ParserArray *)result.data = ParserList_toArray(list);
-			if (((ParserArray *)result.data)->length >= 0)
-				ParserList_destroy(list);
-			else {
+			if (((ParserArray *)result.data)->length >= 0) {
+				for (; list->next; list = list->next)
+					free(list->prev);
+				free(list->prev);
+				free(list);
+			} else {
 				free(result.data);
 				result.data = list;
 			}

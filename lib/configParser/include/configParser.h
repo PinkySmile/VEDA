@@ -145,6 +145,11 @@ int	getSizeOf(ParserTypes type);
 void	*copyData(void *data, int n);
 
 //////////////////////////////////////////////////////////
+//Returns a string describing the type. Don't free it ! //
+//////////////////////////////////////////////////////////
+char	*typeToString(ParserTypes type);
+
+//////////////////////////////////////////////////////////
 //                   Displays a data                    //
 //////////////////////////////////////////////////////////
 void	Parser_printElement(void *data, ParserTypes type, ParserInfos *infos);
@@ -155,7 +160,7 @@ void	Parser_printElement(void *data, ParserTypes type, ParserInfos *infos);
 //          Array management functions             //
 // /!\ These arrays are not NULL terminated !  /!\ //
 //A 0 length array will see his pointer set to NULL//
-//TLDR: Don't try to access < 0 length arrays      //
+//TLDR: Don't try to access < 1 length arrays      //
 /////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////
