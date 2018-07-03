@@ -35,6 +35,7 @@ Language	*loadLanguages	(game_t *game);
 Sprite		createSprite	(Sprite_config config);
 sfMusic		*createMusic	(Music_config config);
 void		displayLoadingBar(game_t *game, int step, int maxSteps, int file, int maxFiles, char *status);
+Battle		loadBattleScript(char *path);
 
 //Display functions
 void	image		(game_t *game, sfSprite *sprite, int x, int y, int width, int height);

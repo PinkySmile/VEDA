@@ -1,6 +1,5 @@
 #ifndef __GAME_STRUCT_H_
 #define __GAME_STRUCT_H_
-
 #include <SFML/Graphics.h>
 #include <SFML/Audio.h>
 #include <stdbool.h>
@@ -280,6 +279,7 @@ typedef struct {
 	int		bankID;
 	Sprite		sprite;
 	sfVector2f	pos;
+	sfVector2i	hitbox;
 	float		speed;
 	float		acceleration;
 	float		angle;

@@ -12,7 +12,7 @@
 		"hitbox_size": {
 			"x": 4,
 			"y": 4,
-		}
+		},
 		"base_speed": 0,
 		"base_acceleration": 10,
 		"rotation_speed": 10,
