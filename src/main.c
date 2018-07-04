@@ -128,7 +128,7 @@ void	sighandler(int signum)
 		printf("%s: Caught signal %i (%s). Exiting.\n", INFO, signum, strsignal(signum));
 	} else {
 		printf("%s: Caught signal %i (%s). Aborting !\n", FATAL, signum, strsignal(signum));
-		dispMsg("Fatal Error", concatf("Error: Caught signal %i (%s)\n\n\nClick OK to close the program", signum, strsignal(signum)), 0);
+		dispMsg("Fatal Error", concatf("Fatal: Caught signal %i (%s)\n\n\nClick OK to close the program", signum, strsignal(signum)), 0);
 		exit(EXIT_FAILURE);
 		signal(signum, NULL);
 		raise(signum); //In case the crash trashed the exit function
