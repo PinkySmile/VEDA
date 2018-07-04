@@ -23,6 +23,12 @@ void		changeScreenMode(game_t *game, int new);
 int		dispMsg(char *title, char *content, int variate);
 Character	*getPlayer(Character *characters, int len);
 char		**split(char *str, char separator);
+void		displayCharacter(Character *character, game_t *game, int id, sfSprite *sprite);
+void		displayCharacters(game_t *game);
+void		displayLowerLayer(game_t *game);
+void		displayUpperLayer(game_t *game);
+void		displayHUD(game_t *game);
+void		movePlayer(game_t *game);
 
 //Init game struct
 void		initGame	(game_t *game);
