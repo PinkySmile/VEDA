@@ -282,11 +282,13 @@ typedef struct {
 	sfVector2i	hitbox;
 	float		speed;
 	float		acceleration;
+	int		animation;
 	float		angle;
 	bool		needToDestroySprite;
 	int		animSpeed;
 	int		rotaSpeed;
 	sfClock		*clock;
+	sfClock		*animClock;
 } Projectile;
 
 typedef struct {

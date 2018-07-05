@@ -5,6 +5,7 @@
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <math.h>
 
 extern game_t game;
 
@@ -96,6 +97,7 @@ Array	loadProjectiles(char *path)
 	memset(array.content, 0, array.length * sizeof(Projectile));
 	for (int i = 0; i < array.length; i++) {
 		currProjectile = ParserArray_getElement(result.data, i);
+		memset(&projBuffer, 0, sizeof(projBuffer));
 		if (buffer = ParserObj_getElement(currProjectile, "sprite_sheet")) {
 			if (buffer->type == ParserStringType) {
 				projBuffer.sprite = createSprite((Sprite_config)
@@ -197,7 +199,7 @@ Array	loadProjectiles(char *path)
 				return invalidTypeArray(result, path, "Invalid type for field \"animation_speed\"", buffer->type, ParserFloatType);
 		} else
 			printf("%s: Field \"animation_speed\" is missing\n", WARNING);
-		projBuffer.clock = sfClock_create();
+		projBuffer.bankID = i;
 		((Projectile *)array.content)[i] = projBuffer;
 	}
 	Parser_destroyData(result.data, result.type);
@@ -357,12 +359,53 @@ Battle	loadBattleScript(char *path)
 	return battle;
 }
 
+void	updateProjectiles(Array array)
+{
+	Projectile	*projs = array.content;
+
+	for (int i = 0; i < array.length; i++) {
+		projs[i].pos.x += cos(projs[i].angle * M_PI / 180) * projs[i].speed;
+		projs[i].pos.y += sin(projs[i].angle * M_PI / 180) * projs[i].speed;
+		projs[i].speed += projs[i].acceleration;
+		projs[i].angle += projs[i].rotaSpeed;
+	}
+}
+
+void	displayProjectiles(game_t *game)
+{
+	Projectile	*projs = game->battle_infos.projectiles.content;
+	sfVector2f	pos;
+
+	for (int i = 0; i < game->battle_infos.projectiles.length; i++) {
+		if (sfTime_asSeconds(sfClock_getElapsedTime(projs[i].animClock)) >= projs[i].animSpeed) {
+			sfClock_restart(projs[i].animClock);
+			projs[i].animation = (projs[i].animation >= ((int)sfTexture_getSize(projs[i].sprite.texture).x / projs[i].sprite.rect.width) - 1) ? 0 : projs[i].animation + 1;
+		}
+		projs[i].sprite.rect.left = projs[i].animation * projs[i].sprite.rect.width;
+		pos.x = projs[i].pos.x + game->cam.x;
+		pos.y = projs[i].pos.y + game->cam.y;
+		sfSprite_setRotation(projs[i].sprite.sprite, projs[i].angle);
+		sfSprite_setPosition(projs[i].sprite.sprite, pos);
+		sfSprite_setTextureRect(projs[i].sprite.sprite, projs[i].sprite.rect);
+		sfRenderWindow_drawSprite(game->window, projs[i].sprite.sprite, NULL);
+	}
+}
+
 void	battle(game_t *game)
 {
+	if (game->battle_infos.music && sfMusic_getStatus(game->battle_infos.music) != sfPlaying) {
+		for (int i = 0; i < game->musics.length; i++)
+			if (((sfMusic **)game->musics.content)[i] && sfMusic_getStatus(game->battle_infos.music) == sfPlaying)
+				sfMusic_stop(((sfMusic **)game->musics.content)[i]);
+		sfMusic_play(game->battle_infos.music);
+		sfMusic_setVolume(game->battle_infos.music, game->settings.musicVolume);
+	}
 	displayLowerLayer(game);
 	displayCharacters(game);
 	displayCharacter(&game->battle_infos.boss, game, 10, game->battle_infos.bossSprite.sprite);
 	displayUpperLayer(game);
+	displayProjectiles(game);
 	displayHUD(game);
 	movePlayer(game);
+	updateProjectiles(game->battle_infos.projectiles);
 }
