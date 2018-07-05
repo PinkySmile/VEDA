@@ -23,6 +23,7 @@ SRC = 	main.c		\
 	dispMsg.c	\
 	change_buffer.c	\
 	battle.c	\
+	battleAPI.c	\
 
 OBJ =	$(SRC:%.c=src/%.o)
 
