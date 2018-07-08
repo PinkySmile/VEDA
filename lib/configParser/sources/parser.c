@@ -342,6 +342,7 @@ ParserResult	getValue(char *str, ParserInfos *infos)
 			return (ERROR_RESULT("Unexpected character found after an array"));
 		}
 		if (infos->listToArray) {
+			list = result.data;
 			result.type = ParserArrayType;
 			result.data = malloc(sizeof(ParserArray));
 			*(ParserArray *)result.data = ParserList_toArray(list);
