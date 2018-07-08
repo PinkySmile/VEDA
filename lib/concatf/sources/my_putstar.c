@@ -8,6 +8,7 @@
 #include "concatf.h"
 #include <stdbool.h>
 #include <stdlib.h>
+#include <string.h>
 
 char	*my_putstarfloat(double *nbr, int format, int format_size)
 {
@@ -30,7 +31,7 @@ char	*my_putstarchar(char *c)
 
 char	*my_putpointer(void *ptr, int format, int format_size)
 {
-	return(concat("0x", my_putnbrbase((long)ptr, "0123456789abcdef"), false, true));
+	return(ptr ? concat("0x", my_putnbrbase((long)ptr, "0123456789abcdef"), false, true) : strdup("(nil)"));
 }
 
 char	*my_putnbr_unsigned(unsigned int *nbr, int format, int format_size)
