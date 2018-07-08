@@ -4,6 +4,9 @@
 #include <SFML/Audio.h>
 #include <stdbool.h>
 #include "macros.h"
+#include "lua.h"
+#include "lualib.h"
+#include "lauxlib.h"
 
 enum damagesTypes {
 	TRUE_DAMAGE,
@@ -303,8 +306,10 @@ typedef struct {
 	bool		needToDestroySprite;
 	bool		needToDestroyMusic;
 	sfMusic		*music;
-	char		*script;
 	char		*name;
+	char		*script;
+	sfClock		*clock;
+	lua_State	*Lua;
 } Battle;
 
 struct game_s {

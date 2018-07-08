@@ -2,6 +2,7 @@
 #include "concatf.h"
 #include "structs.h"
 #include "configParser.h"
+#include "battle_api.h"
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -69,6 +70,7 @@ Array	loadProjectiles(char *path)
 	ParserObj	*buffer;
 	ParserObj	*buffer2;
 	ParserObj	*currProjectile;
+	sfVector2f	scaling = {1, 1};
 	Projectile	projBuffer;
 	Array		array;
 
@@ -96,6 +98,7 @@ Array	loadProjectiles(char *path)
 	array.content = malloc(array.length * sizeof(Projectile));
 	memset(array.content, 0, array.length * sizeof(Projectile));
 	for (int i = 0; i < array.length; i++) {
+		scaling = (sfVector2f){1, 1};
 		currProjectile = ParserArray_getElement(result.data, i);
 		memset(&projBuffer, 0, sizeof(projBuffer));
 		if (buffer = ParserObj_getElement(currProjectile, "sprite_sheet")) {
@@ -116,6 +119,8 @@ Array	loadProjectiles(char *path)
 			printf("%s: Field \"sprite_sheet\" is missing\n", WARNING);
 		if (buffer = ParserObj_getElement(currProjectile, "sprite_size")) {
 			if (buffer->type == ParserObjType) {
+				projBuffer.sprite.rect.width = projBuffer.sprite.texture ? sfTexture_getSize(projBuffer.sprite.texture).x : 0;
+				projBuffer.sprite.rect.height = projBuffer.sprite.texture ? sfTexture_getSize(projBuffer.sprite.texture).y : 0;
 				if (buffer2 = ParserObj_getElement(buffer->data, "x")) {
 					if (buffer2->type == ParserIntType) {
 						projBuffer.sprite.rect.width = ParserInt_toInt(buffer2->data);
@@ -134,6 +139,28 @@ Array	loadProjectiles(char *path)
 				return invalidTypeArray(result, path, "Invalid type for field \"sprite_size\"", buffer->type, ParserObjType);
 		} else
 			printf("%s: Field \"sprite_size\" is missing\n", WARNING);
+		if (buffer = ParserObj_getElement(currProjectile, "bullet_size")) {
+			if (buffer->type == ParserObjType) {
+				if (buffer2 = ParserObj_getElement(buffer->data, "x")) {
+					if (buffer2->type == ParserIntType) {
+						scaling.x = (float)ParserInt_toInt(buffer2->data) / (float)projBuffer.sprite.rect.width;
+					} else
+						return invalidTypeArray(result, path, "Invalid type for field \"x\" in \"bullet_size\"", buffer2->type, ParserIntType);
+				} else
+					printf("%s: Field \"x\" is missing in \"bullet_size\"\n", WARNING);
+				if (buffer2 = ParserObj_getElement(buffer->data, "y")) {
+					if (buffer2->type == ParserIntType) {
+						scaling.y = (float)ParserInt_toInt(buffer2->data) / (float)projBuffer.sprite.rect.height;
+					} else
+						return invalidTypeArray(result, path, "Invalid type for field \"y\" in \"bullet_size\"", buffer2->type, ParserIntType);
+				} else
+					printf("%s: Field \"y\" is missing in \"bullet_size\"\n", WARNING);
+				if (projBuffer.sprite.sprite)
+					sfSprite_setScale(projBuffer.sprite.sprite, scaling);
+			} else
+				return invalidTypeArray(result, path, "Invalid type for field \"bullet_size\"", buffer->type, ParserObjType);
+		} else
+			printf("%s: Field \"hitbox_size\" is missing\n", WARNING);
 		if (buffer = ParserObj_getElement(currProjectile, "hitbox_size")) {
 			if (buffer->type == ParserObjType) {
 				if (buffer2 = ParserObj_getElement(buffer->data, "x")) {
@@ -200,15 +227,27 @@ Array	loadProjectiles(char *path)
 		} else
 			printf("%s: Field \"animation_speed\" is missing\n", WARNING);
 		projBuffer.bankID = i;
+		if (projBuffer.sprite.sprite)
+			sfSprite_setOrigin(projBuffer.sprite.sprite, (sfVector2f){(float)projBuffer.sprite.rect.width / 2, (float)projBuffer.sprite.rect.height / 2});
 		((Projectile *)array.content)[i] = projBuffer;
 	}
 	Parser_destroyData(result.data, result.type);
 	return array;
 }
 
+void	addDependencies(lua_State *Lua)
+{
+	luaL_openlibs(Lua);
+	lua_pushcfunction(Lua, &getElapsedTime);
+	lua_setglobal(Lua, "getElapsedTime");
+	lua_pushcfunction(Lua, &yield);
+	lua_setglobal(Lua, "yield");
+}
+
 Battle	loadBattleScript(char *path)
 {
 	Battle		battle;
+	int		err;
 	ParserResult	result = Parser_parseFile(path, NULL);
 	ParserObj	*buffer;
 	ParserObj	*buffer2;
@@ -233,6 +272,7 @@ Battle	loadBattleScript(char *path)
 				buffer = (void *)concatf("Unknown battle type '%s'", ParserString_toCharStar(buffer->data));
 				battle = invalidData(result, path, (void *)buffer);
 				free(buffer);
+				ParserObj_destroy(result.data);
 				return battle;
 			}
 		} else if (buffer->type == ParserIntType) {
@@ -278,7 +318,17 @@ Battle	loadBattleScript(char *path)
 		return invalidData(result, path, "Field \"projectiles\" is missing");
 	if (buffer = ParserObj_getElement(result.data, "base_script")) {
 		if (buffer->type == ParserStringType) {
+			battle.Lua  = luaL_newstate();
 			battle.script = strdup(ParserString_toCharStar(buffer->data));
+			addDependencies(battle.Lua);
+			err = luaL_dofile(battle.Lua, ParserString_toCharStar(buffer->data));
+			if (err) {
+				buffer = (void *)concatf("An unexpected error occured when loading %s", ParserString_toCharStar(buffer->data));
+				battle = invalidData(result, path, (void *)buffer);
+				free(buffer);
+				ParserObj_destroy(result.data);
+				return battle;
+			}
 		} else
 			return invalidType(result, path, "Invalid type for field \"base_script\"", buffer->type, ParserStringType);
 	} else
@@ -356,6 +406,7 @@ Battle	loadBattleScript(char *path)
 	} else
 		printf("%s: Field \"boss_hitbox\" is missing\n", WARNING);
 	ParserObj_destroy(result.data);
+	battle.clock = sfClock_create();
 	return battle;
 }
 
@@ -377,7 +428,7 @@ void	displayProjectiles(game_t *game)
 	sfVector2f	pos;
 
 	for (int i = 0; i < game->battle_infos.projectiles.length; i++) {
-		if (sfTime_asSeconds(sfClock_getElapsedTime(projs[i].animClock)) >= projs[i].animSpeed) {
+		if (projs[i].animSpeed >= 0 && sfTime_asSeconds(sfClock_getElapsedTime(projs[i].animClock)) >= projs[i].animSpeed) {
 			sfClock_restart(projs[i].animClock);
 			projs[i].animation = (projs[i].animation >= ((int)sfTexture_getSize(projs[i].sprite.texture).x / projs[i].sprite.rect.width) - 1) ? 0 : projs[i].animation + 1;
 		}
@@ -391,21 +442,64 @@ void	displayProjectiles(game_t *game)
 	}
 }
 
+int	errorHandler(lua_State *Lua)
+{
+	lua_pushstring(Lua, luaL_checkstring(Lua, 1));
+	return 1;
+}
+
 void	battle(game_t *game)
 {
-	if (game->battle_infos.music && sfMusic_getStatus(game->battle_infos.music) != sfPlaying) {
-		for (int i = 0; i < game->musics.length; i++)
-			if (((sfMusic **)game->musics.content)[i] && sfMusic_getStatus(game->battle_infos.music) == sfPlaying)
-				sfMusic_stop(((sfMusic **)game->musics.content)[i]);
-		sfMusic_play(game->battle_infos.music);
-		sfMusic_setVolume(game->battle_infos.music, game->settings.musicVolume);
+	static	bool	launchLua = true;
+	
+	if (launchLua) {
+		lua_State	*Lua = lua_newthread(game->battle_infos.Lua);
+		int		err;
+		char		*buffer;
+
+		launchLua = false;
+		// luaL_dofile(lua, "/users/gegel85/documents/github/veda/data/battles/alexandre/battle_normal/actions.lua");
+		// lua_getglobal(lua, "test");
+		// lua_call(lua, 0, 0);
+		// exit(0);
+		lua_pushcfunction(Lua, &errorHandler);
+		lua_getglobal(Lua, "bossAI");
+		err = lua_pcall(Lua, 0, 0, 1);
+		if (err == LUA_ERRRUN) {
+			buffer = concatf("A runtime error occurred during battle:\n%s", luaL_checkstring(Lua, 2));
+			printf("%s: %s\n", ERROR, lua_tostring(Lua, 2));
+			dispMsg("Battle Error", buffer, 0);
+			free(buffer);
+			back_on_title_screen(game, -1);
+		} else if (err == LUA_ERRMEM) {
+			buffer = concatf("A runtime error occurred during battle:\n%s: Out of memory", game->battle_infos.script);
+			printf("%s: %s: Out of memory\n", ERROR, game->battle_infos.script);
+			dispMsg("Battle Error", buffer, 0);
+			free(buffer);
+			back_on_title_screen(game, -1);
+		} else if (err == LUA_ERRERR) {
+			buffer = concatf("An unexpected error occurred during battle:\n%s", game->battle_infos.script);
+			printf("%s: %s: Unknown error\n", ERROR, game->battle_infos.script);
+			dispMsg("Battle Error", buffer, 0);
+			free(buffer);
+			back_on_title_screen(game, -1);
+		}
+		launchLua = true;
+	} else {
+		if (game->battle_infos.music && sfMusic_getStatus(game->battle_infos.music) != sfPlaying) {
+			for (int i = 0; i < game->musics.length; i++)
+				if (((sfMusic **)game->musics.content)[i] && sfMusic_getStatus(game->battle_infos.music) == sfPlaying)
+					sfMusic_stop(((sfMusic **)game->musics.content)[i]);
+			sfMusic_play(game->battle_infos.music);
+			sfMusic_setVolume(game->battle_infos.music, game->settings.musicVolume);
+		}
+		displayLowerLayer(game);
+		displayCharacters(game);
+		displayCharacter(&game->battle_infos.boss, game, 10, game->battle_infos.bossSprite.sprite);
+		displayUpperLayer(game);
+		displayProjectiles(game);
+		displayHUD(game);
+		movePlayer(game);
+		updateProjectiles(game->battle_infos.projectiles);
 	}
-	displayLowerLayer(game);
-	displayCharacters(game);
-	displayCharacter(&game->battle_infos.boss, game, 10, game->battle_infos.bossSprite.sprite);
-	displayUpperLayer(game);
-	displayProjectiles(game);
-	displayHUD(game);
-	movePlayer(game);
-	updateProjectiles(game->battle_infos.projectiles);
 }

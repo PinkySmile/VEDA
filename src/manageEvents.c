@@ -69,6 +69,7 @@ void	manageEvents(game_t *game)
 			}
 		} else if (event.type == sfEvtKeyPressed) {
 			if (game->debug && event.key.code == sfKeyInsert) {
+				printf("%s: Adding projectile %i %i\n", INFO, var, game->battle_infos.projectileBank.length);
 				addProjectile(var, game->battle_infos.boss.movement.pos.x, game->battle_infos.boss.movement.pos.y - 50);
 				var = var < game->battle_infos.projectileBank.length - 1 ? var + 1 : 0;
 			}

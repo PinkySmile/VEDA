@@ -31,8 +31,7 @@ function onPlayerMove(player, direction)
 end
 
 function bossAI(boss)
-	while true do
-		updateBoss(boss)
-		yield()
+	while yield() do
+		--updateBoss(boss)
 	end
 end

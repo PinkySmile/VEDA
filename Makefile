@@ -42,6 +42,7 @@ LDFLAGS =			\
 	-lm			\
 	-lconcatf		\
 	-lconfigParser		\
+	-llua			\
 
 CFLAGS= $(INC)		\
 	-W		\

@@ -10,10 +10,10 @@
 
 char	*my_show_str(char *str)
 {
-	return (showstr(str));
+	return (str ? showstr(str) : strdup("(null)"));
 }
 
 char	*my_put_str(char *str)
 {
-	return (strdup(str));
+	return (str ? strdup(str) : strdup("(null)"));
 }
