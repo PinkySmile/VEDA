@@ -16,7 +16,8 @@
 #	define SIGQUIT 3
 #endif
 
-game_t		game;
+game_t  game;
+int	nbSignals = 0;
 
 char	*strsignal(int signum)
 {
@@ -120,6 +121,14 @@ void	destroyStruct(game_t *game)
 
 void	sighandler(int signum)
 {
+	nbSignals++;
+	if (nbSignals >= 3)
+		return;
+	if (nbSignals >= 6) {
+		signal(signum, NULL);
+		raise(signum);
+		exit(EXIT_FAILURE);
+	}
 	if (signum == SIGINT || signum == SIGTERM) {
 		if (game.window && sfRenderWindow_isOpen(game.window))
 			sfRenderWindow_close(game.window);

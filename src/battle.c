@@ -70,7 +70,7 @@ Array	loadProjectiles(char *path)
 	ParserObj	*buffer;
 	ParserObj	*buffer2;
 	ParserObj	*currProjectile;
-	sfVector2f	scaling = {1, 1};
+	sfVector2f	scaling = game.baseScale;
 	Projectile	projBuffer;
 	Array		array;
 
@@ -143,14 +143,14 @@ Array	loadProjectiles(char *path)
 			if (buffer->type == ParserObjType) {
 				if (buffer2 = ParserObj_getElement(buffer->data, "x")) {
 					if (buffer2->type == ParserIntType) {
-						scaling.x = (float)ParserInt_toInt(buffer2->data) / (float)projBuffer.sprite.rect.width;
+						scaling.x = game.baseScale.x * (float)ParserInt_toInt(buffer2->data) / (float)projBuffer.sprite.rect.width;
 					} else
 						return invalidTypeArray(result, path, "Invalid type for field \"x\" in \"bullet_size\"", buffer2->type, ParserIntType);
 				} else
 					printf("%s: Field \"x\" is missing in \"bullet_size\"\n", WARNING);
 				if (buffer2 = ParserObj_getElement(buffer->data, "y")) {
 					if (buffer2->type == ParserIntType) {
-						scaling.y = (float)ParserInt_toInt(buffer2->data) / (float)projBuffer.sprite.rect.height;
+						scaling.y = game.baseScale.y * (float)ParserInt_toInt(buffer2->data) / (float)projBuffer.sprite.rect.height;
 					} else
 						return invalidTypeArray(result, path, "Invalid type for field \"y\" in \"bullet_size\"", buffer2->type, ParserIntType);
 				} else
@@ -240,6 +240,10 @@ void	addDependencies(lua_State *Lua)
 	luaL_openlibs(Lua);
 	lua_pushcfunction(Lua, &getElapsedTime);
 	lua_setglobal(Lua, "getElapsedTime");
+	lua_pushcfunction(Lua, &addProjectileLua);
+	lua_setglobal(Lua, "addProjectile");
+	lua_pushcfunction(Lua, &stopTime);
+	lua_setglobal(Lua, "stopTime");
 	lua_pushcfunction(Lua, &yield);
 	lua_setglobal(Lua, "yield");
 }
@@ -326,7 +330,6 @@ Battle	loadBattleScript(char *path)
 				buffer = (void *)concatf("An unexpected error occured when loading %s", ParserString_toCharStar(buffer->data));
 				battle = invalidData(result, path, (void *)buffer);
 				free(buffer);
-				ParserObj_destroy(result.data);
 				return battle;
 			}
 		} else
@@ -433,8 +436,8 @@ void	displayProjectiles(game_t *game)
 			projs[i].animation = (projs[i].animation >= ((int)sfTexture_getSize(projs[i].sprite.texture).x / projs[i].sprite.rect.width) - 1) ? 0 : projs[i].animation + 1;
 		}
 		projs[i].sprite.rect.left = projs[i].animation * projs[i].sprite.rect.width;
-		pos.x = projs[i].pos.x + game->cam.x;
-		pos.y = projs[i].pos.y + game->cam.y;
+		pos.x = (projs[i].pos.x + game->cam.x) * game->baseScale.x;
+		pos.y = (projs[i].pos.y + game->cam.y) * game->baseScale.y;
 		sfSprite_setRotation(projs[i].sprite.sprite, projs[i].angle);
 		sfSprite_setPosition(projs[i].sprite.sprite, pos);
 		sfSprite_setTextureRect(projs[i].sprite.sprite, projs[i].sprite.rect);
@@ -451,8 +454,8 @@ int	errorHandler(lua_State *Lua)
 void	battle(game_t *game)
 {
 	static	bool	launchLua = true;
-	
-	if (launchLua) {
+
+	if (launchLua && game->battle_infos.Lua) {
 		lua_State	*Lua = lua_newthread(game->battle_infos.Lua);
 		int		err;
 		char		*buffer;
@@ -499,7 +502,12 @@ void	battle(game_t *game)
 		displayUpperLayer(game);
 		displayProjectiles(game);
 		displayHUD(game);
-		movePlayer(game);
-		updateProjectiles(game->battle_infos.projectiles);
+		if (!game->battle_infos.timeStopped) {
+			movePlayer(game);
+			updateProjectiles(game->battle_infos.projectiles);
+		} else {
+			sfRectangleShape_setFillColor(game->rectangle, (sfColor){255, 230, 255, 55});
+			rect(game, 0, 0, 640, 480);
+		}
 	}
 }

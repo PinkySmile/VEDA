@@ -286,6 +286,7 @@ typedef struct {
 	float		speed;
 	float		acceleration;
 	int		animation;
+	int		owner;
 	float		angle;
 	bool		needToDestroySprite;
 	int		animSpeed;
@@ -309,6 +310,7 @@ typedef struct {
 	char		*name;
 	char		*script;
 	sfClock		*clock;
+	bool		timeStopped;
 	lua_State	*Lua;
 } Battle;
 

@@ -5,8 +5,10 @@
 #include "lualib.h"
 #include "lauxlib.h"
 
-bool	addProjectile(int id, int x, int y);
+bool	addProjectile(int id, int x, int y, int ownerID, float angle);
+int	addProjectileLua(lua_State *Lua);
 int	getElapsedTime(lua_State *Lua);
+int	stopTime(lua_State *Lua);
 int	yield(lua_State *Lua);
 
 #endif
