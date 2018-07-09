@@ -188,8 +188,34 @@ Array	loadProjectiles(char *path)
 				projBuffer.speed = ParserFloat_toFloat(buffer->data);
 			} else
 				return invalidTypeArray(result, path, "Invalid type for field \"base_speed\"", buffer->type, ParserFloatType);
-		} else
+		} else {
+			projBuffer.minSpeed = -1000;
 			printf("%s: Field \"base_speed\" is missing\n", WARNING);
+		}
+		if (buffer = ParserObj_getElement(currProjectile, "min_speed")) {
+		        if (buffer->type == ParserIntType) {
+				projBuffer.minSpeed = ParserInt_toInt(buffer->data);
+			} else if (buffer->type == ParserFloatType) {
+				projBuffer.minSpeed = ParserFloat_toFloat(buffer->data);
+			} else
+				return invalidTypeArray(result, path, "Invalid type for field \"min_speed\"", buffer->type, ParserFloatType);
+		} else
+			printf("%s: Field \"min_speed\" is missing\n", WARNING);
+		if (buffer = ParserObj_getElement(currProjectile, "max_speed")) {
+		        if (buffer->type == ParserIntType) {
+				projBuffer.maxSpeed = ParserInt_toInt(buffer->data);
+			} else if (buffer->type == ParserFloatType) {
+				projBuffer.maxSpeed = ParserFloat_toFloat(buffer->data);
+			} else
+				return invalidTypeArray(result, path, "Invalid type for field \"max_speed\"", buffer->type, ParserFloatType);
+			if 
+		} else {
+			projBuffer.maxSpeed = 1000;
+			printf("%s: Field \"max_speed\" is missing\n", WARNING);
+		}
+		if (projBuffer.maxSpeed < projBuffer.minSpeed) {
+			return invalidTypeArray(result, path, "Maximum speed is lower than minimum speed", buffer->type, ParserFloatType);
+		}
 		if (buffer = ParserObj_getElement(currProjectile, "base_acceleration")) {
 		        if (buffer->type == ParserIntType) {
 				projBuffer.acceleration = ParserInt_toInt(buffer->data);
@@ -421,6 +447,10 @@ void	updateProjectiles(Array array)
 		projs[i].pos.x += cos(projs[i].angle * M_PI / 180) * projs[i].speed;
 		projs[i].pos.y += sin(projs[i].angle * M_PI / 180) * projs[i].speed;
 		projs[i].speed += projs[i].acceleration;
+		if (projs[i].speed > projs[i].maxSpeed)
+			projs[i].speed = projs[i].maxSpeed;
+		if (projs[i].speed < projs[i].minSpeed)
+			projs[i].speed = projs[i].minSpeed;
 		projs[i].angle += projs[i].rotaSpeed;
 	}
 }

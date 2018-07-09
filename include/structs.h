@@ -291,6 +291,8 @@ typedef struct {
 	bool		needToDestroySprite;
 	int		animSpeed;
 	int		rotaSpeed;
+	int		maxSpeed;
+	int		minSpeed;
 	sfClock		*clock;
 	sfClock		*animClock;
 } Projectile;
