@@ -70,18 +70,16 @@ void	manageEvents(game_t *game)
 		} else if (event.type == sfEvtKeyPressed) {
 			if (game->debug && event.key.code == sfKeyInsert) {
 				printf("%s: Adding projectile %i %i\n", INFO, var, game->battle_infos.projectileBank.length);
-				addProjectile(var, game->battle_infos.boss.movement.pos.x, game->battle_infos.boss.movement.pos.y - 50, -1, 0);
+				addProjectile(var, game->battle_infos.boss.movement.pos.x, game->battle_infos.boss.movement.pos.y - 50, -1, 0, 0, 0, 0, 0);
 				var = var < game->battle_infos.projectileBank.length - 1 ? var + 1 : 0;
 			}
-			if (game->debug && event.key.code == sfKeyHome) {
+			if (/*game->debug &&*/ event.key.code == sfKeyHome) {
 				char	buffer[100];
-				Array	buff = game->battle_infos.projectiles;
 
 				memset(buffer, 0, 100);
 				for (int i = 0; game->buffer[i]; i++)
 					buffer[i] = game->buffer[i] % 255;
 				game->battle_infos = loadBattleScript(/*buffer*/"data/battles/alexandre/battle_normal/info_file.json");
-				game->battle_infos.projectiles = buff;
 				for (int i = 0; game->buttons[i].content; i++) {
 					game->buttons[i].active = false;
 					game->buttons[i].displayed = false;

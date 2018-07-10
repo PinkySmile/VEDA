@@ -285,12 +285,13 @@ typedef struct {
 	sfVector2i	hitbox;
 	float		speed;
 	float		acceleration;
+	int		marker;
 	int		animation;
 	int		owner;
 	float		angle;
 	bool		needToDestroySprite;
 	int		animSpeed;
-	int		rotaSpeed;
+	float		rotaSpeed;
 	int		maxSpeed;
 	int		minSpeed;
 	sfClock		*clock;
@@ -313,6 +314,7 @@ typedef struct {
 	char		*script;
 	sfClock		*clock;
 	bool		timeStopped;
+	int		yieldTime;
 	lua_State	*Lua;
 } Battle;
 

@@ -492,7 +492,11 @@ void	inGame(game_t *game)
 			color *= -1;
 	}
 	movePlayer(game);
-	if (player->stats.life > 10 * player->stats.lifeMax)
-		player->stats.life = 10 * player->stats.lifeMax;
-	player->invulnerabiltyTime -= player->invulnerabiltyTime > 0 ? 1 : 0;
+	for (int i = 0; i < game->characters.length; i++) {
+		Character	*chara = &((Character *)game->characters.content)[i];
+
+		if (chara->stats.life > 10 * chara->stats.lifeMax)
+			chara->stats.life = 10 * chara->stats.lifeMax;
+		chara->invulnerabiltyTime -= chara->invulnerabiltyTime > 0 ? 1 : 0;
+	}
 }

@@ -208,7 +208,6 @@ Array	loadProjectiles(char *path)
 				projBuffer.maxSpeed = ParserFloat_toFloat(buffer->data);
 			} else
 				return invalidTypeArray(result, path, "Invalid type for field \"max_speed\"", buffer->type, ParserFloatType);
-			if 
 		} else {
 			projBuffer.maxSpeed = 1000;
 			printf("%s: Field \"max_speed\" is missing\n", WARNING);
@@ -276,14 +275,13 @@ void	addDependencies(lua_State *Lua)
 
 Battle	loadBattleScript(char *path)
 {
-	Battle		battle;
+	Battle		battle = game.battle_infos;
 	int		err;
 	ParserResult	result = Parser_parseFile(path, NULL);
 	ParserObj	*buffer;
 	ParserObj	*buffer2;
 
 	printf("%s: Loading %s as battle infos\n", INFO, path);
-	memset(&battle, 0, sizeof(battle));
 	battle.type = BATTLE_ERROR;
 	if (result.error) {
 		printf("%s: %s\n", ERROR, result.error);
@@ -475,29 +473,20 @@ void	displayProjectiles(game_t *game)
 	}
 }
 
-int	errorHandler(lua_State *Lua)
-{
-	lua_pushstring(Lua, luaL_checkstring(Lua, 1));
-	return 1;
-}
-
 void	battle(game_t *game)
 {
-	static	bool	launchLua = true;
+	static	bool		launchLua = true;
+	static	lua_State	*Lua = NULL;
+	int			err;
+	char			*buffer;
 
+	game->battle_infos.player = getPlayer(game->characters.content, game->characters.length);
 	if (launchLua && game->battle_infos.Lua) {
-		lua_State	*Lua = lua_newthread(game->battle_infos.Lua);
-		int		err;
-		char		*buffer;
-
+		Lua = lua_newthread(game->battle_infos.Lua);
 		launchLua = false;
-		// luaL_dofile(lua, "/users/gegel85/documents/github/veda/data/battles/alexandre/battle_normal/actions.lua");
-		// lua_getglobal(lua, "test");
-		// lua_call(lua, 0, 0);
-		// exit(0);
-		lua_pushcfunction(Lua, &errorHandler);
 		lua_getglobal(Lua, "bossAI");
-		err = lua_pcall(Lua, 0, 0, 1);
+	} else if (game->battle_infos.yieldTime <= 0) {
+		err = lua_resume(Lua, game->battle_infos.Lua, 0);
 		if (err == LUA_ERRRUN) {
 			buffer = concatf("A runtime error occurred during battle:\n%s", luaL_checkstring(Lua, 2));
 			printf("%s: %s\n", ERROR, lua_tostring(Lua, 2));
@@ -516,28 +505,35 @@ void	battle(game_t *game)
 			dispMsg("Battle Error", buffer, 0);
 			free(buffer);
 			back_on_title_screen(game, -1);
+		} else if (!err) {
+			launchLua = true;
+			game->menu = 1;
 		}
-		launchLua = true;
-	} else {
-		if (game->battle_infos.music && sfMusic_getStatus(game->battle_infos.music) != sfPlaying) {
-			for (int i = 0; i < game->musics.length; i++)
-				if (((sfMusic **)game->musics.content)[i] && sfMusic_getStatus(game->battle_infos.music) == sfPlaying)
-					sfMusic_stop(((sfMusic **)game->musics.content)[i]);
-			sfMusic_play(game->battle_infos.music);
-			sfMusic_setVolume(game->battle_infos.music, game->settings.musicVolume);
-		}
-		displayLowerLayer(game);
-		displayCharacters(game);
-		displayCharacter(&game->battle_infos.boss, game, 10, game->battle_infos.bossSprite.sprite);
-		displayUpperLayer(game);
-		displayProjectiles(game);
-		displayHUD(game);
-		if (!game->battle_infos.timeStopped) {
-			movePlayer(game);
-			updateProjectiles(game->battle_infos.projectiles);
-		} else {
-			sfRectangleShape_setFillColor(game->rectangle, (sfColor){255, 230, 255, 55});
-			rect(game, 0, 0, 640, 480);
-		}
+	} else
+		game->battle_infos.yieldTime--;
+	if (game->battle_infos.music && sfMusic_getStatus(game->battle_infos.music) != sfPlaying) {
+		for (int i = 0; i < game->musics.length; i++)
+			if (((sfMusic **)game->musics.content)[i] && sfMusic_getStatus(game->battle_infos.music) == sfPlaying)
+				sfMusic_stop(((sfMusic **)game->musics.content)[i]);
+		sfMusic_play(game->battle_infos.music);
+		sfMusic_setVolume(game->battle_infos.music, game->settings.musicVolume);
 	}
+	displayLowerLayer(game);
+	displayCharacters(game);
+	displayCharacter(&game->battle_infos.boss, game, 10, game->battle_infos.bossSprite.sprite);
+	displayUpperLayer(game);
+	displayProjectiles(game);
+	displayHUD(game);
+	if (!game->battle_infos.timeStopped) {
+		movePlayer(game);
+		updateProjectiles(game->battle_infos.projectiles);
+		for (int i = 0; i < game->characters.length; i++)
+			((Character *)game->characters.content)[i].invulnerabiltyTime -= ((Character *)game->characters.content)[i].invulnerabiltyTime > 0 ? 1 : 0;
+	} else {
+		sfRectangleShape_setFillColor(game->rectangle, (sfColor){255, 230, 255, 55});
+		rect(game, 0, 0, 640, 480);
+	}
+	for (int i = 0; i < game->characters.length; i++)
+		if (((Character *)game->characters.content)[i].stats.life > 10 * ((Character *)game->characters.content)[i].stats.lifeMax)
+			((Character *)game->characters.content)[i].stats.life = 10 * ((Character *)game->characters.content)[i].stats.lifeMax;
 }

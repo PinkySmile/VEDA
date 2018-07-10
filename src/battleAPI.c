@@ -12,7 +12,7 @@
 extern	game_t	game;
 extern	void	(* const game_functions[])(game_t *game);
 
-bool	addProjectile(int id, int x, int y, int ownerID, float angle)
+bool	addProjectile(int id, int x, int y, int ownerID, float angle, float speed, float rotaSpeed, float accel, int marker)
 {
 	void		*buff;
 	Projectile	*projs = game.battle_infos.projectiles.content;
@@ -35,6 +35,13 @@ bool	addProjectile(int id, int x, int y, int ownerID, float angle)
 	projs[game.battle_infos.projectiles.length - 1].animClock = sfClock_create();
 	projs[game.battle_infos.projectiles.length - 1].owner = ownerID;
 	projs[game.battle_infos.projectiles.length - 1].angle = angle;
+	projs[game.battle_infos.projectiles.length - 1].marker = marker;
+	if (speed)
+		projs[game.battle_infos.projectiles.length - 1].speed = speed;
+	if (rotaSpeed)
+		projs[game.battle_infos.projectiles.length - 1].rotaSpeed = rotaSpeed;
+	if (accel)
+		projs[game.battle_infos.projectiles.length - 1].acceleration = accel;
 	return true;
 }
 
@@ -83,70 +90,28 @@ int	c_swap(lua_State *Lua)
 
 int	addProjectileLua(lua_State *Lua)
 {
-	double	x = luaL_checknumber(Lua, 1);
-	double	y = luaL_checknumber(Lua, 2);
-	double	projID = luaL_checknumber(Lua, 3);
-	double	ownerID = luaL_checknumber(Lua, 4);
-	double	angle = luaL_checknumber(Lua, 5);
+	double	x		= luaL_checknumber(Lua, 1);
+	double	y		= luaL_checknumber(Lua, 2);
+	double	projID		= luaL_checknumber(Lua, 3);
+	double	ownerID		= luaL_checknumber(Lua, 4);
+	double	angle		= luaL_checknumber(Lua, 5);
+	double	speed		= lua_isnone(Lua, 6) ? 0 : luaL_checknumber(Lua, 6);
+	double	rotaSpeed	= lua_isnone(Lua, 7) ? 0 : luaL_checknumber(Lua, 7);
+	double	accel		= lua_isnone(Lua, 8) ? 0 : luaL_checknumber(Lua, 8);
+	double	marker		= lua_isnone(Lua, 9) ? 0 : luaL_checknumber(Lua, 9);
 
 	if (projID >= game.battle_infos.projectileBank.length || projID < 0)
-		luaL_error(Lua, "No projectile exists with id %i", projID);
-	addProjectile(projID, x, y, ownerID, angle);
+	        return 0;
+	addProjectile(projID, x, y, ownerID, angle, speed, rotaSpeed, accel, marker);
 	return 0;
 }
 
 int	yield(lua_State *Lua)
 {
-	//This is temporary, I didn't find better ways to do it yet
-	static int	loopCount = 0;
-	static int	oldTime = 0;
-	static char	frameRate[30];
-	char		*buffer;
-	int		frames = 1;
+	int		frames = lua_isnone(Lua, 1) ? 1 : luaL_checknumber(Lua, 1);
 
-
-	if (!lua_isnumber(Lua, 1) && !lua_isnone(Lua, 1))
-		luaL_error(Lua, "Invalid argument #1 for function 'yield': Expected number or no value");
-	else if (lua_isnumber(Lua, 1)) {
-		if (lua_tonumber(Lua, 1) >= 1)
-			frames = lua_tonumber(Lua, 1);
-		else
-			luaL_error(Lua, "Invalid argument #1 for function 'yield': Positive and not null number expected (got %d)", lua_tonumber(Lua, 1));
-	}
-	for (int i = 0; i < frames && game.menu == 7 && sfRenderWindow_isOpen(game.window); i++) {
-		if (game.menu == 7 && sfRenderWindow_isOpen(game.window)) {
-			sfRenderWindow_clear(game.window, (sfColor){0, 0, 0, 255});
-			game_functions[game.menu](&game);
-			disp_buttons(&game);
-			manageEvents(&game);
-			loopCount++;
-			if (oldTime != time(NULL)) {
-				buffer = concatf("%f FPS", (float)loopCount / (time(NULL) - oldTime));
-				strcpy(frameRate, buffer);
-				free(buffer);
-				loopCount = 0;
-				oldTime = time(NULL);
-			}
-			if (game.settings.dispFramerate) {
-				sfText_setCharacterSize(game.text, 10);
-				sfText_setColor(game.text, (sfColor){255, 255, 255, 255});
-				text(frameRate, &game, 2, 0, false);
-			}
-			if (game.debug) {
-				sfText_setCharacterSize(game.text, 10);
-				sfText_setColor(game.text, (sfColor){255, 255, 255, 255});
-				text("Debug mode", &game, 580, 0, false);
-				sfText_setColor(game.text, (sfColor){0, 0, 0, 255});
-			}
-			sfRenderWindow_display(game.window);
-		} else {
-			if (game.menu == 7)
-				game.menu = 0;
-		}
-	}
-	if (game.menu == 7 && sfRenderWindow_isOpen(game.window))
-		lua_pushboolean(Lua, 1);
-	else
-		lua_pushboolean(Lua, 0);
-	return 1;
+	game.battle_infos.yieldTime = frames;
+	if (frames <= 0)
+		return 0;
+	return lua_yield(Lua, 0);
 }

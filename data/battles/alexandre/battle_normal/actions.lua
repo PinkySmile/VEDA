@@ -83,9 +83,10 @@ function bossAI(boss)
 	yield(30)
 	doAttack1()
 	yield(100)
-	repeat
+	while true do
 		doAttack2()
 		--updateBoss(boss)
-	until not yield(150)
+		yield(150)
+	end
 	stopTime(false)
 end
