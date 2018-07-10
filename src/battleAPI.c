@@ -53,6 +53,7 @@ int	playSound(char const *path)
 	static	bool		first = true;
 
 	if (first) {
+		first = false;
 		memset(buffers, 0, sizeof(musics));
 		for (int i = 0; i < 16; i++)
 			musics[i] = sfSound_create();
@@ -65,9 +66,11 @@ int	playSound(char const *path)
 				return (1);
 			paths[i] = strdup(path);
 			sfSound_setBuffer(musics[i], buffers[i]);
+			sfSound_setVolume(musics[i], game.settings.sfxVolume);
 			sfSound_play(musics[i]);
 			return (0);
 		} else if(strcmp(paths[i], path) == 0 && sfSound_getStatus(musics[i]) != sfPlaying) {
+			sfSound_setPlayingOffset(musics[i], (sfTime){0});
 			sfSound_play(musics[i]);
 			return (0);
 		} else if(musics[15] && sfSound_getStatus(musics[i]) != sfPlaying) {
@@ -78,7 +81,9 @@ int	playSound(char const *path)
 				return (1);
 			sfSoundBuffer_destroy(buffers[i]);
 			sfSound_setBuffer(musics[i], buffers[i]);
+			sfSound_setVolume(musics[i], game.settings.sfxVolume);
 			buffers[i] = buffer;
+			free(paths[i]);
 			paths[i] = strdup(path);
 			sfSound_play(musics[i]);
 			return (0);
