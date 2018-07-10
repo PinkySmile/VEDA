@@ -45,6 +45,13 @@ bool	addProjectile(int id, int x, int y, int ownerID, float angle, float speed, 
 	return true;
 }
 
+void	playSound(char *path)
+{
+	static	sfMusic	*musics[16];
+	static	char	*paths[16];
+	static	bool	first
+}
+
 void	destroyProjectile(int index)
 {
 	void		*buff;
