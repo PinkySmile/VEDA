@@ -271,6 +271,8 @@ void	addDependencies(lua_State *Lua)
 	lua_setglobal(Lua, "stopTime");
 	lua_pushcfunction(Lua, &yield);
 	lua_setglobal(Lua, "yield");
+	lua_pushcfunction(Lua, &playSoundLua);
+	lua_setglobal(Lua, "playSound");
 }
 
 Battle	loadBattleScript(char *path)

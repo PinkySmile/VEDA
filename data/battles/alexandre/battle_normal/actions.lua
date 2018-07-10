@@ -31,6 +31,7 @@ function onPlayerMove(player, direction)
 end
 
 function doAttack1()
+	playSound("data/battles/alexandre/battle_normal/stop_time_sound.ogg")
 	stopTime(true)
 	for i = 1, 20 do
 		addProjectile(
@@ -40,6 +41,7 @@ function doAttack1()
 			-1,
 			90
 		)
+		playSound("data/battles/alexandre/battle_normal/bullet_spawn_sound.ogg")
 		yield(3)
 	end
 	stopTime(false)
@@ -54,9 +56,11 @@ function doAttack2()
 			-1,
 			0
 		)
+		playSound("data/battles/alexandre/battle_normal/bullet_spawn_sound.ogg")
 		yield(3)
 		if i == 20 then
 			yield(40)
+			playSound("data/battles/alexandre/battle_normal/stop_time_sound.ogg")
 			stopTime(true)
 		end
 	end
@@ -70,9 +74,11 @@ function doAttack2()
 			-1,
 			180
 		)
+		playSound("data/battles/alexandre/battle_normal/bullet_spawn_sound.ogg")
 		yield(3)
 		if i == 20 then
 			yield(40)
+			playSound("data/battles/alexandre/battle_normal/stop_time_sound.ogg")
 			stopTime(true)
 		end
 	end
@@ -80,6 +86,7 @@ function doAttack2()
 end
 
 function bossAI(boss)
+	playSound(0)
 	yield(30)
 	doAttack1()
 	yield(100)
@@ -88,5 +95,4 @@ function bossAI(boss)
 		--updateBoss(boss)
 		yield(150)
 	end
-	stopTime(false)
 end

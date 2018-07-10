@@ -45,11 +45,80 @@ bool	addProjectile(int id, int x, int y, int ownerID, float angle, float speed, 
 	return true;
 }
 
-void	playSound(char *path)
+int	playSound(char const *path)
 {
-	static	sfMusic	*musics[16];
-	static	char	*paths[16];
-	static	bool	first
+	static	sfSound		*musics[16];
+	static	sfSoundBuffer	*buffers[16];
+	static	char		*paths[16];
+	static	bool		first = true;
+
+	if (first) {
+		memset(buffers, 0, sizeof(musics));
+		for (int i = 0; i < 16; i++)
+			musics[i] = sfSound_create();
+		memset(paths, 0, sizeof(paths));
+	}
+	for (int i = 0; i < 16; i++) {
+		if (!paths[i]) {
+		        buffers[i] = sfSoundBuffer_createFromFile(path);
+			if (!buffers[i])
+				return (1);
+			paths[i] = strdup(path);
+			sfSound_setBuffer(musics[i], buffers[i]);
+			sfSound_play(musics[i]);
+			return (0);
+		} else if(strcmp(paths[i], path) == 0 && sfSound_getStatus(musics[i]) != sfPlaying) {
+			sfSound_play(musics[i]);
+			return (0);
+		} else if(musics[15] && sfSound_getStatus(musics[i]) != sfPlaying) {
+			sfSoundBuffer	*buffer;
+
+			buffer = sfSoundBuffer_createFromFile(path);
+			if (!buffer)
+				return (1);
+			sfSoundBuffer_destroy(buffers[i]);
+			sfSound_setBuffer(musics[i], buffers[i]);
+			buffers[i] = buffer;
+			paths[i] = strdup(path);
+			sfSound_play(musics[i]);
+			return (0);
+		}
+	}
+	return (2);
+}
+
+int	playSoundLua(lua_State *Lua)
+{
+	int	err;
+	int	arg = lua_tonumber(Lua, 1);
+
+	if (lua_isnumber(Lua, 1)) {
+		if (arg < 0 || arg > game.sfx.length) {
+			lua_pushboolean(Lua, false);
+			lua_pushstring(Lua, "index out of range");
+			return (2);
+		} else if (((sfMusic **)game.sfx.content)[arg]) {
+			sfMusic_play(((sfMusic **)game.sfx.content)[arg]);
+			lua_pushboolean(Lua, true);
+			return (1);
+		}
+	}
+	err = playSound(luaL_checkstring(Lua, 1));
+	if (!err) {
+		lua_pushboolean(Lua, true);
+		return (1);
+	} else if (err == 1) {
+		lua_pushboolean(Lua, false);
+		lua_pushstring(Lua, "cannot load file");
+		return (2);
+	} else if (err == 2) {
+		lua_pushboolean(Lua, false);
+		lua_pushstring(Lua, "all voices are used");
+		return (2);
+	}
+	lua_pushboolean(Lua, false);
+	lua_pushstring(Lua, "unknown error");
+	return (2);
 }
 
 void	destroyProjectile(int index)
