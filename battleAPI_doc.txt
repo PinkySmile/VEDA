@@ -1,0 +1,22 @@
+API:
+
+nil	stopTime(needToStop)
+nil	yield([time])
+Projectile|nil	addProjectile(x, y, projectileId, ownerId, angle[, speed[, rotationSpeed[, acceleration[, marker]]]])
+table	getProjectilesMarker(marker)
+table	getProjectilesId(projectileId)
+table	getProjectilesAtPos(x, y)
+table	getProjectilesOwnedBy(ownerId)
+Projectile	getProjectileUniqueId(uniqueId)
+Projectile	getProjectile(index)
+boolean	destroyProjectile(index)
+boolean	destroyProjectileUniqueId(uniqueId)
+boolean, nil|string	updatePlayer(player)
+boolean, nil|string	updateBoss(boss)
+boolean, nil|string	playSound(sound)
+
+Events:
+bossAI(boss)
+onBossDie(boss)
+onProjectileHit(projectile, target)
+onProjectileDie(projectile)
