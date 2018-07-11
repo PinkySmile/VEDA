@@ -71,9 +71,10 @@ int	playSound(char const *path)
 			return (0);
 		} else if(strcmp(paths[i], path) == 0 && sfSound_getStatus(musics[i]) != sfPlaying) {
 			sfSound_setPlayingOffset(musics[i], (sfTime){0});
+			sfSound_setVolume(musics[i], game.settings.sfxVolume);
 			sfSound_play(musics[i]);
 			return (0);
-		} else if(musics[15] && sfSound_getStatus(musics[i]) != sfPlaying) {
+		} else if(buffers[15] && sfSound_getStatus(musics[i]) != sfPlaying) {
 			sfSoundBuffer	*buffer;
 
 			buffer = sfSoundBuffer_createFromFile(path);

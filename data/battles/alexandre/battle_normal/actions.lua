@@ -31,10 +31,7 @@ function onPlayerMove(player, direction)
 end
 
 function doAttack1()
-	local succ, err = playSound("data/battles/alexandre/battle_normal/stop_time_sound.ogg")
-	if not succ then
-		print(err)
-	end
+	playSound("data/battles/alexandre/battle_normal/stop_time_sound.ogg")
 	stopTime(true)
 	for i = 1, 20 do
 		addProjectile(
@@ -44,12 +41,10 @@ function doAttack1()
 			-1,
 			90
 		)
-		succ, err = playSound("data/battles/alexandre/battle_normal/bullet_spawn_sound.ogg")
-		if not succ then
-			print(err)
-		end
+		playSound("data/battles/alexandre/battle_normal/bullet_spawn_sound.ogg")
 		yield(3)
 	end
+	playSound("data/battles/alexandre/battle_normal/stop_time_sound.ogg")
 	stopTime(false)
 end
 
@@ -63,20 +58,15 @@ function doAttack2()
 			-1,
 			0
 		)
-		succ, err = playSound("data/battles/alexandre/battle_normal/bullet_spawn_sound.ogg")
-		if not succ then
-			print(err)
-		end
+		playSound("data/battles/alexandre/battle_normal/bullet_spawn_sound.ogg")
 		yield(3)
 		if i == 20 then
 			yield(40)
-			succ, err = playSound("data/battles/alexandre/battle_normal/stop_time_sound.ogg")
-			if not succ then
-				print(err)
-			end
+			playSound("data/battles/alexandre/battle_normal/stop_time_sound.ogg")
 			stopTime(true)
 		end
 	end
+	playSound("data/battles/alexandre/battle_normal/stop_time_sound.ogg")
 	stopTime(false)
 	yield(120)
 	for i = 1, 30 do
@@ -87,20 +77,15 @@ function doAttack2()
 			-1,
 			180
 		)
-		succ, err = playSound("data/battles/alexandre/battle_normal/bullet_spawn_sound.ogg")
-		if not succ then
-			print(err)
-		end
+		playSound("data/battles/alexandre/battle_normal/bullet_spawn_sound.ogg")
 		yield(3)
 		if i == 20 then
 			yield(40)
-			succ, err = playSound("data/battles/alexandre/battle_normal/stop_time_sound.ogg")
-			if not succ then
-				print(err)
-			end
+			playSound("data/battles/alexandre/battle_normal/stop_time_sound.ogg")
 			stopTime(true)
 		end
 	end
+	playSound("data/battles/alexandre/battle_normal/stop_time_sound.ogg")
 	stopTime(false)
 end
 
