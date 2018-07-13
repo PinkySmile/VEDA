@@ -45,6 +45,11 @@ bool	addProjectile(int id, int x, int y, int ownerID, float angle, float speed, 
 	return true;
 }
 
+void	pushProjectile(Projectile *proj, lua_State *Lua)
+{
+	
+}
+
 int	playSound(char const *path)
 {
 	static	sfSound		*musics[16];

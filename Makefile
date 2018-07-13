@@ -1,29 +1,30 @@
 NAME =	VEDA
 
-SRC = 	main.c		\
-	initGame.c	\
-	loadSprites.c	\
-	loadSounds.c	\
-	launchGame.c	\
-	manageEvents.c	\
-	mainMenu.c	\
-	drawSprite.c	\
-	settingsMgr.c	\
-	load_buttons.c	\
-	callbacks.c	\
-	int_to_str.c	\
-	loadFonts.c	\
-	get_nbrlen.c	\
-	loadLanguages.c	\
-	clic_button.c	\
-	loadLevel.c	\
-	inGame.c	\
-	settings.c	\
-	saveFileMgr.c	\
-	dispMsg.c	\
-	change_buffer.c	\
-	battle.c	\
-	battleAPI.c	\
+SRC = 	main.c			\
+	initGame.c		\
+	loadSprites.c		\
+	loadSounds.c		\
+	launchGame.c		\
+	manageEvents.c		\
+	mainMenu.c		\
+	drawSprite.c		\
+	settingsMgr.c		\
+	load_buttons.c		\
+	callbacks.c		\
+	int_to_str.c		\
+	loadFonts.c		\
+	get_nbrlen.c		\
+	loadLanguages.c		\
+	clic_button.c		\
+	loadLevel.c		\
+	inGame.c		\
+	settings.c		\
+	saveFileMgr.c		\
+	dispMsg.c		\
+	change_buffer.c		\
+	battle.c		\
+	battleAPI.c		\
+	discordRichPresence.c	\
 
 OBJ =	$(SRC:%.c=src/%.o)
 
@@ -43,6 +44,9 @@ LDFLAGS =			\
 	-lconcatf		\
 	-lconfigParser		\
 	-llua			\
+	-ldiscord-rpc		\
+	-lpthread		\
+	-lpthreadGC-3		\
 
 CFLAGS= $(INC)		\
 	-W		\
@@ -74,7 +78,7 @@ lib/concatf/libconcatf.a:
 	$(MAKE) -C lib/concatf $(RULE)
 
 $(NAME):$(OBJ)
-	$(CC) -o $(NAME) $(OBJ) $(LDFLAGS) $(RES)
+	g++ -o $(NAME) $(OBJ) $(LDFLAGS) $(RES) 
 
 clean:
 	$(MAKE) -C lib/concatf clean

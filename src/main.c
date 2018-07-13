@@ -4,10 +4,13 @@
 #include <signal.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <time.h>
+#include <discord_rpc.h>
 #include "structs.h"
 #include "functions.h"
 #include "concatf.h"
 #include "macros.h"
+#include "discord_rp.h"
 
 #ifndef SIGBUS
 #	define SIGBUS 7
@@ -136,8 +139,10 @@ void	sighandler(int signum)
 			exit(EXIT_SUCCESS);
 		printf("%s: Caught signal %i (%s). Exiting.\n", INFO, signum, strsignal(signum));
 	} else {
+		updateDiscordPresence("Game crashed", concatf("Crashed client (%s)\n", strsignal(signum)), time(NULL), false, "default", NULL, "Crash", NULL);
 		printf("%s: Caught signal %i (%s). Aborting !\n", FATAL, signum, strsignal(signum));
 		dispMsg("Fatal Error", concatf("Fatal: Caught signal %i (%s)\n\n\nClick OK to close the program", signum, strsignal(signum)), 0);
+		Discord_Shutdown();
 		exit(EXIT_FAILURE);
 		signal(signum, NULL);
 		raise(signum); //In case the crash trashed the exit function
@@ -158,12 +163,16 @@ int	main(int argc, char **args)
 	signal(SIGFPE,  &sighandler);
 	signal(SIGSEGV, &sighandler);
 	signal(SIGTERM, &sighandler);
+	printf("%s: Init discord rich presence\n", INFO);
+	initDiscordRichPresence();
 	printf("%s: Initializating game\n", INFO);
 	initGame(&game);
 	game.debug = (argc == 2 && !strcmp("debug", args[1]));
+	updateDiscordPresence("Main menu", "In main menu", time(NULL), false, "default", NULL, "Menu", NULL);
 	launchGame(&game);
 	saveSettings(&game);
 	destroyStruct(&game);
 	printf("%s: Goodbye !\n", INFO);
+	Discord_Shutdown();
 	return (EXIT_SUCCESS);
 }

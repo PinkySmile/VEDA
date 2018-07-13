@@ -263,6 +263,8 @@ Array	loadProjectiles(char *path)
 void	addDependencies(lua_State *Lua)
 {
 	luaL_openlibs(Lua);
+	luaL_newmetatable(Lua, "projectile");
+	luaL_newmetatable(Lua, "sound_object");
 	lua_pushcfunction(Lua, &getElapsedTime);
 	lua_setglobal(Lua, "getElapsedTime");
 	lua_pushcfunction(Lua, &addProjectileLua);
