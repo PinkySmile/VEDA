@@ -23,6 +23,7 @@ SRC = 	main.c		\
 	dispMsg.c	\
 	change_buffer.c	\
 	battle.c	\
+	battleAPI.c	\
 
 OBJ =	$(SRC:%.c=src/%.o)
 
@@ -41,11 +42,13 @@ LDFLAGS =			\
 	-lm			\
 	-lconcatf		\
 	-lconfigParser		\
+	-llua			\
 
-CFLAGS= $(INC)	\
-	-W	\
-	-Wall	\
-	-Wextra	\
+CFLAGS= $(INC)		\
+	-W		\
+	-Wall		\
+	-Wextra		\
+	-Wno-parentheses\
 
 CC =	gcc
 
@@ -92,7 +95,7 @@ dbg:	CFLAGS += -g -O0
 dbg:	RULE = dbg
 dbg:	ffclean all
 
-epi:	LDFLAGS = -lc_graph_prog -lm -lconcatf -L lib/concatf -L lib/configParser -lconfigParser
+epi:	LDFLAGS = -lc_graph_prog -lm -lconcatf -L lib/concatf -L lib/configParser -lconfigParser -llua
 epi:	CFLAGS += -g -O0
 epi:	RULE = dbg
 epi:	re

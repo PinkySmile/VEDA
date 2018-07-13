@@ -16,6 +16,11 @@ void	back_on_title_screen(game_t *game, int buttonID)
 		game->buttons[i].active = true;
 		game->buttons[i].displayed = true;
 	}
+	for (int i = 0; i < game->musics.length; i++)
+		if (((sfMusic **)game->musics.content)[i] && sfMusic_getStatus(((sfMusic **)game->musics.content)[i]) == sfPlaying)
+			sfMusic_stop(((sfMusic **)game->musics.content)[i]);
+	if (game->battle_infos.music && sfMusic_getStatus(game->battle_infos.music) == sfPlaying)
+		sfMusic_stop(game->battle_infos.music);
 	game->menu = 0;
 }
 

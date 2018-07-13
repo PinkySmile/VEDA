@@ -12,11 +12,35 @@
 		"hitbox_size": {
 			"x": 4,
 			"y": 4,
-		}
-		"base_speed": 0,
-		"base_acceleration": 10,
-		"rotation_speed": 10,
+		},
+		"base_speed": 10,
+		"max_speed": 10,
+		"min_speed": -10,
+		"base_acceleration": -0.1,
+		"rotation_speed": 0,
 		"base_angle": 0,
-		"animation_speed": 10,
+		"animation_speed": 2,
+	},
+	{
+		"sprite_sheet": "data/battles/alexandre/battle_normal/bullets/bullet_2.png",
+		"sprite_size": {
+			"x": 32,
+			"y": 16,
+		},
+		"bullet_size": {
+			"x": 24,
+			"y": 12,
+		},
+		"hitbox_size": {
+			"x": 4,
+			"y": 4,
+		},
+		"base_speed": 0,
+		"max_speed": 20,
+		"min_speed": 0,
+		"base_acceleration": 0,
+		"rotation_speed": 20,
+		"base_angle": 0,
+		"animation_speed": -1,
 	},
 ]

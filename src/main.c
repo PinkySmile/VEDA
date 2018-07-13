@@ -16,8 +16,8 @@
 #	define SIGQUIT 3
 #endif
 
-sfRenderWindow	**window = NULL;
-game_t		*gameStruct = NULL;
+game_t  game;
+int	nbSignals = 0;
 
 char	*strsignal(int signum)
 {
@@ -121,15 +121,23 @@ void	destroyStruct(game_t *game)
 
 void	sighandler(int signum)
 {
+	nbSignals++;
+	if (nbSignals >= 3)
+		return;
+	if (nbSignals >= 6) {
+		signal(signum, NULL);
+		raise(signum);
+		exit(EXIT_FAILURE);
+	}
 	if (signum == SIGINT || signum == SIGTERM) {
-		if (window && *window && sfRenderWindow_isOpen(*window))
-			sfRenderWindow_close(*window);
+		if (game.window && sfRenderWindow_isOpen(game.window))
+			sfRenderWindow_close(game.window);
 		else
 			exit(EXIT_SUCCESS);
 		printf("%s: Caught signal %i (%s). Exiting.\n", INFO, signum, strsignal(signum));
 	} else {
 		printf("%s: Caught signal %i (%s). Aborting !\n", FATAL, signum, strsignal(signum));
-		dispMsg("Fatal Error", concatf("Error: Caught signal %i (%s)\n\n\nClick OK to close the program", signum, strsignal(signum)), 0);
+		dispMsg("Fatal Error", concatf("Fatal: Caught signal %i (%s)\n\n\nClick OK to close the program", signum, strsignal(signum)), 0);
 		exit(EXIT_FAILURE);
 		signal(signum, NULL);
 		raise(signum); //In case the crash trashed the exit function
@@ -140,11 +148,8 @@ void	sighandler(int signum)
 
 int	main(int argc, char **args)
 {
-	game_t	game;
-
-	gameStruct = &game;
+	game.window = NULL;
 	srand((long)&game);
-	window = &game.window;
 	signal(SIGINT,  &sighandler);
 	signal(SIGQUIT, &sighandler);
 	signal(SIGILL,  &sighandler);

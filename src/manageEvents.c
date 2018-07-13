@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <battle_api.h>
 
 
 void	setVolumes(Array sounds, float volume)
@@ -16,13 +17,14 @@ void	setVolumes(Array sounds, float volume)
 
 void	manageEvents(game_t *game)
 {
-	sfEvent	event;
-	int	random = rand();
+	sfEvent		event;
+	int		random = rand();
+	static int	var = 0;
 
 	while (sfRenderWindow_pollEvent(game->window, &event)) {
 		if (event.type == sfEvtClosed) {
 			sfRenderWindow_close(game->window);
-			if (game->menu == 1)
+			if (game->menu == 1 || game->menu == 7)
 				saveGame(game, true);
 			for (int i = 0; i < game->musics.length; i++)
 				if (((sfMusic **)game->musics.content)[i] && sfMusic_getStatus(((sfMusic **)game->musics.content)[MAIN_MENU_MUSIC]) == sfPlaying)
@@ -46,7 +48,7 @@ void	manageEvents(game_t *game)
 				game->selected = -1;
 			}
 		} else if (event.type == sfEvtJoystickButtonPressed) {
-			if (game->menu == 1 && game->settings.keys[KEY_PAUSE] == event.joystickButton.button + 205) {
+			if ((game->menu == 1 || game->menu == 7) && game->settings.keys[KEY_PAUSE] == event.joystickButton.button + 205) {
 				back_on_title_screen(game, -1);
 				saveGame(game, true);
 				continue;
@@ -66,6 +68,33 @@ void	manageEvents(game_t *game)
 				game->selected = -1;
 			}
 		} else if (event.type == sfEvtKeyPressed) {
+			if (game->debug && event.key.code == sfKeyInsert) {
+				printf("%s: Adding projectile %i %i\n", INFO, var, game->battle_infos.projectileBank.length);
+				addProjectile(var, game->battle_infos.boss.movement.pos.x, game->battle_infos.boss.movement.pos.y - 50, -1, 0, 0, 0, 0, 0);
+				var = var < game->battle_infos.projectileBank.length - 1 ? var + 1 : 0;
+			}
+			if (/*game->debug &&*/ event.key.code == sfKeyHome) {
+				char	buffer[100];
+
+				memset(buffer, 0, 100);
+				for (int i = 0; game->buffer[i]; i++)
+					buffer[i] = game->buffer[i] % 255;
+				game->battle_infos = loadBattleScript(/*buffer*/"data/battles/alexandre/battle_normal/info_file.json");
+				for (int i = 0; game->buttons[i].content; i++) {
+					game->buttons[i].active = false;
+					game->buttons[i].displayed = false;
+				}
+				game->menu = 7;
+				if (!getPlayer(game->characters.content, game->characters.length)) {
+					loadGame(game);
+					if (!game->map || !game->characters.content) {
+						loadLevel("data/levels/test", game);
+						game->loadedMap = strdup("data/levels/test");
+					}
+				}
+				game->battle_infos.boss.movement.pos.x = 100;
+				game->battle_infos.boss.movement.pos.y = 100;
+			}
 			if (game->debug && event.key.code == sfKeyEqual) {
 				for (int i = 0; game->buttons[i].content; i++) {
 					game->buttons[i].active = false;
@@ -77,7 +106,7 @@ void	manageEvents(game_t *game)
 				game->menu = 5;
 				continue;
 			}
-			if (game->menu == 1 && game->settings.keys[KEY_PAUSE] == event.key.code) {
+			if ((game->menu == 1 || game->menu == 7) && game->settings.keys[KEY_PAUSE] == event.key.code) {
 				back_on_title_screen(game, -1);
 				saveGame(game, true);
 				continue;

@@ -34,7 +34,7 @@ char	*showstr(char const *str)
 	int	start = 0;
 	char	*result = strdup("");
 
-	for (int i = 0; str[i] != '\0'; i++) {
+	for (int i = 0; str && str[i] != '\0'; i++) {
 		if (str[i] < 32 || str[i] == 127) {
 			result = concat(result, sub_strings(str, start, i - 1, NULL), true, true);
 			start = i + 1;

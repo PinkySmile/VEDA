@@ -1,10 +1,12 @@
 #ifndef __GAME_STRUCT_H_
 #define __GAME_STRUCT_H_
-
 #include <SFML/Graphics.h>
 #include <SFML/Audio.h>
 #include <stdbool.h>
 #include "macros.h"
+#include "lua.h"
+#include "lualib.h"
+#include "lauxlib.h"
 
 enum damagesTypes {
 	TRUE_DAMAGE,
@@ -96,7 +98,12 @@ enum musics {
 	EUGRT_START,
 	EUGRT_LOOP,
 	UMLAUT,
-	DANMAKU,
+	DANMAKU_MUSIC,
+};
+
+enum battles {
+	BATTLE_ERROR = -1,
+	DANMAKU_BATTLE,
 };
 
 enum sfx {
@@ -272,18 +279,43 @@ typedef struct {
 } Icon;
 
 typedef struct {
+	int		bankID;
 	Sprite		sprite;
 	sfVector2f	pos;
+	sfVector2i	hitbox;
 	float		speed;
 	float		acceleration;
-	float		facingAngle;
+	int		marker;
+	int		animation;
+	int		owner;
+	float		angle;
+	bool		needToDestroySprite;
+	int		animSpeed;
+	float		rotaSpeed;
+	int		maxSpeed;
+	int		minSpeed;
+	sfClock		*clock;
+	sfClock		*animClock;
 } Projectile;
 
 typedef struct {
+	enum battles	type;
 	Character	boss;
+	sfVector2f	bossHitbox;
+	Sprite		bossSprite;
 	Character	*player;
+	sfVector2f	playerHitbox;
 	Array	 	projectiles;
+	Array		projectileBank;
+	bool		needToDestroySprite;
+	bool		needToDestroyMusic;
+	sfMusic		*music;
+	char		*name;
 	char		*script;
+	sfClock		*clock;
+	bool		timeStopped;
+	int		yieldTime;
+	lua_State	*Lua;
 } Battle;
 
 struct game_s {
