@@ -5,7 +5,6 @@
 #include <math.h>
 #include <string.h>
 #include <time.h>
-#include "discord_rp.h"
 
 void	displayLowerLayer(game_t *game)
 {
@@ -476,7 +475,6 @@ void	inGame(game_t *game)
 	char		*tmp = NULL;
 	static int	color = 255;
 
-	updateDiscordPresence("In Game", game->loadedMap, 0, false, "icon", 0, "VEDA", 0);
 	displayLowerLayer(game);
 	displayCharacters(game);
 	displayUpperLayer(game);

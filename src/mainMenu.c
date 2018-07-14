@@ -8,7 +8,6 @@ void	mainMenu(game_t *game)
 
 	//var -= 0.0001 * var;
 	//sfMusic_setPitch(((sfMusic **)game->musics.content)[MAIN_MENU_MUSIC], var);
-	updateDiscordPresence("Main menu", "In Main Menu", 0, false, "icon", "nem", "VEDA", "Main Menu");
 	if (!sfRenderWindow_isOpen(game->window))
 		return;
 	if (((sfMusic **)game->musics.content)[MAIN_MENU_MUSIC] && sfMusic_getStatus(((sfMusic **)game->musics.content)[MAIN_MENU_MUSIC]) != sfPlaying)

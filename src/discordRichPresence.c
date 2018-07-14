@@ -13,7 +13,7 @@ void	initDiscordRichPresence(void)
 
 void	updateDiscordPresence(char *details, char *state, int timestamp, bool end, char *large_image, char *small_image, char *large_text, char *small_text)
 {
-	DiscordRichPresence discordPresence;
+	DiscordRichPresence	discordPresence;
 
 	memset(&discordPresence, 0, sizeof(discordPresence));
 	discordPresence.state = state;

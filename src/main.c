@@ -170,6 +170,7 @@ int	main(int argc, char **args)
 	printf("%s: Initializating game\n", INFO);
 	initGame(&game);
 	game.debug = (argc == 2 && !strcmp("debug", args[1]));
+	updateDiscordPresence("Main menu", "In Main Menu", 0, false, "icon", "nem", "VEDA", "Main Menu");
 	launchGame(&game);
 	saveSettings(&game);
 	destroyStruct(&game);
