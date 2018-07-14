@@ -48,7 +48,10 @@ void	displayLoadingBar(game_t *game, int step, int maxSteps, int file, int maxFi
 	rect(game, pos2.x, pos2.y, size2.x, size2.y);
 	text(status, game, 320 - strlen(status) / 2 * 6, 310, false);
 	text(nbr, game, 320 - strlen(nbr) / 2 * 7, 410, false);
-	image(game, game->icon.sprite, 256, 100, 128, 128);
+	if (game->sprites.content && ((Sprite *)game->sprites.content)[ICON].sprite)
+		image(game, ((Sprite *)game->sprites.content)[ICON].sprite, 256, 100, 128, 128);
+	else if (game->icon.sprite)
+		image(game, game->icon.sprite, 256, 100, 128, 128);
 	sfRenderWindow_display(game->window);
 	free(nbr);
 	free(status);

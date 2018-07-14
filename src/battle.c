@@ -3,6 +3,7 @@
 #include "structs.h"
 #include "configParser.h"
 #include "battle_api.h"
+#include "discord_rp.h"
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -484,6 +485,9 @@ void	battle(game_t *game)
 	int			err;
 	char			*buffer;
 
+	buffer = concatf("Fighting %s", game->battle_infos.boss.name);
+	updateDiscordPresence("Battle", buffer, 0, false, "icon", NULL, "VEDA", NULL);
+	free(buffer);
 	game->battle_infos.player = getPlayer(game->characters.content, game->characters.length);
 	if (launchLua && game->battle_infos.Lua) {
 		Lua = lua_newthread(game->battle_infos.Lua);

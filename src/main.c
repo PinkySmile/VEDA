@@ -135,11 +135,13 @@ void	sighandler(int signum)
 	if (signum == SIGINT || signum == SIGTERM) {
 		if (game.window && sfRenderWindow_isOpen(game.window))
 			sfRenderWindow_close(game.window);
-		else
+		else {
+			Discord_Shutdown();
 			exit(EXIT_SUCCESS);
+		}
 		printf("%s: Caught signal %i (%s). Exiting.\n", INFO, signum, strsignal(signum));
 	} else {
-		updateDiscordPresence("Game crashed", concatf("Crashed client (%s)\n", strsignal(signum)), time(NULL), false, "default", NULL, "Crash", NULL);
+		updateDiscordPresence("Game crashed", strsignal(signum), 0, false, "icon", "bug", "VEDA", strsignal(signum));
 		printf("%s: Caught signal %i (%s). Aborting !\n", FATAL, signum, strsignal(signum));
 		dispMsg("Fatal Error", concatf("Fatal: Caught signal %i (%s)\n\n\nClick OK to close the program", signum, strsignal(signum)), 0);
 		Discord_Shutdown();
@@ -168,7 +170,6 @@ int	main(int argc, char **args)
 	printf("%s: Initializating game\n", INFO);
 	initGame(&game);
 	game.debug = (argc == 2 && !strcmp("debug", args[1]));
-	updateDiscordPresence("Main menu", "In main menu", time(NULL), false, "default", NULL, "Menu", NULL);
 	launchGame(&game);
 	saveSettings(&game);
 	destroyStruct(&game);

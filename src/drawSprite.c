@@ -23,7 +23,7 @@ void	image(game_t *game, sfSprite *sprite, int x, int y, int width, int height)
 
 	if (sprite && sfSprite_getTexture(sprite)) {
 		rect = sfSprite_getTextureRect(sprite);
-		scale = (sfVector2f){width / rect.width * game->baseScale.x, height / rect.height * game->baseScale.y};
+		scale = (sfVector2f){width * game->baseScale.x / rect.width, height * game->baseScale.y / rect.height};
 		if (width == -1)
 			scale.x = game->baseScale.x;
 		if (height == -1)

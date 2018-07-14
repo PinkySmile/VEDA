@@ -46,7 +46,6 @@ LDFLAGS =			\
 	-llua			\
 	-ldiscord-rpc		\
 	-lpthread		\
-	-lpthreadGC-3		\
 
 CFLAGS= $(INC)		\
 	-W		\
