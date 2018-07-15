@@ -3,10 +3,11 @@
 #include <SFML/Graphics.h>
 #include <SFML/Audio.h>
 #include <stdbool.h>
+#define LUA_COMPAT_MODULE
+#include <lua.h>
+#include <lualib.h>
+#include <lauxlib.h>
 #include "macros.h"
-#include "lua.h"
-#include "lualib.h"
-#include "lauxlib.h"
 
 enum damagesTypes {
 	TRUE_DAMAGE,
@@ -294,9 +295,17 @@ typedef struct {
 	float		rotaSpeed;
 	int		maxSpeed;
 	int		minSpeed;
+	bool		toRemove;
 	sfClock		*clock;
 	sfClock		*animClock;
 } Projectile;
+
+typedef struct list_s list_t;
+struct list_s {
+	void	*data;
+	list_t	*prev;
+	list_t	*next;
+};
 
 typedef struct {
 	enum battles	type;
@@ -305,7 +314,7 @@ typedef struct {
 	Sprite		bossSprite;
 	Character	*player;
 	sfVector2f	playerHitbox;
-	Array	 	projectiles;
+	list_t		projectiles;
 	Array		projectileBank;
 	bool		needToDestroySprite;
 	bool		needToDestroyMusic;

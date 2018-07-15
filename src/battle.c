@@ -3,12 +3,43 @@
 #include "structs.h"
 #include "configParser.h"
 #include "battle_api.h"
+#include <lua.h>
+#include <lualib.h>
+#include <lauxlib.h>
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
 
 extern game_t game;
+
+int	proj2string(lua_State *Lua)
+{
+	Projectile	**proj = luaL_checkudata(Lua, 1, "projectile");
+
+	luaL_argcheck(Lua, proj != NULL, 1, "'projectile' expected");
+	lua_pushfstring(Lua, "projectile: %p", *proj);
+	return 1;
+}
+
+const luaL_Reg game_api[] = {
+	{"playSound", playSoundLua},
+	{"yield", yield},
+	{"stopTime", stopTime},
+	{"addProjectile", addProjectileLua},
+	{"getElapsedTime", getElapsedTime},
+	{NULL, NULL}
+};
+
+const luaL_Reg projectiles_lib[] = {
+	{"get", getProjectileField},
+	{"set", setProjectileField},
+	{"setToRemove", destroyProjectile},
+	{"__index", getProjectileField},
+	{"__newindex", setProjectileField},
+	{"__tostring", proj2string},
+	{NULL, NULL}
+};
 
 Battle	invalidData(ParserResult result, char *path, char *message)
 {
@@ -264,8 +295,22 @@ void	addDependencies(lua_State *Lua)
 {
 	luaL_openlibs(Lua);
 	luaL_newmetatable(Lua, "projectile");
-	luaL_newmetatable(Lua, "sound_object");
-	lua_pushcfunction(Lua, &getElapsedTime);
+	lua_pushstring(Lua, "__index");
+	lua_pushvalue(Lua, -2);
+	lua_settable(Lua, -3);
+	/*lua_pushstring(Lua, "__index");
+	lua_pushstring(Lua, "get");
+	lua_gettable(Lua, 2);
+	lua_settable(Lua, 1);
+	lua_pushstring(Lua, "__newindex");
+	lua_pushstring(Lua, "set");
+	lua_gettable(Lua, 2);
+	lua_settable(Lua, 1);*/
+	
+	luaL_openlib(Lua, NULL, projectiles_lib, 0);
+	//luaL_newmetatable(Lua, "sound_object");
+	luaL_openlib(Lua, "vedaApi", game_api, 0);
+	/*lua_pushcfunction(Lua, &getElapsedTime);
 	lua_setglobal(Lua, "getElapsedTime");
 	lua_pushcfunction(Lua, &addProjectileLua);
 	lua_setglobal(Lua, "addProjectile");
@@ -274,7 +319,7 @@ void	addDependencies(lua_State *Lua)
 	lua_pushcfunction(Lua, &yield);
 	lua_setglobal(Lua, "yield");
 	lua_pushcfunction(Lua, &playSoundLua);
-	lua_setglobal(Lua, "playSound");
+	lua_setglobal(Lua, "playSound"); */
 }
 
 Battle	loadBattleScript(char *path)
@@ -441,39 +486,74 @@ Battle	loadBattleScript(char *path)
 	return battle;
 }
 
-void	updateProjectiles(Array array)
+void	updateProjectiles(list_t *proj_list)
 {
-	Projectile	*projs = array.content;
+	Projectile	*proj;
+	list_t		*buffer;
 
-	for (int i = 0; i < array.length; i++) {
-		projs[i].pos.x += cos(projs[i].angle * M_PI / 180) * projs[i].speed;
-		projs[i].pos.y += sin(projs[i].angle * M_PI / 180) * projs[i].speed;
-		projs[i].speed += projs[i].acceleration;
-		if (projs[i].speed > projs[i].maxSpeed)
-			projs[i].speed = projs[i].maxSpeed;
-		if (projs[i].speed < projs[i].minSpeed)
-			projs[i].speed = projs[i].minSpeed;
-		projs[i].angle += projs[i].rotaSpeed;
+	for (list_t *list = proj_list; list && list->data; list = list->next) {
+		proj = list->data;
+		while (proj->toRemove) {
+			buffer = list->next;
+			sfClock_destroy(proj->clock);
+			sfClock_destroy(proj->animClock);
+			free(proj);
+			if (list->prev) {
+				list->prev->next = list->next;
+			} else {
+				if (!list->next) {
+					list->data = NULL;
+					return;
+				} else {
+					list->data = list->next->data;
+					list->next = list->next->next;
+					free(buffer);
+					buffer = list->next;
+				}
+			}
+			if (list->next) {
+				list->next->prev = list->prev;
+			} else
+				return;
+			list = buffer;
+			proj = list->data;
+		}
+	}
+	for (list_t *list = proj_list; list && list->data; list = list->next) {
+		proj = list->data;
+		proj->pos.x += cos(proj->angle * M_PI / 180) * proj->speed;
+		proj->pos.y += sin(proj->angle * M_PI / 180) * proj->speed;
+		proj->speed += proj->acceleration;
+		if (proj->speed > proj->maxSpeed)
+			proj->speed = proj->maxSpeed;
+		if (proj->speed < proj->minSpeed)
+			proj->speed = proj->minSpeed;
+		proj->angle += proj->rotaSpeed;
 	}
 }
 
 void	displayProjectiles(game_t *game)
 {
-	Projectile	*projs = game->battle_infos.projectiles.content;
+	Projectile	*proj;
 	sfVector2f	pos;
 
-	for (int i = 0; i < game->battle_infos.projectiles.length; i++) {
-		if (projs[i].animSpeed >= 0 && sfTime_asSeconds(sfClock_getElapsedTime(projs[i].animClock)) >= projs[i].animSpeed) {
-			sfClock_restart(projs[i].animClock);
-			projs[i].animation = (projs[i].animation >= ((int)sfTexture_getSize(projs[i].sprite.texture).x / projs[i].sprite.rect.width) - 1) ? 0 : projs[i].animation + 1;
+	for (list_t *list = &game->battle_infos.projectiles; list && list->data; list = list->next) {
+		proj = list->data;
+		if (proj->animSpeed >= 0 && sfTime_asSeconds(sfClock_getElapsedTime(proj->animClock)) >= proj->animSpeed) {
+			sfClock_restart(proj->animClock);
+			proj->animation = (proj->animation >= ((int)sfTexture_getSize(proj->sprite.texture).x / proj->sprite.rect.width) - 1) ? 0 : proj->animation + 1;
 		}
-		projs[i].sprite.rect.left = projs[i].animation * projs[i].sprite.rect.width;
-		pos.x = (projs[i].pos.x + game->cam.x) * game->baseScale.x;
-		pos.y = (projs[i].pos.y + game->cam.y) * game->baseScale.y;
-		sfSprite_setRotation(projs[i].sprite.sprite, projs[i].angle);
-		sfSprite_setPosition(projs[i].sprite.sprite, pos);
-		sfSprite_setTextureRect(projs[i].sprite.sprite, projs[i].sprite.rect);
-		sfRenderWindow_drawSprite(game->window, projs[i].sprite.sprite, NULL);
+		proj->sprite.rect.left = proj->animation * proj->sprite.rect.width;
+		pos.x = (proj->pos.x + game->cam.x) * game->baseScale.x;
+		pos.y = (proj->pos.y + game->cam.y) * game->baseScale.y;
+		while (proj->angle > 360)
+			proj->angle -= 360;
+		while (proj->angle < 360)
+			proj->angle += 360;
+		sfSprite_setRotation(proj->sprite.sprite, proj->angle);
+		sfSprite_setPosition(proj->sprite.sprite, pos);
+		sfSprite_setTextureRect(proj->sprite.sprite, proj->sprite.rect);
+		sfRenderWindow_drawSprite(game->window, proj->sprite.sprite, NULL);
 	}
 }
 
@@ -489,29 +569,45 @@ void	battle(game_t *game)
 		Lua = lua_newthread(game->battle_infos.Lua);
 		launchLua = false;
 		lua_getglobal(Lua, "bossAI");
-	} else if (game->battle_infos.yieldTime <= 0) {
+	}
+	if (game->battle_infos.yieldTime <= 0) {
 		err = lua_resume(Lua, game->battle_infos.Lua, 0);
 		if (err == LUA_ERRRUN) {
-			buffer = concatf("A runtime error occurred during battle:\n%s", luaL_checkstring(Lua, 2));
-			printf("%s: %s\n", ERROR, lua_tostring(Lua, 2));
+			buffer = concatf("A runtime error occurred during battle:\n%s", luaL_checkstring(Lua, -1));
+			printf("%s: %s\n", ERROR, lua_tostring(Lua, -1));
 			dispMsg("Battle Error", buffer, 0);
 			free(buffer);
 			back_on_title_screen(game, -1);
+			sfMusic_stop(game->battle_infos.music);
+			//sfMusic_destroy(game->battle_infos.music);
+			launchLua = true;
+			return;
 		} else if (err == LUA_ERRMEM) {
 			buffer = concatf("A runtime error occurred during battle:\n%s: Out of memory", game->battle_infos.script);
 			printf("%s: %s: Out of memory\n", ERROR, game->battle_infos.script);
 			dispMsg("Battle Error", buffer, 0);
 			free(buffer);
 			back_on_title_screen(game, -1);
+			sfMusic_stop(game->battle_infos.music);
+			//sfMusic_destroy(game->battle_infos.music);
+			launchLua = true;
+			return;
 		} else if (err == LUA_ERRERR) {
 			buffer = concatf("An unexpected error occurred during battle:\n%s", game->battle_infos.script);
 			printf("%s: %s: Unknown error\n", ERROR, game->battle_infos.script);
 			dispMsg("Battle Error", buffer, 0);
 			free(buffer);
 			back_on_title_screen(game, -1);
+			sfMusic_stop(game->battle_infos.music);
+			//sfMusic_destroy(game->battle_infos.music);
+			launchLua = true;
+			return;
 		} else if (!err) {
 			launchLua = true;
 			game->menu = 1;
+			sfMusic_stop(game->battle_infos.music);
+			//sfMusic_destroy(game->battle_infos.music);
+			return;
 		}
 	} else
 		game->battle_infos.yieldTime--;
@@ -530,7 +626,7 @@ void	battle(game_t *game)
 	displayHUD(game);
 	if (!game->battle_infos.timeStopped) {
 		movePlayer(game);
-		updateProjectiles(game->battle_infos.projectiles);
+		updateProjectiles(&game->battle_infos.projectiles);
 		for (int i = 0; i < game->characters.length; i++)
 			((Character *)game->characters.content)[i].invulnerabiltyTime -= ((Character *)game->characters.content)[i].invulnerabiltyTime > 0 ? 1 : 0;
 	} else {
