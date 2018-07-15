@@ -149,6 +149,7 @@ int	destroyProjectile(lua_State *Lua)
 
 	luaL_argcheck(Lua, proj != NULL, 1, "'projectile' expected");
 	(*proj)->toRemove = true;
+	*proj = NULL;
 	return (0);
 }
 

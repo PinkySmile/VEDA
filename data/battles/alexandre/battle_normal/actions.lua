@@ -45,6 +45,8 @@ function doAttack1(boss)
 			-1,
 			i * 180 / 10 + 180
 		)
+		projectiles[#projectiles].speed = 0
+		projectiles[#projectiles].acceleration = 0
 		vedaApi.playSound("data/battles/alexandre/battle_normal/bullet_spawn_sound.ogg")
 		vedaApi.yield(3)
 	end
@@ -55,12 +57,12 @@ function doAttack1(boss)
 	vedaApi.stopTime(true)
 	vedaApi.yield(30)
 	for i, projectile in pairs(projectiles) do
-		projectile.rotationSpeed = 2
-		projectile.speed = 2
+		projectile.rotationSpeed = 2.7
+		projectile.speed = 1.5
 	end
 	vedaApi.playSound("data/battles/alexandre/battle_normal/stop_time_sound.ogg")
 	vedaApi.stopTime(false)
-	vedaApi.yield(120)
+	vedaApi.yield(80)
 	vedaApi.playSound("data/battles/alexandre/battle_normal/stop_time_sound.ogg")
 	vedaApi.stopTime(true)
 	for i, projectile in pairs(projectiles) do
@@ -88,8 +90,9 @@ end
 
 function collectGarbage()
 	for i, k in pairs(projs) do
-		if k.lifeTime > 2 then
+		if k.lifeTime > 12 then
 			k:setToRemove()
+			projs[i] = nil
 		end
 	end
 end
@@ -142,12 +145,14 @@ end
 
 function bossAI(boss)
 	local proj = vedaApi.addProjectile(
-		100,
-		100,
+		108,
+		116,
 		1,
 		-1,
-		0
+		-90
 	)
+	
+	proj.rotationSpeed = 0;
 	vedaApi.playSound(0)
 	vedaApi.yield(30)
 	proj:setToRemove()
