@@ -32,15 +32,36 @@ function onPlayerMove(player, direction)
 	vedaApi.updatePlayer(player)
 end
 
-function doAttack1(boss)
-	local	projectiles = {}
+function yield(timer)
+	for i = 1, timer do
+		vedaApi.yield()
+		collectGarbage()
+	end
+end
 
+function doAttack1()
+	local	projectiles = {}
+	local	anim = 0
+
+	repeat
+		boss.x = boss.x + (boss.x > 316 and -1 or 1)
+		vedaApi.yield()
+		anim = anim + 1
+		boss.animation = (boss.x > 316 and 3 or 1) + (anim % 20 < 10 and 4 or 0)
+	until boss.x == 316
+	repeat
+		boss.y = boss.y + (boss.y > 224 and -1 or 1)
+		vedaApi.yield()
+		anim = anim + 1
+		boss.animation = (boss.y > 224 and 0 or 2) + (anim % 20 < 10 and 4 or 0)
+	until boss.y == 224
 	vedaApi.playSound("data/battles/alexandre/battle_normal/stop_time_sound.ogg")
 	vedaApi.stopTime(true)
+	boss.animation = 8
 	for i = 1, 20 do
 		projectiles[#projectiles + 1] = vedaApi.addProjectile(
-			108 + math.cos(math.pi * i / 10) * 50,
-			116 + math.sin(math.pi * i / 10) * 50,
+			boss.x + 16 + math.cos(math.pi * i / 10) * 50,
+			boss.y + 16 + math.sin(math.pi * i / 10) * 50,
 			1,
 			-1,
 			i * 180 / 10 + 180
@@ -62,12 +83,13 @@ function doAttack1(boss)
 	end
 	vedaApi.playSound("data/battles/alexandre/battle_normal/stop_time_sound.ogg")
 	vedaApi.stopTime(false)
-	vedaApi.yield(80)
+	vedaApi.yield(60)
 	vedaApi.playSound("data/battles/alexandre/battle_normal/stop_time_sound.ogg")
+	boss.animation = 9
 	vedaApi.stopTime(true)
 	for i, projectile in pairs(projectiles) do
-		local OB = math.sqrt((boss.x + 8      - projectile.x) ^ 2 + (boss.y + 16 - projectile.y) ^ 2)
-		local AB = math.sqrt((boss.x + 8 + OB - projectile.x) ^ 2 + (boss.y + 16 - projectile.y) ^ 2)
+		local OB = math.sqrt((boss.x + 16      - projectile.x) ^ 2 + (boss.y + 16 - projectile.y) ^ 2)
+		local AB = math.sqrt((boss.x + 16 + OB - projectile.x) ^ 2 + (boss.y + 16 - projectile.y) ^ 2)
 		local AO = OB
 		
 		projectile.angle = math.acos((AB ^ 2 - AO ^ 2 - OB ^ 2) / (-2 * AO * OB)) * 180 / math.pi
@@ -82,7 +104,10 @@ function doAttack1(boss)
 	vedaApi.yield(7)
 	vedaApi.playSound("data/battles/alexandre/battle_normal/stop_time_sound.ogg")
 	vedaApi.stopTime(false)
-	vedaApi.yield(100)
+	boss.animation = 10
+	vedaApi.yield(30)
+	boss.animation = 11
+	vedaApi.yield(70)
 	for i, projectile in pairs(projectiles) do
 		projectile:setToRemove()
 	end
@@ -108,18 +133,16 @@ function doAttack2()
 			0
 		)
 		vedaApi.playSound("data/battles/alexandre/battle_normal/bullet_spawn_sound.ogg")
-		collectGarbage()
-		vedaApi.yield(3)
+		yield(3)
 		if i == 20 then
-			vedaApi.yield(40)
+			yield(40)
 			vedaApi.playSound("data/battles/alexandre/battle_normal/stop_time_sound.ogg")
 			vedaApi.stopTime(true)
 		end
 	end
 	vedaApi.playSound("data/battles/alexandre/battle_normal/stop_time_sound.ogg")
 	vedaApi.stopTime(false)
-	vedaApi.yield(120)
-	collectGarbage()
+	yield(120)
 	for i = 1, 30 do
 		projs[#projs + 1] = vedaApi.addProjectile(
 			532,
@@ -129,37 +152,35 @@ function doAttack2()
 			180
 		)
 		vedaApi.playSound("data/battles/alexandre/battle_normal/bullet_spawn_sound.ogg")
-		collectGarbage()
-		vedaApi.yield(3)
+		yield(3)
 		if i == 20 then
-			vedaApi.yield(40)
+			yield(40)
 			vedaApi.playSound("data/battles/alexandre/battle_normal/stop_time_sound.ogg")
 			vedaApi.stopTime(true)
 		end
 	end
 	vedaApi.playSound("data/battles/alexandre/battle_normal/stop_time_sound.ogg")
 	vedaApi.stopTime(false)
-	vedaApi.yield(120)
-	collectGarbage()
+	yield(120)
 end
 
-function bossAI(boss)
+function bossAI()
 	local proj = vedaApi.addProjectile(
-		108,
+		116,
 		116,
 		1,
 		-1,
 		-90
 	)
-	
+
+	boss.animation = 11
 	proj.rotationSpeed = 0;
 	vedaApi.playSound(0)
 	vedaApi.yield(30)
 	proj:setToRemove()
-	doAttack1({x = 100, y = 100})
+	doAttack1()
 	while true do
 		doAttack2()
-		--vedaApi.updateBoss(boss)
 		vedaApi.yield(30)
 		collectGarbage()
 	end
