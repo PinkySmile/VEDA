@@ -12,6 +12,7 @@
 extern	game_t	game;
 extern	void	(* const game_functions[])(game_t *game);
 extern	const	luaL_Reg	projectiles_lib[];
+extern	const	luaL_Reg	character_lib[];
 
 Projectile	*addProjectile(int id, int x, int y, int ownerID, float angle, float speed, float rotaSpeed, float accel, int marker)
 {
@@ -59,6 +60,15 @@ void	pushProjectile(Projectile *proj, lua_State *Lua)
 	luaL_getmetatable(Lua, "projectile");
 	lua_setmetatable(Lua, -2);
 	*a = proj;
+}
+
+void	pushCharacter(lua_State *Lua, Character *character)
+{
+	Character	**a = lua_newuserdata(Lua, sizeof(character));
+
+	luaL_getmetatable(Lua, "character");
+	lua_setmetatable(Lua, -2);
+	*a = character;
 }
 
 int	playSound(char const *path)
@@ -156,7 +166,85 @@ int	destroyProjectile(lua_State *Lua)
 	return (0);
 }
 
-int	getIndex(char const *test)
+int	getCharacterIndex(char const *test)
+{
+	if (strcmp(test, "animation") == 0)
+		return (1);
+	else if (strcmp(test, "x") == 0)
+		return (2);
+	else if (strcmp(test, "y") == 0)
+		return (3);
+	else if (strcmp(test, "name") == 0)
+		return (4);
+	return (0);
+}
+
+int	setCharacterField(lua_State *Lua)
+{
+	Character	**character = luaL_checkudata(Lua, 1, "character");
+	char	const	*buffer;
+	int		index = lua_isnumber(Lua, 2) ? luaL_checknumber(Lua, 2) : getCharacterIndex(luaL_checkstring(Lua, 2));
+
+	luaL_argcheck(Lua, character != NULL, 1, "'character' expected");
+	if (!*character)
+		luaL_error(Lua, "Trying to access deleted object");
+	switch (index) {
+	case 1:
+		(*character)->movement.animation = luaL_checknumber(Lua, 3);
+		break;
+	case 2:
+		(*character)->movement.pos.x = luaL_checknumber(Lua, 3);
+		break;
+	case 3:
+		(*character)->movement.pos.y = luaL_checknumber(Lua, 3);
+		break;
+	case 4:
+		buffer = luaL_checkstring(Lua, 3);
+		if (strlen(buffer) >= sizeof((*character)->name))
+			luaL_error(Lua, "Max length for the name is %i but given one has %i characters", strlen(buffer), sizeof((*character)->name));
+		strcpy((*character)->name, buffer);
+		break;
+	default:
+		luaL_error(Lua, "This index is in read-only");
+	}
+	return (0);
+}
+
+int	getCharacterField(lua_State *Lua)
+{
+	Character	**character = luaL_checkudata(Lua, 1, "character");
+	char	const	*ind = !lua_isnumber(Lua, 2) ? luaL_checkstring(Lua, 2) : NULL;
+	int		index = lua_isnumber(Lua, 2) ? luaL_checknumber(Lua, 2) : getCharacterIndex(ind);
+
+	luaL_argcheck(Lua, character != NULL, 1, "'character' expected");
+	if (!*character)
+		luaL_error(Lua, "Trying to access deleted object");
+	switch (index) {
+	case 1:
+		lua_pushnumber(Lua, (*character)->movement.animation);
+		break;
+	case 2:
+		lua_pushnumber(Lua, (*character)->movement.pos.x);
+		break;
+	case 3:
+		lua_pushnumber(Lua, (*character)->movement.pos.y);
+		break;
+	case 4:
+		lua_pushstring(Lua, (*character)->name);
+		break;
+	default:
+		for (int i = 0; ind && character_lib[i].name; i++) {
+			if (strcmp(character_lib[i].name, ind) == 0) {
+				lua_pushcfunction(Lua, character_lib[i].func);
+				return (1);
+			}
+		}
+		lua_pushnil(Lua);
+	}
+	return (1);
+}
+
+int	getProjectileIndex(char const *test)
 {
 	if (strcmp(test, "bankId") == 0)
 		return (1);
@@ -186,7 +274,7 @@ int	getIndex(char const *test)
 int	setProjectileField(lua_State *Lua)
 {
 	Projectile	**proj = luaL_checkudata(Lua, 1, "projectile");
-	int		index = lua_isnumber(Lua, 2) ? luaL_checknumber(Lua, 2) : getIndex(luaL_checkstring(Lua, 2));
+	int		index = lua_isnumber(Lua, 2) ? luaL_checknumber(Lua, 2) : getProjectileIndex(luaL_checkstring(Lua, 2));
 
 	luaL_argcheck(Lua, proj != NULL, 1, "'projectile' expected");
 	if (!*proj)
@@ -220,7 +308,7 @@ int	getProjectileField(lua_State *Lua)
 {
 	Projectile	**proj = luaL_checkudata(Lua, 1, "projectile");
 	char	const	*ind = !lua_isnumber(Lua, 2) ? luaL_checkstring(Lua, 2) : NULL;
-	int		index = lua_isnumber(Lua, 2) ? luaL_checknumber(Lua, 2) : getIndex(ind);
+	int		index = lua_isnumber(Lua, 2) ? luaL_checknumber(Lua, 2) : getProjectileIndex(ind);
 
 	luaL_argcheck(Lua, proj != NULL, 1, "'projectile' expected");
 	if (!*proj)

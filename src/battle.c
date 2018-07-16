@@ -22,12 +22,30 @@ int	proj2string(lua_State *Lua)
 	return 1;
 }
 
+int	char2string(lua_State *Lua)
+{
+	Character	**proj = luaL_checkudata(Lua, 1, "character");
+
+	luaL_argcheck(Lua, proj != NULL, 1, "'character' expected");
+	lua_pushfstring(Lua, "character ('%s')", (*proj)->name);
+	return 1;
+}
+
 const luaL_Reg game_api[] = {
 	{"playSound", playSoundLua},
 	{"yield", yield},
 	{"stopTime", stopTime},
 	{"addProjectile", addProjectileLua},
 	{"getElapsedTime", getElapsedTime},
+	{NULL, NULL}
+};
+
+const luaL_Reg character_lib[] = {
+	{"get", getCharacterField},
+	{"set", setCharacterField},
+	{"__index", getCharacterField},
+	{"__newindex", setCharacterField},
+	{"__tostring", char2string},
 	{NULL, NULL}
 };
 
@@ -294,20 +312,19 @@ Array	loadProjectiles(char *path)
 void	addDependencies(lua_State *Lua)
 {
 	luaL_openlibs(Lua);
+	
 	luaL_newmetatable(Lua, "projectile");
 	lua_pushstring(Lua, "__index");
 	lua_pushvalue(Lua, -2);
 	lua_settable(Lua, -3);
-	/*lua_pushstring(Lua, "__index");
-	lua_pushstring(Lua, "get");
-	lua_gettable(Lua, 2);
-	lua_settable(Lua, 1);
-	lua_pushstring(Lua, "__newindex");
-	lua_pushstring(Lua, "set");
-	lua_gettable(Lua, 2);
-	lua_settable(Lua, 1);*/
-
 	luaL_openlib(Lua, NULL, projectiles_lib, 0);
+	
+	luaL_newmetatable(Lua, "character");
+	lua_pushstring(Lua, "__index");
+	lua_pushvalue(Lua, -2);
+	lua_settable(Lua, -3);
+	luaL_openlib(Lua, NULL, character_lib, 0);
+	
 	//luaL_newmetatable(Lua, "sound_object");
 	luaL_openlib(Lua, "vedaApi", game_api, 0);
 	/*lua_pushcfunction(Lua, &getElapsedTime);
@@ -559,6 +576,17 @@ void	displayProjectiles(game_t *game)
 	}
 }
 
+sfIntRect	getRect(sfVector2u size, sfVector2u imgSize, int anim)
+{
+	sfIntRect	rect;
+	
+	rect.top = size.x * (anim / ((imgSize.x - imgSize.x % size.x) / size.x));
+	rect.left = size.x * anim % (imgSize.x - imgSize.x % size.x);
+	rect.width = size.x;
+	rect.height = size.y;
+	return (rect);
+}
+
 void	battle(game_t *game)
 {
 	static	bool		launchLua = true;
@@ -570,6 +598,10 @@ void	battle(game_t *game)
 	if (launchLua && game->battle_infos.Lua) {
 		Lua = lua_newthread(game->battle_infos.Lua);
 		launchLua = false;
+		pushCharacter(Lua, game->battle_infos.player);
+		lua_setglobal(Lua, "player");
+		pushCharacter(Lua, &game->battle_infos.boss);
+		lua_setglobal(Lua, "boss");
 		lua_getglobal(Lua, "bossAI");
 	}
 	if (game->battle_infos.yieldTime <= 0) {
@@ -611,8 +643,7 @@ void	battle(game_t *game)
 			//sfMusic_destroy(game->battle_infos.music);
 			return;
 		}
-	} else
-		game->battle_infos.yieldTime--;
+	}
 	if (game->battle_infos.music && sfMusic_getStatus(game->battle_infos.music) != sfPlaying) {
 		for (int i = 0; i < game->musics.length; i++)
 			if (((sfMusic **)game->musics.content)[i] && sfMusic_getStatus(game->battle_infos.music) == sfPlaying)
@@ -620,9 +651,23 @@ void	battle(game_t *game)
 		sfMusic_play(game->battle_infos.music);
 		sfMusic_setVolume(game->battle_infos.music, game->settings.musicVolume);
 	}
+	if (game->battle_infos.yieldTime > 0)
+		game->battle_infos.yieldTime--;
 	displayLowerLayer(game);
 	displayCharacters(game);
-	displayCharacter(&game->battle_infos.boss, game, 10, game->battle_infos.bossSprite.sprite);
+	if (game->battle_infos.bossSprite.sprite) {
+		game->battle_infos.bossSprite.rect = getRect(
+			(sfVector2u){game->battle_infos.bossSprite.rect.width, game->battle_infos.bossSprite.rect.height},
+			sfTexture_getSize(game->battle_infos.bossSprite.texture),
+			game->battle_infos.boss.movement.animation
+		);
+		sfSprite_setTextureRect(game->battle_infos.bossSprite.sprite, game->battle_infos.bossSprite.rect);
+		image(game, game->battle_infos.bossSprite.sprite, game->battle_infos.boss.movement.pos.x + game->cam.x, game->battle_infos.boss.movement.pos.y + game->cam.y, -1, -1);
+	} else {
+		sfRectangleShape_setOutlineColor(game->rectangle, (sfColor){0, 0, 0, 0});
+		sfRectangleShape_setFillColor(game->rectangle, (sfColor){255, 0, 0, 255});
+		rect(game, game->battle_infos.boss.movement.pos.x + game->cam.x, game->battle_infos.boss.movement.pos.y + game->cam.y, game->battle_infos.bossSprite.rect.width, game->battle_infos.bossSprite.rect.height);
+	}
 	displayUpperLayer(game);
 	displayProjectiles(game);
 	displayHUD(game);
