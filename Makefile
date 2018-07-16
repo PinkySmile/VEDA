@@ -32,21 +32,22 @@ INC =	-Iinclude			\
 	-Ilib/concatf/include		\
 	-Ilib/configParser/include	\
 
-LDFLAGS =			\
-	-L lib/configParser	\
-	-L lib/concatf		\
-	-lcsfml-audio		\
+CSFML = -lcsfml-audio		\
 	-lcsfml-graphics	\
 	-lcsfml-network		\
 	-lcsfml-system		\
 	-lcsfml-window		\
+
+
+LDFLAGS =			\
+	-L lib/configParser	\
+	-L lib/concatf		\
 	-lm			\
 	-lconcatf		\
 	-lconfigParser		\
 	-llua			\
 	-ldiscord-rpc		\
-	-lpthread		\
-	-lpthreadGC-3		\
+#	-lpthread		\
 
 CFLAGS= $(INC)		\
 	-W		\
@@ -78,7 +79,7 @@ lib/concatf/libconcatf.a:
 	$(MAKE) -C lib/concatf $(RULE)
 
 $(NAME):$(OBJ)
-	g++ -o $(NAME) $(OBJ) $(LDFLAGS) $(RES) 
+	g++ -o $(NAME) $(OBJ) $(LDFLAGS) $(CSFML) $(RES) 
 
 clean:
 	$(MAKE) -C lib/concatf clean
@@ -99,7 +100,7 @@ dbg:	CFLAGS += -g -O0
 dbg:	RULE = dbg
 dbg:	ffclean all
 
-epi:	LDFLAGS = -lc_graph_prog -lm -lconcatf -L lib/concatf -L lib/configParser -lconfigParser -llua
+epi:	CSFML = -lc_graph_prog
 epi:	CFLAGS += -g -O0
 epi:	RULE = dbg
 epi:	re
