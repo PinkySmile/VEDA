@@ -47,7 +47,7 @@ LDFLAGS =			\
 	-lconfigParser		\
 	-llua			\
 	-ldiscord-rpc		\
-#	-lpthread		\
+	-lpthread		\
 
 CFLAGS= $(INC)		\
 	-W		\

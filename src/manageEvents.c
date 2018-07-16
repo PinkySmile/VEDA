@@ -1,10 +1,11 @@
 #include "structs.h"
 #include "functions.h"
+#include "discord_rp.h"
+#include "concatf.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
 #include <battle_api.h>
-
 
 void	setVolumes(Array sounds, float volume)
 {
@@ -75,6 +76,7 @@ void	manageEvents(game_t *game)
 			}
 			if (/*game->debug &&*/ event.key.code == sfKeyHome) {
 				char	buffer[100];
+				char	*buff;
 
 				memset(buffer, 0, 100);
 				for (int i = 0; game->buffer[i]; i++)
@@ -84,6 +86,9 @@ void	manageEvents(game_t *game)
 					game->buttons[i].active = false;
 					game->buttons[i].displayed = false;
 				}
+				buff = concatf("Fighting %s", game->battle_infos.boss.name);
+				updateDiscordPresence("In Game", buff, 0, false, "icon", NULL, "VEDA", NULL);
+				free(buff);
 				game->menu = 7;
 				if (!getPlayer(game->characters.content, game->characters.length)) {
 					loadGame(game);

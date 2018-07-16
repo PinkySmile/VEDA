@@ -11,43 +11,54 @@
 
 extern	game_t	game;
 extern	void	(* const game_functions[])(game_t *game);
+extern	const	luaL_Reg	projectiles_lib[];
 
-bool	addProjectile(int id, int x, int y, int ownerID, float angle, float speed, float rotaSpeed, float accel, int marker)
+Projectile	*addProjectile(int id, int x, int y, int ownerID, float angle, float speed, float rotaSpeed, float accel, int marker)
 {
-	void		*buff;
-	Projectile	*projs = game.battle_infos.projectiles.content;
 	Projectile	*bank = game.battle_infos.projectileBank.content;
+	Projectile	*proj;
+	list_t		*list = &game.battle_infos.projectiles;
 
-	game.battle_infos.projectiles.length++;
-	buff = realloc(game.battle_infos.projectiles.content, game.battle_infos.projectiles.length * sizeof(Projectile));
-	if (id < 0)
-		return false;
-	if (id >= game.battle_infos.projectileBank.length)
-		return false;
-	if (!buff)
-		return false;
-	game.battle_infos.projectiles.content = buff;
-	projs = buff;
-	projs[game.battle_infos.projectiles.length - 1] = bank[id];
-	projs[game.battle_infos.projectiles.length - 1].pos.x = x;
-	projs[game.battle_infos.projectiles.length - 1].pos.y = y;
-	projs[game.battle_infos.projectiles.length - 1].clock = sfClock_create();
-	projs[game.battle_infos.projectiles.length - 1].animClock = sfClock_create();
-	projs[game.battle_infos.projectiles.length - 1].owner = ownerID;
-	projs[game.battle_infos.projectiles.length - 1].angle = angle;
-	projs[game.battle_infos.projectiles.length - 1].marker = marker;
+	for (; list->next && list->data; list = list->next);
+	if (list->data) {
+		list->next = malloc(sizeof(*list->next));
+		if (!list->next)
+			return (NULL);
+		memset(list->next, 0, sizeof(*list->next));
+		list->next->prev = list;
+		list = list->next;
+	}
+	proj = malloc(sizeof(*proj));
+	if (!proj && list->prev) {
+		list->prev->next = NULL;
+		free(list);
+		return (NULL);
+	}
+	list->data = proj;
+	*proj = bank[id];
+	proj->pos.x = x;
+	proj->pos.y = y;
+	proj->clock = sfClock_create();
+	proj->animClock = sfClock_create();
+	proj->owner = ownerID;
+	proj->angle = angle;
+	proj->marker = marker;
 	if (speed)
-		projs[game.battle_infos.projectiles.length - 1].speed = speed;
+		proj->speed = speed;
 	if (rotaSpeed)
-		projs[game.battle_infos.projectiles.length - 1].rotaSpeed = rotaSpeed;
+		proj->rotaSpeed = rotaSpeed;
 	if (accel)
-		projs[game.battle_infos.projectiles.length - 1].acceleration = accel;
-	return true;
+		proj->acceleration = accel;
+	return (proj);
 }
 
 void	pushProjectile(Projectile *proj, lua_State *Lua)
 {
-	
+	Projectile	**a = lua_newuserdata(Lua, sizeof(proj));
+
+	luaL_getmetatable(Lua, "projectile");
+	lua_setmetatable(Lua, -2);
+	*a = proj;
 }
 
 int	playSound(char const *path)
@@ -132,19 +143,129 @@ int	playSoundLua(lua_State *Lua)
 	return (2);
 }
 
-void	destroyProjectile(int index)
+int	destroyProjectile(lua_State *Lua)
 {
-	void		*buff;
-	Projectile	*projs = game.battle_infos.projectiles.content;
+	Projectile	**proj = luaL_checkudata(Lua, 1, "projectile");
 
-	sfClock_destroy(projs[index].clock);
-	sfClock_destroy(projs[index].animClock);
-	if (game.battle_infos.projectiles.length - 1 != index)
-		projs[index] = projs[game.battle_infos.projectiles.length - 1];
-	game.battle_infos.projectiles.length--;
-	buff = realloc(game.battle_infos.projectiles.content, game.battle_infos.projectiles.length * sizeof(Projectile));
-	if (buff)
-		game.battle_infos.projectiles.content = buff;
+	luaL_argcheck(Lua, proj != NULL, 1, "'projectile' expected");
+	(*proj)->toRemove = true;
+	*proj = NULL;
+	return (0);
+}
+
+int	getIndex(char const *test)
+{
+	if (strcmp(test, "bankId") == 0)
+		return (1);
+	else if (strcmp(test, "x") == 0)
+		return (2);
+	else if (strcmp(test, "y") == 0)
+		return (3);
+	else if (strcmp(test, "speed") == 0)
+		return (4);
+	else if (strcmp(test, "acceleration") == 0)
+		return (5);
+	else if (strcmp(test, "owner") == 0)
+		return (6);
+	else if (strcmp(test, "angle") == 0)
+		return (7);
+	else if (strcmp(test, "rotationSpeed") == 0)
+		return (8);
+	else if (strcmp(test, "maxSpeed") == 0)
+		return (9);
+	else if (strcmp(test, "minSpeed") == 0)
+		return (10);
+	else if (strcmp(test, "lifeTime") == 0)
+		return (11);
+	return (0);
+}
+
+int	setProjectileField(lua_State *Lua)
+{
+	Projectile	**proj = luaL_checkudata(Lua, 1, "projectile");
+	int		index = lua_isnumber(Lua, 2) ? luaL_checkint(Lua, 2) : getIndex(luaL_checkstring(Lua, 2));
+
+	luaL_argcheck(Lua, proj != NULL, 1, "'projectile' expected");
+	if (!*proj)
+		luaL_error(Lua, "Trying to access deleted object");
+	switch (index) {
+	case 2:
+		(*proj)->pos.x = luaL_checknumber(Lua, 3);
+		break;
+	case 3:
+		(*proj)->pos.y = luaL_checknumber(Lua, 3);
+		break;
+	case 4:
+		(*proj)->speed = luaL_checknumber(Lua, 3);
+		break;
+	case 5:
+		(*proj)->acceleration = luaL_checknumber(Lua, 3);
+		break;
+	case 7:
+		(*proj)->angle = luaL_checknumber(Lua, 3);
+		break;
+	case 8:
+		(*proj)->rotaSpeed = luaL_checknumber(Lua, 3);
+		break;
+	default:
+		luaL_error(Lua, "This index is in read-only");
+	}
+	return (0);
+}
+
+int	getProjectileField(lua_State *Lua)
+{
+	Projectile	**proj = luaL_checkudata(Lua, 1, "projectile");
+	char	const	*ind = !lua_isnumber(Lua, 2) ? luaL_checkstring(Lua, 2) : NULL;
+	int		index = lua_isnumber(Lua, 2) ? luaL_checkint(Lua, 2) : getIndex(ind);
+
+	luaL_argcheck(Lua, proj != NULL, 1, "'projectile' expected");
+	if (!*proj)
+		luaL_error(Lua, "Trying to access deleted object");
+	switch (index) {
+	case 1:
+		lua_pushnumber(Lua, (*proj)->bankID);
+		break;
+	case 2:
+		lua_pushnumber(Lua, (*proj)->pos.x);
+		break;
+	case 3:
+		lua_pushnumber(Lua, (*proj)->pos.y);
+		break;
+	case 4:
+		lua_pushnumber(Lua, (*proj)->speed);
+		break;
+	case 5:
+		lua_pushnumber(Lua, (*proj)->acceleration);
+		break;
+	case 6:
+		lua_pushnumber(Lua, (*proj)->owner);
+		break;
+	case 7:
+		lua_pushnumber(Lua, (*proj)->angle);
+		break;
+	case 8:
+		lua_pushnumber(Lua, (*proj)->rotaSpeed);
+		break;
+	case 9:
+		lua_pushnumber(Lua, (*proj)->maxSpeed);
+		break;
+	case 10:
+		lua_pushnumber(Lua, (*proj)->minSpeed);
+		break;
+	case 11:
+		lua_pushnumber(Lua, sfTime_asSeconds(sfClock_getElapsedTime((*proj)->clock)));
+		break;
+	default:
+		for (int i = 0; ind && projectiles_lib[i].name; i++) {
+			if (strcmp(projectiles_lib[i].name, ind) == 0) {
+				lua_pushcfunction(Lua, projectiles_lib[i].func);
+				return (1);
+			}
+		}
+		lua_pushnil(Lua);
+	}
+	return (1);
 }
 
 int	stopTime(lua_State *Lua)
@@ -161,41 +282,34 @@ int	getElapsedTime(lua_State *Lua)
 	return 1;
 }
 
-int	c_swap(lua_State *Lua)
-{
-	//check and fetch the arguments
-	double arg1 = luaL_checknumber(Lua, 1);
-	double arg2 = luaL_checknumber(Lua, 2);
-
-	//push the results
-	lua_pushnumber(Lua, arg2);
-	lua_pushnumber(Lua, arg1);
-
-	//return number of results
-	return 2;
-}
-
 int	addProjectileLua(lua_State *Lua)
 {
-	double	x		= luaL_checknumber(Lua, 1);
-	double	y		= luaL_checknumber(Lua, 2);
-	double	projID		= luaL_checknumber(Lua, 3);
-	double	ownerID		= luaL_checknumber(Lua, 4);
-	double	angle		= luaL_checknumber(Lua, 5);
-	double	speed		= lua_isnone(Lua, 6) ? 0 : luaL_checknumber(Lua, 6);
-	double	rotaSpeed	= lua_isnone(Lua, 7) ? 0 : luaL_checknumber(Lua, 7);
-	double	accel		= lua_isnone(Lua, 8) ? 0 : luaL_checknumber(Lua, 8);
-	double	marker		= lua_isnone(Lua, 9) ? 0 : luaL_checknumber(Lua, 9);
+	double		x		= luaL_checknumber(Lua, 1);
+	double		y		= luaL_checknumber(Lua, 2);
+	double		projID		= luaL_checknumber(Lua, 3);
+	double		ownerID		= luaL_checknumber(Lua, 4);
+	double		angle		= luaL_checknumber(Lua, 5);
+	double		speed		= lua_isnone(Lua, 6) ? 0 : luaL_checknumber(Lua, 6);
+	double		rotaSpeed	= lua_isnone(Lua, 7) ? 0 : luaL_checknumber(Lua, 7);
+	double		accel		= lua_isnone(Lua, 8) ? 0 : luaL_checknumber(Lua, 8);
+	double		marker		= lua_isnone(Lua, 9) ? 0 : luaL_checknumber(Lua, 9);
+	Projectile	*proj;
 
-	if (projID >= game.battle_infos.projectileBank.length || projID < 0)
-	        return 0;
-	addProjectile(projID, x, y, ownerID, angle, speed, rotaSpeed, accel, marker);
-	return 0;
+	if (projID >= game.battle_infos.projectileBank.length || projID < 0) {
+		lua_pushnil(Lua);
+		lua_pushstring(Lua, "index out of bank range");
+	        return 2;
+	}
+	proj = addProjectile(projID, x, y, ownerID, angle, speed, rotaSpeed, accel, marker);
+	if (!proj)
+		luaL_error(Lua, "Out of memory");
+	pushProjectile(proj, Lua);
+	return 1;
 }
 
 int	yield(lua_State *Lua)
 {
-	int		frames = lua_isnone(Lua, 1) ? 1 : luaL_checknumber(Lua, 1);
+	int	frames = lua_isnone(Lua, 1) ? 1 : luaL_checknumber(Lua, 1);
 
 	game.battle_infos.yieldTime = frames;
 	if (frames <= 0)

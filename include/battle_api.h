@@ -11,5 +11,8 @@ int	playSoundLua(lua_State *Lua);
 int	getElapsedTime(lua_State *Lua);
 int	stopTime(lua_State *Lua);
 int	yield(lua_State *Lua);
+int	destroyProjectile(lua_State *Lua);
+int	getProjectileField(lua_State *Lua);
+int	setProjectileField(lua_State *Lua);
 
 #endif
