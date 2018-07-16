@@ -306,7 +306,7 @@ void	addDependencies(lua_State *Lua)
 	lua_pushstring(Lua, "set");
 	lua_gettable(Lua, 2);
 	lua_settable(Lua, 1);*/
-	
+
 	luaL_openlib(Lua, NULL, projectiles_lib, 0);
 	//luaL_newmetatable(Lua, "sound_object");
 	luaL_openlib(Lua, "vedaApi", game_api, 0);
@@ -517,6 +517,8 @@ void	updateProjectiles(list_t *proj_list)
 				return;
 			list = buffer;
 			proj = list->data;
+			if (!proj)
+				break;
 		}
 	}
 	for (list_t *list = proj_list; list && list->data; list = list->next) {
