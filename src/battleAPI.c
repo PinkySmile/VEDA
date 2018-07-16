@@ -77,7 +77,7 @@ int	playSound(char const *path)
 	}
 	for (int i = 0; i < 16; i++) {
 		if (!paths[i]) {
-		        buffers[i] = sfSoundBuffer_createFromFile(path);
+			buffers[i] = sfSoundBuffer_createFromFile(path);
 			if (!buffers[i])
 				return (1);
 			paths[i] = strdup(path);
@@ -90,14 +90,17 @@ int	playSound(char const *path)
 			sfSound_setVolume(musics[i], game.settings.sfxVolume);
 			sfSound_play(musics[i]);
 			return (0);
-		} else if(buffers[15] && sfSound_getStatus(musics[i]) != sfPlaying) {
+		}
+	}
+	for (int i = 0; i < 16; i++) {
+		if(sfSound_getStatus(musics[i]) != sfPlaying) {
 			sfSoundBuffer	*buffer;
 
 			buffer = sfSoundBuffer_createFromFile(path);
 			if (!buffer)
 				return (1);
 			sfSoundBuffer_destroy(buffers[i]);
-			sfSound_setBuffer(musics[i], buffers[i]);
+			sfSound_setBuffer(musics[i], buffer);
 			sfSound_setVolume(musics[i], game.settings.sfxVolume);
 			buffers[i] = buffer;
 			free(paths[i]);
@@ -183,7 +186,7 @@ int	getIndex(char const *test)
 int	setProjectileField(lua_State *Lua)
 {
 	Projectile	**proj = luaL_checkudata(Lua, 1, "projectile");
-	int		index = lua_isnumber(Lua, 2) ? luaL_checkint(Lua, 2) : getIndex(luaL_checkstring(Lua, 2));
+	int		index = lua_isnumber(Lua, 2) ? luaL_checknumber(Lua, 2) : getIndex(luaL_checkstring(Lua, 2));
 
 	luaL_argcheck(Lua, proj != NULL, 1, "'projectile' expected");
 	if (!*proj)
@@ -217,7 +220,7 @@ int	getProjectileField(lua_State *Lua)
 {
 	Projectile	**proj = luaL_checkudata(Lua, 1, "projectile");
 	char	const	*ind = !lua_isnumber(Lua, 2) ? luaL_checkstring(Lua, 2) : NULL;
-	int		index = lua_isnumber(Lua, 2) ? luaL_checkint(Lua, 2) : getIndex(ind);
+	int		index = lua_isnumber(Lua, 2) ? luaL_checknumber(Lua, 2) : getIndex(ind);
 
 	luaL_argcheck(Lua, proj != NULL, 1, "'projectile' expected");
 	if (!*proj)
