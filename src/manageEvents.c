@@ -86,7 +86,7 @@ void	manageEvents(game_t *game)
 					game->buttons[i].active = false;
 					game->buttons[i].displayed = false;
 				}
-				buff = concatf("Fighting %s", game->battle_infos.boss.name);
+				buff = concatf("Fighting %s (%s)", game->battle_infos.boss.name, game->battle_infos.name);
 				updateDiscordPresence("In Game", buff, 0, false, "icon", NULL, "VEDA", NULL);
 				free(buff);
 				game->menu = 7;
