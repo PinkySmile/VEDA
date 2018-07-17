@@ -71,7 +71,7 @@ void	pushCharacter(lua_State *Lua, Character *character)
 	*a = character;
 }
 
-int	playSound(char const *path)
+int	playSound(char const *path, bool freeAll)
 {
 	static	sfSound		*musics[16];
 	static	sfSoundBuffer	*buffers[16];
@@ -84,6 +84,16 @@ int	playSound(char const *path)
 		for (int i = 0; i < 16; i++)
 			musics[i] = sfSound_create();
 		memset(paths, 0, sizeof(paths));
+	}
+	if (freeAll) {
+		for (int i = 0; i < 16; i++) {
+			if (paths[i]) {
+				free(paths[i]);
+				sfSound_destroy(musics[i]);
+				sfSoundBuffer_destroy(buffers[i]);
+			}
+		}
+		return (0);
 	}
 	for (int i = 0; i < 16; i++) {
 		if (!paths[i]) {
@@ -138,7 +148,7 @@ int	playSoundLua(lua_State *Lua)
 			return (1);
 		}
 	}
-	err = playSound(luaL_checkstring(Lua, 1));
+	err = playSound(luaL_checkstring(Lua, 1), false);
 	if (!err) {
 		lua_pushboolean(Lua, true);
 		return (1);

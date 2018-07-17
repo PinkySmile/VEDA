@@ -29,6 +29,7 @@ void		displayLowerLayer(game_t *game);
 void		displayUpperLayer(game_t *game);
 void		displayHUD(game_t *game);
 void		movePlayer(game_t *game);
+int		playSound(char const *path, bool freeAll);
 
 //Init game struct
 void		initGame	(game_t *game);

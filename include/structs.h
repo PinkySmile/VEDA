@@ -296,6 +296,7 @@ typedef struct {
 	int		maxSpeed;
 	int		minSpeed;
 	bool		toRemove;
+	int		lifeTime;
 	sfClock		*clock;
 	sfClock		*animClock;
 } Projectile;
@@ -325,6 +326,7 @@ typedef struct {
 	bool		timeStopped;
 	int		yieldTime;
 	lua_State	*Lua;
+	lua_State	*Lua_thread;
 } Battle;
 
 struct game_s {

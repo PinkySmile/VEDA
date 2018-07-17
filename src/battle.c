@@ -312,19 +312,19 @@ Array	loadProjectiles(char *path)
 void	addDependencies(lua_State *Lua)
 {
 	luaL_openlibs(Lua);
-	
+
 	luaL_newmetatable(Lua, "projectile");
 	lua_pushstring(Lua, "__index");
 	lua_pushvalue(Lua, -2);
 	lua_settable(Lua, -3);
 	luaL_openlib(Lua, NULL, projectiles_lib, 0);
-	
+
 	luaL_newmetatable(Lua, "character");
 	lua_pushstring(Lua, "__index");
 	lua_pushvalue(Lua, -2);
 	lua_settable(Lua, -3);
 	luaL_openlib(Lua, NULL, character_lib, 0);
-	
+
 	//luaL_newmetatable(Lua, "sound_object");
 	luaL_openlib(Lua, "vedaApi", game_api, 0);
 	/*lua_pushcfunction(Lua, &getElapsedTime);
@@ -499,6 +499,8 @@ Battle	loadBattleScript(char *path)
 	} else
 		printf("%s: Field \"boss_hitbox\" is missing\n", WARNING);
 	ParserObj_destroy(result.data);
+	for (int j = 0; j < DAMAGES_TYPE_NB; j++)
+	        battle.boss.damageClock[j] = sfClock_create();
 	battle.clock = sfClock_create();
 	return battle;
 }
@@ -579,7 +581,7 @@ void	displayProjectiles(game_t *game)
 sfIntRect	getRect(sfVector2u size, sfVector2u imgSize, int anim)
 {
 	sfIntRect	rect;
-	
+
 	rect.top = size.x * (anim / ((imgSize.x - imgSize.x % size.x) / size.x));
 	rect.left = size.x * anim % (imgSize.x - imgSize.x % size.x);
 	rect.width = size.x;
@@ -595,25 +597,29 @@ void	battle(game_t *game)
 	char			*buffer;
 
 	game->battle_infos.player = getPlayer(game->characters.content, game->characters.length);
-	if (launchLua && game->battle_infos.Lua) {
-		Lua = lua_newthread(game->battle_infos.Lua);
+	if (launchLua) {
+		if (!game->battle_infos.Lua) {
+			game->menu = 1;
+			return;
+		}
+		game->battle_infos.Lua_thread = lua_newthread(game->battle_infos.Lua);
 		launchLua = false;
-		pushCharacter(Lua, game->battle_infos.player);
-		lua_setglobal(Lua, "player");
-		pushCharacter(Lua, &game->battle_infos.boss);
-		lua_setglobal(Lua, "boss");
-		lua_getglobal(Lua, "bossAI");
+		pushCharacter(game->battle_infos.Lua_thread, game->battle_infos.player);
+		lua_setglobal(game->battle_infos.Lua_thread, "player");
+		pushCharacter(game->battle_infos.Lua_thread, &game->battle_infos.boss);
+		lua_setglobal(game->battle_infos.Lua_thread, "boss");
+		lua_getglobal(game->battle_infos.Lua_thread, "bossAI");
 	}
 	if (game->battle_infos.yieldTime <= 0) {
-		err = lua_resume(Lua, game->battle_infos.Lua, 0);
+		err = lua_resume(game->battle_infos.Lua_thread, game->battle_infos.Lua, 0);
 		if (err == LUA_ERRRUN) {
-			buffer = concatf("A runtime error occurred during battle:\n%s", luaL_checkstring(Lua, -1));
+			buffer = concatf("A runtime error occurred during battle:\n%s", luaL_checkstring(game->battle_infos.Lua_thread, -1));
 			printf("%s: %s\n", ERROR, lua_tostring(Lua, -1));
 			dispMsg("Battle Error", buffer, 0);
 			free(buffer);
 			back_on_title_screen(game, -1);
-			sfMusic_stop(game->battle_infos.music);
-			//sfMusic_destroy(game->battle_infos.music);
+			if (game->battle_infos.music)
+				sfMusic_stop(game->battle_infos.music);
 			launchLua = true;
 			return;
 		} else if (err == LUA_ERRMEM) {
@@ -622,8 +628,8 @@ void	battle(game_t *game)
 			dispMsg("Battle Error", buffer, 0);
 			free(buffer);
 			back_on_title_screen(game, -1);
-			sfMusic_stop(game->battle_infos.music);
-			//sfMusic_destroy(game->battle_infos.music);
+			if (game->battle_infos.music)
+				sfMusic_stop(game->battle_infos.music);
 			launchLua = true;
 			return;
 		} else if (err == LUA_ERRERR) {
@@ -633,14 +639,13 @@ void	battle(game_t *game)
 			free(buffer);
 			back_on_title_screen(game, -1);
 			sfMusic_stop(game->battle_infos.music);
-			//sfMusic_destroy(game->battle_infos.music);
 			launchLua = true;
 			return;
 		} else if (!err) {
 			launchLua = true;
 			game->menu = 1;
-			sfMusic_stop(game->battle_infos.music);
-			//sfMusic_destroy(game->battle_infos.music);
+			if (game->battle_infos.music)
+				sfMusic_stop(game->battle_infos.music);
 			return;
 		}
 	}

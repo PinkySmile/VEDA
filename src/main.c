@@ -54,6 +54,40 @@ char	*strsignal(int signum)
 	}
 }
 
+void	destroyBattle(Battle battle)
+{
+	list_t	*list = &battle.projectiles;
+
+	if (battle.Lua) {
+		sfClock_destroy(battle.clock);
+		for (int j = 0; j < DAMAGES_TYPE_NB; j++)
+			sfClock_destroy(battle.boss.damageClock[j]);
+		if (battle.bossSprite.sprite && battle.needToDestroySprite) {
+			sfSprite_destroy(battle.bossSprite.sprite);
+			sfTexture_destroy(battle.bossSprite.texture);
+		}
+		for (; list->next; list = list->next);
+		for (; list && list->data; list = list->prev) {
+			Projectile	*proj = list->data;
+
+			sfClock_destroy(proj->clock);
+			sfClock_destroy(proj->animClock);
+			if (proj->needToDestroySprite) {
+				sfSprite_destroy(proj->sprite.sprite);
+				sfTexture_destroy(proj->sprite.texture);
+			}
+			free(list->data);
+			free(list->next);
+		}
+		if (battle.music && battle.needToDestroyMusic) {
+			sfMusic_stop(battle.music);
+			sfMusic_destroy(battle.music);
+		}
+		if (battle.Lua)
+			lua_close(battle.Lua);
+	}
+}
+
 void	destroyStruct(game_t *game)
 {
 	printf("%s: Destroying game objects\n", INFO);
@@ -120,6 +154,10 @@ void	destroyStruct(game_t *game)
 	free(game->buttons);
 	free(game->characters.content);
 	free(game->languages);
+	printf("%s: Destroying battle sounds\n", INFO);
+	playSound(NULL, true);
+	printf("%s: Destroying battle struct\n", INFO);
+	destroyBattle(game->battle_infos);
 }
 
 void	sighandler(int signum)
