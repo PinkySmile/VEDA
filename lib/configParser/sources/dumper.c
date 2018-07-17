@@ -106,6 +106,7 @@ char	*dataToString(void *data, ParserTypes type, ParserInfos *infos, int indenta
 				result = concatf("%s\n%s\t%c%s%c%c ", result, indent, infos->strChar[0], index, infos->strChar[0], infos->eqChar);
 			else
 				result = concatf("%s%c%s%c%c", result, infos->strChar[0], list->index, infos->strChar[0], infos->eqChar);
+			free(index);
 			if (!result)
 				return (NULL);
 			free(buffer);
