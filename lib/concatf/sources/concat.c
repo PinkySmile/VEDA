@@ -14,10 +14,10 @@ char	*concat(char *str1, char *str2, bool free1, bool free2)
 		return (NULL);
 	}
 	result = malloc(strlen(str1) + strlen(str2) + 1);
-	if (!result)
-		return (NULL);
-	strcpy(result, str1);
-	strcat(result, str2);
+	if (result) {
+		strcpy(result, str1);
+		strcat(result, str2);
+	}
 	if (free1)
 		free(str1);
 	if (free2)

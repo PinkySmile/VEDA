@@ -135,12 +135,14 @@ Array	loadProjectiles(char *path)
 		buffer = (void *)concatf("Error: %s: Invalid type found in the file\n", path);
 		dispMsg("Battle Error", (void *)buffer, 0);
 		free(buffer);
+		Parser_destroyData(result.data, result.type);
 		return (Array){NULL, -1};
 	} else if (((ParserArray *)result.data)->type != ParserObjType) {
 		printf("%s: %s: Invalid type\n", ERROR, path);
 		buffer = (void *)concatf("Error: %s: Array contains invalid data\n", path);
 		dispMsg("Battle Error", (void *)buffer, 0);
 		free(buffer);
+		Parser_destroyData(result.data, result.type);
 		return (Array){NULL, -1};
 	}
 	array.length = ((ParserArray *)result.data)->length;

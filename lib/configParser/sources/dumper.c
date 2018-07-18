@@ -13,6 +13,7 @@ char	*transformString(char *str, int length, ParserInfos *infos)
 	char	*buffer = NULL;
 
 	for (int i = 0; i < length; i++) {
+		buffer = result;
 		if (isInString(str[i], infos->strChar) != -1)
 			result = concatf("%s\\%c", result, str[i]);
 		else if (str[i] >= ' ' && str[i] != 127)
@@ -38,7 +39,6 @@ char	*transformString(char *str, int length, ParserInfos *infos)
 		else
 			result = concatf("%s\\x%s%x", result, str[i] > 15 ? "" : "0", str[i]);
 		free(buffer);
-		buffer = result;
 	}
 	return (result);
 }
@@ -107,10 +107,9 @@ char	*dataToString(void *data, ParserTypes type, ParserInfos *infos, int indenta
 			else
 				result = concatf("%s%c%s%c%c", result, infos->strChar[0], list->index, infos->strChar[0], infos->eqChar);
 			free(index);
+			free(buffer);
 			if (!result)
 				return (NULL);
-			free(buffer);
-			free(index);
 			result = concat(result, dataToString(list->data, list->type, infos, indentation + 1), true, true);
 			if (!result)
 				return (NULL);
