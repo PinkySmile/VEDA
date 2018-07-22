@@ -60,6 +60,8 @@ void	destroyBattle(Battle battle)
 
 	if (battle.Lua) {
 		sfClock_destroy(battle.clock);
+		free(battle.script);
+		free(battle.name);
 		for (int j = 0; j < DAMAGES_TYPE_NB; j++)
 			sfClock_destroy(battle.boss.damageClock[j]);
 		if (battle.bossSprite.sprite && battle.needToDestroySprite) {
@@ -145,6 +147,7 @@ void	destroyStruct(game_t *game)
 		sfClock_destroy(((Character *)game->characters.content)[i].movement.animationClock);
 		sfClock_destroy(((Character *)game->characters.content)[i].movement.stateClock);
 		sfClock_destroy(((Character *)game->characters.content)[i].stats.energyRegenClock);
+		free(((Character *)game->characters.content)[i].battleScript);
 		for (int j = 0; j < DAMAGES_TYPE_NB; j++)
 			sfClock_destroy(((Character *)game->characters.content)[i].damageClock[j]);
 	}

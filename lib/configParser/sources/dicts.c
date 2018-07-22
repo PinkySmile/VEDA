@@ -12,14 +12,18 @@ ParserObj	*ParserObj_getElement(ParserObj *list, char *index)
 
 bool	ParserObj_addElement(ParserObj *list, void *data, ParserTypes type, char *index)
 {
+	ParserString	buffer;
+	
 	for (; list->next; list = list->next) {
 		if (!list->index)
 			break;
 		if (strcmp(list->index, index) == 0)
 			return (false);
 	}
-	if (list->index && strcmp(list->index, index) == 0)
+	if (list->index && strcmp(list->index, index) == 0) {
+		free(index);
 		return (false);
+	}
 	if (list->index) {
 		list->next = malloc(sizeof(*list->next));
 		if (!list->next)
@@ -28,8 +32,13 @@ bool	ParserObj_addElement(ParserObj *list, void *data, ParserTypes type, char *i
 		list->next->prev = list;
 		list = list->next;
 	}
-	list->data = copyData(data, getSizeOf(type));
-	list->index = index;
+	if (type == ParserStringType) {
+		buffer.length = strlen(data);
+		buffer.content = strdup(data);
+		list->data = copyData(&buffer, type);
+	} else
+		list->data = copyData(data, type);
+	list->index = strdup(index);
 	list->type = type;
 	return (true);
 }
@@ -63,16 +72,17 @@ void	ParserObj_delElement(ParserObj *list, char *index)
 			return;
 		}
 }
-
 void	ParserObj_destroy(ParserObj *list)
 {
 	for (; list->next; list = list->next) {
-		Parser_destroyData(list->data, list->type);
 		free(list->index);
-		free(list->prev);
+		if (list->prev)
+			free(list->prev);
+		Parser_destroyData(list->data, list->type);
 	}
 	Parser_destroyData(list->data, list->type);
-	free(list->prev);
+	if (list->prev)
+		free(list->prev);
 	free(list->index);
 	free(list);
 }

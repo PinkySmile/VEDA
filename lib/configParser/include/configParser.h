@@ -44,6 +44,7 @@ typedef struct {
 	void		*content;
 	int		length;
 	ParserTypes	type;
+	ParserList	*list;
 } ParserArray;	//An array
 
 typedef struct {
@@ -142,7 +143,7 @@ int	getSizeOf(ParserTypes type);
 //////////////////////////////////////////////////////////
 //Copy bytes of data and create a new buffer to store it//
 //////////////////////////////////////////////////////////
-void	*copyData(void *data, int n);
+void	*copyData(void *data, ParserTypes type);
 
 //////////////////////////////////////////////////////////
 //Returns a string describing the type. Don't free it ! //

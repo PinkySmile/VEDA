@@ -58,8 +58,7 @@ bool	saveGame(game_t *game, bool level)
 	bool		success = false;
 	int		len = 0;
 	char		*buffer = NULL;
-	void		*buff = NULL;
-	ParserObj	*obj = NULL;
+	ParserObj	obj;
 	Character	charac;
 	ParserList	*result = malloc(sizeof(ParserList));
 
@@ -113,38 +112,13 @@ bool	saveGame(game_t *game, bool level)
 		memset(result, 0, sizeof(*result));
 		for (int i = 0; i < game->characters.length; i++) {
 			charac = ((Character *)game->characters.content)[i];
-			obj = malloc(sizeof(*obj));
-			if (!obj) {
-				printf("%s: Cannot save: alloc error\n", ERROR);
-				dispMsg("Error", "Cannot save: alloc error\n", 0);
-				return (false);
-			}
-			memset(obj, 0, sizeof(*obj));
-			buff = malloc(sizeof(ParserString));
-			if (buff) {
-				((ParserString *)buff)->length = strlen(charac.name);
-				((ParserString *)buff)->content = strdup(charac.name);
-			}
-			ParserObj_addElement(obj, buff, ParserStringType, strdup("name"));
-			buff = malloc(sizeof(ParserInt));
-			if (buff)
-				*(int *)buff = charac.movement.pos.x;
-			ParserObj_addElement(obj, buff, ParserIntType, strdup("x_pos"));
-			buff = malloc(sizeof(ParserInt));
-			if (buff)
-				*(int *)buff = charac.movement.pos.y;
-			ParserObj_addElement(obj, buff, ParserIntType, strdup("y_pos"));
-			buff = malloc(sizeof(ParserInt));
-			if (buff)
-				*(int *)buff = charac.texture;
-			ParserObj_addElement(obj, buff, ParserIntType, strdup("sprite_id"));
-			buff = malloc(sizeof(ParserString));
-			if (buff) {
-				((ParserString *)buff)->length = strlen(charac.battleScript ? charac.battleScript : "");
-				((ParserString *)buff)->content = strdup(charac.battleScript ? charac.battleScript : "");
-			}
-			ParserObj_addElement(obj, buff, ParserStringType, strdup("battle_info"));
-			ParserList_addElement(result, obj, ParserObjType, -1);
+			memset(&obj, 0, sizeof(obj));
+			ParserObj_addElement(&obj, charac.name,						ParserStringType, "name");
+			ParserObj_addElement(&obj, &charac.movement.pos.x,				ParserIntType, "x_pos");
+			ParserObj_addElement(&obj, &charac.movement.pos.y,				ParserIntType, "y_pos");
+			ParserObj_addElement(&obj, &charac.texture,					ParserIntType, "sprite_id");
+			ParserObj_addElement(&obj, charac.battleScript ? charac.battleScript : "",	ParserStringType, "battle_info");
+			ParserList_addElement(result, &obj, ParserObjType, -1);
 		}
 		buffer = concatf("%s/characters-save.json", game->loadedMap);
 		Parser_createFile(buffer, result, ParserListType, NULL);

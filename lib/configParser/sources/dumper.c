@@ -186,6 +186,7 @@ bool	Parser_createFile(char *path, void *data, ParserTypes type, ParserInfos *in
 	if (!buffer)
 		return (false);
 	success = write(fd, buffer, strlen(buffer)) == (int)strlen(buffer);
+	free(buffer);
 	close(fd);
 	return (success);
 }

@@ -399,6 +399,7 @@ Battle	loadBattleScript(char *path)
 				(sfVector2i){0, 0},
 				(sfVector2i){0, 0},
 			});
+			battle.needToDestroySprite = true;
 		} else if (buffer->type == ParserIntType) {
 			battle.bossSprite = ((Sprite *)game.sprites.content)[ParserInt_toInt(buffer->data) % game.sprites.length];
 		} else
