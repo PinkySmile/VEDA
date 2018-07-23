@@ -2,12 +2,12 @@
 	"type": "DANMAKU",
 	"battle_name": "Normal",
 	"boss_name": "Alexandre",
-	"boss_sprite_sheet": 7,
+	"boss_sprite_sheet": "data/battles/alexandre/battle_normal/boss.png",
 	"projectiles": "data/battles/alexandre/battle_normal/bullets.json",
 	"base_script": "data/battles/alexandre/battle_normal/actions.lua",
 	"music": 13,
 	"boss_sprite_size": {
-		"x": 16,
+		"x": 32,
 		"y": 32,
 	},
 	"boss_hitbox": {

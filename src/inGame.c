@@ -483,7 +483,7 @@ void	inGame(game_t *game)
 		player->movement.speed = 0;
 	if (game->debug) {
 		sfText_setCharacterSize(game->text, 10);
-		tmp = concatf("X: %f\nY: %f\n", player->movement.pos.x, player->movement.pos.y);
+		tmp = concatf("X: %f\nY: %f\ncamX: %i\ncamY: %i\n", player->movement.pos.x, player->movement.pos.y, game->cam.x, game->cam.y);
 		sfText_setColor(game->text, (sfColor){abs(color), abs(color), abs(color), 255});
 		text(tmp, game, 0, game->settings.dispFramerate ? 10 : 0, false);
 		free(tmp);

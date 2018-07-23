@@ -1,4 +1,5 @@
 #include "structs.h"
+#include "discord_rp.h"
 #include "functions.h"
 
 void	mainMenu(game_t *game)

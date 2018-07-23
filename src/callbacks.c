@@ -1,6 +1,7 @@
 #include "structs.h"
 #include "functions.h"
 #include "concatf.h"
+#include "discord_rp.h"
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
@@ -21,11 +22,14 @@ void	back_on_title_screen(game_t *game, int buttonID)
 			sfMusic_stop(((sfMusic **)game->musics.content)[i]);
 	if (game->battle_infos.music && sfMusic_getStatus(game->battle_infos.music) == sfPlaying)
 		sfMusic_stop(game->battle_infos.music);
+	updateDiscordPresence("Main Menu", "In Main Menu", 0, false, "icon", 0, "VEDA", 0);
 	game->menu = 0;
 }
 
 void	play_button(game_t *game, int buttonID)
 {
+	char	*buffer;
+
 	(void)buttonID;
 	free(game->map);
 	game->map = NULL;
@@ -39,6 +43,7 @@ void	play_button(game_t *game, int buttonID)
 		game->loadedMap = strdup("data/levels/test");
 	}
 	if (strcmp(getPlayer(game->characters.content, game->characters.length)->name, "") == 0) {
+		updateDiscordPresence("Main Menu", "Choosing name", 0, false, "icon", 0, "VEDA", 0);
 		game->menu = 6;
 		game->bufPos = 0;
 		game->bufSize = 32;
@@ -47,8 +52,12 @@ void	play_button(game_t *game, int buttonID)
 		game->buttons[14].active = true;
 		game->buttons[14].displayed = true;
 		memset(game->buffer, 0, sizeof(*game->buffer) * 17);
-	} else
+	} else {
+		buffer = concatf("Playing as \"%s\"", getPlayer(game->characters.content, game->characters.length)->name);
+		updateDiscordPresence("In Game", buffer, 0, false, "icon", 0, "VEDA", 0);
+		free(buffer);
 		game->menu = 1;
+	}
 	if (((sfMusic **)game->musics.content)[MAIN_MENU_MUSIC] && sfMusic_getStatus(((sfMusic **)game->musics.content)[MAIN_MENU_MUSIC]) == sfPlaying)
 		sfMusic_stop(((sfMusic **)game->musics.content)[MAIN_MENU_MUSIC]);
 }
@@ -56,6 +65,7 @@ void	play_button(game_t *game, int buttonID)
 void	changePlayerName(game_t *game, int buttonID)
 {
 	Character	*player = getPlayer(game->characters.content, game->characters.length);
+	char		*buffer;
 
 	(void)buttonID;
 	memset(player->name, 0, 33);
@@ -66,6 +76,9 @@ void	changePlayerName(game_t *game, int buttonID)
 		game->buttons[i].active = false;
 		game->buttons[i].displayed = false;
 	}
+	buffer = concatf("Playing as \"%s\"", player->name);
+	updateDiscordPresence("In Game", buffer, 0, false, "icon", 0, "VEDA", 0);
+	free(buffer);
 }
 
 void	fullScreen(game_t *game, int buttonID)

@@ -4,10 +4,13 @@
 #include <signal.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <time.h>
+#include <discord_rpc.h>
 #include "structs.h"
 #include "functions.h"
 #include "concatf.h"
 #include "macros.h"
+#include "discord_rp.h"
 
 #ifndef SIGBUS
 #	define SIGBUS 7
@@ -48,6 +51,42 @@ char	*strsignal(int signum)
 		return ("Terminated");
 	default:
 		return ("Unknown signal");
+	}
+}
+
+void	destroyBattle(Battle battle)
+{
+	list_t	*list = &battle.projectiles;
+
+	if (battle.Lua) {
+		sfClock_destroy(battle.clock);
+		free(battle.script);
+		free(battle.name);
+		for (int j = 0; j < DAMAGES_TYPE_NB; j++)
+			sfClock_destroy(battle.boss.damageClock[j]);
+		if (battle.bossSprite.sprite && battle.needToDestroySprite) {
+			sfSprite_destroy(battle.bossSprite.sprite);
+			sfTexture_destroy(battle.bossSprite.texture);
+		}
+		for (; list->next; list = list->next);
+		for (; list && list->data; list = list->prev) {
+			Projectile	*proj = list->data;
+
+			sfClock_destroy(proj->clock);
+			sfClock_destroy(proj->animClock);
+			if (proj->needToDestroySprite) {
+				sfSprite_destroy(proj->sprite.sprite);
+				sfTexture_destroy(proj->sprite.texture);
+			}
+			free(list->data);
+			free(list->next);
+		}
+		if (battle.music && battle.needToDestroyMusic) {
+			sfMusic_stop(battle.music);
+			sfMusic_destroy(battle.music);
+		}
+		if (battle.Lua)
+			lua_close(battle.Lua);
 	}
 }
 
@@ -108,6 +147,7 @@ void	destroyStruct(game_t *game)
 		sfClock_destroy(((Character *)game->characters.content)[i].movement.animationClock);
 		sfClock_destroy(((Character *)game->characters.content)[i].movement.stateClock);
 		sfClock_destroy(((Character *)game->characters.content)[i].stats.energyRegenClock);
+		free(((Character *)game->characters.content)[i].battleScript);
 		for (int j = 0; j < DAMAGES_TYPE_NB; j++)
 			sfClock_destroy(((Character *)game->characters.content)[i].damageClock[j]);
 	}
@@ -117,6 +157,10 @@ void	destroyStruct(game_t *game)
 	free(game->buttons);
 	free(game->characters.content);
 	free(game->languages);
+	printf("%s: Destroying battle sounds\n", INFO);
+	playSound(NULL, true);
+	printf("%s: Destroying battle struct\n", INFO);
+	destroyBattle(game->battle_infos);
 }
 
 void	sighandler(int signum)
@@ -132,12 +176,16 @@ void	sighandler(int signum)
 	if (signum == SIGINT || signum == SIGTERM) {
 		if (game.window && sfRenderWindow_isOpen(game.window))
 			sfRenderWindow_close(game.window);
-		else
+		else {
+			Discord_Shutdown();
 			exit(EXIT_SUCCESS);
+		}
 		printf("%s: Caught signal %i (%s). Exiting.\n", INFO, signum, strsignal(signum));
 	} else {
+		updateDiscordPresence("Game crashed", strsignal(signum), 0, false, "icon", "bug", "VEDA", strsignal(signum));
 		printf("%s: Caught signal %i (%s). Aborting !\n", FATAL, signum, strsignal(signum));
 		dispMsg("Fatal Error", concatf("Fatal: Caught signal %i (%s)\n\n\nClick OK to close the program", signum, strsignal(signum)), 0);
+		Discord_Shutdown();
 		exit(EXIT_FAILURE);
 		signal(signum, NULL);
 		raise(signum); //In case the crash trashed the exit function
@@ -158,12 +206,16 @@ int	main(int argc, char **args)
 	signal(SIGFPE,  &sighandler);
 	signal(SIGSEGV, &sighandler);
 	signal(SIGTERM, &sighandler);
+	printf("%s: Init discord rich presence\n", INFO);
+	initDiscordRichPresence();
 	printf("%s: Initializating game\n", INFO);
 	initGame(&game);
 	game.debug = (argc == 2 && !strcmp("debug", args[1]));
+	updateDiscordPresence("Main menu", "In Main Menu", 0, false, "icon", "nem", "VEDA", "Main Menu");
 	launchGame(&game);
 	saveSettings(&game);
 	destroyStruct(&game);
 	printf("%s: Goodbye !\n", INFO);
+	Discord_Shutdown();
 	return (EXIT_SUCCESS);
 }

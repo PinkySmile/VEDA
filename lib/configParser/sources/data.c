@@ -1,13 +1,19 @@
 #include "configParser.h"
 #include <malloc.h>
 
-void	*copyData(void *data, int size)
+void	*copyData(void *data, ParserTypes type)
 {
-	char	*new = malloc(size);
+	int	size = getSizeOf(type);
+	void	*new = malloc(size);
 
-	if (new)
+	if (new) {
 		for (int i = 0; i < size; i++)
-			new[i] = ((char *)data)[i];
+			((char *)new)[i] = ((char *)data)[i];
+		if (type == ParserObjType && ((ParserObj *)data)->next)
+			((ParserObj *)data)->next->prev = new;
+		else if (type == ParserListType && ((ParserList *)data)->next)
+			((ParserList *)data)->next->prev = new;
+	}
 	return (new);
 }
 

@@ -14,7 +14,7 @@ ParserList	*ParserList_getElement(ParserList *list, int index)
 
 ParserArray	ParserList_toArray(ParserList *list)
 {
-	ParserArray	result = {NULL, 0, ParserBooleanType};
+	ParserArray	result = {NULL, 0, ParserBooleanType, list};
 	int		len = 0;
 	int		index = 0;
 
@@ -23,10 +23,10 @@ ParserArray	ParserList_toArray(ParserList *list)
 		return (result);
 	for (ParserList *l = list; l; l = l->next, len++)
 		if (result.type != l->type)
-			return ((ParserArray){NULL, -1, ParserBooleanType});
+			return ((ParserArray){NULL, -1, ParserBooleanType, NULL});
 	result.content = malloc(len * getSizeOf(result.type));
 	if (!result.content)
-		return ((ParserArray){NULL, -1, ParserBooleanType});
+		return ((ParserArray){NULL, -1, ParserBooleanType, NULL});
 	result.length = len;
 	memset(result.content, 0, len * getSizeOf(result.type));
 	for (ParserList *l = list; l; l = l->next, index += getSizeOf(result.type))
@@ -38,6 +38,7 @@ ParserArray	ParserList_toArray(ParserList *list)
 bool	ParserList_addElement(ParserList *list, void *data, ParserTypes type, int index)
 {
 	ParserList	*buffer = NULL;
+	ParserString	buff;
 	int		len = 0;
 
 	for (ParserList *buf = list; buf; buf = buf->next, len++);
@@ -52,7 +53,12 @@ bool	ParserList_addElement(ParserList *list, void *data, ParserTypes type, int i
 		list = list->next;
 		list->next = buffer;
 	}
-	list->data = data;
+	if (type == ParserStringType) {
+		buff.length = strlen(data);
+		buff.content = strdup(data);
+		list->data = copyData(&buff, type);
+	} else
+		list->data = copyData(data, type);
 	list->type = type;
 	return (true);
 }
@@ -90,10 +96,12 @@ void	ParserList_delElement(ParserList *list, int index)
 void	ParserList_destroy(ParserList *list)
 {
 	for (; list->next; list = list->next) {
+		if (list->prev)
+			free(list->prev);
 		Parser_destroyData(list->data, list->type);
-		free(list->prev);
 	}
+	if (list->prev)
+		free(list->prev);
 	Parser_destroyData(list->data, list->type);
-	free(list->prev);
 	free(list);
 }
