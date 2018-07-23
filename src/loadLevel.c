@@ -208,20 +208,66 @@ Array	loadCharacters(char *path)
 					printf("%s: Character %i has no field \"sprite_id\"\n", WARNING, i);
 				objBuffer = ParserObj_getElement(obj, "x_pos");
 				if (objBuffer) {
-					if (objBuffer->type != ParserIntType)
-						printf("%s: Field \"x_pos\" in character %i has an invalid type\n", ERROR, i);
+					if (objBuffer->type == ParserFloatType)
+				        	buff.movement.pos.x = ParserFloat_toFloat(objBuffer->data);
+					else if (objBuffer->type == ParserIntType)
+				        	buff.movement.pos.x = ParserInt_toInt(objBuffer->data);
 					else
-						buff.movement.pos.x = ParserInt_toInt(objBuffer->data);
+						printf("%s: Field \"x_pos\" in character %i has an invalid type\n", ERROR, i);
 				} else
 					printf("%s: Character %i has no field \"x_pos\"\n", WARNING, i);
 				objBuffer = ParserObj_getElement(obj, "y_pos");
 				if (objBuffer) {
-					if (objBuffer->type != ParserIntType)
-						printf("%s: Field \"y_pos\" in character %i has an invalid type\n", ERROR, i);
-					else
+					if (objBuffer->type == ParserFloatType)
+				        	buff.movement.pos.y = ParserFloat_toFloat(objBuffer->data);
+					else if (objBuffer->type == ParserIntType)
 				        	buff.movement.pos.y = ParserInt_toInt(objBuffer->data);
+					else
+						printf("%s: Field \"y_pos\" in character %i has an invalid type\n", ERROR, i);
 				} else
 					printf("%s: Character %i has no field \"y_pos\"\n", WARNING, i);
+				objBuffer = ParserObj_getElement(obj, "max_life");
+				if (objBuffer) {
+					if (objBuffer->type == ParserFloatType)
+				        	buff.stats.lifeMax = ParserFloat_toFloat(objBuffer->data);
+					else if (objBuffer->type == ParserIntType)
+				        	buff.stats.lifeMax = ParserInt_toInt(objBuffer->data);
+					else
+						printf("%s: Field \"max_life\" in character %i has an invalid type\n", ERROR, i);
+				} else
+					printf("%s: Character %i has no field \"max_life\"\n", WARNING, i);
+				buff.stats.life = buff.stats.lifeMax * 10;
+				objBuffer = ParserObj_getElement(obj, "current_life");
+				if (objBuffer) {
+					if (objBuffer->type == ParserFloatType)
+				        	buff.stats.life = ParserFloat_toFloat(objBuffer->data);
+					else if (objBuffer->type == ParserIntType)
+				        	buff.stats.life = ParserInt_toInt(objBuffer->data);
+					else
+						printf("%s: Field \"current_life\" in character %i has an invalid type\n", ERROR, i);
+				} else
+					printf("%s: Character %i has no field \"current_life\"\n", WARNING, i);
+				objBuffer = ParserObj_getElement(obj, "max_energy");
+				if (objBuffer) {
+					if (objBuffer->type == ParserFloatType)
+				        	buff.stats.maxEnergy = ParserFloat_toFloat(objBuffer->data);
+					else if (objBuffer->type == ParserIntType)
+				        	buff.stats.maxEnergy = ParserInt_toInt(objBuffer->data);
+					else
+						printf("%s: Field \"max_energy\" in character %i has an invalid type\n", ERROR, i);
+				} else
+					printf("%s: Character %i has no field \"max_energy\"\n", WARNING, i);
+				buff.stats.energy = buff.stats.maxEnergy * 10;
+				objBuffer = ParserObj_getElement(obj, "current_energy");
+				if (objBuffer) {
+					if (objBuffer->type == ParserFloatType)
+				        	buff.stats.energy = ParserFloat_toFloat(objBuffer->data);
+					else if (objBuffer->type == ParserIntType)
+				        	buff.stats.energy = ParserInt_toInt(objBuffer->data);
+					else
+						printf("%s: Field \"current_energy\" in character %i has an invalid type\n", ERROR, i);
+				} else
+					printf("%s: Character %i has no field \"current_energy\"\n", WARNING, i);
 				objBuffer = ParserObj_getElement(obj, "battle_info");
 				if (objBuffer) {
 					if (objBuffer->type != ParserStringType)
