@@ -114,11 +114,13 @@ bool	saveGame(game_t *game, bool level)
 			charac = ((Character *)game->characters.content)[i];
 			memset(&obj, 0, sizeof(obj));
 			ParserObj_addElement(&obj, charac.name, ParserStringType, "name");
-			len = charac.movement.pos.x;
-			ParserObj_addElement(&obj, &len, ParserIntType, "x_pos");
-			len = charac.movement.pos.y;
-			ParserObj_addElement(&obj, &len, ParserIntType, "y_pos");
+			ParserObj_addElement(&obj, &charac.movement.pos.x, ParserFloatType, "x_pos");
+			ParserObj_addElement(&obj, &charac.movement.pos.y, ParserFloatType, "y_pos");
 			ParserObj_addElement(&obj, &charac.texture, ParserIntType, "sprite_id");
+			ParserObj_addElement(&obj, &charac.stats.maxEnergy, ParserFloatType, "max_energy");
+			ParserObj_addElement(&obj, &charac.stats.lifeMax, ParserFloatType, "max_life");
+			ParserObj_addElement(&obj, &charac.stats.energy, ParserFloatType, "current_energy");
+			ParserObj_addElement(&obj, &charac.stats.life, ParserFloatType, "current_life");
 			ParserObj_addElement(&obj, charac.battleScript ? charac.battleScript : "", ParserStringType, "battle_info");
 			ParserList_addElement(result, &obj, ParserObjType, -1);
 		}
