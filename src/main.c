@@ -68,16 +68,22 @@ void	destroyBattle(Battle battle)
 			sfSprite_destroy(battle.bossSprite.sprite);
 			sfTexture_destroy(battle.bossSprite.texture);
 		}
+	        for (int i = 0; i < battle.projectileBank.length; i++) {
+			Projectile	*proj = &((Projectile *)battle.projectileBank.content)[i];
+
+			if (proj->needToDestroySprite) {
+				sfSprite_destroy(proj->sprite.sprite);
+				sfTexture_destroy(proj->sprite.texture);
+			}
+		}
+		free(battle.projectileBank.content);
+		battle.projectileBank.length = 0;
 		for (; list->next; list = list->next);
 		for (; list && list->data; list = list->prev) {
 			Projectile	*proj = list->data;
 
 			sfClock_destroy(proj->clock);
 			sfClock_destroy(proj->animClock);
-			if (proj->needToDestroySprite) {
-				sfSprite_destroy(proj->sprite.sprite);
-				sfTexture_destroy(proj->sprite.texture);
-			}
 			free(list->data);
 			free(list->next);
 		}
@@ -166,13 +172,13 @@ void	destroyStruct(game_t *game)
 void	sighandler(int signum)
 {
 	nbSignals++;
-	if (nbSignals >= 3)
-		return;
 	if (nbSignals >= 6) {
 		signal(signum, NULL);
 		raise(signum);
 		exit(EXIT_FAILURE);
 	}
+	if (nbSignals >= 3)
+		return;
 	if (signum == SIGINT || signum == SIGTERM) {
 		if (game.window && sfRenderWindow_isOpen(game.window))
 			sfRenderWindow_close(game.window);
