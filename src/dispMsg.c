@@ -30,7 +30,7 @@ int	dispMsg(char *title, char *content, int variate)
 			nbOfButtons = 2;
 			break;
 		}
-		win = sfRenderWindow_create(mode, title, sfTitlebar | sfClose, NULL);
+		win = sfRenderWindow_create(mode, title ? title : "null", sfTitlebar | sfClose, NULL);
 		if (text && font)
 			sfText_setFont(text, font);
 		if (!win)
@@ -59,7 +59,7 @@ int	dispMsg(char *title, char *content, int variate)
 			if (text) {
 				sfText_setColor(text, (sfColor){0, 0, 0, 255});
 				sfText_setPosition(text, (sfVector2f){10, 40});
-				sfText_setString(text, content);
+				sfText_setString(text, content ? content : "null");
 				sfRenderWindow_drawText(win, text, NULL);
 			}
 			for (int i = 0; i < nbOfButtons; i++) {
