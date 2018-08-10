@@ -1,0 +1,4 @@
+﻿test dialog §\n§test
+test n°2
+another test dialog
+fight !§\n§§battle§

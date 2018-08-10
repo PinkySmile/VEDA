@@ -42,10 +42,6 @@ Settings	loadSettings()
 	if (fd < 0) {
 		printf("%s: Couldn't load settings (save/settings.dat: %s)\n", ERROR, strerror(errno));
 		memset(&settings.keys, -1, NB_OF_KEYS);
-		settings.sfxVolume = 100;
-		settings.musicVolume = 100;
-		settings.windowSize.x = 640;
-		settings.windowSize.y = 480;
 		settings.keys[0] = sfKeyZ;
 		settings.keys[1] = sfKeyS;
 		settings.keys[2] = sfKeyQ;
@@ -66,6 +62,10 @@ Settings	loadSettings()
 		settings.keys[17] = sfKeyNum7;
 		settings.keys[18] = sfKeyNum8;
 		settings.keys[19] = sfKeyLShift;
+		settings.sfxVolume = 100;
+		settings.musicVolume = 100;
+		settings.windowSize.x = 640;
+		settings.windowSize.y = 480;
 		strcpy(settings.lang_id, "en");
 	} else
 		read(fd, &settings, sizeof(settings));

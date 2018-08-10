@@ -14,6 +14,17 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 
+extern game_t game;
+
+bool	isFolder(char *path)
+{
+	struct stat path_stat;
+
+	if (stat(path, &path_stat) < 0)
+		return (false);
+	return S_ISDIR(path_stat.st_mode);
+}
+
 char	**split(char *str, char sep)
 {
 	char	**result;
@@ -154,6 +165,71 @@ Object	*loadMap(char *path, char **bg)
 	return (objs);
 }
 
+bool	lineIsValid(char *line)
+{
+	bool	cmd = false;
+
+	for (int i = 0; line[i]; i++) {
+		if (line[i] == '§')
+			cmd = !cmd;
+		if (line[i] == '\\' && line[i + 1])
+			i++;
+	}
+	return (!cmd);
+}
+
+char	**loadDialogs(char *path)
+{
+	char	**dialogs = NULL;
+	char	*lang = game.settings.lang_id;
+	char	buffer[strlen(path) + strlen(lang) + 6];
+	char	*buff;
+	char	**buf;
+	FILE	*stream;
+	char	*line;
+	size_t	n = 1;
+
+	sprintf(buffer, "%s/%s.txt", path, lang);
+	stream = fopen(buffer, "r");
+	if (stream == NULL) {
+		printf("%s: %s: %s\n", ERROR, buffer, strerror(errno));
+		buff = concatf("%s: %s\n", buffer, strerror(errno));
+		dispMsg("Error", buff, 0);
+		free(buff);
+		return NULL;
+	}
+	line = malloc(1);
+	if (!line) {
+		printf("%s: Allocation error\n", ERROR);
+		return (NULL);
+	}
+	for (int i = 1; getline(&line, &n, stream) > 0; i++) {
+		buf = realloc(dialogs, sizeof(*dialogs) * (i + 1));
+		if (!buf) {
+			free(line);
+			for (int j = 0; j < i - 1; j++)
+				free(dialogs[i]);
+			free(dialogs);
+			return (NULL);
+		}
+		dialogs = buf;
+		if (line[strlen(line) - 1] == '\n')
+			line[strlen(line) - 1] = 0;
+		if (line[strlen(line) - 1] == '\r')
+			line[strlen(line) - 1] = 0;
+		dialogs[i - 1] = line;
+		if (!lineIsValid(line)) {
+			for (int j = 0; j < i; j++)
+				free(dialogs[i]);
+			free(dialogs);
+			return (NULL);
+		}
+		dialogs[i] = NULL;
+	}
+	free(line);
+	return (dialogs);
+}
+
 Array	loadCharacters(char *path)
 {
 	Array		characters = {NULL, 0};
@@ -276,6 +352,16 @@ Array	loadCharacters(char *path)
 				        	buff.battleScript = strdup(ParserString_toCharStar(objBuffer->data));
 				} else
 					printf("%s: Character %i has no field \"battle_info\"\n", WARNING, i);
+				objBuffer = ParserObj_getElement(obj, "dialogs");
+				if (objBuffer) {
+					if (objBuffer->type != ParserStringType)
+						printf("%s: Field \"dialogs\" in character %i has an invalid type\n", ERROR, i);
+					else if (!isFolder(ParserString_toCharStar(objBuffer->data)))
+						printf("%s: In field \"dialogs\" of character %i: %s is not a folder\n", ERROR, i, ParserString_toCharStar(objBuffer->data));
+					else if (!(buff.dialogsStrings = loadDialogs(ParserString_toCharStar(objBuffer->data))))
+				        	printf("%s: In field \"dialogs\" of character %i: An error occurred during parsing of %s\n", ERROR, i, ParserString_toCharStar(objBuffer->data));
+				} else
+					printf("%s: Character %i has no field \"battle_info\"\n", WARNING, i);
 				buff.movement.canMove = true;
 				buff.movement.animationClock = sfClock_create();
 				buff.movement.stateClock = sfClock_create();
@@ -303,8 +389,23 @@ void	loadLevel(char *path, game_t *game)
 	buffer = concatf("%s/characters.chr", path);
 	game->characters = loadCharacters(buffer);
 	if (!game->characters.content) {
-		game->characters.content = malloc(sizeof(Character));
-		game->characters.length = 1;
+		Character buff;
+
+		game->characters.content = malloc(sizeof(Character) * 2);
+		game->characters.length = 2;
+		memset(&buff, 0, sizeof(buff));
+		buff.movement.animationClock = sfClock_create();
+		buff.movement.stateClock = sfClock_create();
+		buff.stats.energyRegenClock = sfClock_create();
+		for (int j = 0; j < DAMAGES_TYPE_NB; j++)
+			buff.damageClock[j] = sfClock_create();
+		((Character *)game->characters.content)[0] = buff;
+		buff.movement.animationClock = sfClock_create();
+		buff.movement.stateClock = sfClock_create();
+		buff.stats.energyRegenClock = sfClock_create();
+		for (int j = 0; j < DAMAGES_TYPE_NB; j++)
+			buff.damageClock[j] = sfClock_create();
+		((Character *)game->characters.content)[1] = buff;
 	}
 	((Character *)game->characters.content)[0].isPlayer = true;
 	free(buffer);

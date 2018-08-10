@@ -28,12 +28,12 @@
 		"base_life" : 100,
 		"sprite_id" : 3,
 		"battle_info" : "data/battles/alexandre/battle_info.json",
-		"dialogs" : "data/dialogs/alexandre.json",
 		"x_pos" : 50,
 		"y_pos" : 50,
 		"attack" : 100,
 		"resistance" : 100,
 		"power_id" : 0,
-		"max_life" : 100
+		"max_life" : 100,
+		"dialogs" : "data/dialogs/alexandre"
 	}
 ]
