@@ -10,9 +10,6 @@
 #include <stdio.h>
 #include <errno.h>
 #include <unistd.h>
-#ifdef __MINGW32__
-#include <windows.h>
-#endif
 
 void	displayLoadingBar(game_t *game, int step, int maxSteps, int file, int maxFiles, char *status)
 {
@@ -110,17 +107,13 @@ void	initGame(game_t *game)
 		printf("[ERROR]: Couldn't load icon image\n");
 	if (!title) {
 		printf("%s: Couldn't create window title\n", FATAL);
-		#ifdef __MINGW32__
-		MessageBox(NULL, "Couldn't create window title", "Window error", 0);
-		#endif
+		dispMsg("Window error", "Couldn't create window title", 0);
 		exit(EXIT_FAILURE);
 	}
 	game->window = sfRenderWindow_create(mode, title, style, NULL);
 	if (!game->window) {
 		printf("%s: Couldn't create window\n", FATAL);
-		#ifdef __MINGW32__
-		MessageBox(NULL, "Couldn't create window object", "Window error", 0);
-		#endif
+		dispMsg("Window error", "Couldn't create window object", 0);
 		exit(EXIT_FAILURE);
 	}
 	if (icon)
@@ -141,7 +134,14 @@ void	initGame(game_t *game)
 	game->icon.sprite = sfSprite_create();
 	if (game->icon.sprite && game->icon.texture)
 		sfSprite_setTexture(game->icon.sprite, game->icon.texture, sfTrue);
-	memset(&game->characters, 0, sizeof(game->characters));/*
+	memset(&game->characters, 0, sizeof(game->characters));
+	game->dialogLuaScript = luaL_newstate();
+	addDependencies(game->dialogLuaScript);
+	if (luaL_dofile(game->dialogLuaScript, "data/dialogs/script.lua")) {
+		printf("%s: An unexpected error occurred when loading data/dialogs/script.lua\n", ERROR);
+		lua_close(game->dialogLuaScript);
+		game->dialogLuaScript = NULL;
+	}/*
 	game->characters.content = malloc(sizeof(Character));
 	if (!game->characters.content) {
 		printf("%s: Couldn't create player object\n", FATAL);

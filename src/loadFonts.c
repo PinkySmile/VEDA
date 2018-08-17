@@ -1,6 +1,7 @@
 #include "structs.h"
 #include "fonts_conf.h"
 #include "functions.h"
+#include "concatf.h"
 #include <stdlib.h>
 #include <stdio.h>
 
@@ -23,7 +24,11 @@ Array	loadFonts(game_t *game)
 		printf("%s: Loading file %s\n", INFO, fonts_conf[i]);
 		fonts[i] = sfFont_createFromFile(fonts_conf[i]);
 		if (i == ARIAL)
-			setFont(game->text, fonts[ARIAL]);
+			if (!fonts[i]) {
+				dispMsg("Loading error.", concatf(ERROR_DEFAULT_FONT, fonts_conf[i]), 0);
+				exit(EXIT_FAILURE);
+			} else
+				setFont(game->text, fonts[ARIAL]);
 		displayLoadingBar(game, 1, MAX_STEPS, i + 1, len, "Loading fonts");
 		if (!fonts[i])
 			printf("%s: Couldn't load file %s\n", ERROR, fonts_conf[i]);

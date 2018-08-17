@@ -3,6 +3,7 @@
 #else
 #	include <SFML/Graphics.h>
 #endif
+#include "macros.h"
 
 int	dispMsg(char *title, char *content, int variate)
 {
@@ -20,6 +21,10 @@ int	dispMsg(char *title, char *content, int variate)
 		int			nbOfButtons = 0;
 		int			buttonClicked = 0;
 
+		if (!font) {
+			printf("%s: Cannot load default font !\nDisplaying the message in the console:\n\n", ERROR);
+			printf("%s\n%s\n", title, content);
+		}
 		switch (variate) {
 		case 0:
 			buttons = (char *[1]){"OK"};

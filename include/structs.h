@@ -340,7 +340,6 @@ typedef struct {
 	char		*displayedText;
 	char		*dialogOwnerName;
 	char		*rawText;
-	lua_State	*dialogLuaScript;
 	int		index;
 	float		speed;
 	sfClock		*clock;
@@ -378,6 +377,7 @@ struct game_s {
 	int			dialogs;
 	DialogDisplayed		*dialogsOnScreen;
 	Battle			battle_infos;
+	lua_State		*dialogLuaScript;
 };
 
 #endif

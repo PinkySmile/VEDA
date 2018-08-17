@@ -131,6 +131,8 @@ void	destroyStruct(game_t *game)
 	sfImage_destroy(game->icon.image);
 	sfTexture_destroy(game->icon.texture);
 	sfSprite_destroy(game->icon.sprite);
+	if (game->dialogLuaScript)
+		lua_close(game->dialogLuaScript);
 	for (int i = 0; game->buttons[i].content; i++) {
 		printf("%s: Destroying button %i\n", INFO, i);
 		sfRectangleShape_destroy(game->buttons[i].rect);
