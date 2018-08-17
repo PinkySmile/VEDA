@@ -4,6 +4,9 @@
 #include <SFML/Graphics.h>
 #include <SFML/Audio.h>
 #include <stdbool.h>
+#include "lua.h"
+#include "lualib.h"
+#include "lauxlib.h"
 #include "structs.h"
 
 char		*concat(char *str1, char *str2, bool free1, bool free2);
@@ -30,6 +33,8 @@ void		displayUpperLayer(game_t *game);
 void		displayHUD(game_t *game);
 void		movePlayer(game_t *game);
 int		playSound(char const *path, bool freeAll);
+void		addDependencies(lua_State *Lua);
+CommandInfos	executeCommand(char *cmd, char *args);
 
 //Init game struct
 void		initGame	(game_t *game);

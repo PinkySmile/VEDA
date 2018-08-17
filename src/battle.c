@@ -420,7 +420,7 @@ Battle	loadBattleScript(char *path)
 			addDependencies(battle.Lua);
 			err = luaL_dofile(battle.Lua, ParserString_toCharStar(buffer->data));
 			if (err) {
-				buffer = (void *)concatf("An unexpected error occured when loading %s", ParserString_toCharStar(buffer->data));
+				buffer = (void *)concatf("An unexpected error occurred when loading %s", ParserString_toCharStar(buffer->data));
 				battle = invalidData(result, path, (void *)buffer);
 				free(buffer);
 				return battle;

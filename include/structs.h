@@ -43,6 +43,7 @@ enum textures {
 	MUSICS,
 	TRIGGER,
 	CROSS,
+	DIALOG_BOX,
 };
 
 enum directions {
@@ -329,6 +330,22 @@ typedef struct {
 	lua_State	*Lua_thread;
 } Battle;
 
+typedef struct {
+	int	returnValue;
+	char	*stderror;
+	char	*stdoutput;
+} CommandInfos;
+
+typedef struct {
+	char		*displayedText;
+	char		*dialogOwnerName;
+	char		*rawText;
+	lua_State	*dialogLuaScript;
+	int		index;
+	float		speed;
+	sfClock		*clock;
+} DialogDisplayed;
+
 struct game_s {
 	sfRenderWindow		*window;
 	int			menu;
@@ -358,6 +375,8 @@ struct game_s {
 	sfUint32		buffer[BUFFER_MAX_SIZE + 1];
 	int			bufPos;
 	int			bufSize;
+	int			dialogs;
+	DialogDisplayed		*dialogsOnScreen;
 	Battle			battle_infos;
 };
 

@@ -16,5 +16,6 @@ const Sprite_config	sprites_conf[] = {
 	{"data/misc/music.png", {1, 1}, {16, 16}, {0, 0}},
 	{"data/misc/trigger.png", {1, 1}, {16, 16}, {0, 0}},
 	{"data/misc/cancel.png", {1, 1}, {16, 16}, {0, 0}},
+	{"data/misc/dialog_box.png", {1, 1}, {640, 100}, {0, 0}},
 	{0, {0, 0}, {0, 0}, {0, 0}}
 };

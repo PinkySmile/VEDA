@@ -25,6 +25,7 @@ SRC = 	main.c			\
 	battle.c		\
 	battleAPI.c		\
 	discordRichPresence.c	\
+	commands.c		\
 
 OBJ =	$(SRC:%.c=src/%.o)
 

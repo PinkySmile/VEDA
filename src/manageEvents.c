@@ -20,7 +20,6 @@ void	manageEvents(game_t *game)
 {
 	sfEvent		event;
 	int		random = rand();
-	static int	var = 0;
 
 	while (sfRenderWindow_pollEvent(game->window, &event)) {
 		if (event.type == sfEvtClosed) {
@@ -70,9 +69,36 @@ void	manageEvents(game_t *game)
 			}
 		} else if (event.type == sfEvtKeyPressed) {
 			if (game->debug && event.key.code == sfKeyInsert) {
-				printf("%s: Adding projectile %i %i\n", INFO, var, game->battle_infos.projectileBank.length);
-				addProjectile(var, game->battle_infos.boss.movement.pos.x, game->battle_infos.boss.movement.pos.y - 50, -1, 0, 0, 0, 0, 0);
-				var = var < game->battle_infos.projectileBank.length - 1 ? var + 1 : 0;
+				void	*buff = realloc(game->dialogsOnScreen, sizeof(*game->dialogsOnScreen) * (game->dialogs + 1));
+				int	random = rand() % (game->characters.length + 1);
+				size_t	n = 0;
+				
+				if (buff) {
+					game->dialogs++;
+					game->dialogsOnScreen = buff;
+					memset(&game->dialogsOnScreen[game->dialogs - 1], 0, sizeof(*game->dialogsOnScreen));
+					game->dialogsOnScreen[game->dialogs - 1].dialogOwnerName = (random == game->characters.length ? NULL : ((Character *)game->characters.content)[random].name);
+					getline(&game->dialogsOnScreen[game->dialogs - 1].rawText, &n, stdin);
+					game->dialogsOnScreen[game->dialogs - 1].dialogLuaScript = luaL_newstate();
+					addDependencies(game->dialogsOnScreen[game->dialogs - 1].dialogLuaScript);
+					game->dialogsOnScreen[game->dialogs - 1].clock = sfClock_create();
+					game->dialogsOnScreen[game->dialogs - 1].speed = 0.1;
+					if (luaL_dofile(game->dialogsOnScreen[game->dialogs - 1].dialogLuaScript, "data/dialogs/test.lua")) {
+						printf("%s: An unexpected error occurred when loading data/dialogs/test.lua\n", ERROR);
+						lua_close(game->dialogsOnScreen[game->dialogs - 1].dialogLuaScript);
+						game->dialogsOnScreen[game->dialogs - 1].dialogLuaScript = NULL;
+					}
+				}
+			} else if (game->debug && event.key.code == sfKeyDelete) {
+				for (int i = 0; i < game->dialogs; i++) {
+					free(game->dialogsOnScreen[i].displayedText);
+					free(game->dialogsOnScreen[i].rawText);
+					if (game->dialogsOnScreen[i].dialogLuaScript)
+						lua_close(game->dialogsOnScreen[i].dialogLuaScript);
+				}
+				free(game->dialogsOnScreen);
+				game->dialogsOnScreen = NULL;
+				game->dialogs = 0;
 			}
 			if (/*game->debug &&*/ event.key.code == sfKeyHome) {
 				char	buffer[100];

@@ -469,6 +469,88 @@ void	movePlayer(game_t *game)
 		player->stats.energy = player->stats.maxEnergy * 10;
 }
 
+bool	addCharacter(char c, char **str)
+{
+	int	start = 0;
+	char	*buffer = str ? *str : NULL;
+	
+	if (!buffer) {
+		buffer = malloc(2);
+		if (!buffer)
+			return (false);
+		*str = buffer;
+		buffer[0] = c;
+		buffer[1] = 0;
+		return (true);
+	}
+	buffer = realloc(buffer, strlen(buffer) + 2);
+	if (!buffer)
+		return (false);
+	for (int i = 0; buffer[i]; i++)
+		if (buffer[i] == '\n')
+			start = i + 1;
+	if (strlen(buffer) - start > 78) {
+		for (int i = strlen(buffer) - 1; i >= 0; i--)
+			if (buffer[i] == ' ' || buffer[i] == '\t') {
+				buffer[i] = '\n';
+				break;
+			} else if (buffer[i] == '\n')
+				break;
+	}
+	buffer[strlen(buffer) + 1] = 0;
+	buffer[strlen(buffer)] = c;
+	*str = buffer;
+	return (true);
+}
+
+bool	addStringToDialogBox(char *str, char **resulting)
+{
+	if (!str)
+		return (addStringToDialogBox("(null)", resulting));
+	for (int i = 0; str[i]; i++)
+		if (!addCharacter(str[i], resulting))
+			return (false);
+	return (true);
+}
+
+void	resolveCommand(DialogDisplayed *diag)
+{
+	char		*command = &diag->rawText[diag->index + 1];
+	CommandInfos	infos;
+
+	for (diag->index++; diag->rawText[diag->index] && diag->rawText[diag->index] != '%'; diag->index++);
+	if (!diag->rawText[diag->index]) {
+		addStringToDialogBox("Unfinished command found", &diag->displayedText);
+		return;
+	}
+	diag->rawText[diag->index] = 0;
+	infos = executeCommand(command, NULL);
+	if (infos.stderror)
+		addStringToDialogBox(infos.stderror, &diag->displayedText);
+	free(infos.stderror);
+	free(infos.stdoutput);
+	diag->rawText[diag->index] = '%';
+	diag->index++;
+}
+
+void	displayDialogs(game_t *game)
+{
+	for (int i = 0; i < game->dialogs; i++) {
+		if (!game->dialogsOnScreen[i].displayedText)
+			game->dialogsOnScreen[i].displayedText = concatf("%s: ", game->dialogsOnScreen[i].dialogOwnerName);
+		sfText_setCharacterSize(game->text, 15);
+		sfText_setColor(game->text, (sfColor){255, 255, 255, 255});
+		text(game->dialogsOnScreen[i].displayedText, game, 10, 390, false);
+		if (game->dialogsOnScreen[i].index < (int)strlen(game->dialogsOnScreen[i].rawText) - 1 && sfTime_asSeconds(sfClock_getElapsedTime(game->dialogsOnScreen[i].clock)) > game->dialogsOnScreen[i].speed) {
+			if (game->dialogsOnScreen[i].rawText[game->dialogsOnScreen[i].index] == '%')
+				resolveCommand(&game->dialogsOnScreen[i]);
+			else
+				addCharacter(game->dialogsOnScreen[i].rawText[game->dialogsOnScreen[i].index++], &game->dialogsOnScreen[i].displayedText);
+			sfClock_restart(game->dialogsOnScreen[i].clock);
+		}
+	}
+}
+
 void	inGame(game_t *game)
 {
 	Character	*player = getPlayer(game->characters.content, game->characters.length);
@@ -492,6 +574,10 @@ void	inGame(game_t *game)
 			color *= -1;
 	}
 	movePlayer(game);
+	if (game->dialogs) {
+		image(game, ((Sprite *)game->sprites.content)[DIALOG_BOX].sprite, 0, 380, 640, 100);
+		displayDialogs(game);
+	}
 	for (int i = 0; i < game->characters.length; i++) {
 		Character	*chara = &((Character *)game->characters.content)[i];
 
