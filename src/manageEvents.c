@@ -16,160 +16,160 @@ void	setVolumes(Array sounds, float volume)
 			sfMusic_setVolume(musics[i], volume);
 }
 
-void	manageEvents(game_t *game)
+void	manageEvents()
 {
 	sfEvent		event;
 	int		random = rand();
 
-	while (sfRenderWindow_pollEvent(game->window, &event)) {
+	while (sfRenderWindow_pollEvent(game.ressources.window, &event)) {
 		if (event.type == sfEvtClosed) {
-			sfRenderWindow_close(game->window);
-			if (game->menu == 1 || game->menu == 7)
-				saveGame(game, true);
-			for (int i = 0; i < game->musics.length; i++)
-				if (((sfMusic **)game->musics.content)[i] && sfMusic_getStatus(((sfMusic **)game->musics.content)[MAIN_MENU_MUSIC]) == sfPlaying)
-					sfMusic_stop(((sfMusic **)game->musics.content)[i]);
+			sfRenderWindow_close(game.ressources.window);
+			if (game.state.menu == 1 || game.state.menu == 7)
+				saveGame(true);
+			for (int i = 0; i < game.ressources.musics.length; i++)
+				if (((sfMusic **)game.ressources.musics.content)[i] && sfMusic_getStatus(((sfMusic **)game.ressources.musics.content)[MAIN_MENU_MUSIC]) == sfPlaying)
+					sfMusic_stop(((sfMusic **)game.ressources.musics.content)[i]);
 		} else if (event.type == sfEvtTextEntered) {
-			if (event.text.unicode == 8 && game->bufPos > 0)
-				game->buffer[--game->bufPos] = 0;
+			if (event.text.unicode == 8 && game.input.bufPos > 0)
+				game.input.buffer[--game.input.bufPos] = 0;
 			else if (event.text.unicode != 8)
-				game->buffer[game->bufPos < game->bufSize ? game->bufPos++ : game->bufPos - 1] = event.text.unicode;
+				game.input.buffer[game.input.bufPos < game.input.bufSize ? game.input.bufPos++ : game.input.bufPos - 1] = event.text.unicode;
 		} else if (event.type == sfEvtMouseButtonPressed) {
-			manage_mouse_click(game, event.mouseButton);
+			manage_mouse_click(event.mouseButton);
 		} else if (event.type == sfEvtJoystickMoved) {
 			if (event.joystickMove.position < 3 && event.joystickMove.position > -3)
 				continue;
-			if (game->selected - game->languagesConf.y - game->languagesConf.x >= 0 && game->selected - game->languagesConf.y - game->languagesConf.x < 4 && game->menu == 2) {
+			if (game.state.menuSelected - game.languagesConf.y - game.languagesConf.x >= 0 && game.state.menuSelected - game.languagesConf.y - game.languagesConf.x < 4 && game.state.menu == 2) {
 				for (int i = 0; i < 4; i++) {
-					game->settings.keys[i] = 201 + i;
-					game->buttons[i + game->languagesConf.y + game->languagesConf.x].content = getKeyString(201 + i);
+					game.settings.keys[i] = 201 + i;
+					game.ressources.buttons[i + game.languagesConf.y + game.languagesConf.x].content = getKeyString(201 + i);
 				}
-				game->buttons[game->selected].content = getKeyString(game->settings.keys[game->selected - game->languagesConf.y - game->languagesConf.x]);
-				game->selected = -1;
+				game.ressources.buttons[game.state.menuSelected].content = getKeyString(game.settings.keys[game.state.menuSelected - game.languagesConf.y - game.languagesConf.x]);
+				game.state.menuSelected = -1;
 			}
 		} else if (event.type == sfEvtJoystickButtonPressed) {
-			if ((game->menu == 1 || game->menu == 7) && game->settings.keys[KEY_PAUSE] == event.joystickButton.button + 205) {
-				back_on_title_screen(game, -1);
-				saveGame(game, true);
+			if ((game.state.menu == 1 || game.state.menu == 7) && game.settings.keys[KEY_PAUSE] == event.joystickButton.button + 205) {
+				back_on_title_screen(-1);
+				saveGame(true);
 				continue;
 			}
-			if (game->selected - game->languagesConf.y - game->languagesConf.x >= 0 && game->selected - game->languagesConf.y - game->languagesConf.x < 4 && game->menu == 2)
+			if (game.state.menuSelected - game.languagesConf.y - game.languagesConf.x >= 0 && game.state.menuSelected - game.languagesConf.y - game.languagesConf.x < 4 && game.state.menu == 2)
 				for (int i = 0; i < 4; i++)
-					if (game->settings.keys[i] >= 201 && game->settings.keys[i] <= 204) {
+					if (game.settings.keys[i] >= 201 && game.settings.keys[i] <= 204) {
 						for (int i = 0; i < 4; i++) {
-							game->settings.keys[i] = -1;
-							game->buttons[i + game->languagesConf.y + game->languagesConf.x].content = getKeyString(-1);
+							game.settings.keys[i] = -1;
+							game.ressources.buttons[i + game.languagesConf.y + game.languagesConf.x].content = getKeyString(-1);
 						}
 						break;
 					}
-			if (game->selected >= 0 && game->menu == 2) {
-				game->settings.keys[game->selected - game->languagesConf.y - game->languagesConf.x] = event.joystickButton.button + 205;
-				game->buttons[game->selected].content = getKeyString(event.joystickButton.button + 205);
-				game->selected = -1;
+			if (game.state.menuSelected >= 0 && game.state.menu == 2) {
+				game.settings.keys[game.state.menuSelected - game.languagesConf.y - game.languagesConf.x] = event.joystickButton.button + 205;
+				game.ressources.buttons[game.state.menuSelected].content = getKeyString(event.joystickButton.button + 205);
+				game.state.menuSelected = -1;
 			}
 		} else if (event.type == sfEvtKeyPressed) {
-			if (game->debug && event.key.code == sfKeyInsert) {
-				void	*buff = realloc(game->dialogsOnScreen, sizeof(*game->dialogsOnScreen) * (game->dialogs + 1));
-				int	random = rand() % (game->characters.length + 1);
+			if (game.debug && event.key.code == sfKeyInsert) {
+				void	*buff = realloc(game.state.dialogsOnScreen, sizeof(*game.state.dialogsOnScreen) * (game.state.dialogs + 1));
+				int	random = rand() % (game.state.characters.length + 1);
 				size_t	n = 0;
 
 				if (buff) {
-					game->dialogs++;
-					game->dialogsOnScreen = buff;
-					memset(&game->dialogsOnScreen[game->dialogs - 1], 0, sizeof(*game->dialogsOnScreen));
-					game->dialogsOnScreen[game->dialogs - 1].dialogOwnerName = (random == game->characters.length ? NULL : ((Character *)game->characters.content)[random].name);
-					getline(&game->dialogsOnScreen[game->dialogs - 1].rawText, &n, stdin);
-					game->dialogsOnScreen[game->dialogs - 1].clock = sfClock_create();
-					game->dialogsOnScreen[game->dialogs - 1].speed = 0.1;
+					game.state.dialogs++;
+					game.state.dialogsOnScreen = buff;
+					memset(&game.state.dialogsOnScreen[game.state.dialogs - 1], 0, sizeof(*game.state.dialogsOnScreen));
+					game.state.dialogsOnScreen[game.state.dialogs - 1].dialogOwnerName = (random == game.state.characters.length ? NULL : ((Character *)game.state.characters.content)[random].name);
+					getline(&game.state.dialogsOnScreen[game.state.dialogs - 1].rawText, &n, stdin);
+					game.state.dialogsOnScreen[game.state.dialogs - 1].clock = sfClock_create();
+					game.state.dialogsOnScreen[game.state.dialogs - 1].speed = 0.1;
 				}
-			} else if (game->debug && event.key.code == sfKeyDelete) {
-				for (int i = 0; i < game->dialogs; i++) {
-					free(game->dialogsOnScreen[i].displayedText);
-					free(game->dialogsOnScreen[i].rawText);
+			} else if (game.debug && event.key.code == sfKeyDelete) {
+				for (int i = 0; i < game.state.dialogs; i++) {
+					free(game.state.dialogsOnScreen[i].displayedText);
+					free(game.state.dialogsOnScreen[i].rawText);
 				}
-				free(game->dialogsOnScreen);
-				game->dialogsOnScreen = NULL;
-				game->dialogs = 0;
+				free(game.state.dialogsOnScreen);
+				game.state.dialogsOnScreen = NULL;
+				game.state.dialogs = 0;
 			}
-			if (/*game->debug &&*/ event.key.code == sfKeyHome) {
+			if (/*game.debug &&*/ event.key.code == sfKeyHome) {
 				char	buffer[100];
 				char	*buff;
 
 				memset(buffer, 0, 100);
-				for (int i = 0; game->buffer[i]; i++)
-					buffer[i] = game->buffer[i] % 255;
-				game->battle_infos = loadBattleScript(/*buffer*/"data/battles/alexandre/battle_normal/info_file.json");
-				for (int i = 0; game->buttons[i].content; i++) {
-					game->buttons[i].active = false;
-					game->buttons[i].displayed = false;
+				for (int i = 0; game.input.buffer[i]; i++)
+					buffer[i] = game.input.buffer[i] % 255;
+				game.state.battle_infos = loadBattleScript(/*buffer*/"data/battles/alexandre/battle_normal/info_file.json");
+				for (int i = 0; game.ressources.buttons[i].content; i++) {
+					game.ressources.buttons[i].active = false;
+					game.ressources.buttons[i].displayed = false;
 				}
-				buff = concatf("Fighting %s (%s)", game->battle_infos.boss.name, game->battle_infos.name);
+				buff = concatf("Fighting %s (%s)", game.state.battle_infos.boss.name, game.state.battle_infos.name);
 				updateDiscordPresence("In Game", buff, 0, false, "icon", NULL, "VEDA", NULL);
 				free(buff);
-				game->menu = 7;
-				if (!getPlayer(game->characters.content, game->characters.length)) {
-					loadGame(game);
-					if (!game->map || !game->characters.content) {
-						loadLevel("data/levels/test", game);
-						game->loadedMap = strdup("data/levels/test");
+				game.state.menu = 7;
+				if (!getPlayer(game.state.characters.content, game.state.characters.length)) {
+					loadGame();
+					if (!game.state.loadedMap.objects || !game.state.characters.content) {
+						loadLevel("data/levels/test");
+						game.state.loadedMap.path = strdup("data/levels/test");
 					}
 				}
-				game->battle_infos.boss.movement.pos.x = 100;
-				game->battle_infos.boss.movement.pos.y = 100;
+				game.state.battle_infos.boss.movement.pos.x = 100;
+				game.state.battle_infos.boss.movement.pos.y = 100;
 			}
-			if (game->debug && event.key.code == sfKeyEqual) {
-				for (int i = 0; game->buttons[i].content; i++) {
-					game->buttons[i].active = false;
-					game->buttons[i].displayed = false;
+			if (game.debug && event.key.code == sfKeyEqual) {
+				for (int i = 0; game.ressources.buttons[i].content; i++) {
+					game.ressources.buttons[i].active = false;
+					game.ressources.buttons[i].displayed = false;
 				}
-				memset(game->buffer, 0, BUFFER_MAX_SIZE * sizeof(*game->buffer));
-				game->bufSize = BUFFER_MAX_SIZE;
-				game->bufPos = 0;
-				game->menu = 5;
+				memset(game.input.buffer, 0, BUFFER_MAX_SIZE * sizeof(*game.input.buffer));
+				game.input.bufSize = BUFFER_MAX_SIZE;
+				game.input.bufPos = 0;
+				game.state.menu = 5;
 				continue;
 			}
-			if ((game->menu == 1 || game->menu == 7) && game->settings.keys[KEY_PAUSE] == event.key.code) {
-				back_on_title_screen(game, -1);
-				saveGame(game, true);
+			if ((game.state.menu == 1 || game.state.menu == 7) && game.settings.keys[KEY_PAUSE] == event.key.code) {
+				back_on_title_screen(-1);
+				saveGame(true);
 				continue;
 			}
-			if (game->selected - game->languagesConf.y - game->languagesConf.x >= 0 && game->selected - game->languagesConf.y - game->languagesConf.x < 4 && game->menu == 2)
+			if (game.state.menuSelected - game.languagesConf.y - game.languagesConf.x >= 0 && game.state.menuSelected - game.languagesConf.y - game.languagesConf.x < 4 && game.state.menu == 2)
 				for (int i = 0; i < 4; i++)
-					if (game->settings.keys[i] >= 201 && game->settings.keys[i] <= 204) {
+					if (game.settings.keys[i] >= 201 && game.settings.keys[i] <= 204) {
 						for (int i = 0; i < 4; i++) {
-							game->settings.keys[i] = -1;
-							game->buttons[i + game->languagesConf.y + game->languagesConf.x].content = getKeyString(-1);
+							game.settings.keys[i] = -1;
+							game.ressources.buttons[i + game.languagesConf.y + game.languagesConf.x].content = getKeyString(-1);
 						}
 						break;
 					}
-			if (game->selected >= 0 && game->menu == 2) {
-				game->settings.keys[game->selected - game->languagesConf.y - game->languagesConf.x] = event.key.code;
-				game->buttons[game->selected].content = getKeyString(event.key.code);
-				game->selected = -1;
+			if (game.state.menuSelected >= 0 && game.state.menu == 2) {
+				game.settings.keys[game.state.menuSelected - game.languagesConf.y - game.languagesConf.x] = event.key.code;
+				game.ressources.buttons[game.state.menuSelected].content = getKeyString(event.key.code);
+				game.state.menuSelected = -1;
 			}
 		} else if (event.type == sfEvtMouseMoved) {
-			if (game->selected == 1 && game->menu == 3) {
+			if (game.state.menuSelected == 1 && game.state.menu == 3) {
 				if (event.mouseMove.x <= 140)
-					game->settings.sfxVolume = 0;
+					game.settings.sfxVolume = 0;
 				else if (event.mouseMove.x >= 440)
-					game->settings.sfxVolume = 100;
+					game.settings.sfxVolume = 100;
 				else
-					game->settings.sfxVolume = (event.mouseMove.x - 140) / 3;
-				setVolumes(game->sfx, game->settings.sfxVolume);
-				if (((sfMusic **)game->sfx.content)[DIRT1 + random % 4])
-					sfMusic_play(((sfMusic **)game->sfx.content)[DIRT1 + random % 4]);
-			} else if (game->selected == 2 && game->menu == 3) {
+					game.settings.sfxVolume = (event.mouseMove.x - 140) / 3;
+				setVolumes(game.ressources.sfx, game.settings.sfxVolume);
+				if (((sfMusic **)game.ressources.sfx.content)[DIRT1 + random % 4])
+					sfMusic_play(((sfMusic **)game.ressources.sfx.content)[DIRT1 + random % 4]);
+			} else if (game.state.menuSelected == 2 && game.state.menu == 3) {
 				if (event.mouseMove.x <= 140)
-					game->settings.musicVolume = 0;
+					game.settings.musicVolume = 0;
 				else if (event.mouseMove.x >= 440)
-					game->settings.musicVolume = 100;
+					game.settings.musicVolume = 100;
 				else
-					game->settings.musicVolume = (event.mouseMove.x - 140) / 3;
-				setVolumes(game->musics, game->settings.musicVolume);
+					game.settings.musicVolume = (event.mouseMove.x - 140) / 3;
+				setVolumes(game.ressources.musics, game.settings.musicVolume);
 			}
 		} else if (event.type == sfEvtMouseButtonReleased) {
-			if (game->menu == 3)
-				game->selected = -1;
+			if (game.state.menu == 3)
+				game.state.menuSelected = -1;
 		}
 	}
 }

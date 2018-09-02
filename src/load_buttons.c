@@ -8,24 +8,24 @@
 #include "functions.h"
 #include "concatf.h"
 
-char	*getButtonContent(int nameId, game_t *game)
+char	*getButtonContent(int nameId)
 {
 	int 	len = 0;
 
 	if (nameId < 0)
 		return ("");
-	if (getLanguage(game->languages, game->settings.lang_id) < 0 || game->languages[getLanguage(game->languages, game->settings.lang_id)].buttons == NULL)
+	if (getLanguage(game.ressources.languages, game.settings.lang_id) < 0 || game.ressources.languages[getLanguage(game.ressources.languages, game.settings.lang_id)].buttons == NULL)
 		return ("");
-	for (; game->languages[getLanguage(game->languages, game->settings.lang_id)].buttons[len]; len++);
-	if (nameId < len && game->languages[getLanguage(game->languages, game->settings.lang_id)].buttons[nameId])
-		return (game->languages[getLanguage(game->languages, game->settings.lang_id)].buttons[nameId]);
+	for (; game.ressources.languages[getLanguage(game.ressources.languages, game.settings.lang_id)].buttons[len]; len++);
+	if (nameId < len && game.ressources.languages[getLanguage(game.ressources.languages, game.settings.lang_id)].buttons[nameId])
+		return (game.ressources.languages[getLanguage(game.ressources.languages, game.settings.lang_id)].buttons[nameId]);
 	return ("");
 }
 
-void	disp_buttons(game_t *game)
+void	disp_buttons()
 {
-	Button		*buttons = game->buttons;
-	sfRenderWindow	*window = game->window;
+	Button		*buttons = game.ressources.buttons;
+	sfRenderWindow	*window = game.ressources.window;
 	sfVector2f	pos;
 	sfVector2f	size;
 	sfColor		color;
@@ -33,8 +33,8 @@ void	disp_buttons(game_t *game)
 	int		blue;
 	int		green;
 
-	sfText_setCharacterSize(game->text, 20);
-	sfText_setScale(game->text, game->baseScale);
+	sfText_setCharacterSize(game.ressources.text, 20);
+	sfText_setScale(game.ressources.text, game.settings.baseScale);
 	for (int i = 0; buttons && buttons[i].content; i++) {
 		if (buttons[i].displayed && buttons[i].rect) {
 			color.a = buttons[i].color.a;
@@ -44,8 +44,8 @@ void	disp_buttons(game_t *game)
 			size = buttons[i].size;
 			pos = buttons[i].pos;
 			for (int j = 0; j < 10; j++) {
-				sfVector2f	realSize = {size.x * game->baseScale.x, size.y * game->baseScale.y};
-				sfVector2f	realPos = {pos.x * game->baseScale.x, pos.y * game->baseScale.y};
+				sfVector2f	realSize = {size.x * game.settings.baseScale.x, size.y * game.settings.baseScale.y};
+				sfVector2f	realPos = {pos.x * game.settings.baseScale.x, pos.y * game.settings.baseScale.y};
 
 				pos.x += 1;
 				pos.y += 1;
@@ -77,18 +77,18 @@ void	disp_buttons(game_t *game)
 			        blue += 15;
 			        green += 15;
 			}
-			sfText_setColor(game->text, buttons[i].textColor);
-			text(buttons[i].content, game, buttons[i].pos.x + 10, buttons[i].pos.y + 8, false);
+			sfText_setColor(game.ressources.text, buttons[i].textColor);
+			text(buttons[i].content, buttons[i].pos.x + 10, buttons[i].pos.y + 8, false);
 		}
 	}
 }
 
-Button	create_button(Button_config config, game_t *game, bool createName)
+Button	create_button(Button_config config, bool createName)
 {
 	Button	button;
 
 	if (createName)
-		button.content = getButtonContent(config.nameId, game);
+		button.content = getButtonContent(config.nameId);
 	button.pos = (sfVector2f){config.pos.x, config.pos.y};
 	button.size = (sfVector2f){config.size.x, config.size.y};
 	button.callback = config.callback;
@@ -327,7 +327,7 @@ char	*getKeyString(unsigned char keyID)
 	}
 }
 
-Button	*loadButtons(game_t *game)
+Button	*loadButtons()
 {
 	Button		*buttons = NULL;
 	int		len = 0;
@@ -335,38 +335,38 @@ Button	*loadButtons(game_t *game)
 	Button_config	config;
 
 	for (; button_config[len].callback; len++);
-	for (; game->languages && game->languages[langs].name; langs++);
+	for (; game.ressources.languages && game.ressources.languages[langs].name; langs++);
 	printf("%s: Loading %i buttons\n", INFO, len + langs + NB_OF_KEYS);
 	buttons = malloc(sizeof(*buttons) * (len + langs + NB_OF_KEYS + 1));
 	if (!buttons) {
 		printf("%s: Couldn't malloc %liB for buttons\n", FATAL, (long)sizeof(*buttons) * (len + langs + NB_OF_KEYS + 1));
 		exit(EXIT_FAILURE);
 	}
-	game->languagesConf.y = langs;
-	game->languagesConf.x = len;
+	game.languagesConf.y = langs;
+	game.languagesConf.x = len;
 	memset(buttons, 0, sizeof(*buttons) * (len + langs + 1));
 	for (int i = 0; button_config[i].callback; i++) {
-		displayLoadingBar(game, 6, MAX_STEPS, i, len + langs + NB_OF_KEYS, "Creating buttons");
-		buttons[i] = create_button(button_config[i], game, true);
+		displayLoadingBar(6, MAX_STEPS, i, len + langs + NB_OF_KEYS, "Creating buttons");
+		buttons[i] = create_button(button_config[i], true);
 	}
 	config.textColor = (sfColor){0, 0, 0, 255};
 	config.disabled = false;
 	config.color = (sfColor){255, 255, 0, 255};
 	config.callback = &changeLanguage;
-	for (int i = 0; game->languages && game->languages[i].name; i++) {
-		displayLoadingBar(game, 6, MAX_STEPS, i + len, len + langs + NB_OF_KEYS, "Creating buttons");
-		config.pos = (sfVector2f){300 - strlen(game->languages[i].name) * 7, 50 * i + 10};
-		config.size = (sfVector2f){40 + strlen(game->languages[i].name) * 7, 40};
-		buttons[i + len] = create_button(config, game, false);
-		buttons[i + len].content = game->languages[i].name;
+	for (int i = 0; game.ressources.languages && game.ressources.languages[i].name; i++) {
+		displayLoadingBar(6, MAX_STEPS, i + len, len + langs + NB_OF_KEYS, "Creating buttons");
+		config.pos = (sfVector2f){300 - strlen(game.ressources.languages[i].name) * 7, 50 * i + 10};
+		config.size = (sfVector2f){40 + strlen(game.ressources.languages[i].name) * 7, 40};
+		buttons[i + len] = create_button(config, false);
+		buttons[i + len].content = game.ressources.languages[i].name;
 	}
 	config.size = (sfVector2f){150, 40};
 	config.color = (sfColor){255, 255, 255, 255};
 	config.callback = &changeKey;
 	for (int i = 0; i < NB_OF_KEYS; i++) {
-		displayLoadingBar(game, 6, MAX_STEPS, i + len + langs, len + langs + NB_OF_KEYS, "Creating buttons");
+		displayLoadingBar(6, MAX_STEPS, i + len + langs, len + langs + NB_OF_KEYS, "Creating buttons");
 		config.pos = (sfVector2f){115 + i / 10 * 272, i % 10 * 48 + 5};
-		buttons[i + len + langs] = create_button(config, game, false);
+		buttons[i + len + langs] = create_button(config, false);
 		buttons[i + len + langs].content = "";
 	}
 	buttons[len + langs + NB_OF_KEYS].content = NULL;

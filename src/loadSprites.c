@@ -30,7 +30,7 @@ Sprite	createSprite(Sprite_config config)
 	return (sprite);
 }
 
-Array	loadSprites(game_t *game)
+Array	loadSprites()
 {
 	Array	array = {NULL, 0};
 	int	len = 0;
@@ -46,7 +46,7 @@ Array	loadSprites(game_t *game)
 	array.length = len;
 	array.content = sprites;
 	for (int i = 0; sprites_conf[i].path; i++) {
-		displayLoadingBar(game, 2, MAX_STEPS, i, len, "Loading textures");
+		displayLoadingBar(2, MAX_STEPS, i, len, "Loading textures");
 		sprites[i] = createSprite(sprites_conf[i]);
 	}
 	printf("%s: Textures loaded !\n", INFO);

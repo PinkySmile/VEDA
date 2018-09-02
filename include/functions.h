@@ -10,86 +10,86 @@
 #include "structs.h"
 
 char		*concat(char *str1, char *str2, bool free1, bool free2);
-void		launchGame(game_t *game);
-void		manageEvents(game_t *game);
-char		*getButtonContent(int nameId, game_t *game);
+void		launchGame();
+void		manageEvents();
+char		*getButtonContent(int nameId);
 char		*int_to_str(int nb);
 int		get_nbrlen(int nbr);
 void		setFont(sfText *text, sfFont *font);
 int		getLanguage(Language *languages, char *lang_id);
-void		manage_mouse_click(game_t *game, sfMouseButtonEvent event);
+void		manage_mouse_click(sfMouseButtonEvent event);
 char		*getKeyString(unsigned char keyID);
 void		setVolumes(Array sounds, float volume);
 float		isPressed(int keyID, sfRenderWindow *window);
 char		*getVersion();
-void		changeScreenMode(game_t *game, int new);
+void		changeScreenMode(int new);
 int		dispMsg(char *title, char *content, int variate);
 Character	*getPlayer(Character *characters, int len);
 char		**split(char *str, char separator);
-void		displayCharacter(Character *character, game_t *game, int id, sfSprite *sprite);
-void		displayCharacters(game_t *game);
-void		displayLowerLayer(game_t *game);
-void		displayUpperLayer(game_t *game);
-void		displayHUD(game_t *game);
-void		movePlayer(game_t *game);
+void		displayCharacter(Character *character, int id, sfSprite *sprite);
+void		displayCharacters();
+void		displayLowerLayer();
+void		displayUpperLayer();
+void		displayHUD();
+void		movePlayer();
 int		playSound(char const *path, bool freeAll);
 void		addDependencies(lua_State *Lua);
-CommandInfos	executeCommand(char *cmd, char *args);
+char		*executeCommand(char *cmd, char *args);
 
 //Init game struct
-void		initGame	(game_t *game);
-Array		loadMusics	(game_t *game);
-Array		loadSprites	(game_t *game);
-Array		loadSfx		(game_t *game);
-Array		loadFonts	(game_t *game);
-Button		*loadButtons	(game_t *game);
-Language	*loadLanguages	(game_t *game);
+void		initGame	();
+Array		loadMusics	();
+Array		loadSprites	();
+Array		loadSfx		();
+Array		loadFonts	();
+Button		*loadButtons	();
+Language	*loadLanguages	();
 Sprite		createSprite	(Sprite_config config);
 sfMusic		*createMusic	(Music_config config);
-void		displayLoadingBar(game_t *game, int step, int maxSteps, int file, int maxFiles, char *status);
+void		displayLoadingBar(int step, int maxSteps, int file, int maxFiles, char *status);
 Battle		loadBattleScript(char *path);
 
 //Display functions
-void	image		(game_t *game, sfSprite *sprite, int x, int y, int width, int height);
-void	disp_buttons	(game_t *game);
-void	text		(char *str, game_t *game, int x, int y, bool isUnicode);
-void	rect		(game_t *game, int x, int y, int width, int height);
+void	image		(sfSprite *sprite, int x, int y, int width, int height);
+void	disp_buttons	();
+void	text		(char *str, int x, int y, bool isUnicode);
+void	rect		(int x, int y, int width, int height);
 
 //Save/Load functions
-bool		saveGame	(game_t *game, bool level);
-void		loadGame	(game_t *game);
-void		saveSettings	(game_t *game);
+bool		saveGame	(bool level);
+void		loadGame	();
+void		saveSettings	();
 Settings	loadSettings	(void);
-void		loadLevel	(char *path, game_t *game);
+void		loadLevel	(char *path);
 Array		loadCharacters	(char *path);
 Object		*loadMap	(char *path, char **bg);
 
 //Menu functions
-void	mainMenu	(game_t *game);
-void	inGame		(game_t *game);
-void	controls	(game_t *game);
-void	audio		(game_t *game);
-void	options		(game_t *game);
-void	buf_modif	(game_t *game);
-void	changeName	(game_t *game);
-void	chooseCharacter	(game_t *game);
-void	battle		(game_t *game);
+void	mainMenu	();
+void	inGame		();
+void	controls	();
+void	audio		();
+void	options		();
+void	buf_modif	();
+void	changeName	();
+void	chooseCharacter	();
+void	battle		();
 
 //callbacks
-void	play_button		(game_t *game, int buttonId);
-void	quit_button		(game_t *game, int buttonId);
-void	settings_button		(game_t *game, int buttonId);
-void	options_button		(game_t *game, int buttonID);
-void	audio_button		(game_t *game, int buttonID);
-void	lang_button		(game_t *game, int buttonID);
-void	controls_button		(game_t *game, int buttonID);
-void	back_on_title_screen	(game_t *game, int buttonID);
-void	changeLanguage		(game_t *game, int buttonID);
-void	changeKey		(game_t *game, int buttonID);
-void	fullScreen		(game_t *game, int buttonID);
-void	borderless		(game_t *game, int buttonID);
-void	windowed		(game_t *game, int buttonID);
-void	FPS_button		(game_t *game, int buttonID);
-void	changePlayerName	(game_t *game, int buttonID);
+void	play_button		(int buttonId);
+void	quit_button		(int buttonId);
+void	settings_button		(int buttonId);
+void	options_button		(int buttonID);
+void	audio_button		(int buttonID);
+void	lang_button		(int buttonID);
+void	controls_button		(int buttonID);
+void	back_on_title_screen	(int buttonID);
+void	changeLanguage		(int buttonID);
+void	changeKey		(int buttonID);
+void	fullScreen		(int buttonID);
+void	borderless		(int buttonID);
+void	windowed		(int buttonID);
+void	FPS_button		(int buttonID);
+void	changePlayerName	(int buttonID);
 
 #endif

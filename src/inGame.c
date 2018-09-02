@@ -6,41 +6,41 @@
 #include <string.h>
 #include <time.h>
 
-void	displayLowerLayer(game_t *game)
+void	displayLowerLayer()
 {
-	Object		*map = game->map;
-	Array		sprites = game->sprites;
-	sfVector2i	cam = game->cam;
+	Object		*map = game.state.loadedMap.objects;
+	Array		sprites = game.ressources.sprites;
+	sfVector2i	cam = game.state.cameraPos;
 	sfIntRect	rec = {0, 0, 16, 16};
 	char		*buffer = NULL;
 
 	for (int i = 0; map && map[i].layer; i++) {
 		if (map[i].layer == 1 && map[i].pos.x + cam.x > -32 && map[i].pos.x + cam.x < 672 && map[i].pos.y + cam.y > -32 && map[i].pos.y + cam.y < 672) {
 			if (!((Sprite *)sprites.content)[OBJECTS].sprite) {
-				sfRectangleShape_setOutlineColor(game->rectangle, (sfColor){0, 0, 0, 0});
-				sfRectangleShape_setFillColor(game->rectangle, (sfColor){((map[i].id * 10) >> 16) * 20 % 256, ((map[i].id * 10) >> 8) * 10 % 256, map[i].id * 10 % 256, 255});
-				rect(game, map[i].pos.x + cam.x, map[i].pos.y + cam.y, 16, 16);
+				sfRectangleShape_setOutlineColor(game.ressources.rectangle, (sfColor){0, 0, 0, 0});
+				sfRectangleShape_setFillColor(game.ressources.rectangle, (sfColor){((map[i].id * 10) >> 16) * 20 % 256, ((map[i].id * 10) >> 8) * 10 % 256, map[i].id * 10 % 256, 255});
+				rect(map[i].pos.x + cam.x, map[i].pos.y + cam.y, 16, 16);
 			} else {
 				rec.left = (map[i].id - 1) * 16 % 640;
 				rec.top = (map[i].id - 1) * 16 / 640;
 				sfSprite_setTextureRect(((Sprite *)sprites.content)[OBJECTS].sprite, rec);
-				image(game, ((Sprite *)sprites.content)[OBJECTS].sprite, map[i].pos.x + cam.x, map[i].pos.y + cam.y, 16, 16);
+				image(((Sprite *)sprites.content)[OBJECTS].sprite, map[i].pos.x + cam.x, map[i].pos.y + cam.y, 16, 16);
 			}
-			if (game->debug) {
-				sfText_setCharacterSize(game->text, 15);
-				sfText_setColor(game->text, (sfColor){0, 0, 0, 200});
+			if (game.debug) {
+				sfText_setCharacterSize(game.ressources.text, 15);
+				sfText_setColor(game.ressources.text, (sfColor){0, 0, 0, 200});
 				buffer = concatf("%i", map[i].id);
-				text(buffer, game, map[i].pos.x + cam.x, map[i].pos.y + cam.y, false);
+				text(buffer, map[i].pos.x + cam.x, map[i].pos.y + cam.y, false);
 				free(buffer);
 			}
 		}
 	}
 }
 
-void	displayCharacter(Character *character, game_t *game, int id, sfSprite *sprite)
+void	displayCharacter(Character *character, int id, sfSprite *sprite)
 {
 	sfIntRect	rec = {0, 0, 16, 32};
-	sfVector2i	cam = game->cam;
+	sfVector2i	cam = game.state.cameraPos;
 
 	if (character->movement.pos.x + cam.x < -16)
 		return;
@@ -54,33 +54,33 @@ void	displayCharacter(Character *character, game_t *game, int id, sfSprite *spri
 	rec.left = (character->movement.position % 2) * 32;
 	if (sprite) {
 		sfSprite_setTextureRect(sprite, rec);
-		image(game, sprite, character->movement.pos.x + cam.x, character->movement.pos.y + cam.y, 16, 32);
+		image(sprite, character->movement.pos.x + cam.x, character->movement.pos.y + cam.y, 16, 32);
 	} else {
-		sfRectangleShape_setOutlineColor(game->rectangle, (sfColor){0, 0, 0, 0});
-		sfRectangleShape_setFillColor(game->rectangle, (sfColor){id * 2 % 256, ((id * 10) >> 8) * 10 % 256, id * 2 % 256, 255});
-		rect(game, character->movement.pos.x + cam.x, character->movement.pos.y + cam.y, 16, 32);
+		sfRectangleShape_setOutlineColor(game.ressources.rectangle, (sfColor){0, 0, 0, 0});
+		sfRectangleShape_setFillColor(game.ressources.rectangle, (sfColor){id * 2 % 256, ((id * 10) >> 8) * 10 % 256, id * 2 % 256, 255});
+		rect(character->movement.pos.x + cam.x, character->movement.pos.y + cam.y, 16, 32);
 	}
 }
 
-void	displayCharacters(game_t *game)
+void	displayCharacters()
 {
 	Character	buff;
 	static int	var = 0;
-	Array		sprites = game->sprites;
+	Array		sprites = game.ressources.sprites;
 
-	for (int i = 0; i < game->characters.length; i++) {
-		buff = ((Character *)game->characters.content)[i];
+	for (int i = 0; i < game.state.characters.length; i++) {
+		buff = ((Character *)game.state.characters.content)[i];
 		if (MALE_CHARACTER + buff.texture >= 0 && MALE_CHARACTER + buff.texture < sprites.length && (!buff.invulnerabiltyTime || var % 5 <= 3))
-			displayCharacter(&buff, game, i, ((Sprite *)sprites.content)[MALE_CHARACTER + buff.texture].sprite);
+			displayCharacter(&buff, i, ((Sprite *)sprites.content)[MALE_CHARACTER + buff.texture].sprite);
 	}
 	var = var >= 4 ? 0 : var + 1;
 }
 
-void	displayUpperLayer(game_t *game)
+void	displayUpperLayer()
 {
-	Object		*map = game->map;
-	Array		sprites = game->sprites;
-	sfVector2i	cam = game->cam;
+	Object		*map = game.state.loadedMap.objects;
+	Array		sprites = game.ressources.sprites;
+	sfVector2i	cam = game.state.cameraPos;
 	sfIntRect	rec = {0, 0, 16, 16};
 	bool		newLayer = true;
 	char		*buffer = NULL;
@@ -91,20 +91,20 @@ void	displayUpperLayer(game_t *game)
 		for (int i = 0; map && map[i].layer; i++) {
 			if (map[i].layer == layer && map[i].pos.x + cam.x > -32 && map[i].pos.x + cam.x < 672 && map[i].pos.y + cam.y > -32 && map[i].pos.y + cam.y < 672) {
 				if (!((Sprite *)sprites.content)[OBJECTS].sprite) {
-					sfRectangleShape_setOutlineColor(game->rectangle, (sfColor){0, 0, 0, 0});
-					sfRectangleShape_setFillColor(game->rectangle, (sfColor){((map[i].id * 10) >> 16) * 20 % 256, ((map[i].id * 10) >> 8) * 10 % 256, map[i].id * 10 % 256, 255});
-					rect(game, map[i].pos.x + cam.x, map[i].pos.y + cam.y, 16, 16);
+					sfRectangleShape_setOutlineColor(game.ressources.rectangle, (sfColor){0, 0, 0, 0});
+					sfRectangleShape_setFillColor(game.ressources.rectangle, (sfColor){((map[i].id * 10) >> 16) * 20 % 256, ((map[i].id * 10) >> 8) * 10 % 256, map[i].id * 10 % 256, 255});
+					rect(map[i].pos.x + cam.x, map[i].pos.y + cam.y, 16, 16);
 				} else {
 					rec.left = (map[i].id - 1) * 16 % 640;
 					rec.top = (map[i].id - 1) * 16 / 640;
 					sfSprite_setTextureRect(((Sprite *)sprites.content)[OBJECTS].sprite, rec);
-					image(game, ((Sprite *)sprites.content)[OBJECTS].sprite, map[i].pos.x + cam.x, map[i].pos.y + cam.y, 16, 16);
+					image(((Sprite *)sprites.content)[OBJECTS].sprite, map[i].pos.x + cam.x, map[i].pos.y + cam.y, 16, 16);
 				}
-				if (game->debug) {
-					sfText_setCharacterSize(game->text, 15);
-					sfText_setColor(game->text, (sfColor){layer % 2 == 0 ? 255 : 0, layer % 3 == 0 ? 255 : 0, layer % 4 == 0 ? 255 : 0, 200});
+				if (game.debug) {
+					sfText_setCharacterSize(game.ressources.text, 15);
+					sfText_setColor(game.ressources.text, (sfColor){layer % 2 == 0 ? 255 : 0, layer % 3 == 0 ? 255 : 0, layer % 4 == 0 ? 255 : 0, 200});
 					buffer = concatf("%i", map[i].id);
-					text(buffer, game, map[i].pos.x + cam.x, map[i].pos.y + cam.y, false);
+					text(buffer, map[i].pos.x + cam.x, map[i].pos.y + cam.y, false);
 					free(buffer);
 				}
 			}
@@ -112,49 +112,49 @@ void	displayUpperLayer(game_t *game)
 			newLayer = newLayer || map[i].layer > layer;
 		}
 	}
-	for (int i = 0; game->debug && map && map[i].layer; i++) {
+	for (int i = 0; game.debug && map && map[i].layer; i++) {
 		if (map[i].solid && map[i].pos.x + cam.x > -32 && map[i].pos.x + cam.x < 672 && map[i].pos.y + cam.y > -32 && map[i].pos.y + cam.y < 672) {
-			sfRectangleShape_setFillColor(game->rectangle, (sfColor){255, 0, 255, 125});
-			rect(game, map[i].pos.x + cam.x + 1, map[i].pos.y + cam.y + 1, 14, 14);
+			sfRectangleShape_setFillColor(game.ressources.rectangle, (sfColor){255, 0, 255, 125});
+			rect(map[i].pos.x + cam.x + 1, map[i].pos.y + cam.y + 1, 14, 14);
 		}
 		if (((Sprite *)sprites.content)[MUSICS].sprite && map[i].action == CHANGE_MUSIC && map[i].pos.x + cam.x > -32 && map[i].pos.x + cam.x < 672 && map[i].pos.y + cam.y > -32 && map[i].pos.y + cam.y < 672)
-			image(game, ((Sprite *)sprites.content)[MUSICS].sprite, map[i].pos.x + cam.x, map[i].pos.y + cam.y, 16, 16);
+			image(((Sprite *)sprites.content)[MUSICS].sprite, map[i].pos.x + cam.x, map[i].pos.y + cam.y, 16, 16);
 		else if (((Sprite *)sprites.content)[CROSS].sprite && map[i].action == DEAL_DAMAGES && map[i].pos.x + cam.x > -32 && map[i].pos.x + cam.x < 672 && map[i].pos.y + cam.y > -32 && map[i].pos.y + cam.y < 672) {
-			sfRectangleShape_setFillColor(game->rectangle, (sfColor){0, 0, 255, 155});
-			rect(game, map[i].pos.x + cam.x + 3, map[i].pos.y + cam.y + 3, 10, 10);
+			sfRectangleShape_setFillColor(game.ressources.rectangle, (sfColor){0, 0, 255, 155});
+			rect(map[i].pos.x + cam.x + 3, map[i].pos.y + cam.y + 3, 10, 10);
 		} else if (((Sprite *)sprites.content)[CUTSCENE].sprite && map[i].action == LAUNCH_CUTSCENE && map[i].pos.x + cam.x > -32 && map[i].pos.x + cam.x < 672 && map[i].pos.y + cam.y > -32 && map[i].pos.y + cam.y < 672)
-			image(game, ((Sprite *)sprites.content)[CUTSCENE].sprite, map[i].pos.x + cam.x, map[i].pos.y + cam.y, 16, 16);
+			image(((Sprite *)sprites.content)[CUTSCENE].sprite, map[i].pos.x + cam.x, map[i].pos.y + cam.y, 16, 16);
 	}
 }
 
-void	drawLifeBar(game_t *game)
+void	drawLifeBar()
 {
-	int		lifeBuffer = getPlayer(game->characters.content, game->characters.length)->stats.life;
+	int		lifeBuffer = getPlayer(game.state.characters.content, game.state.characters.length)->stats.life;
 	int		x = 0;
 	int		y = 0;
 	int		h = 0;
 	int		b = 0;
 	sfIntRect	rec = {0, 0, 16, 16};
 
-	for (int i = 1 ; i <= getPlayer(game->characters.content, game->characters.length)->stats.lifeMax; i++) {
+	for (int i = 1 ; i <= getPlayer(game.state.characters.content, game.state.characters.length)->stats.lifeMax; i++) {
 		if (lifeBuffer <= 10 && lifeBuffer > 0)
 			rec.left = 48 + 160 * h + 16 * (10 - lifeBuffer);
 		else if (lifeBuffer >= 10)
 			rec.left = 48 + 160 * h;
 		else
 			rec.left = 528;
-		if (((Sprite *)game->sprites.content)[LIFE_BAR].sprite) {
-			sfSprite_setTextureRect(((Sprite *)game->sprites.content)[LIFE_BAR].sprite, rec);
-			image(game, ((Sprite *)game->sprites.content)[LIFE_BAR].sprite, x, 465 - y, 16, 16);
+		if (((Sprite *)game.ressources.sprites.content)[LIFE_BAR].sprite) {
+			sfSprite_setTextureRect(((Sprite *)game.ressources.sprites.content)[LIFE_BAR].sprite, rec);
+			image(((Sprite *)game.ressources.sprites.content)[LIFE_BAR].sprite, x, 465 - y, 16, 16);
 			rec.left = 16 * h;
-			sfSprite_setTextureRect(((Sprite *)game->sprites.content)[LIFE_BAR].sprite, rec);
-			image(game, ((Sprite *)game->sprites.content)[LIFE_BAR].sprite, x, 465 - y, 16, 16);
+			sfSprite_setTextureRect(((Sprite *)game.ressources.sprites.content)[LIFE_BAR].sprite, rec);
+			image(((Sprite *)game.ressources.sprites.content)[LIFE_BAR].sprite, x, 465 - y, 16, 16);
 		} else {
-			sfRectangleShape_setFillColor(game->rectangle, (sfColor){h == 0 ? 255 : 0, h == 1 ? 255 : 0, h == 2 ? 255 : 0, 255});
+			sfRectangleShape_setFillColor(game.ressources.rectangle, (sfColor){h == 0 ? 255 : 0, h == 1 ? 255 : 0, h == 2 ? 255 : 0, 255});
 			if (lifeBuffer <= 10 && lifeBuffer > 0)
-				rect(game, x, 465 - y + 16 - 16 * lifeBuffer / 10, 16, 16 * lifeBuffer / 10);
+				rect(x, 465 - y + 16 - 16 * lifeBuffer / 10, 16, 16 * lifeBuffer / 10);
 			else if (lifeBuffer >= 10)
-				rect(game, x, 465 - y, 16, 16);
+				rect(x, 465 - y, 16, 16);
 		}
 		if (b == 0)
 			x = x + 15;
@@ -185,34 +185,34 @@ void	drawLifeBar(game_t *game)
 	}
 }
 
-void	drawEnergyBar(game_t *game)
+void	drawEnergyBar()
 {
-	int		energyBuffer = getPlayer(game->characters.content, game->characters.length)->stats.energy;
+	int		energyBuffer = getPlayer(game.state.characters.content, game.state.characters.length)->stats.energy;
 	int		x = 0;
 	int		y = 0;
 	int		h = 0;
 	int		b = 0;
 	sfIntRect	rec = {0, 0, 16, 16};
 
-	for (int i = 1 ; i <= getPlayer(game->characters.content, game->characters.length)->stats.maxEnergy ; i++) {
+	for (int i = 1 ; i <= getPlayer(game.state.characters.content, game.state.characters.length)->stats.maxEnergy ; i++) {
 		if (energyBuffer <= 10 && energyBuffer > 0)
 			rec.left = 48 + 160 * h + 16 * (10 - energyBuffer);
 		else if (energyBuffer >= 10)
 			rec.left = 48 + 160 * h;
 		else
 			rec.left = 528;
-		if (((Sprite *)game->sprites.content)[ENERGY_BAR].sprite) {
-			sfSprite_setTextureRect(((Sprite *)game->sprites.content)[ENERGY_BAR].sprite, rec);
-			image(game, ((Sprite *)game->sprites.content)[ENERGY_BAR].sprite, 625 - x, 465 - y, 16, 16);
+		if (((Sprite *)game.ressources.sprites.content)[ENERGY_BAR].sprite) {
+			sfSprite_setTextureRect(((Sprite *)game.ressources.sprites.content)[ENERGY_BAR].sprite, rec);
+			image(((Sprite *)game.ressources.sprites.content)[ENERGY_BAR].sprite, 625 - x, 465 - y, 16, 16);
 			rec.left = 16 * h;
-			sfSprite_setTextureRect(((Sprite *)game->sprites.content)[ENERGY_BAR].sprite, rec);
-			image(game, ((Sprite *)game->sprites.content)[ENERGY_BAR].sprite, 625 - x, 465 - y, 16, 16);
+			sfSprite_setTextureRect(((Sprite *)game.ressources.sprites.content)[ENERGY_BAR].sprite, rec);
+			image(((Sprite *)game.ressources.sprites.content)[ENERGY_BAR].sprite, 625 - x, 465 - y, 16, 16);
 		} else {
-			sfRectangleShape_setFillColor(game->rectangle, (sfColor){h == 0 ? 255 : 0, h == 1 ? 255 : 0, h == 2 ? 255 : 0, 255});
+			sfRectangleShape_setFillColor(game.ressources.rectangle, (sfColor){h == 0 ? 255 : 0, h == 1 ? 255 : 0, h == 2 ? 255 : 0, 255});
 			if (energyBuffer <= 10 && energyBuffer > 0)
-				rect(game, 625 - x, 465 - y + 16 - 16 * energyBuffer / 10, 16, 16 * energyBuffer / 10);
+				rect(625 - x, 465 - y + 16 - 16 * energyBuffer / 10, 16, 16 * energyBuffer / 10);
 			else if (energyBuffer >= 10)
-				rect(game, 625 - x, 465 - y, 16, 16);
+				rect(625 - x, 465 - y, 16, 16);
 		}
 		if (b == 0)
 			x = x + 15;
@@ -243,10 +243,10 @@ void	drawEnergyBar(game_t *game)
 	}
 }
 
-void	displayHUD(game_t *game)
+void	displayHUD()
 {
-	drawEnergyBar(game);
-	drawLifeBar(game);
+	drawEnergyBar();
+	drawLifeBar();
 }
 
 void	dealDamages(Character *character, int damages, int damageType)
@@ -279,9 +279,9 @@ void	dealDamages(Character *character, int damages, int damageType)
 	}
 }
 
-void	execAction(game_t *game, Object obj)
+void	execAction(Object obj)
 {
-	Character	*player = getPlayer(game->characters.content, game->characters.length);
+	Character	*player = getPlayer(game.state.characters.content, game.state.characters.length);
 
 	if (obj.solid) {
 		switch(player->movement.position) {
@@ -299,8 +299,8 @@ void	execAction(game_t *game, Object obj)
 			break;
 		}
 	}
-	if (obj.footstepSound > game->stepSound)
-		game->stepSound = obj.footstepSound + rand() % obj.footstepVariance;
+	if (obj.footstepSound > player->stepSound)
+		player->stepSound = obj.footstepSound + rand() % obj.footstepVariance;
 	switch(obj.action) {
 	case DEAL_DAMAGES:
 		for (int i = 0; i < DAMAGES_TYPE_NB; i++) {
@@ -343,31 +343,31 @@ Character	*getPlayer(Character *array, int len)
 	return (array);
 }
 
-void	movePlayer(game_t *game)
+void	movePlayer()
 {
-	Character	*player = getPlayer(game->characters.content, game->characters.length);
-	Object		*map = game->map;
+	Character	*player = getPlayer(game.state.characters.content, game.state.characters.length);
+	Object		*map = game.state.loadedMap.objects;
 	bool		mooved = false;
 
-	if (player->movement.pos.x + game->cam.x + 8 > 640) {
-		game->cam.x -= 640;
-	} else if (player->movement.pos.x + game->cam.x + 8 < 0) {
-		game->cam.x += 640;
-	} else if (player->movement.pos.y + game->cam.y + 16 > 480) {
-		game->cam.y -= 480;
-	} else if (player->movement.pos.y + game->cam.y + 16 < 0) {
-		game->cam.y += 480;
+	if (player->movement.pos.x + game.state.cameraPos.x + 8 > 640) {
+		game.state.cameraPos.x -= 640;
+	} else if (player->movement.pos.x + game.state.cameraPos.x + 8 < 0) {
+		game.state.cameraPos.x += 640;
+	} else if (player->movement.pos.y + game.state.cameraPos.y + 16 > 480) {
+		game.state.cameraPos.y -= 480;
+	} else if (player->movement.pos.y + game.state.cameraPos.y + 16 < 0) {
+		game.state.cameraPos.y += 480;
 	}
 	if (player->movement.state == MOVING && sfTime_asSeconds(sfClock_getElapsedTime(player->movement.animationClock)) >= 0.1 / player->movement.speed) {
 		player->movement.animation = !player->movement.animation;
-		if (((sfMusic **)game->sfx.content)[game->stepSound])
-			sfMusic_play(((sfMusic **)game->sfx.content)[game->stepSound]);
+		if (((sfMusic **)game.ressources.sfx.content)[player->stepSound])
+			sfMusic_play(((sfMusic **)game.ressources.sfx.content)[player->stepSound]);
 		sfClock_restart(player->movement.animationClock);
 	} else if (player->movement.state == MOVING && sfTime_asSeconds(sfClock_getElapsedTime(player->movement.stateClock)) >= 0.3) {
 		player->movement.state = STATIC;
 		player->movement.animation = 0;
 	}
-	game->stepSound = IRON;
+	player->stepSound = IRON;
 	if (player->movement.canMove) {
 		memset(&player->movement.blocked, 0, sizeof(player->movement.blocked));
 		for (int i = 0; map && map[i].layer; i++) {
@@ -382,77 +382,77 @@ void	movePlayer(game_t *game)
 					player->movement.blocked.right = true;
 			}
 			if (player->movement.pos.y + 30 >= map[i].pos.y && player->movement.pos.y <= map[i].pos.y && player->movement.pos.x - 16 < map[i].pos.x && player->movement.pos.x + 16 > map[i].pos.x)
-				execAction(game, map[i]);
+				execAction(map[i]);
 		}
 		player->movement.speed = 0;
-		if (!player->movement.blocked.left && isPressed(game->settings.keys[KEY_LEFT], game->window)) {
-			player->movement.pos.x -= isPressed(game->settings.keys[KEY_LEFT], game->window);
-			if (isPressed(game->settings.keys[KEY_LEFT], game->window) - isPressed(game->settings.keys[KEY_RIGHT], game->window))
+		if (!player->movement.blocked.left && isPressed(game.settings.keys[KEY_LEFT], game.ressources.window)) {
+			player->movement.pos.x -= isPressed(game.settings.keys[KEY_LEFT], game.ressources.window);
+			if (isPressed(game.settings.keys[KEY_LEFT], game.ressources.window) - isPressed(game.settings.keys[KEY_RIGHT], game.ressources.window))
 				player->movement.position = LEFT;
-			player->movement.state = isPressed(game->settings.keys[KEY_LEFT], game->window) - isPressed(game->settings.keys[KEY_RIGHT], game->window) ? MOVING : player->movement.state;
+			player->movement.state = isPressed(game.settings.keys[KEY_LEFT], game.ressources.window) - isPressed(game.settings.keys[KEY_RIGHT], game.ressources.window) ? MOVING : player->movement.state;
 			if (!mooved)
-				player->movement.speed += isPressed(game->settings.keys[KEY_LEFT], game->window) - isPressed(game->settings.keys[KEY_RIGHT], game->window);
-			if (isPressed(game->settings.keys[KEY_LEFT], game->window) - isPressed(game->settings.keys[KEY_RIGHT], game->window))
+				player->movement.speed += isPressed(game.settings.keys[KEY_LEFT], game.ressources.window) - isPressed(game.settings.keys[KEY_RIGHT], game.ressources.window);
+			if (isPressed(game.settings.keys[KEY_LEFT], game.ressources.window) - isPressed(game.settings.keys[KEY_RIGHT], game.ressources.window))
 				sfClock_restart(player->movement.stateClock);
-			if (isPressed(game->settings.keys[KEY_SPRINT], game->window) && player->stats.energy >= player->stats.sprintSpeed) {
-				player->movement.pos.x -= player->stats.sprintSpeed * (isPressed(game->settings.keys[KEY_LEFT], game->window) - isPressed(game->settings.keys[KEY_RIGHT], game->window)) - 1;
-				if (!mooved && isPressed(game->settings.keys[KEY_LEFT], game->window) - isPressed(game->settings.keys[KEY_RIGHT], game->window))
-					player->movement.speed += player->stats.sprintSpeed * (isPressed(game->settings.keys[KEY_LEFT], game->window) - isPressed(game->settings.keys[KEY_RIGHT], game->window)) - 1;
-				if (isPressed(game->settings.keys[KEY_LEFT], game->window) - isPressed(game->settings.keys[KEY_RIGHT], game->window) != 0)
+			if (isPressed(game.settings.keys[KEY_SPRINT], game.ressources.window) && player->stats.energy >= player->stats.sprintSpeed) {
+				player->movement.pos.x -= player->stats.sprintSpeed * (isPressed(game.settings.keys[KEY_LEFT], game.ressources.window) - isPressed(game.settings.keys[KEY_RIGHT], game.ressources.window)) - 1;
+				if (!mooved && isPressed(game.settings.keys[KEY_LEFT], game.ressources.window) - isPressed(game.settings.keys[KEY_RIGHT], game.ressources.window))
+					player->movement.speed += player->stats.sprintSpeed * (isPressed(game.settings.keys[KEY_LEFT], game.ressources.window) - isPressed(game.settings.keys[KEY_RIGHT], game.ressources.window)) - 1;
+				if (isPressed(game.settings.keys[KEY_LEFT], game.ressources.window) - isPressed(game.settings.keys[KEY_RIGHT], game.ressources.window) != 0)
 					player->stats.energyClock++;
 			}
 			mooved = player->movement.speed != 0;
 		}
-		if (!player->movement.blocked.right && isPressed(game->settings.keys[KEY_RIGHT], game->window)) {
-			player->movement.pos.x += isPressed(game->settings.keys[KEY_RIGHT], game->window);
-			if (isPressed(game->settings.keys[KEY_RIGHT], game->window) - isPressed(game->settings.keys[KEY_LEFT], game->window))
+		if (!player->movement.blocked.right && isPressed(game.settings.keys[KEY_RIGHT], game.ressources.window)) {
+			player->movement.pos.x += isPressed(game.settings.keys[KEY_RIGHT], game.ressources.window);
+			if (isPressed(game.settings.keys[KEY_RIGHT], game.ressources.window) - isPressed(game.settings.keys[KEY_LEFT], game.ressources.window))
 				player->movement.position = RIGHT;
-			player->movement.state = isPressed(game->settings.keys[KEY_RIGHT], game->window) - isPressed(game->settings.keys[KEY_LEFT], game->window) ? MOVING : player->movement.state;
+			player->movement.state = isPressed(game.settings.keys[KEY_RIGHT], game.ressources.window) - isPressed(game.settings.keys[KEY_LEFT], game.ressources.window) ? MOVING : player->movement.state;
 			if (!mooved)
-				player->movement.speed += isPressed(game->settings.keys[KEY_RIGHT], game->window) - isPressed(game->settings.keys[KEY_LEFT], game->window);
-			if (isPressed(game->settings.keys[KEY_RIGHT], game->window) - isPressed(game->settings.keys[KEY_LEFT], game->window))
+				player->movement.speed += isPressed(game.settings.keys[KEY_RIGHT], game.ressources.window) - isPressed(game.settings.keys[KEY_LEFT], game.ressources.window);
+			if (isPressed(game.settings.keys[KEY_RIGHT], game.ressources.window) - isPressed(game.settings.keys[KEY_LEFT], game.ressources.window))
 				sfClock_restart(player->movement.stateClock);
-			if (isPressed(game->settings.keys[KEY_SPRINT], game->window) && player->stats.energy >= player->stats.sprintSpeed) {
-				player->movement.pos.x += player->stats.sprintSpeed * (isPressed(game->settings.keys[KEY_RIGHT], game->window) - isPressed(game->settings.keys[KEY_LEFT], game->window)) - 1;
-				if (!mooved && isPressed(game->settings.keys[KEY_RIGHT], game->window) - isPressed(game->settings.keys[KEY_LEFT], game->window))
-					player->movement.speed += player->stats.sprintSpeed * (isPressed(game->settings.keys[KEY_RIGHT], game->window) - isPressed(game->settings.keys[KEY_LEFT], game->window)) - 1;
-				if (isPressed(game->settings.keys[KEY_RIGHT], game->window) - isPressed(game->settings.keys[KEY_LEFT], game->window) != 0)
+			if (isPressed(game.settings.keys[KEY_SPRINT], game.ressources.window) && player->stats.energy >= player->stats.sprintSpeed) {
+				player->movement.pos.x += player->stats.sprintSpeed * (isPressed(game.settings.keys[KEY_RIGHT], game.ressources.window) - isPressed(game.settings.keys[KEY_LEFT], game.ressources.window)) - 1;
+				if (!mooved && isPressed(game.settings.keys[KEY_RIGHT], game.ressources.window) - isPressed(game.settings.keys[KEY_LEFT], game.ressources.window))
+					player->movement.speed += player->stats.sprintSpeed * (isPressed(game.settings.keys[KEY_RIGHT], game.ressources.window) - isPressed(game.settings.keys[KEY_LEFT], game.ressources.window)) - 1;
+				if (isPressed(game.settings.keys[KEY_RIGHT], game.ressources.window) - isPressed(game.settings.keys[KEY_LEFT], game.ressources.window) != 0)
 					player->stats.energyClock++;
 			}
 			mooved = player->movement.speed != 0;
 		}
-		if (!player->movement.blocked.up && isPressed(game->settings.keys[KEY_UP], game->window)) {
-			player->movement.pos.y -= isPressed(game->settings.keys[KEY_UP], game->window);
-			if (isPressed(game->settings.keys[KEY_UP], game->window) - isPressed(game->settings.keys[KEY_DOWN], game->window))
+		if (!player->movement.blocked.up && isPressed(game.settings.keys[KEY_UP], game.ressources.window)) {
+			player->movement.pos.y -= isPressed(game.settings.keys[KEY_UP], game.ressources.window);
+			if (isPressed(game.settings.keys[KEY_UP], game.ressources.window) - isPressed(game.settings.keys[KEY_DOWN], game.ressources.window))
 				player->movement.position = UP;
-			player->movement.state = isPressed(game->settings.keys[KEY_UP], game->window) - isPressed(game->settings.keys[KEY_DOWN], game->window) ? MOVING : player->movement.state;
+			player->movement.state = isPressed(game.settings.keys[KEY_UP], game.ressources.window) - isPressed(game.settings.keys[KEY_DOWN], game.ressources.window) ? MOVING : player->movement.state;
 			if (!mooved)
-				player->movement.speed += isPressed(game->settings.keys[KEY_UP], game->window) - isPressed(game->settings.keys[KEY_DOWN], game->window);
-			if (isPressed(game->settings.keys[KEY_UP], game->window) - isPressed(game->settings.keys[KEY_DOWN], game->window))
+				player->movement.speed += isPressed(game.settings.keys[KEY_UP], game.ressources.window) - isPressed(game.settings.keys[KEY_DOWN], game.ressources.window);
+			if (isPressed(game.settings.keys[KEY_UP], game.ressources.window) - isPressed(game.settings.keys[KEY_DOWN], game.ressources.window))
 				sfClock_restart(player->movement.stateClock);
-			if (isPressed(game->settings.keys[KEY_SPRINT], game->window) && player->stats.energy >= player->stats.sprintSpeed) {
-				player->movement.pos.y -= player->stats.sprintSpeed * (isPressed(game->settings.keys[KEY_UP], game->window) - isPressed(game->settings.keys[KEY_DOWN], game->window)) - 1;
-				if (!mooved && isPressed(game->settings.keys[KEY_UP], game->window) - isPressed(game->settings.keys[KEY_DOWN], game->window))
-					player->movement.speed += player->stats.sprintSpeed * (isPressed(game->settings.keys[KEY_UP], game->window) - isPressed(game->settings.keys[KEY_DOWN], game->window)) - 1;
-				if (isPressed(game->settings.keys[KEY_UP], game->window) - isPressed(game->settings.keys[KEY_DOWN], game->window) != 0)
+			if (isPressed(game.settings.keys[KEY_SPRINT], game.ressources.window) && player->stats.energy >= player->stats.sprintSpeed) {
+				player->movement.pos.y -= player->stats.sprintSpeed * (isPressed(game.settings.keys[KEY_UP], game.ressources.window) - isPressed(game.settings.keys[KEY_DOWN], game.ressources.window)) - 1;
+				if (!mooved && isPressed(game.settings.keys[KEY_UP], game.ressources.window) - isPressed(game.settings.keys[KEY_DOWN], game.ressources.window))
+					player->movement.speed += player->stats.sprintSpeed * (isPressed(game.settings.keys[KEY_UP], game.ressources.window) - isPressed(game.settings.keys[KEY_DOWN], game.ressources.window)) - 1;
+				if (isPressed(game.settings.keys[KEY_UP], game.ressources.window) - isPressed(game.settings.keys[KEY_DOWN], game.ressources.window) != 0)
 					player->stats.energyClock++;
 			}
 			mooved = player->movement.speed != 0;
 		}
-		if (!player->movement.blocked.down && isPressed(game->settings.keys[KEY_DOWN], game->window)) {
-			player->movement.pos.y += isPressed(game->settings.keys[KEY_DOWN], game->window);
-			if (isPressed(game->settings.keys[KEY_DOWN], game->window) - isPressed(game->settings.keys[KEY_UP], game->window))
+		if (!player->movement.blocked.down && isPressed(game.settings.keys[KEY_DOWN], game.ressources.window)) {
+			player->movement.pos.y += isPressed(game.settings.keys[KEY_DOWN], game.ressources.window);
+			if (isPressed(game.settings.keys[KEY_DOWN], game.ressources.window) - isPressed(game.settings.keys[KEY_UP], game.ressources.window))
 				player->movement.position = DOWN;
-			player->movement.state = isPressed(game->settings.keys[KEY_DOWN], game->window) - isPressed(game->settings.keys[KEY_UP], game->window) ? MOVING : player->movement.state;
+			player->movement.state = isPressed(game.settings.keys[KEY_DOWN], game.ressources.window) - isPressed(game.settings.keys[KEY_UP], game.ressources.window) ? MOVING : player->movement.state;
 			if (!mooved)
-				player->movement.speed += isPressed(game->settings.keys[KEY_DOWN], game->window) - isPressed(game->settings.keys[KEY_UP], game->window);
-			if (isPressed(game->settings.keys[KEY_DOWN], game->window) - isPressed(game->settings.keys[KEY_UP], game->window))
+				player->movement.speed += isPressed(game.settings.keys[KEY_DOWN], game.ressources.window) - isPressed(game.settings.keys[KEY_UP], game.ressources.window);
+			if (isPressed(game.settings.keys[KEY_DOWN], game.ressources.window) - isPressed(game.settings.keys[KEY_UP], game.ressources.window))
 				sfClock_restart(player->movement.stateClock);
-			if (isPressed(game->settings.keys[KEY_SPRINT], game->window) && player->stats.energy >= player->stats.sprintSpeed) {
-				player->movement.pos.y += player->stats.sprintSpeed * (isPressed(game->settings.keys[KEY_DOWN], game->window) - isPressed(game->settings.keys[KEY_UP], game->window)) - 1;
-				if (!mooved && isPressed(game->settings.keys[KEY_DOWN], game->window) - isPressed(game->settings.keys[KEY_UP], game->window))
-					player->movement.speed += player->stats.sprintSpeed * (isPressed(game->settings.keys[KEY_DOWN], game->window) - isPressed(game->settings.keys[KEY_UP], game->window)) - 1;
-				if (isPressed(game->settings.keys[KEY_DOWN], game->window) - isPressed(game->settings.keys[KEY_UP], game->window) != 0)
+			if (isPressed(game.settings.keys[KEY_SPRINT], game.ressources.window) && player->stats.energy >= player->stats.sprintSpeed) {
+				player->movement.pos.y += player->stats.sprintSpeed * (isPressed(game.settings.keys[KEY_DOWN], game.ressources.window) - isPressed(game.settings.keys[KEY_UP], game.ressources.window)) - 1;
+				if (!mooved && isPressed(game.settings.keys[KEY_DOWN], game.ressources.window) - isPressed(game.settings.keys[KEY_UP], game.ressources.window))
+					player->movement.speed += player->stats.sprintSpeed * (isPressed(game.settings.keys[KEY_DOWN], game.ressources.window) - isPressed(game.settings.keys[KEY_UP], game.ressources.window)) - 1;
+				if (isPressed(game.settings.keys[KEY_DOWN], game.ressources.window) - isPressed(game.settings.keys[KEY_UP], game.ressources.window) != 0)
 					player->stats.energyClock++;
 			}
 			mooved = player->movement.speed != 0;
@@ -515,8 +515,8 @@ bool	addStringToDialogBox(char *str, char **resulting)
 
 void	resolveCommand(DialogDisplayed *diag)
 {
-	char		*command = &diag->rawText[diag->index + 1];
-	CommandInfos	infos;
+	char	*command = &diag->rawText[diag->index + 1];
+	char	*result;
 
 	for (diag->index++; diag->rawText[diag->index] && diag->rawText[diag->index] != '%'; diag->index++);
 	if (!diag->rawText[diag->index]) {
@@ -524,62 +524,61 @@ void	resolveCommand(DialogDisplayed *diag)
 		return;
 	}
 	diag->rawText[diag->index] = 0;
-	infos = executeCommand(command, NULL);
-	if (infos.stderror)
-		addStringToDialogBox(infos.stderror, &diag->displayedText);
-	free(infos.stderror);
-	free(infos.stdoutput);
+	result = executeCommand(command, NULL);
+	if (result)
+		addStringToDialogBox(result, &diag->displayedText);
+	free(result);
 	diag->rawText[diag->index] = '%';
 	diag->index++;
 }
 
-void	displayDialogs(game_t *game)
+void	displayDialogs()
 {
-	for (int i = 0; i < game->dialogs; i++) {
-		if (!game->dialogsOnScreen[i].displayedText)
-			game->dialogsOnScreen[i].displayedText = concatf("%s: ", game->dialogsOnScreen[i].dialogOwnerName);
-		sfText_setCharacterSize(game->text, 15);
-		sfText_setColor(game->text, (sfColor){255, 255, 255, 255});
-		text(game->dialogsOnScreen[i].displayedText, game, 10, 390, false);
-		if (game->dialogsOnScreen[i].index < (int)strlen(game->dialogsOnScreen[i].rawText) - 1 && sfTime_asSeconds(sfClock_getElapsedTime(game->dialogsOnScreen[i].clock)) > game->dialogsOnScreen[i].speed) {
-			if (game->dialogsOnScreen[i].rawText[game->dialogsOnScreen[i].index] == '%')
-				resolveCommand(&game->dialogsOnScreen[i]);
+	for (int i = 0; i < game.state.dialogs; i++) {
+		if (!game.state.dialogsOnScreen[i].displayedText)
+			game.state.dialogsOnScreen[i].displayedText = concatf("%s: ", game.state.dialogsOnScreen[i].dialogOwnerName);
+		sfText_setCharacterSize(game.ressources.text, 15);
+		sfText_setColor(game.ressources.text, (sfColor){255, 255, 255, 255});
+		text(game.state.dialogsOnScreen[i].displayedText, 10, 390, false);
+		if (game.state.dialogsOnScreen[i].index < (int)strlen(game.state.dialogsOnScreen[i].rawText) - 1 && sfTime_asSeconds(sfClock_getElapsedTime(game.state.dialogsOnScreen[i].clock)) > game.state.dialogsOnScreen[i].speed) {
+			if (game.state.dialogsOnScreen[i].rawText[game.state.dialogsOnScreen[i].index] == '%')
+				resolveCommand(&game.state.dialogsOnScreen[i]);
 			else
-				addCharacter(game->dialogsOnScreen[i].rawText[game->dialogsOnScreen[i].index++], &game->dialogsOnScreen[i].displayedText);
-			sfClock_restart(game->dialogsOnScreen[i].clock);
+				addCharacter(game.state.dialogsOnScreen[i].rawText[game.state.dialogsOnScreen[i].index++], &game.state.dialogsOnScreen[i].displayedText);
+			sfClock_restart(game.state.dialogsOnScreen[i].clock);
 		}
 	}
 }
 
-void	inGame(game_t *game)
+void	inGame()
 {
-	Character	*player = getPlayer(game->characters.content, game->characters.length);
+	Character	*player = getPlayer(game.state.characters.content, game.state.characters.length);
 	char		*tmp = NULL;
 	static int	color = 255;
 
-	displayLowerLayer(game);
-	displayCharacters(game);
-	displayUpperLayer(game);
-	displayHUD(game);
+	displayLowerLayer();
+	displayCharacters();
+	displayUpperLayer();
+	displayHUD();
 	if (player->movement.speed < 0)
 		player->movement.speed = 0;
-	if (game->debug) {
-		sfText_setCharacterSize(game->text, 10);
-		tmp = concatf("X: %f\nY: %f\ncamX: %i\ncamY: %i\n", player->movement.pos.x, player->movement.pos.y, game->cam.x, game->cam.y);
-		sfText_setColor(game->text, (sfColor){abs(color), abs(color), abs(color), 255});
-		text(tmp, game, 0, game->settings.dispFramerate ? 10 : 0, false);
+	if (game.debug) {
+		sfText_setCharacterSize(game.ressources.text, 10);
+		tmp = concatf("X: %f\nY: %f\ncamX: %i\ncamY: %i\n", player->movement.pos.x, player->movement.pos.y, game.state.cameraPos.x, game.state.cameraPos.y);
+		sfText_setColor(game.ressources.text, (sfColor){abs(color), abs(color), abs(color), 255});
+		text(tmp, 0, game.settings.dispFramerate ? 10 : 0, false);
 		free(tmp);
 		color--;
 		if (color < -255)
 			color *= -1;
 	}
-	movePlayer(game);
-	if (game->dialogs) {
-		image(game, ((Sprite *)game->sprites.content)[DIALOG_BOX].sprite, 0, 380, 640, 100);
-		displayDialogs(game);
+	movePlayer();
+	if (game.state.dialogs) {
+		image(((Sprite *)game.ressources.sprites.content)[DIALOG_BOX].sprite, 0, 380, 640, 100);
+		displayDialogs();
 	}
-	for (int i = 0; i < game->characters.length; i++) {
-		Character	*chara = &((Character *)game->characters.content)[i];
+	for (int i = 0; i < game.state.characters.length; i++) {
+		Character	*chara = &((Character *)game.state.characters.content)[i];
 
 		if (chara->stats.life > 10 * chara->stats.lifeMax)
 			chara->stats.life = 10 * chara->stats.lifeMax;

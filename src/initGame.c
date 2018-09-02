@@ -11,7 +11,7 @@
 #include <errno.h>
 #include <unistd.h>
 
-void	displayLoadingBar(game_t *game, int step, int maxSteps, int file, int maxFiles, char *status)
+void	displayLoadingBar(int step, int maxSteps, int file, int maxFiles, char *status)
 {
 	sfVector2f	pos2 = {100, 250};
 	sfVector2f	size2 = {440 * step / maxSteps, 50};
@@ -26,30 +26,30 @@ void	displayLoadingBar(game_t *game, int step, int maxSteps, int file, int maxFi
 		printf("%s: Couldn't create loading screen text\n", FATAL);
 		exit(EXIT_FAILURE);
 	}
-	if (game->text) {
-		sfText_setColor(game->text, (sfColor){255, 255, 255, 255});
-		sfText_setCharacterSize(game->text, 15);
+	if (game.ressources.text) {
+		sfText_setColor(game.ressources.text, (sfColor){255, 255, 255, 255});
+		sfText_setCharacterSize(game.ressources.text, 15);
 	}
-	sfRectangleShape_setFillColor(game->rectangle, (sfColor){150, 150, 150, 255});
-	sfRectangleShape_setPosition(game->rectangle, pos);
-	sfRectangleShape_setSize(game->rectangle, size);
-	sfRenderWindow_clear(game->window, (sfColor){0, 0, 0, 255});
-	rect(game, pos.x - 5, pos.y - 5, 450, 60);
-	rect(game, pos2.x - 5, pos2.y - 5, 450, 60);
-	sfRectangleShape_setFillColor(game->rectangle, (sfColor){0, 0, 0, 255});
-	rect(game, pos.x, pos.y, 440, 50);
-	rect(game, pos2.x, pos2.y, 440, 50);
-	sfRectangleShape_setFillColor(game->rectangle, (sfColor){0, 0, 255, 255});
-	rect(game, pos.x, pos.y, size.x, size.y);
-	sfRectangleShape_setFillColor(game->rectangle, (sfColor){0, 255, 0, 255});
-	rect(game, pos2.x, pos2.y, size2.x, size2.y);
-	text(status, game, 320 - strlen(status) / 2 * 6, 310, false);
-	text(nbr, game, 320 - strlen(nbr) / 2 * 7, 410, false);
-	if (game->sprites.content && ((Sprite *)game->sprites.content)[ICON].sprite)
-		image(game, ((Sprite *)game->sprites.content)[ICON].sprite, 256, 100, 128, 128);
-	else if (game->icon.sprite)
-		image(game, game->icon.sprite, 256, 100, 128, 128);
-	sfRenderWindow_display(game->window);
+	sfRectangleShape_setFillColor(game.ressources.rectangle, (sfColor){150, 150, 150, 255});
+	sfRectangleShape_setPosition(game.ressources.rectangle, pos);
+	sfRectangleShape_setSize(game.ressources.rectangle, size);
+	sfRenderWindow_clear(game.ressources.window, (sfColor){0, 0, 0, 255});
+	rect(pos.x - 5, pos.y - 5, 450, 60);
+	rect(pos2.x - 5, pos2.y - 5, 450, 60);
+	sfRectangleShape_setFillColor(game.ressources.rectangle, (sfColor){0, 0, 0, 255});
+	rect(pos.x, pos.y, 440, 50);
+	rect(pos2.x, pos2.y, 440, 50);
+	sfRectangleShape_setFillColor(game.ressources.rectangle, (sfColor){0, 0, 255, 255});
+	rect(pos.x, pos.y, size.x, size.y);
+	sfRectangleShape_setFillColor(game.ressources.rectangle, (sfColor){0, 255, 0, 255});
+	rect(pos2.x, pos2.y, size2.x, size2.y);
+	text(status, 320 - strlen(status) / 2 * 6, 310, false);
+	text(nbr, 320 - strlen(nbr) / 2 * 7, 410, false);
+	if (game.ressources.sprites.content && ((Sprite *)game.ressources.sprites.content)[ICON].sprite)
+		image(((Sprite *)game.ressources.sprites.content)[ICON].sprite, 256, 100, 128, 128);
+	else if (game.ressources.icon.sprite)
+		image(game.ressources.icon.sprite, 256, 100, 128, 128);
+	sfRenderWindow_display(game.ressources.window);
 	free(nbr);
 	free(status);
 }
@@ -76,7 +76,7 @@ char	*getVersion()
 	return (version);
 }
 
-void	initGame(game_t *game)
+void	initGame()
 {
 	char		*title = concat("VEDA version ", getVersion(), false, true);
 	const sfUint8	*icon = NULL;
@@ -85,22 +85,22 @@ void	initGame(game_t *game)
 	sfWindowStyle	style;
 	Character	player;
 
-	memset(game, 0, sizeof(*game));
+	memset(&game, 0, sizeof(game));
 	memset(&player, 0, sizeof(player));
-	game->settings = loadSettings();
-	if (game->settings.windowMode == FULLSCREEN) {
+	game.settings = loadSettings();
+	if (game.settings.windowMode == FULLSCREEN) {
 		style = sfFullscreen;
 		mode = sfVideoMode_getDesktopMode();
-	} else if (game->settings.windowMode == BORDERLESS_WINDOW) {
+	} else if (game.settings.windowMode == BORDERLESS_WINDOW) {
 		style = sfNone;
 		mode = sfVideoMode_getDesktopMode();
 	} else {
 		style = sfTitlebar | sfClose;
-		mode.width = game->settings.windowSize.x;
-		mode.height = game->settings.windowSize.y;
+		mode.width = game.settings.windowSize.x;
+		mode.height = game.settings.windowSize.y;
 	}
-	game->baseScale.x = (float)mode.width / 640.0;
-	game->baseScale.y = (float)mode.height / 480.0;
+	game.settings.baseScale.x = (float)mode.width / 640.0;
+	game.settings.baseScale.y = (float)mode.height / 480.0;
 	if (image)
 		icon = sfImage_getPixelsPtr(image);
 	else
@@ -110,45 +110,45 @@ void	initGame(game_t *game)
 		dispMsg("Window error", "Couldn't create window title", 0);
 		exit(EXIT_FAILURE);
 	}
-	game->window = sfRenderWindow_create(mode, title, style, NULL);
-	if (!game->window) {
+	game.ressources.window = sfRenderWindow_create(mode, title, style, NULL);
+	if (!game.ressources.window) {
 		printf("%s: Couldn't create window\n", FATAL);
 		dispMsg("Window error", "Couldn't create window object", 0);
 		exit(EXIT_FAILURE);
 	}
 	if (icon)
-		sfRenderWindow_setIcon(game->window, 32, 32, icon);
-	game->rectangle = sfRectangleShape_create();
-	if (!game->rectangle) {
+		sfRenderWindow_setIcon(game.ressources.window, 32, 32, icon);
+	game.ressources.rectangle = sfRectangleShape_create();
+	if (!game.ressources.rectangle) {
 		printf("%s: Couldn't create rectangle object\n", FATAL);
 		exit(EXIT_FAILURE);
 	}
-	game->text = sfText_create();
-	if (!game->text) {
+	game.ressources.text = sfText_create();
+	if (!game.ressources.text) {
 		printf("%s: Couldn't create text object\n", FATAL);
 		exit(EXIT_FAILURE);
 	}
-	game->icon.image = image;
+	game.ressources.icon.image = image;
 	if (image)
-		game->icon.texture = sfTexture_createFromImage(image, NULL);
-	game->icon.sprite = sfSprite_create();
-	if (game->icon.sprite && game->icon.texture)
-		sfSprite_setTexture(game->icon.sprite, game->icon.texture, sfTrue);
-	memset(&game->characters, 0, sizeof(game->characters));
-	game->dialogLuaScript = luaL_newstate();
-	addDependencies(game->dialogLuaScript);
-	if (luaL_dofile(game->dialogLuaScript, "data/dialogs/script.lua")) {
+		game.ressources.icon.texture = sfTexture_createFromImage(image, NULL);
+	game.ressources.icon.sprite = sfSprite_create();
+	if (game.ressources.icon.sprite && game.ressources.icon.texture)
+		sfSprite_setTexture(game.ressources.icon.sprite, game.ressources.icon.texture, sfTrue);
+	memset(&game.state.characters, 0, sizeof(game.state.characters));
+	game.ressources.dialogLuaScript = luaL_newstate();
+	addDependencies(game.ressources.dialogLuaScript);
+	if (luaL_dofile(game.ressources.dialogLuaScript, "data/dialogs/script.lua")) {
 		printf("%s: An unexpected error occurred when loading data/dialogs/script.lua\n", ERROR);
-		lua_close(game->dialogLuaScript);
-		game->dialogLuaScript = NULL;
+		lua_close(game.ressources.dialogLuaScript);
+		game.ressources.dialogLuaScript = NULL;
 	}/*
-	game->characters.content = malloc(sizeof(Character));
-	if (!game->characters.content) {
+	game.state.characters.content = malloc(sizeof(Character));
+	if (!game.state.characters.content) {
 		printf("%s: Couldn't create player object\n", FATAL);
 		exit(EXIT_FAILURE);
 	}
-	game->characters.length = 1;
-	game->selected = -1;
+	game.state.characters.length = 1;
+	game.state.menuSelected = -1;
 	player.movement.animationClock = sfClock_create();
 	player.movement.stateClock = sfClock_create();
 	player.stats.energyRegenClock = sfClock_create();
@@ -163,20 +163,20 @@ void	initGame(game_t *game)
 	player.movement.canMove = true;
 	player.isPlayer = true;
 	player.texture = 0;
-	strcpy(player.name, game->settings.playerName);
+	strcpy(player.name, game.settings.playerName);
 	for (int i = 0; i < DAMAGES_TYPE_NB; i++)
 		player.damageClock[i] = sfClock_create();
-	((Character *)game->characters.content)[0] = player;*/
-	memset(game->buffer, 0, BUFFER_MAX_SIZE * sizeof(*game->buffer));
-	game->bufSize = BUFFER_MAX_SIZE;
-	game->fonts = loadFonts(game);
-	game->sprites = loadSprites(game);
-	game->musics = loadMusics(game);
-	setVolumes(game->musics, game->settings.musicVolume);
-	game->sfx = loadSfx(game);
-	setVolumes(game->sfx, game->settings.sfxVolume);
-	game->languages = loadLanguages(game);
-	game->buttons = loadButtons(game);
-	sfRenderWindow_setFramerateLimit(game->window, 60);
+	((Character *)game.state.characters.content)[0] = player;*/
+	memset(game.input.buffer, 0, BUFFER_MAX_SIZE * sizeof(*game.input.buffer));
+	game.input.bufSize = BUFFER_MAX_SIZE;
+	game.ressources.fonts = loadFonts();
+	game.ressources.sprites = loadSprites();
+	game.ressources.musics = loadMusics();
+	setVolumes(game.ressources.musics, game.settings.musicVolume);
+	game.ressources.sfx = loadSfx();
+	setVolumes(game.ressources.sfx, game.settings.sfxVolume);
+	game.ressources.languages = loadLanguages();
+	game.ressources.buttons = loadButtons();
+	sfRenderWindow_setFramerateLimit(game.ressources.window, 60);
 	free(title);
 }

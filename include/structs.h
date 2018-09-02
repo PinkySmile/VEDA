@@ -3,7 +3,6 @@
 #include <SFML/Graphics.h>
 #include <SFML/Audio.h>
 #include <stdbool.h>
-#define LUA_COMPAT_MODULE
 #include <lua.h>
 #include <lualib.h>
 #include <lauxlib.h>
@@ -217,6 +216,7 @@ typedef struct {
 	Dialog		dialogs;
 	char		*battleScript;
 	char		**dialogsStrings;
+	enum sfx	stepSound;
 } Character;
 
 typedef struct {
@@ -236,6 +236,8 @@ typedef struct {
 	char		lang_id[256];
 	char		playerName[16];
 	bool		dispFramerate;
+	bool		characterChosed;
+	sfVector2f	baseScale;
 } Settings;
 
 typedef struct game_s game_t;
@@ -246,7 +248,7 @@ typedef struct {
 	sfVector2f	size;
 	sfColor		color;
 	sfColor		textColor;
-	void		(*callback)(game_t *, int);
+	void		(*callback)(int);
 	bool		disabled;
 } Button_config;
 
@@ -256,7 +258,7 @@ typedef struct {
 	sfVector2f		size;
 	sfColor			color;
 	sfColor			textColor;
-	void			(*callback)(game_t *, int);
+	void			(*callback)(int);
 	sfRectangleShape	*rect;
 	bool			displayed;
 	bool			active;
@@ -331,12 +333,6 @@ typedef struct {
 } Battle;
 
 typedef struct {
-	int	returnValue;
-	char	*stderror;
-	char	*stdoutput;
-} CommandInfos;
-
-typedef struct {
 	char		*displayedText;
 	char		*dialogOwnerName;
 	char		*rawText;
@@ -345,39 +341,55 @@ typedef struct {
 	sfClock		*clock;
 } DialogDisplayed;
 
-struct game_s {
-	sfRenderWindow		*window;
-	int			menu;
+typedef struct {
+	Icon			icon;
+	Button			*buttons;
 	Array			sprites;
 	Array			musics;
 	Array			sfx;
-	Settings		settings;
+	Array			fonts;
+	sfRenderWindow		*window;
+	Language		*languages;
 	sfRectangleShape	*rectangle;
 	sfCircleShape		*circle;
 	sfText			*text;
-	Array			fonts;
-	sfVector2f		baseScale;
-	sfVector2i		cam;
-	enum sfx		stepSound;
-	Array			characters;
-	Button			*buttons;
-	Icon			icon;
-	Language		*languages;
-	Object			*map;
-	char			*bg;
-	sfVector2i		languagesConf;
-	bool			debug;
-	bool			characterChosed;
-	int			selected;
-	float			trashCan;
-	char			*loadedMap;
-	sfUint32		buffer[BUFFER_MAX_SIZE + 1];
-	int			bufPos;
-	int			bufSize;
-	int			dialogs;
-	DialogDisplayed		*dialogsOnScreen;
-	Battle			battle_infos;
 	lua_State		*dialogLuaScript;
+} Ressources;
+
+typedef struct {
+	sfUint32	buffer[BUFFER_MAX_SIZE + 1];
+	int		bufPos;
+	int		bufSize;
+} Input;
+
+typedef struct {
+	Object		*objects;
+	Sprite		background;
+	char		*backgroundPath;
+	char		*path;
+} Map;
+
+typedef struct {
+	int		menu;
+	sfVector2i	cameraPos;
+	Array		characters;
+	Battle		battle_infos;
+	Map		loadedMap;
+	int		dialogs;
+	DialogDisplayed	*dialogsOnScreen;
+	int		menuSelected;
+} GameState;
+
+struct game_s {
+	bool		debug;
+	Ressources	ressources;
+	Settings	settings;
+	GameState	state;
+	Input		input;
+	sfVector2i	languagesConf;
 };
+
+extern game_t game;
+extern	void	(* const game_functions[])();
 
 #endif

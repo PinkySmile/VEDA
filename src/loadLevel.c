@@ -378,35 +378,35 @@ Array	loadCharacters(char *path)
 	return (characters);
 }
 
-void	loadLevel(char *path, game_t *game)
+void	loadLevel(char *path)
 {
 	char	*buffer = concatf("%s/level/floor0.lvl", path);
 
-	free(game->map);
-	game->map = loadMap(buffer, &game->bg);
+	free(game.state.loadedMap.objects);
+	game.state.loadedMap.objects = loadMap(buffer, &game.state.loadedMap.backgroundPath);
 	free(buffer);
-	free(game->characters.content);
+	free(game.state.characters.content);
 	buffer = concatf("%s/characters.chr", path);
-	game->characters = loadCharacters(buffer);
-	if (!game->characters.content) {
+	game.state.characters = loadCharacters(buffer);
+	if (!game.state.characters.content) {
 		Character buff;
 
-		game->characters.content = malloc(sizeof(Character) * 2);
-		game->characters.length = 2;
+		game.state.characters.content = malloc(sizeof(Character) * 2);
+		game.state.characters.length = 2;
 		memset(&buff, 0, sizeof(buff));
 		buff.movement.animationClock = sfClock_create();
 		buff.movement.stateClock = sfClock_create();
 		buff.stats.energyRegenClock = sfClock_create();
 		for (int j = 0; j < DAMAGES_TYPE_NB; j++)
 			buff.damageClock[j] = sfClock_create();
-		((Character *)game->characters.content)[0] = buff;
+		((Character *)game.state.characters.content)[0] = buff;
 		buff.movement.animationClock = sfClock_create();
 		buff.movement.stateClock = sfClock_create();
 		buff.stats.energyRegenClock = sfClock_create();
 		for (int j = 0; j < DAMAGES_TYPE_NB; j++)
 			buff.damageClock[j] = sfClock_create();
-		((Character *)game->characters.content)[1] = buff;
+		((Character *)game.state.characters.content)[1] = buff;
 	}
-	((Character *)game->characters.content)[0].isPlayer = true;
+	((Character *)game.state.characters.content)[0].isPlayer = true;
 	free(buffer);
 }

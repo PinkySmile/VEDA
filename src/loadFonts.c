@@ -5,7 +5,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-Array	loadFonts(game_t *game)
+Array	loadFonts()
 {
 	Array	array = {NULL, 0};
 	int	len = 0;
@@ -28,8 +28,8 @@ Array	loadFonts(game_t *game)
 				dispMsg("Loading error.", concatf(ERROR_DEFAULT_FONT, fonts_conf[i]), 0);
 				exit(EXIT_FAILURE);
 			} else
-				setFont(game->text, fonts[ARIAL]);
-		displayLoadingBar(game, 1, MAX_STEPS, i + 1, len, "Loading fonts");
+				setFont(game.ressources.text, fonts[ARIAL]);
+		displayLoadingBar(1, MAX_STEPS, i + 1, len, "Loading fonts");
 		if (!fonts[i])
 			printf("%s: Couldn't load file %s\n", ERROR, fonts_conf[i]);
 	}

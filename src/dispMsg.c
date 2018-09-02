@@ -1,13 +1,12 @@
-#ifdef __MINGW32__
+#if defined _WIN32 || defined __WIN32 || defined __WIN32__
 #	include <windows.h>
 #else
 #	include <SFML/Graphics.h>
 #endif
-#include "macros.h"
 
 int	dispMsg(char *title, char *content, int variate)
 {
-	#ifdef __MINGW32__
+	#if defined _WIN32 || defined __WIN32 || defined __WIN32__
 		return (MessageBox(NULL, content, title, variate));
 	#else
 		char			**buttons = NULL;

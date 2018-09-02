@@ -7,18 +7,18 @@
 #include "macros.h"
 #include "game_functions.h"
 
-void	launchGame(game_t *game)
+void	launchGame()
 {
 	static int	loopCount = 0;
 	static int	oldTime = 0;
 	static char	*frameRate = NULL;
 
 	printf("%s: Launching game\n", INFO);
-	while (sfRenderWindow_isOpen(game->window)) {
-		sfRenderWindow_clear(game->window, (sfColor){0, 0, 0, 255});
-		game_functions[game->menu](game);
-		disp_buttons(game);
-		manageEvents(game);
+	while (sfRenderWindow_isOpen(game.ressources.window)) {
+		sfRenderWindow_clear(game.ressources.window, (sfColor){0, 0, 0, 255});
+		game_functions[game.state.menu]();
+		disp_buttons();
+		manageEvents();
 		loopCount++;
 		if (oldTime != time(NULL)) {
 			free(frameRate);
@@ -26,18 +26,18 @@ void	launchGame(game_t *game)
 			loopCount = 0;
 			oldTime = time(NULL);
 		}
-		if (game->settings.dispFramerate) {
-			sfText_setCharacterSize(game->text, 10);
-			sfText_setColor(game->text, (sfColor){255, 255, 255, 255});
-			text(frameRate, game, 2, 0, false);
+		if (game.settings.dispFramerate) {
+			sfText_setCharacterSize(game.ressources.text, 10);
+			sfText_setColor(game.ressources.text, (sfColor){255, 255, 255, 255});
+			text(frameRate, 2, 0, false);
 		}
-		if (game->debug) {
-			sfText_setCharacterSize(game->text, 10);
-			sfText_setColor(game->text, (sfColor){255, 255, 255, 255});
-			text("Debug mode", game, 580, 0, false);
-			sfText_setColor(game->text, (sfColor){0, 0, 0, 255});
+		if (game.debug) {
+			sfText_setCharacterSize(game.ressources.text, 10);
+			sfText_setColor(game.ressources.text, (sfColor){255, 255, 255, 255});
+			text("Debug mode", 580, 0, false);
+			sfText_setColor(game.ressources.text, (sfColor){0, 0, 0, 255});
 		}
-		sfRenderWindow_display(game->window);
+		sfRenderWindow_display(game.ressources.window);
 	}
 	free(frameRate);
 }

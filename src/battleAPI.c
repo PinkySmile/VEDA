@@ -9,16 +9,14 @@
 #include "lauxlib.h"
 #include "concatf.h"
 
-extern	game_t	game;
-extern	void	(* const game_functions[])(game_t *game);
 extern	const	luaL_Reg	projectiles_lib[];
 extern	const	luaL_Reg	character_lib[];
 
 Projectile	*addProjectile(int id, int x, int y, int ownerID, float angle, float speed, float rotaSpeed, float accel, int marker)
 {
-	Projectile	*bank = game.battle_infos.projectileBank.content;
+	Projectile	*bank = game.state.battle_infos.projectileBank.content;
 	Projectile	*proj;
-	list_t		*list = &game.battle_infos.projectiles;
+	list_t		*list = &game.state.battle_infos.projectiles;
 
 	for (; list->next && list->data; list = list->next);
 	if (list->data) {
@@ -138,12 +136,12 @@ int	playSoundLua(lua_State *Lua)
 	int	arg = lua_tonumber(Lua, 1);
 
 	if (lua_isnumber(Lua, 1)) {
-		if (arg < 0 || arg > game.sfx.length) {
+		if (arg < 0 || arg > game.ressources.sfx.length) {
 			lua_pushboolean(Lua, false);
 			lua_pushstring(Lua, "index out of range");
 			return (2);
-		} else if (((sfMusic **)game.sfx.content)[arg]) {
-			sfMusic_play(((sfMusic **)game.sfx.content)[arg]);
+		} else if (((sfMusic **)game.ressources.sfx.content)[arg]) {
+			sfMusic_play(((sfMusic **)game.ressources.sfx.content)[arg]);
 			lua_pushboolean(Lua, true);
 			return (1);
 		}
@@ -373,13 +371,13 @@ int	stopTime(lua_State *Lua)
 {
 	if (!lua_isboolean(Lua, 1))
 		luaL_error(Lua, "Invalid argument #1 to 'stopTime': Expected boolean, got %s", lua_typename(Lua, lua_type(Lua, 1)));
-	game.battle_infos.timeStopped = lua_toboolean(Lua, 1);
+	game.state.battle_infos.timeStopped = lua_toboolean(Lua, 1);
 	return 0;
 }
 
 int	getElapsedTime(lua_State *Lua)
 {
-	lua_pushnumber(Lua, sfTime_asSeconds(sfClock_getElapsedTime(game.battle_infos.clock)));
+	lua_pushnumber(Lua, sfTime_asSeconds(sfClock_getElapsedTime(game.state.battle_infos.clock)));
 	return 1;
 }
 
@@ -396,7 +394,7 @@ int	addProjectileLua(lua_State *Lua)
 	double		marker		= lua_isnone(Lua, 9) ? 0 : luaL_checknumber(Lua, 9);
 	Projectile	*proj;
 
-	if (projID >= game.battle_infos.projectileBank.length || projID < 0) {
+	if (projID >= game.state.battle_infos.projectileBank.length || projID < 0) {
 		lua_pushnil(Lua);
 		lua_pushstring(Lua, "index out of bank range");
 	        return 2;
@@ -412,7 +410,7 @@ int	yield(lua_State *Lua)
 {
 	int	frames = lua_isnone(Lua, 1) ? 1 : luaL_checknumber(Lua, 1);
 
-	game.battle_infos.yieldTime = frames;
+	game.state.battle_infos.yieldTime = frames;
 	if (frames <= 0)
 		return 0;
 	return lua_yield(Lua, 0);

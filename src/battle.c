@@ -11,8 +11,6 @@
 #include <stdlib.h>
 #include <math.h>
 
-extern game_t game;
-
 int	proj2string(lua_State *Lua)
 {
 	Projectile	**proj = luaL_checkudata(Lua, 1, "projectile");
@@ -41,8 +39,6 @@ const luaL_Reg game_api[] = {
 };
 
 const luaL_Reg character_lib[] = {
-	{"get", getCharacterField},
-	{"set", setCharacterField},
 	{"__index", getCharacterField},
 	{"__newindex", setCharacterField},
 	{"__tostring", char2string},
@@ -50,8 +46,6 @@ const luaL_Reg character_lib[] = {
 };
 
 const luaL_Reg projectiles_lib[] = {
-	{"get", getProjectileField},
-	{"set", setProjectileField},
 	{"setToRemove", destroyProjectile},
 	{"__index", getProjectileField},
 	{"__newindex", setProjectileField},
@@ -119,7 +113,7 @@ Array	loadProjectiles(char *path)
 	ParserObj	*buffer;
 	ParserObj	*buffer2;
 	ParserObj	*currProjectile;
-	sfVector2f	scaling = game.baseScale;
+	sfVector2f	scaling = game.settings.baseScale;
 	Projectile	projBuffer;
 	Array		array;
 
@@ -163,7 +157,7 @@ Array	loadProjectiles(char *path)
 				});
 				projBuffer.needToDestroySprite = true;
 			} else if (buffer->type == ParserIntType) {
-				projBuffer.sprite = ((Sprite *)game.sprites.content)[ParserInt_toInt(buffer->data) % game.sprites.length];
+				projBuffer.sprite = ((Sprite *)game.ressources.sprites.content)[ParserInt_toInt(buffer->data) % game.ressources.sprites.length];
 			} else
 				return invalidTypeArray(result, path, "Invalid type for field \"sprite_sheet\"", buffer->type, ParserStringType);
 		} else
@@ -194,14 +188,14 @@ Array	loadProjectiles(char *path)
 			if (buffer->type == ParserObjType) {
 				if (buffer2 = ParserObj_getElement(buffer->data, "x")) {
 					if (buffer2->type == ParserIntType) {
-						scaling.x = game.baseScale.x * (float)ParserInt_toInt(buffer2->data) / (float)projBuffer.sprite.rect.width;
+						scaling.x = game.settings.baseScale.x * (float)ParserInt_toInt(buffer2->data) / (float)projBuffer.sprite.rect.width;
 					} else
 						return invalidTypeArray(result, path, "Invalid type for field \"x\" in \"bullet_size\"", buffer2->type, ParserIntType);
 				} else
 					printf("%s: Field \"x\" is missing in \"bullet_size\"\n", WARNING);
 				if (buffer2 = ParserObj_getElement(buffer->data, "y")) {
 					if (buffer2->type == ParserIntType) {
-						scaling.y = game.baseScale.y * (float)ParserInt_toInt(buffer2->data) / (float)projBuffer.sprite.rect.height;
+						scaling.y = game.settings.baseScale.y * (float)ParserInt_toInt(buffer2->data) / (float)projBuffer.sprite.rect.height;
 					} else
 						return invalidTypeArray(result, path, "Invalid type for field \"y\" in \"bullet_size\"", buffer2->type, ParserIntType);
 				} else
@@ -343,7 +337,7 @@ void	addDependencies(lua_State *Lua)
 
 Battle	loadBattleScript(char *path)
 {
-	Battle		battle = game.battle_infos;
+	Battle		battle = game.state.battle_infos;
 	int		err;
 	ParserResult	result = Parser_parseFile(path, NULL);
 	ParserObj	*buffer;
@@ -401,7 +395,7 @@ Battle	loadBattleScript(char *path)
 			});
 			battle.needToDestroySprite = true;
 		} else if (buffer->type == ParserIntType) {
-			battle.bossSprite = ((Sprite *)game.sprites.content)[ParserInt_toInt(buffer->data) % game.sprites.length];
+			battle.bossSprite = ((Sprite *)game.ressources.sprites.content)[ParserInt_toInt(buffer->data) % game.ressources.sprites.length];
 		} else
 			return invalidType(result, path, "Invalid type for field \"boss_sprite_sheet\"", buffer->type, ParserStringType);
 	} else
@@ -436,7 +430,7 @@ Battle	loadBattleScript(char *path)
 				true,
 			});
 		} else if (buffer->type == ParserIntType) {
-			battle.music = ((sfMusic **)game.musics.content)[ParserInt_toInt(buffer->data) % game.musics.length];
+			battle.music = ((sfMusic **)game.ressources.musics.content)[ParserInt_toInt(buffer->data) % game.ressources.musics.length];
 		} else
 			return invalidType(result, path, "Invalid type for field \"music\"", buffer->type, ParserStringType);
 	} else
@@ -556,20 +550,20 @@ void	updateProjectiles(list_t *proj_list)
 	}
 }
 
-void	displayProjectiles(game_t *game)
+void	displayProjectiles()
 {
 	Projectile	*proj;
 	sfVector2f	pos;
 
-	for (list_t *list = &game->battle_infos.projectiles; list && list->data; list = list->next) {
+	for (list_t *list = &game.state.battle_infos.projectiles; list && list->data; list = list->next) {
 		proj = list->data;
 		if (proj->animSpeed >= 0 && sfTime_asSeconds(sfClock_getElapsedTime(proj->animClock)) >= proj->animSpeed) {
 			sfClock_restart(proj->animClock);
 			proj->animation = (proj->animation >= ((int)sfTexture_getSize(proj->sprite.texture).x / proj->sprite.rect.width) - 1) ? 0 : proj->animation + 1;
 		}
 		proj->sprite.rect.left = proj->animation * proj->sprite.rect.width;
-		pos.x = (proj->pos.x + game->cam.x) * game->baseScale.x;
-		pos.y = (proj->pos.y + game->cam.y) * game->baseScale.y;
+		pos.x = (proj->pos.x + game.state.cameraPos.x) * game.settings.baseScale.x;
+		pos.y = (proj->pos.y + game.state.cameraPos.y) * game.settings.baseScale.y;
 		while (proj->angle > 360)
 			proj->angle -= 360;
 		while (proj->angle < 360)
@@ -577,7 +571,7 @@ void	displayProjectiles(game_t *game)
 		sfSprite_setRotation(proj->sprite.sprite, proj->angle);
 		sfSprite_setPosition(proj->sprite.sprite, pos);
 		sfSprite_setTextureRect(proj->sprite.sprite, proj->sprite.rect);
-		sfRenderWindow_drawSprite(game->window, proj->sprite.sprite, NULL);
+		sfRenderWindow_drawSprite(game.ressources.window, proj->sprite.sprite, NULL);
 	}
 }
 
@@ -592,103 +586,103 @@ sfIntRect	getRect(sfVector2u size, sfVector2u imgSize, int anim)
 	return (rect);
 }
 
-void	battle(game_t *game)
+void	battle()
 {
 	static	bool		launchLua = true;
 	static	lua_State	*Lua = NULL;
 	int			err;
 	char			*buffer;
 
-	game->battle_infos.player = getPlayer(game->characters.content, game->characters.length);
+	game.state.battle_infos.player = getPlayer(game.state.characters.content, game.state.characters.length);
 	if (launchLua) {
-		if (!game->battle_infos.Lua) {
-			game->menu = 1;
+		if (!game.state.battle_infos.Lua) {
+			game.state.menu = 1;
 			return;
 		}
-		game->battle_infos.Lua_thread = lua_newthread(game->battle_infos.Lua);
+		game.state.battle_infos.Lua_thread = lua_newthread(game.state.battle_infos.Lua);
 		launchLua = false;
-		pushCharacter(game->battle_infos.Lua_thread, game->battle_infos.player);
-		lua_setglobal(game->battle_infos.Lua_thread, "player");
-		pushCharacter(game->battle_infos.Lua_thread, &game->battle_infos.boss);
-		lua_setglobal(game->battle_infos.Lua_thread, "boss");
-		lua_getglobal(game->battle_infos.Lua_thread, "bossAI");
+		pushCharacter(game.state.battle_infos.Lua_thread, game.state.battle_infos.player);
+		lua_setglobal(game.state.battle_infos.Lua_thread, "player");
+		pushCharacter(game.state.battle_infos.Lua_thread, &game.state.battle_infos.boss);
+		lua_setglobal(game.state.battle_infos.Lua_thread, "boss");
+		lua_getglobal(game.state.battle_infos.Lua_thread, "bossAI");
 	}
-	if (game->battle_infos.yieldTime <= 0) {
-		err = lua_resume(game->battle_infos.Lua_thread, game->battle_infos.Lua, 0);
+	if (game.state.battle_infos.yieldTime <= 0) {
+		err = lua_resume(game.state.battle_infos.Lua_thread, game.state.battle_infos.Lua, 0);
 		if (err == LUA_ERRRUN) {
-			buffer = concatf("A runtime error occurred during battle:\n%s", luaL_checkstring(game->battle_infos.Lua_thread, -1));
+			buffer = concatf("A runtime error occurred during battle:\n%s", luaL_checkstring(game.state.battle_infos.Lua_thread, -1));
 			printf("%s: %s\n", ERROR, lua_tostring(Lua, -1));
 			dispMsg("Battle Error", buffer, 0);
 			free(buffer);
-			back_on_title_screen(game, -1);
-			if (game->battle_infos.music)
-				sfMusic_stop(game->battle_infos.music);
+			back_on_title_screen(-1);
+			if (game.state.battle_infos.music)
+				sfMusic_stop(game.state.battle_infos.music);
 			launchLua = true;
 			return;
 		} else if (err == LUA_ERRMEM) {
-			buffer = concatf("A runtime error occurred during battle:\n%s: Out of memory", game->battle_infos.script);
-			printf("%s: %s: Out of memory\n", ERROR, game->battle_infos.script);
+			buffer = concatf("A runtime error occurred during battle:\n%s: Out of memory", game.state.battle_infos.script);
+			printf("%s: %s: Out of memory\n", ERROR, game.state.battle_infos.script);
 			dispMsg("Battle Error", buffer, 0);
 			free(buffer);
-			back_on_title_screen(game, -1);
-			if (game->battle_infos.music)
-				sfMusic_stop(game->battle_infos.music);
+			back_on_title_screen(-1);
+			if (game.state.battle_infos.music)
+				sfMusic_stop(game.state.battle_infos.music);
 			launchLua = true;
 			return;
 		} else if (err == LUA_ERRERR) {
-			buffer = concatf("An unexpected error occurred during battle:\n%s", game->battle_infos.script);
-			printf("%s: %s: Unknown error\n", ERROR, game->battle_infos.script);
+			buffer = concatf("An unexpected error occurred during battle:\n%s", game.state.battle_infos.script);
+			printf("%s: %s: Unknown error\n", ERROR, game.state.battle_infos.script);
 			dispMsg("Battle Error", buffer, 0);
 			free(buffer);
-			back_on_title_screen(game, -1);
-			sfMusic_stop(game->battle_infos.music);
+			back_on_title_screen(-1);
+			sfMusic_stop(game.state.battle_infos.music);
 			launchLua = true;
 			return;
 		} else if (!err) {
 			launchLua = true;
-			game->menu = 1;
-			if (game->battle_infos.music)
-				sfMusic_stop(game->battle_infos.music);
+			game.state.menu = 1;
+			if (game.state.battle_infos.music)
+				sfMusic_stop(game.state.battle_infos.music);
 			return;
 		}
 	}
-	if (game->battle_infos.music && sfMusic_getStatus(game->battle_infos.music) != sfPlaying) {
-		for (int i = 0; i < game->musics.length; i++)
-			if (((sfMusic **)game->musics.content)[i] && sfMusic_getStatus(game->battle_infos.music) == sfPlaying)
-				sfMusic_stop(((sfMusic **)game->musics.content)[i]);
-		sfMusic_play(game->battle_infos.music);
-		sfMusic_setVolume(game->battle_infos.music, game->settings.musicVolume);
+	if (game.state.battle_infos.music && sfMusic_getStatus(game.state.battle_infos.music) != sfPlaying) {
+		for (int i = 0; i < game.ressources.musics.length; i++)
+			if (((sfMusic **)game.ressources.musics.content)[i] && sfMusic_getStatus(game.state.battle_infos.music) == sfPlaying)
+				sfMusic_stop(((sfMusic **)game.ressources.musics.content)[i]);
+		sfMusic_play(game.state.battle_infos.music);
+		sfMusic_setVolume(game.state.battle_infos.music, game.settings.musicVolume);
 	}
-	if (game->battle_infos.yieldTime > 0)
-		game->battle_infos.yieldTime--;
-	displayLowerLayer(game);
-	displayCharacters(game);
-	if (game->battle_infos.bossSprite.sprite) {
-		game->battle_infos.bossSprite.rect = getRect(
-			(sfVector2u){game->battle_infos.bossSprite.rect.width, game->battle_infos.bossSprite.rect.height},
-			sfTexture_getSize(game->battle_infos.bossSprite.texture),
-			game->battle_infos.boss.movement.animation
+	if (game.state.battle_infos.yieldTime > 0)
+		game.state.battle_infos.yieldTime--;
+	displayLowerLayer();
+	displayCharacters();
+	if (game.state.battle_infos.bossSprite.sprite) {
+		game.state.battle_infos.bossSprite.rect = getRect(
+			(sfVector2u){game.state.battle_infos.bossSprite.rect.width, game.state.battle_infos.bossSprite.rect.height},
+			sfTexture_getSize(game.state.battle_infos.bossSprite.texture),
+			game.state.battle_infos.boss.movement.animation
 		);
-		sfSprite_setTextureRect(game->battle_infos.bossSprite.sprite, game->battle_infos.bossSprite.rect);
-		image(game, game->battle_infos.bossSprite.sprite, game->battle_infos.boss.movement.pos.x + game->cam.x, game->battle_infos.boss.movement.pos.y + game->cam.y, -1, -1);
+		sfSprite_setTextureRect(game.state.battle_infos.bossSprite.sprite, game.state.battle_infos.bossSprite.rect);
+		image(game.state.battle_infos.bossSprite.sprite, game.state.battle_infos.boss.movement.pos.x + game.state.cameraPos.x, game.state.battle_infos.boss.movement.pos.y + game.state.cameraPos.y, -1, -1);
 	} else {
-		sfRectangleShape_setOutlineColor(game->rectangle, (sfColor){0, 0, 0, 0});
-		sfRectangleShape_setFillColor(game->rectangle, (sfColor){255, 0, 0, 255});
-		rect(game, game->battle_infos.boss.movement.pos.x + game->cam.x, game->battle_infos.boss.movement.pos.y + game->cam.y, game->battle_infos.bossSprite.rect.width, game->battle_infos.bossSprite.rect.height);
+		sfRectangleShape_setOutlineColor(game.ressources.rectangle, (sfColor){0, 0, 0, 0});
+		sfRectangleShape_setFillColor(game.ressources.rectangle, (sfColor){255, 0, 0, 255});
+		rect(game.state.battle_infos.boss.movement.pos.x + game.state.cameraPos.x, game.state.battle_infos.boss.movement.pos.y + game.state.cameraPos.y, game.state.battle_infos.bossSprite.rect.width, game.state.battle_infos.bossSprite.rect.height);
 	}
-	displayUpperLayer(game);
-	displayProjectiles(game);
-	displayHUD(game);
-	if (!game->battle_infos.timeStopped) {
-		movePlayer(game);
-		updateProjectiles(&game->battle_infos.projectiles);
-		for (int i = 0; i < game->characters.length; i++)
-			((Character *)game->characters.content)[i].invulnerabiltyTime -= ((Character *)game->characters.content)[i].invulnerabiltyTime > 0 ? 1 : 0;
+	displayUpperLayer();
+	displayProjectiles();
+	displayHUD();
+	if (!game.state.battle_infos.timeStopped) {
+		movePlayer();
+		updateProjectiles(&game.state.battle_infos.projectiles);
+		for (int i = 0; i < game.state.characters.length; i++)
+			((Character *)game.state.characters.content)[i].invulnerabiltyTime -= ((Character *)game.state.characters.content)[i].invulnerabiltyTime > 0 ? 1 : 0;
 	} else {
-		sfRectangleShape_setFillColor(game->rectangle, (sfColor){255, 230, 255, 55});
-		rect(game, 0, 0, 640, 480);
+		sfRectangleShape_setFillColor(game.ressources.rectangle, (sfColor){255, 230, 255, 55});
+		rect(0, 0, 640, 480);
 	}
-	for (int i = 0; i < game->characters.length; i++)
-		if (((Character *)game->characters.content)[i].stats.life > 10 * ((Character *)game->characters.content)[i].stats.lifeMax)
-			((Character *)game->characters.content)[i].stats.life = 10 * ((Character *)game->characters.content)[i].stats.lifeMax;
+	for (int i = 0; i < game.state.characters.length; i++)
+		if (((Character *)game.state.characters.content)[i].stats.life > 10 * ((Character *)game.state.characters.content)[i].stats.lifeMax)
+			((Character *)game.state.characters.content)[i].stats.life = 10 * ((Character *)game.state.characters.content)[i].stats.lifeMax;
 }

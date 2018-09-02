@@ -8,7 +8,7 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 
-void		saveSettings(game_t *game)
+void		saveSettings()
 {
 	int		fd;
 	struct stat	st;
@@ -27,7 +27,7 @@ void		saveSettings(game_t *game)
 		printf("%s: Couldn't save settings (save/settings.dat: %s)\n", ERROR, strerror(errno));
 		return;
 	}
-	write(fd, &game->settings, sizeof(game->settings));
+	write(fd, &game.settings, sizeof(game.settings));
 	close(fd);
 }
 
@@ -35,12 +35,14 @@ Settings	loadSettings()
 {
 	Settings	settings;
 	int		fd;
+	FILE		*stream;
 
 	printf("%s: Loading settings\n", INFO);
-	fd = open("save/settings.dat", O_RDONLY);
+	stream = fopen("save/settings.dat", "rb");
+	fd = fileno(stream);
 	memset(&settings, 0, sizeof(settings));
-	if (fd < 0) {
-		printf("%s: Couldn't load settings (save/settings.dat: %s)\n", ERROR, strerror(errno));
+	if (fd < 0 || read(fd, &settings, sizeof(settings)) != sizeof(settings)) {
+		printf("%s: Couldn't load settings (save/settings.dat: %s)\n", ERROR, fd < 0 ? strerror(errno) : "Corrupted file found");
 		memset(&settings.keys, -1, NB_OF_KEYS);
 		settings.keys[0] = sfKeyZ;
 		settings.keys[1] = sfKeyS;
@@ -67,7 +69,7 @@ Settings	loadSettings()
 		settings.windowSize.x = 640;
 		settings.windowSize.y = 480;
 		strcpy(settings.lang_id, "en");
-	} else
-		read(fd, &settings, sizeof(settings));
+	}
+	fclose(stream);
 	return (settings);
 }

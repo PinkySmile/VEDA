@@ -1,6 +1,6 @@
 #include "functions.h"
 
-void	(* const game_functions[])(game_t *game) = {
+void	(* const game_functions[])() = {
 	&mainMenu,	//0
 	&inGame,	//1
 	&controls,	//2

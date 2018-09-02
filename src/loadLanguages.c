@@ -172,7 +172,7 @@ Language	createLanguage(char *path)
 	return (language);
 }
 
-Language	*loadLanguages(game_t *game)
+Language	*loadLanguages()
 {
 	int		len = 0;
 	char		*buffer = NULL;
@@ -206,7 +206,7 @@ Language	*loadLanguages(game_t *game)
 	printf("%s: Loading %i languages\n", INFO, len);
 	for (int i = 0; i < len; i++) {
 		buffer = concat("Loading languages (", concat(paths[i], ")", false, false), false, true);
-		displayLoadingBar(game, 5, MAX_STEPS, i, len, buffer);
+		displayLoadingBar(5, MAX_STEPS, i, len, buffer);
 		free(buffer);
 		languages[i] = createLanguage(paths[i]);
 		free(paths[i]);
