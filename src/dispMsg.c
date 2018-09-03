@@ -2,6 +2,8 @@
 #	include <windows.h>
 #else
 #	include <SFML/Graphics.h>
+#	include <stdio.h>
+#	include "macros.h"
 #endif
 
 int	dispMsg(char *title, char *content, int variate)
