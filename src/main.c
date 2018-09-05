@@ -12,23 +12,20 @@
 #include "macros.h"
 #include "discord_rp.h"
 
-#ifndef SIGBUS
-#	define SIGBUS 7
-#endif
-#ifndef SIGQUIT
-#	define SIGQUIT 3
-#endif
-
 game_t  game;
 int	nbSignals = 0;
+
+
+#if defined _WIN32 || defined __WIN32 || defined __WIN32__
+
+#define SIGQUIT 3
+#define SIGBUS 7
 
 char	*strsignal(int signum)
 {
 	switch (signum) {
 	case 2:
 		return ("Interrupted");
-	case 3:
-		return ("Quit");
 	case 4:
 		return ("Illegal hardware instruction");
 	case 6:
@@ -37,22 +34,17 @@ char	*strsignal(int signum)
 		return ("Bus error");
 	case 8:
 		return ("Floating point exception");
-	case 10:
-		return ("User defined signal 1");
 	case 11:
 		return ("Segmentation fault");
-	case 12:
-		return ("User defined signal 2");
 	case 13:
 		return ("Broken pipe");
-	case 14:
-		return ("Timer expired");
 	case 15:
 		return ("Terminated");
-	default:
-		return ("Unknown signal");
 	}
+	return ("Unknown signal");
 }
+
+#endif
 
 void	destroyBattle(Battle battle)
 {
@@ -213,6 +205,7 @@ int	main(int argc, char **args)
 	signal(SIGBUS,  &sighandler);
 	signal(SIGFPE,  &sighandler);
 	signal(SIGSEGV, &sighandler);
+	signal(SIGPIPE, &sighandler);
 	signal(SIGTERM, &sighandler);
 	printf("%s: Init discord rich presence\n", INFO);
 	initDiscordRichPresence();
