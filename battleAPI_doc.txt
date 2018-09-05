@@ -1,22 +1,41 @@
-API:
+Functions:
 
-nil	stopTime(needToStop)
-nil	yield([time])
-Projectile|nil	addProjectile(x, y, projectileId, ownerId, angle[, speed[, rotationSpeed[, acceleration[, marker]]]])
-table	getProjectilesMarker(marker)
-table	getProjectilesId(projectileId)
-table	getProjectilesAtPos(x, y)
-table	getProjectilesOwnedBy(ownerId)
-Projectile	getProjectileUniqueId(uniqueId)
-Projectile	getProjectile(index)
-boolean	destroyProjectile(index)
-boolean	destroyProjectileUniqueId(uniqueId)
-boolean, nil|string	updatePlayer(player)
-boolean, nil|string	updateBoss(boss)
+nil			stopTime(needToStop)
+nil			yield([time])
 boolean, nil|string	playSound(sound)
+Projectile|nil		addProjectile(x, y, projectileId, ownerId, angle[, speed[, rotationSpeed[, acceleration[, marker]]]])
+number			getElapsedTime()
 
 Events:
 bossAI(boss)
-onBossDie(boss)
-onProjectileHit(projectile, target)
-onProjectileDie(projectile)
+
+Global variables:
+Character	player
+
+//Types
+Character
+Methods
+
+Properties
+number	x
+number	y
+number	animation
+string	name
+
+
+Projectile
+Methods
+nil		setToRemove()
+
+Properties
+number	bankId (read-only)
+number	x
+number	y
+number	speed
+number	acceleration
+number	owner (read-only)
+number	angle
+number	rotationSpeed
+number	maxSpeed (read-only)
+number	minSpeed (read-only)
+number	lifeTime (read-only)
