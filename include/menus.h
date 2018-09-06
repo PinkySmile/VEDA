@@ -1,0 +1,9 @@
+void	mainMenu	();
+void	inGame		();
+void	controls	();
+void	audio		();
+void	options		();
+void	buf_modif	();
+void	changeName	();
+void	chooseCharacter	();
+void	battle		();

@@ -1,4 +1,4 @@
-#include "functions.h"
+#include "menus.h"
 
 void	(* const game_functions[])() = {
 	&mainMenu,	//0

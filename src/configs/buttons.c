@@ -1,8 +1,6 @@
 #include <SFML/Graphics.h>
 #include <SFML/Audio.h>
 #include <stdlib.h>
-#include "structs.h"
-#include "functions.h"
 #include "buttons_names.h"
 
 const Button_config	button_config[] = {
