@@ -76,17 +76,24 @@ char	*getVersion()
 	return (version);
 }
 
-void	initGame()
+void	initGame(bool debug)
 {
-	char		*title = concat("VEDA version ", getVersion(), false, true);
+	char		*title;
 	const sfUint8	*icon = NULL;
-	sfImage		*image = sfImage_createFromFile("data/icon/icon.png");
+	sfImage		*image;
 	sfVideoMode	mode = {640, 480, 32};
 	sfWindowStyle	style;
 	Character	player;
 
+	printf("%s: Initializating game\n", INFO);
 	memset(&game, 0, sizeof(game));
+	srand((long)&game);
 	memset(&player, 0, sizeof(player));
+	game.debug = debug;
+	printf("%s: Init discord rich presence\n", INFO);
+	initDiscordRichPresence();
+	title = concat("VEDA version ", getVersion(), false, true);
+	image = sfImage_createFromFile("data/icon/icon.png");
 	game.settings = loadSettings();
 	if (game.settings.windowMode == FULLSCREEN) {
 		style = sfFullscreen;

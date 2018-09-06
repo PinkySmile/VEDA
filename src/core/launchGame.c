@@ -14,6 +14,7 @@ void	launchGame()
 	static char	*frameRate = NULL;
 
 	printf("%s: Launching game\n", INFO);
+	updateDiscordPresence("Main menu", "In Main Menu", 0, false, "icon", "nem", "VEDA", "Main Menu");
 	while (sfRenderWindow_isOpen(game.ressources.window)) {
 		sfRenderWindow_clear(game.ressources.window, (sfColor){0, 0, 0, 255});
 		game_functions[game.state.menu]();
@@ -40,4 +41,5 @@ void	launchGame()
 		sfRenderWindow_display(game.ressources.window);
 	}
 	free(frameRate);
+	saveSettings();
 }
