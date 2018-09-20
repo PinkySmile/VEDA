@@ -11,56 +11,15 @@
 #include <errno.h>
 #include <unistd.h>
 
-void	displayLoadingBar(int step, int maxSteps, int file, int maxFiles, char *status)
-{
-	sfVector2f	pos2 = {100, 250};
-	sfVector2f	size2 = {440 * step / maxSteps, 50};
-	sfVector2f	pos = {100, 350};
-	sfVector2f	size = {440 * file / maxFiles, 50};
-	char		*nbr = concatf("%i/%i", file, maxFiles);
-
-	status = concatf("%s (%i/%i)", status, step, maxSteps);
-	if (!nbr || !status) {
-		free(nbr);
-		free(status);
-		printf("%s: Couldn't create loading screen text\n", FATAL);
-		exit(EXIT_FAILURE);
-	}
-	if (game.ressources.text) {
-		sfText_setColor(game.ressources.text, (sfColor){255, 255, 255, 255});
-		sfText_setCharacterSize(game.ressources.text, 15);
-	}
-	sfRectangleShape_setFillColor(game.ressources.rectangle, (sfColor){150, 150, 150, 255});
-	sfRectangleShape_setPosition(game.ressources.rectangle, pos);
-	sfRectangleShape_setSize(game.ressources.rectangle, size);
-	sfRenderWindow_clear(game.ressources.window, (sfColor){0, 0, 0, 255});
-	rect(pos.x - 5, pos.y - 5, 450, 60);
-	rect(pos2.x - 5, pos2.y - 5, 450, 60);
-	sfRectangleShape_setFillColor(game.ressources.rectangle, (sfColor){0, 0, 0, 255});
-	rect(pos.x, pos.y, 440, 50);
-	rect(pos2.x, pos2.y, 440, 50);
-	sfRectangleShape_setFillColor(game.ressources.rectangle, (sfColor){0, 0, 255, 255});
-	rect(pos.x, pos.y, size.x, size.y);
-	sfRectangleShape_setFillColor(game.ressources.rectangle, (sfColor){0, 255, 0, 255});
-	rect(pos2.x, pos2.y, size2.x, size2.y);
-	text(status, 320 - strlen(status) / 2 * 6, 310, false);
-	text(nbr, 320 - strlen(nbr) / 2 * 7, 410, false);
-	if (game.ressources.sprites.content && ((Sprite *)game.ressources.sprites.content)[ICON].sprite)
-		image(((Sprite *)game.ressources.sprites.content)[ICON].sprite, 256, 100, 128, 128);
-	else if (game.ressources.icon.sprite)
-		image(game.ressources.icon.sprite, 256, 100, 128, 128);
-	sfRenderWindow_display(game.ressources.window);
-	free(nbr);
-	free(status);
-}
-
 char	*getVersion()
 {
 	int	fd = open("data/version.txt", O_RDONLY);
 	char	*version = malloc(10);
 
 	printf("%s: Loading version string\n", INFO);
-	if (fd < 0 || !version) {
+	if (!version)
+		exit(EXIT_FAILURE);
+	if (fd < 0) {
 		free(version);
 		printf("[ERROR]: data/version.txt: %s\n", strerror(errno));
 		close(fd);
@@ -68,10 +27,8 @@ char	*getVersion()
 		if (!version)
 			exit(EXIT_FAILURE);
 		return (version);
-	} else
-		memset(version, 0, 10);
-	read(fd, version, 9);
-	version[9] = 0;
+	}
+	version[read(fd, version, 9)] = 0;
 	close(fd);
 	return (version);
 }
@@ -93,6 +50,8 @@ void	initGame(bool debug)
 	printf("%s: Init discord rich presence\n", INFO);
 	initDiscordRichPresence();
 	title = concat("VEDA version ", getVersion(), false, true);
+	if (!title)
+		exit(EXIT_FAILURE);
 	image = sfImage_createFromFile("data/icon/icon.png");
 	game.settings = loadSettings();
 	if (game.settings.windowMode == FULLSCREEN) {
@@ -112,17 +71,9 @@ void	initGame(bool debug)
 		icon = sfImage_getPixelsPtr(image);
 	else
 		printf("[ERROR]: Couldn't load icon image\n");
-	if (!title) {
-		printf("%s: Couldn't create window title\n", FATAL);
-		dispMsg("Window error", "Couldn't create window title", 0);
+	game.ressources.window = createRenderWindow(mode, title, style, NULL, false);
+	if (!game.ressources.window)
 		exit(EXIT_FAILURE);
-	}
-	game.ressources.window = sfRenderWindow_create(mode, title, style, NULL);
-	if (!game.ressources.window) {
-		printf("%s: Couldn't create window\n", FATAL);
-		dispMsg("Window error", "Couldn't create window object", 0);
-		exit(EXIT_FAILURE);
-	}
 	if (icon)
 		sfRenderWindow_setIcon(game.ressources.window, 32, 32, icon);
 	game.ressources.rectangle = sfRectangleShape_create();
