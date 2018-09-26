@@ -1,5 +1,5 @@
 #ifndef __ICON_HEADER_
-#define __ICON_HEADER
+#define __ICON_HEADER_
 
 #include <SFML/Graphics.h>
 

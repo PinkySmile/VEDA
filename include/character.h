@@ -2,6 +2,9 @@
 #define __CHARACTER_HEADER_
 
 #include <SFML/Graphics.h>
+#include <stdbool.h>
+#include "enums.h"
+#include "macros.h"
 #include "array.h"
 
 typedef struct {

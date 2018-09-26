@@ -1,4 +1,7 @@
 #include <stdio.h>
+#include "destructors.h"
+#include "structs.h"
+#include "battle_lua.h"
 
 void	destroyStruct()
 {

@@ -1,6 +1,7 @@
 #include <SFML/Audio.h>
 #include <stdio.h>
 #include <malloc.h>
+#include "structs.h"
 
 void	destroySounds()
 {

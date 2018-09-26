@@ -2,6 +2,7 @@
 #define __SETTINGS_HEADER_
 
 #include <SFML/Graphics.h>
+#include "macros.h"
 
 typedef struct {
 	char		musicVolume;

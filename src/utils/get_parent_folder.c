@@ -2,7 +2,7 @@
 
 char	*getParentFolder(char *path)
 {
-	char	parentPath = strdup(path);
+	char	*parentPath = strdup(path);
 
 	for (int i = strlen(parentPath) - 1; i >= 0; i--)
 		if (i == 0)

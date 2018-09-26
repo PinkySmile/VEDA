@@ -1,9 +1,10 @@
+#include <stdbool.h>
 #include "array.h"
-#include "buttons.h"
+#include "button.h"
 #include "language.h"
 #include "configs.h"
 
-void		initGame	();
+void		initGame	(bool debug);
 Array		loadMusics	();
 Array		loadSprites	();
 Array		loadSfx		();

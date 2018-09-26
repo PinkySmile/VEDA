@@ -15,3 +15,5 @@ typedef struct {
 	enum sfx	footstepSound;
 	int		footstepVariance;
 } Object;
+
+#endif

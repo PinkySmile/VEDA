@@ -132,6 +132,7 @@ sfRenderWindow	*createMainWindow()
 		exit(EXIT_FAILURE);
 	}
 	game.ressources.window = createRenderWindow(mode, title, style, NULL, false);
+	free(title);
 
 	//Load the icon and create a sprite out of it
 	image = sfImage_createFromFile(getAbsolutePath("data/icon/icon.png"));

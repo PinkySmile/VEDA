@@ -1,4 +1,9 @@
-
+#include <string.h>
+#include <stdlib.h>
+#include "macros.h"
+#include "structs.h"
+#include "graphic.h"
+#include "concatf.h"
 
 void	displayLoadingBar(int step, int maxSteps, int file, int maxFiles, char *status)
 {
@@ -28,8 +33,8 @@ void	displayLoadingBar(int step, int maxSteps, int file, int maxFiles, char *sta
 	rect(pos2.x, pos2.y, size2.x, size2.y);
 	text(status, 320 - strlen(status) / 2 * 6, 310, false);
 	text(nbr, 320 - strlen(nbr) / 2 * 7, 410, false);
-	if (game.ressources.sprites.content && getSprite(ICON).sprite)
-		image(getSprite(ICON).sprite, 256, 100, 128, 128);
+	if (game.ressources.sprites.content && getSprite(ICON)->sprite)
+		image(getSprite(ICON)->sprite, 256, 100, 128, 128);
 	else if (game.ressources.icon.sprite)
 		image(game.ressources.icon.sprite, 256, 100, 128, 128);
 	sfRenderWindow_display(game.ressources.window);

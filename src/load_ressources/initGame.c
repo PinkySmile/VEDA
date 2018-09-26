@@ -1,7 +1,13 @@
-#include "structs.h"
-#include "creators.h"
-#include "loading.h"
+#include <lauxlib.h>
+#include <string.h>
+#include <stdlib.h>
+#include "save.h"
 #include "utils.h"
+#include "structs.h"
+#include "loading.h"
+#include "creators.h"
+#include "discord_rp.h"
+#include "battle_lua.h"
 
 void	loadRessources()
 {
@@ -48,5 +54,4 @@ void	initGame(bool debug)
 	game.input.bufSize = BUFFER_MAX_SIZE;
 	loadRessources();
 	sfRenderWindow_setFramerateLimit(game.ressources.window, 60);
-	free(title);
 }
