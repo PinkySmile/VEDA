@@ -12,3 +12,5 @@ void		setFont(sfText *text, sfFont *font);
 char		*getButtonContent(int nameId);
 float		isPressed(int keyID, sfRenderWindow *window);
 char		*getKeyString(unsigned char keyID);
+char		*getParentFolder(char *path);
+char		*getAbsolutePath(char *path);
