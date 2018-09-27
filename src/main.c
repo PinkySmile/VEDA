@@ -49,6 +49,8 @@ void	closeConsole(bool debug)
 	#if defined _WIN32 || defined __WIN32 || defined __WIN32__
 	if (!debug && !FreeConsole())
 		printf("%s: Cannot close main console\n", ERROR_BEG);
+	else if (debug)
+		AllocConsole();
 	#else
 	(void)debug;
 	#endif
