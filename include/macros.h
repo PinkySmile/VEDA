@@ -2,14 +2,15 @@
 #define __MACROS_H_
 
 #include "configParser.h"
+#include "enums.h"
 
 #define EXIT_SUCCESS 0
 #define EXIT_FAILURE 1
 
-#define INFO	"[INFO]   "
-#define ERROR	"[ERROR]  "
-#define FATAL	"[FATAL]  "
-#define WARNING	"[WARNING]"
+#define INFO_BEG	"[INFO]   "
+#define ERROR_BEG	"[ERROR]  "
+#define FATAL_BEG	"[FATAL]  "
+#define WARNING_BEG	"[WARNING]"
 
 #define BUFFER_MAX_SIZE	100
 #define MAX_STEPS	6
@@ -17,6 +18,8 @@
 #define WINDOWED		0
 #define FULLSCREEN		1
 #define BORDERLESS_WINDOW	2
+
+#define	getSprite(id)		(id >= 0 && id < game.ressources.sprites.length ? &((Sprite *)game.ressources.sprites.content)[id] : NULL)
 
 #define	PARSER_INFOS		((ParserInfos[1]) {{'{', '}', '{', '}', ',', '=', "\"'", "--", NULL, NULL, false, false}})
 

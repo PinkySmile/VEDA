@@ -181,7 +181,7 @@ function bossAI()
 	doAttack1()
 	while true do
 		doAttack2()
-		vedaApi.yield(30)
+		yield(30)
 		collectGarbage()
 	end
 end
