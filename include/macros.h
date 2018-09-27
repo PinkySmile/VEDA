@@ -19,7 +19,7 @@
 #define FULLSCREEN		1
 #define BORDERLESS_WINDOW	2
 
-#define	getSprite(id)		(id > 0 && id < game.ressources.sprites.length ? &((Sprite *)game.ressources.sprites.content)[id] : NULL)
+#define	getSprite(id)		(id >= 0 && id < game.ressources.sprites.length ? &((Sprite *)game.ressources.sprites.content)[id] : NULL)
 
 #define	PARSER_INFOS		((ParserInfos[1]) {{'{', '}', '{', '}', ',', '=', "\"'", "--", NULL, NULL, false, false}})
 
