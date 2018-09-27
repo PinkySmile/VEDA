@@ -1,6 +1,13 @@
+#include <stdio.h>
 #include <stdlib.h>
 #include <signal.h>
+#include <stdbool.h>
 #include <discord_rpc.h>
+#include <SFML/Graphics.h>
+#include "utils.h"
+#include "concatf.h"
+#include "structs.h"
+#include "discord_rp.h"
 
 #if defined _WIN32 || defined __WIN32 || defined __WIN32__
 

@@ -1,31 +1,37 @@
 #include <lua.h>
-#include <lualib.h>
-#include <lauxlib.h>
-#include <string.h>
-#include <stdio.h>
-#include <stdlib.h>
 #include <math.h>
-#include "functions.h"
+#include <stdio.h>
+#include <string.h>
+#include <lualib.h>
+#include <stdlib.h>
+#include <lauxlib.h>
+#include "utils.h"
+#include "graphic.h"
+#include "loading.h"
+#include "display.h"
 #include "concatf.h"
 #include "structs.h"
-#include "configParser.h"
+#include "configs.h"
+#include "callbacks.h"
+#include "functions.h"
 #include "battle_lua.h"
+#include "configParser.h"
 
-int	proj2string(lua_State *Lua)
+int	proj2string(lua_State *lua)
 {
-	Projectile	**proj = luaL_checkudata(Lua, 1, "projectile");
+	Projectile	**proj = luaL_checkudata(lua, 1, "projectile");
 
-	luaL_argcheck(Lua, proj != NULL, 1, "'projectile' expected");
-	lua_pushfstring(Lua, "projectile: %p", *proj);
+	luaL_argcheck(lua, proj != NULL, 1, "'projectile' expected");
+	lua_pushfstring(lua, "projectile: %p", *proj);
 	return 1;
 }
 
-int	char2string(lua_State *Lua)
+int	char2string(lua_State *lua)
 {
-	Character	**proj = luaL_checkudata(Lua, 1, "character");
+	Character	**proj = luaL_checkudata(lua, 1, "character");
 
-	luaL_argcheck(Lua, proj != NULL, 1, "'character' expected");
-	lua_pushfstring(Lua, "character ('%s')", (*proj)->name);
+	luaL_argcheck(lua, proj != NULL, 1, "'character' expected");
+	lua_pushfstring(lua, "character ('%s')", (*proj)->name);
 	return 1;
 }
 
@@ -305,34 +311,34 @@ Array	loadProjectiles(char *path)
 	return array;
 }
 
-void	addDependencies(lua_State *Lua)
+void	addDependencies(lua_State *lua)
 {
-	luaL_openlibs(Lua);
+	luaL_openlibs(lua);
 
-	luaL_newmetatable(Lua, "projectile");
-	lua_pushstring(Lua, "__index");
-	lua_pushvalue(Lua, -2);
-	lua_settable(Lua, -3);
-	luaL_openlib(Lua, NULL, projectiles_lib, 0);
+	luaL_newmetatable(lua, "projectile");
+	lua_pushstring(lua, "__index");
+	lua_pushvalue(lua, -2);
+	lua_settable(lua, -3);
+	luaL_openlib(lua, NULL, projectiles_lib, 0);
 
-	luaL_newmetatable(Lua, "character");
-	lua_pushstring(Lua, "__index");
-	lua_pushvalue(Lua, -2);
-	lua_settable(Lua, -3);
-	luaL_openlib(Lua, NULL, character_lib, 0);
+	luaL_newmetatable(lua, "character");
+	lua_pushstring(lua, "__index");
+	lua_pushvalue(lua, -2);
+	lua_settable(lua, -3);
+	luaL_openlib(lua, NULL, character_lib, 0);
 
-	//luaL_newmetatable(Lua, "sound_object");
-	luaL_openlib(Lua, "vedaApi", game_api, 0);
-	/*lua_pushcfunction(Lua, &getElapsedTime);
-	lua_setglobal(Lua, "getElapsedTime");
-	lua_pushcfunction(Lua, &addProjectileLua);
-	lua_setglobal(Lua, "addProjectile");
-	lua_pushcfunction(Lua, &stopTime);
-	lua_setglobal(Lua, "stopTime");
-	lua_pushcfunction(Lua, &yield);
-	lua_setglobal(Lua, "yield");
-	lua_pushcfunction(Lua, &playSoundLua);
-	lua_setglobal(Lua, "playSound"); */
+	//luaL_newmetatable(lua, "sound_object");
+	luaL_openlib(lua, "vedaApi", game_api, 0);
+	/*lua_pushcfunction(lua, &getElapsedTime);
+	lua_setglobal(lua, "getElapsedTime");
+	lua_pushcfunction(lua, &addProjectilelua);
+	lua_setglobal(lua, "addProjectile");
+	lua_pushcfunction(lua, &stopTime);
+	lua_setglobal(lua, "stopTime");
+	lua_pushcfunction(lua, &yield);
+	lua_setglobal(lua, "yield");
+	lua_pushcfunction(lua, &playSoundlua);
+	lua_setglobal(lua, "playSound"); */
 }
 
 Battle	loadBattleScript(char *path)
@@ -409,10 +415,10 @@ Battle	loadBattleScript(char *path)
 		return invalidData(result, path, "Field \"projectiles\" is missing");
 	if (buffer = ParserObj_getElement(result.data, "base_script")) {
 		if (buffer->type == ParserStringType) {
-			battle.Lua  = luaL_newstate();
+			battle.lua  = luaL_newstate();
 			battle.script = strdup(ParserString_toCharStar(buffer->data));
-			addDependencies(battle.Lua);
-			err = luaL_dofile(battle.Lua, ParserString_toCharStar(buffer->data));
+			addDependencies(battle.lua);
+			err = luaL_dofile(battle.lua, ParserString_toCharStar(buffer->data));
 			if (err) {
 				buffer = (void *)concatf("An unexpected error occurred when loading %s", ParserString_toCharStar(buffer->data));
 				battle = invalidData(result, path, (void *)buffer);
@@ -588,36 +594,36 @@ sfIntRect	getRect(sfVector2u size, sfVector2u imgSize, int anim)
 
 void	battle()
 {
-	static	bool		launchLua = true;
-	static	lua_State	*Lua = NULL;
+	static	bool		launchlua = true;
+	static	lua_State	*lua = NULL;
 	int			err;
 	char			*buffer;
 
 	game.state.battle_infos.player = getPlayer(game.state.characters.content, game.state.characters.length);
-	if (launchLua) {
-		if (!game.state.battle_infos.Lua) {
+	if (launchlua) {
+		if (!game.state.battle_infos.lua) {
 			game.state.menu = 1;
 			return;
 		}
-		game.state.battle_infos.Lua_thread = lua_newthread(game.state.battle_infos.Lua);
-		launchLua = false;
-		pushCharacter(game.state.battle_infos.Lua_thread, game.state.battle_infos.player);
-		lua_setglobal(game.state.battle_infos.Lua_thread, "player");
-		pushCharacter(game.state.battle_infos.Lua_thread, &game.state.battle_infos.boss);
-		lua_setglobal(game.state.battle_infos.Lua_thread, "boss");
-		lua_getglobal(game.state.battle_infos.Lua_thread, "bossAI");
+		game.state.battle_infos.lua_thread = lua_newthread(game.state.battle_infos.lua);
+		launchlua = false;
+		pushCharacter(game.state.battle_infos.lua_thread, game.state.battle_infos.player);
+		lua_setglobal(game.state.battle_infos.lua_thread, "player");
+		pushCharacter(game.state.battle_infos.lua_thread, &game.state.battle_infos.boss);
+		lua_setglobal(game.state.battle_infos.lua_thread, "boss");
+		lua_getglobal(game.state.battle_infos.lua_thread, "bossAI");
 	}
 	if (game.state.battle_infos.yieldTime <= 0) {
-		err = lua_resume(game.state.battle_infos.Lua_thread, game.state.battle_infos.Lua, 0);
+		err = lua_resume(game.state.battle_infos.lua_thread, game.state.battle_infos.lua, 0);
 		if (err == LUA_ERRRUN) {
-			buffer = concatf("A runtime error occurred during battle:\n%s", luaL_checkstring(game.state.battle_infos.Lua_thread, -1));
-			printf("%s: %s\n", ERROR_BEG, lua_tostring(Lua, -1));
+			buffer = concatf("A runtime error occurred during battle:\n%s", luaL_checkstring(game.state.battle_infos.lua_thread, -1));
+			printf("%s: %s\n", ERROR_BEG, lua_tostring(lua, -1));
 			dispMsg("Battle Error", buffer, 0);
 			free(buffer);
 			back_on_title_screen(-1);
 			if (game.state.battle_infos.music)
 				sfMusic_stop(game.state.battle_infos.music);
-			launchLua = true;
+			launchlua = true;
 			return;
 		} else if (err == LUA_ERRMEM) {
 			buffer = concatf("A runtime error occurred during battle:\n%s: Out of memory", game.state.battle_infos.script);
@@ -627,7 +633,7 @@ void	battle()
 			back_on_title_screen(-1);
 			if (game.state.battle_infos.music)
 				sfMusic_stop(game.state.battle_infos.music);
-			launchLua = true;
+			launchlua = true;
 			return;
 		} else if (err == LUA_ERRERR) {
 			buffer = concatf("An unexpected error occurred during battle:\n%s", game.state.battle_infos.script);
@@ -636,10 +642,10 @@ void	battle()
 			free(buffer);
 			back_on_title_screen(-1);
 			sfMusic_stop(game.state.battle_infos.music);
-			launchLua = true;
+			launchlua = true;
 			return;
 		} else if (!err) {
-			launchLua = true;
+			launchlua = true;
 			game.state.menu = 1;
 			if (game.state.battle_infos.music)
 				sfMusic_stop(game.state.battle_infos.music);

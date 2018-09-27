@@ -7,6 +7,7 @@
 #include "button.h"
 #include "array.h"
 #include "language.h"
+#include "settings.h"
 #include "sprite.h"
 #include "object.h"
 #include "battle.h"

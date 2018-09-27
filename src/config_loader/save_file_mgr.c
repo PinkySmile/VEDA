@@ -6,6 +6,8 @@
 #include <stdbool.h>
 #include <errno.h>
 #include <stdlib.h>
+#include "utils.h"
+#include "loading.h"
 #include "structs.h"
 #include "macros.h"
 #include "functions.h"
@@ -20,7 +22,7 @@ void	saveLevel(char *path, Object *objs, char *header)
 	fd = open(path, O_WRONLY | O_CREAT, 0664);
 	if (fd < 0) {
 		printf("%s: Cannot open save file (%s: %s)\n", ERROR_BEG, path, strerror(errno));
-		buffer = concatf("Cannot open save file (%s: %s)\n", PATH, strerror(errno));
+		buffer = concatf("Cannot open save file (%s: %s)\n", path, strerror(errno));
 		dispMsg("Error", buffer, 0);
 		free(buffer);
 		return;

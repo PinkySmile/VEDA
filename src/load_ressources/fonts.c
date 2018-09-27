@@ -14,7 +14,7 @@ Array	loadFonts()
 	sfFont	**fonts = NULL;
 
 	for (; fonts_conf[len]; len++);
-	printf("%s: Loading %i fonts\n", INFO, len);
+	printf("%s: Loading %i fonts\n", INFO_BEG, len);
 	fonts = malloc(sizeof(*fonts) * len);
 	if (!fonts) {
 		printf("%s: Couldn't allocate %liB of memory\n", FATAL_BEG, (long)sizeof(*fonts) * len);
@@ -23,7 +23,7 @@ Array	loadFonts()
 	array.length = len;
 	array.content = fonts;
 	for (int i = 0; fonts_conf[i]; i++) {
-		printf("%s: Loading file %s\n", INFO, fonts_conf[i]);
+		printf("%s: Loading file %s\n", INFO_BEG, fonts_conf[i]);
 		fonts[i] = sfFont_createFromFile(fonts_conf[i]);
 		if (i == ARIAL)
 			if (!fonts[i]) {
@@ -35,6 +35,6 @@ Array	loadFonts()
 		if (!fonts[i])
 			printf("%s: Couldn't load file %s\n", ERROR_BEG, fonts_conf[i]);
 	}
-	printf("%s: Fonts loaded !\n", INFO);
+	printf("%s: Fonts loaded !\n", INFO_BEG);
 	return (array);
 }

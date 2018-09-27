@@ -1,11 +1,15 @@
 #include <stdio.h>
 #include <time.h>
 #include <malloc.h>
+#include "discord_rp.h"
+#include "display.h"
 #include "concatf.h"
+#include "graphic.h"
+#include "save.h"
 #include "structs.h"
 #include "functions.h"
 #include "macros.h"
-#include "game_functions.h"
+#include "configs.h"
 
 void	launchGame()
 {
@@ -13,12 +17,12 @@ void	launchGame()
 	static int	oldTime = 0;
 	static char	*frameRate = NULL;
 
-	printf("%s: Launching game\n", INFO);
+	printf("%s: Launching game\n", INFO_BEG);
 	updateDiscordPresence("Main menu", "In Main Menu", 0, false, "icon", "nem", "VEDA", "Main Menu");
 	while (sfRenderWindow_isOpen(game.ressources.window)) {
 		sfRenderWindow_clear(game.ressources.window, (sfColor){0, 0, 0, 255});
 		game_functions[game.state.menu]();
-		disp_buttons();
+		dispButtons();
 		manageEvents();
 		loopCount++;
 		if (oldTime != time(NULL)) {

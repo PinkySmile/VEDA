@@ -1,11 +1,15 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include "callbacks.h"
+#include "loading.h"
 #include "structs.h"
 #include "functions.h"
 #include "discord_rp.h"
 #include "concatf.h"
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
-#include <battle_api.h>
+#include "save.h"
+#include "utils.h"
+#include "battle_lua.h"
 
 void	setVolumes(Array sounds, float volume)
 {

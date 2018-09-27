@@ -164,7 +164,7 @@ Language	createLanguage(char *path)
 		printf("%s: Couldn't concatenate '%s' with '%s'\n", FATAL_BEG, "data/languages/", path);
 		exit(EXIT_FAILURE);
 	}
-	printf("%s: Loading language folder %s\n", INFO, path_buffer);
+	printf("%s: Loading language folder %s\n", INFO_BEG, path_buffer);
 	strcpy(language.id, path);
 	loadButtonsNames(path_buffer, &language);
 	loadLanguageName(path_buffer, &language, path);

@@ -1,5 +1,5 @@
 #include <SFML/Graphics.h>
-#include "game_struct.h"
+#include "globals.h"
 
 void	rect(int x, int y, int width, int height)
 {

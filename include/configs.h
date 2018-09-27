@@ -31,5 +31,6 @@ extern const Sprite_config	sprites_conf[];
 extern const char		*fonts_conf[];
 extern const Music_config	musics_conf[];
 extern const Music_config	sfx_conf[];
+extern void	(* const 	game_functions[])();
 
 #endif

@@ -1,6 +1,7 @@
 #include "structs.h"
 #include "discord_rp.h"
 #include "functions.h"
+#include "graphic.h"
 
 void	mainMenu()
 {

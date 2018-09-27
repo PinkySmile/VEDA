@@ -1,10 +1,12 @@
-#include "structs.h"
-#include "functions.h"
-#include "concatf.h"
 #include <stdlib.h>
 #include <math.h>
 #include <string.h>
 #include <time.h>
+#include "structs.h"
+#include "functions.h"
+#include "concatf.h"
+#include "graphic.h"
+#include "utils.h"
 
 void	displayLowerLayer()
 {

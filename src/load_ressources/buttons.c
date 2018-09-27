@@ -41,7 +41,7 @@ Button	*loadButtons()
 
 	for (; button_config[len].callback; len++);
 	for (; game.ressources.languages && game.ressources.languages[langs].name; langs++);
-	printf("%s: Loading %i buttons\n", INFO, len + langs + NB_OF_KEYS);
+	printf("%s: Loading %i buttons\n", INFO_BEG, len + langs + NB_OF_KEYS);
 	buttons = malloc(sizeof(*buttons) * (len + langs + NB_OF_KEYS + 1));
 	if (!buttons) {
 		printf("%s: Couldn't malloc %liB for buttons\n", FATAL_BEG, (long)sizeof(*buttons) * (len + langs + NB_OF_KEYS + 1));

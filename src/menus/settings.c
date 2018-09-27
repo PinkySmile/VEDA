@@ -1,7 +1,9 @@
+#include <malloc.h>
+#include "utils.h"
 #include "structs.h"
 #include "functions.h"
 #include "concatf.h"
-#include <malloc.h>
+#include "graphic.h"
 
 void	audio()
 {

@@ -104,7 +104,7 @@ enum sfx {
 	IRON,
 	ERROR_SOUND,
 	EXCLAMATION,
-	O_o,
+	O_O,
 	GRASS1,
 	GRASS2,
 	GRASS3,

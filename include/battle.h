@@ -27,8 +27,8 @@ typedef struct {
 	sfClock		*clock;
 	bool		timeStopped;
 	int		yieldTime;
-	lua_State	*Lua;
-	lua_State	*Lua_thread;
+	lua_State	*lua;
+	lua_State	*lua_thread;
 } Battle;
 
 #endif

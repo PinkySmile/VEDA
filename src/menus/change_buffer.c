@@ -1,6 +1,7 @@
 #include <SFML/Graphics.h>
 #include <stdlib.h>
 #include <time.h>
+#include "graphic.h"
 #include "structs.h"
 #include "functions.h"
 

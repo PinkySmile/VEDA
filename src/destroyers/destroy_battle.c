@@ -8,7 +8,7 @@ void	destroyBattle(Battle battle)
 {
 	list_t	*list = &battle.projectiles;
 
-	if (battle.Lua) {
+	if (battle.lua) {
 		sfClock_destroy(battle.clock);
 		free(battle.script);
 		free(battle.name);
@@ -41,7 +41,7 @@ void	destroyBattle(Battle battle)
 			sfMusic_stop(battle.music);
 			sfMusic_destroy(battle.music);
 		}
-		if (battle.Lua)
-			lua_close(battle.Lua);
+		if (battle.lua)
+			lua_close(battle.lua);
 	}
 }

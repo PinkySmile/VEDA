@@ -1,10 +1,13 @@
-#include "structs.h"
-#include "functions.h"
-#include "concatf.h"
-#include "discord_rp.h"
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
+#include "save.h"
+#include "utils.h"
+#include "loading.h"
+#include "structs.h"
+#include "concatf.h"
+#include "functions.h"
+#include "discord_rp.h"
 
 void	back_on_title_screen(int buttonID)
 {

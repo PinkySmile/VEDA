@@ -2,6 +2,7 @@
 #define __BUTTON_HEADER_
 
 #include <SFML/Graphics.h>
+#include <stdbool.h>
 
 typedef struct {
 	char			*content;
