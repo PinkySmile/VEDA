@@ -17,7 +17,7 @@ Array	loadFonts()
 	printf("%s: Loading %i fonts\n", INFO, len);
 	fonts = malloc(sizeof(*fonts) * len);
 	if (!fonts) {
-		printf("%s: Couldn't allocate %liB of memory\n", FATAL, (long)sizeof(*fonts) * len);
+		printf("%s: Couldn't allocate %liB of memory\n", FATAL_BEG, (long)sizeof(*fonts) * len);
 		exit(EXIT_FAILURE);
 	}
 	array.length = len;
@@ -33,7 +33,7 @@ Array	loadFonts()
 				setFont(game.ressources.text, fonts[ARIAL]);
 		displayLoadingBar(1, MAX_STEPS, i + 1, len, "Loading fonts");
 		if (!fonts[i])
-			printf("%s: Couldn't load file %s\n", ERROR, fonts_conf[i]);
+			printf("%s: Couldn't load file %s\n", ERROR_BEG, fonts_conf[i]);
 	}
 	printf("%s: Fonts loaded !\n", INFO);
 	return (array);

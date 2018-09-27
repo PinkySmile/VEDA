@@ -44,7 +44,7 @@ Button	*loadButtons()
 	printf("%s: Loading %i buttons\n", INFO, len + langs + NB_OF_KEYS);
 	buttons = malloc(sizeof(*buttons) * (len + langs + NB_OF_KEYS + 1));
 	if (!buttons) {
-		printf("%s: Couldn't malloc %liB for buttons\n", FATAL, (long)sizeof(*buttons) * (len + langs + NB_OF_KEYS + 1));
+		printf("%s: Couldn't malloc %liB for buttons\n", FATAL_BEG, (long)sizeof(*buttons) * (len + langs + NB_OF_KEYS + 1));
 		exit(EXIT_FAILURE);
 	}
 	game.languagesConf.y = langs;
@@ -75,6 +75,6 @@ Button	*loadButtons()
 		buttons[i + len + langs].content = "";
 	}
 	buttons[len + langs + NB_OF_KEYS].content = NULL;
-	printf("%s: Buttons loaded !\n", INFO);
+	printf("%s: Buttons loaded !\n", INFO_BEG);
 	return (buttons);
 }

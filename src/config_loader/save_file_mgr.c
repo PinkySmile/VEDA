@@ -16,11 +16,11 @@ void	saveLevel(char *path, Object *objs, char *header)
 	int	fd;
 	char	*buffer = "test";
 
-	printf("%s: Saving to %s\n", INFO, path);
+	printf("%s: Saving to %s\n", INFO_BEG, path);
 	fd = open(path, O_WRONLY | O_CREAT, 0664);
 	if (fd < 0) {
-		printf("%s: Cannot open save file (%s: %s)\n", ERROR, buffer, strerror(errno));
-		buffer = concatf("Cannot open save file (%s: %s)\n", buffer, strerror(errno));
+		printf("%s: Cannot open save file (%s: %s)\n", ERROR_BEG, path, strerror(errno));
+		buffer = concatf("Cannot open save file (%s: %s)\n", PATH, strerror(errno));
 		dispMsg("Error", buffer, 0);
 		free(buffer);
 		return;
@@ -62,16 +62,16 @@ bool	saveGame(bool level)
 	Character	charac;
 	ParserList	*result = malloc(sizeof(ParserList));
 
-	printf("%s: Saving game\n", INFO);
+	printf("%s: Saving game\n", INFO_BEG);
 	if (stat("save", &st) == -1) {
-		printf("%s: Creating folder \"save\"\n", INFO);
+		printf("%s: Creating folder \"save\"\n", INFO_BEG);
 		#ifdef __MINGW32__
 			success = (mkdir("save") == 0);
 		#else
 			success = (mkdir("save", 0766) == 0);
 		#endif
 		if (!success) {
-			printf("%s: Couldn't create folder \"save\" (%s)\n", ERROR, strerror(errno));
+			printf("%s: Couldn't create folder \"save\" (%s)\n", ERROR_BEG, strerror(errno));
 			buffer = concatf("Couldn't create folder \"save\" (%s)", strerror(errno));
 			dispMsg("Error", buffer, 4);
 			free(buffer);
@@ -82,7 +82,7 @@ bool	saveGame(bool level)
 	rename("save/game.dat", "save/game.dat.old");
 	fd = open("save/game.dat", O_WRONLY | O_CREAT, READ_WRITE_RIGHTS);
 	if (fd < 0) {
-		printf("%s: Cannot open save file (save/game.dat: %s)\n", ERROR, strerror(errno));
+		printf("%s: Cannot open save file (save/game.dat: %s)\n", ERROR_BEG, strerror(errno));
 		buffer = concatf("Cannot open save file (save/game.dat: %s)\n", strerror(errno));
 		dispMsg("Error", buffer, 0);
 		free(buffer);
@@ -90,13 +90,13 @@ bool	saveGame(bool level)
 	}
 	len = game.state.loadedMap.path ? strlen(game.state.loadedMap.path) : 0;
 	if (write(fd, &len, sizeof(len)) != sizeof(len)) {
-		printf("%s: Couldn't write save file\n", ERROR);
+		printf("%s: Couldn't write save file\n", ERROR_BEG);
 		close(fd);
 		dispMsg("Error", "Couldn't write to save file\nNo space on disk ?", 0);
 		return (false);
 	}
 	if (write(fd, game.state.loadedMap.path,len) != len) {
-		printf("%s: Couldn't write save file\n", ERROR);
+		printf("%s: Couldn't write save file\n", ERROR_BEG);
 		close(fd);
 		dispMsg("Error", "Couldn't write to save file\nNo space on disk ?", 0);
 		return (false);
@@ -140,10 +140,10 @@ void	loadGame()
 	int		len = 0;
 	struct stat	st;
 
-	printf("%s: Loading game\n", INFO);
+	printf("%s: Loading game\n", INFO_BEG);
 	fd = open("save/game.dat", O_RDONLY);
 	if (fd < 0) {
-		printf("%s: Cannot open save file (save/game.dat: %s)\n", ERROR, strerror(errno));
+		printf("%s: Cannot open save file (save/game.dat: %s)\n", ERROR_BEG, strerror(errno));
 		return;
 	}
 	free(game.state.loadedMap.objects);
@@ -151,15 +151,15 @@ void	loadGame()
 	free(game.state.loadedMap.path);
 	game.state.loadedMap.objects = NULL;
 	if (read(fd, &len, sizeof(len)) != sizeof(len) && !use) {
-		printf("%s: Corrupted save file detected: Unexpected <EOF> len\n", ERROR);
+		printf("%s: Corrupted save file detected: Unexpected <EOF> len\n", ERROR_BEG);
 		use = (dispMsg("Error", CORRUPTED_SAVE_MSG, 4) == 6);
 		if (!use)
 			return;
 	} else if ((game.state.loadedMap.path = malloc(len + 1)) == NULL) {
-		printf("%s: Couldn't allocate %iB\n", FATAL, len + 1);
+		printf("%s: Couldn't allocate %iB\n", FATAL_BEG, len + 1);
 		exit(EXIT_FAILURE);
 	} else if (read(fd, game.state.loadedMap.path, len) != len && !use) {
-		printf("%s: Corrupted save file detected: Unexpected <EOF> map\n", ERROR);
+		printf("%s: Corrupted save file detected: Unexpected <EOF> map\n", ERROR_BEG);
 		use = (dispMsg("Error", CORRUPTED_SAVE_MSG, 4) == 6);
 		if (!use)
 			return;
@@ -178,7 +178,7 @@ void	loadGame()
 		} else if (stat(game.state.loadedMap.path, &st) != -1) {
 			loadLevel(game.state.loadedMap.path);
 		} else if (!use) {
-			printf("%s: Corrupted save file detected: Saved map not found\n", ERROR);
+			printf("%s: Corrupted save file detected: Saved map not found\n", ERROR_BEG);
 			use = (dispMsg("Error", CORRUPTED_SAVE_MSG, 4) == 6);
 			if (!use) {
 				close(fd);
@@ -186,7 +186,7 @@ void	loadGame()
 			}
 		}
 		if ((!game.state.loadedMap.objects || !game.state.characters.content) && !use) {
-			printf("%s: Corrupted save file detected: Saved map has invalid data\n", ERROR);
+			printf("%s: Corrupted save file detected: Saved map has invalid data\n", ERROR_BEG);
 			use = (dispMsg("Error", CORRUPTED_SAVE_MSG, 4) == 6);
 			if (!use) {
 				close(fd);
@@ -196,5 +196,5 @@ void	loadGame()
 		free(buffer);
 	}
 	close(fd);
-	printf("%s: Done\n", INFO);
+	printf("%s: Done\n", INFO_BEG);
 }

@@ -1,8 +1,3 @@
-#include "functions.h"
-#include "concatf.h"
-#include "structs.h"
-#include "configParser.h"
-#include "battle_api.h"
 #include <lua.h>
 #include <lualib.h>
 #include <lauxlib.h>
@@ -10,6 +5,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
+#include "functions.h"
+#include "concatf.h"
+#include "structs.h"
+#include "configParser.h"
+#include "battle_lua.h"
 
 int	proj2string(lua_State *Lua)
 {
@@ -61,7 +61,7 @@ Battle	invalidData(ParserResult result, char *path, char *message)
 	Parser_destroyData(result.data, result.type);
 	memset(&battle, 0, sizeof(battle));
 	battle.type = BATTLE_ERROR;
-	printf("%s: %s: %s\n", ERROR, path, message);
+	printf("%s: %s: %s\n", ERROR_BEG, path, message);
 	buffer = concatf("Error: File '%s' contains invalid battle data:\n%s", path, message);
 	dispMsg("Battle Error", buffer, 0);
 	free(buffer);
@@ -73,7 +73,7 @@ Array	invalidDataArray(ParserResult result, char *path, char *message)
 	char	*buffer;
 
 	Parser_destroyData(result.data, result.type);
-	printf("%s: %s: %s\n", ERROR, path, message);
+	printf("%s: %s: %s\n", ERROR_BEG, path, message);
 	buffer = concatf("Error: File '%s' contains invalid battle data:\n%s", path, message);
 	dispMsg("Battle Error", buffer, 0);
 	free(buffer);
@@ -88,7 +88,7 @@ Battle	invalidType(ParserResult result, char *path, char *message, ParserTypes g
 	Parser_destroyData(result.data, result.type);
 	memset(&battle, 0, sizeof(battle));
 	battle.type = BATTLE_ERROR;
-	printf("%s: %s: %s\n", ERROR, path, message);
+	printf("%s: %s: %s\n", ERROR_BEG, path, message);
 	buffer = concatf("Error: File '%s' contains invalid battle data:\n%s:\n%s expected but got %s\n", path, message, typeToString(expected), typeToString(got));
 	dispMsg("Battle Error", buffer, 0);
 	free(buffer);
@@ -100,7 +100,7 @@ Array	invalidTypeArray(ParserResult result, char *path, char *message, ParserTyp
 	char	*buffer;
 
 	Parser_destroyData(result.data, result.type);
-	printf("%s: %s: %s\n", ERROR, path, message);
+	printf("%s: %s: %s\n", ERROR_BEG, path, message);
 	buffer = concatf("Error: File '%s' contains invalid battle data:\n%s:\n%s expected but got %s\n", path, message, typeToString(expected), typeToString(got));
 	dispMsg("Battle Error", buffer, 0);
 	free(buffer);
@@ -117,22 +117,22 @@ Array	loadProjectiles(char *path)
 	Projectile	projBuffer;
 	Array		array;
 
-	printf("%s: Loading projectiles in file %s\n", INFO, path);
+	printf("%s: Loading projectiles in file %s\n", INFO_BEG, path);
 	if (result.error) {
-		printf("%s: %s\n", ERROR, result.error);
+		printf("%s: %s\n", ERROR_BEG, result.error);
 		result.error = concatf("Error: Couldn't load file '%s':\n%s\n", path, result.error);
 		dispMsg("Battle Error", result.error, 0);
 		free(result.error);
 		return (Array){NULL, -1};
 	} else if (result.type != ParserArrayType) {
-		printf("%s: %s: Invalid type\n", ERROR, path);
+		printf("%s: %s: Invalid type\n", ERROR_BEG, path);
 		buffer = (void *)concatf("Error: %s: Invalid type found in the file\n", path);
 		dispMsg("Battle Error", (void *)buffer, 0);
 		free(buffer);
 		Parser_destroyData(result.data, result.type);
 		return (Array){NULL, -1};
 	} else if (((ParserArray *)result.data)->type != ParserObjType) {
-		printf("%s: %s: Invalid type\n", ERROR, path);
+		printf("%s: %s: Invalid type\n", ERROR_BEG, path);
 		buffer = (void *)concatf("Error: %s: Array contains invalid data\n", path);
 		dispMsg("Battle Error", (void *)buffer, 0);
 		free(buffer);
@@ -161,7 +161,7 @@ Array	loadProjectiles(char *path)
 			} else
 				return invalidTypeArray(result, path, "Invalid type for field \"sprite_sheet\"", buffer->type, ParserStringType);
 		} else
-			printf("%s: Field \"sprite_sheet\" is missing\n", WARNING);
+			printf("%s: Field \"sprite_sheet\" is missing\n", WARNING_BEG);
 		if (buffer = ParserObj_getElement(currProjectile, "sprite_size")) {
 			if (buffer->type == ParserObjType) {
 				projBuffer.sprite.rect.width = projBuffer.sprite.texture ? sfTexture_getSize(projBuffer.sprite.texture).x : 0;
@@ -172,18 +172,18 @@ Array	loadProjectiles(char *path)
 					} else
 						return invalidTypeArray(result, path, "Invalid type for field \"x\" in \"sprite_size\"", buffer2->type, ParserIntType);
 				} else
-					printf("%s: Field \"x\" is missing in \"sprite_size\"\n", WARNING);
+					printf("%s: Field \"x\" is missing in \"sprite_size\"\n", WARNING_BEG);
 				if (buffer2 = ParserObj_getElement(buffer->data, "y")) {
 					if (buffer2->type == ParserIntType) {
 						projBuffer.sprite.rect.height = ParserInt_toInt(buffer2->data);
 					} else
 						return invalidTypeArray(result, path, "Invalid type for field \"y\" in \"sprite_size\"", buffer2->type, ParserIntType);
 				} else
-					printf("%s: Field \"y\" is missing in \"sprite_size\"\n", WARNING);
+					printf("%s: Field \"y\" is missing in \"sprite_size\"\n", WARNING_BEG);
 			} else
 				return invalidTypeArray(result, path, "Invalid type for field \"sprite_size\"", buffer->type, ParserObjType);
 		} else
-			printf("%s: Field \"sprite_size\" is missing\n", WARNING);
+			printf("%s: Field \"sprite_size\" is missing\n", WARNING_BEG);
 		if (buffer = ParserObj_getElement(currProjectile, "bullet_size")) {
 			if (buffer->type == ParserObjType) {
 				if (buffer2 = ParserObj_getElement(buffer->data, "x")) {
@@ -192,20 +192,20 @@ Array	loadProjectiles(char *path)
 					} else
 						return invalidTypeArray(result, path, "Invalid type for field \"x\" in \"bullet_size\"", buffer2->type, ParserIntType);
 				} else
-					printf("%s: Field \"x\" is missing in \"bullet_size\"\n", WARNING);
+					printf("%s: Field \"x\" is missing in \"bullet_size\"\n", WARNING_BEG);
 				if (buffer2 = ParserObj_getElement(buffer->data, "y")) {
 					if (buffer2->type == ParserIntType) {
 						scaling.y = game.settings.baseScale.y * (float)ParserInt_toInt(buffer2->data) / (float)projBuffer.sprite.rect.height;
 					} else
 						return invalidTypeArray(result, path, "Invalid type for field \"y\" in \"bullet_size\"", buffer2->type, ParserIntType);
 				} else
-					printf("%s: Field \"y\" is missing in \"bullet_size\"\n", WARNING);
+					printf("%s: Field \"y\" is missing in \"bullet_size\"\n", WARNING_BEG);
 				if (projBuffer.sprite.sprite)
 					sfSprite_setScale(projBuffer.sprite.sprite, scaling);
 			} else
 				return invalidTypeArray(result, path, "Invalid type for field \"bullet_size\"", buffer->type, ParserObjType);
 		} else
-			printf("%s: Field \"hitbox_size\" is missing\n", WARNING);
+			printf("%s: Field \"hitbox_size\" is missing\n", WARNING_BEG);
 		if (buffer = ParserObj_getElement(currProjectile, "hitbox_size")) {
 			if (buffer->type == ParserObjType) {
 				if (buffer2 = ParserObj_getElement(buffer->data, "x")) {
@@ -214,18 +214,18 @@ Array	loadProjectiles(char *path)
 					} else
 						return invalidTypeArray(result, path, "Invalid type for field \"x\" in \"hitbox_size\"", buffer2->type, ParserIntType);
 				} else
-					printf("%s: Field \"x\" is missing in \"hitbox_size\"\n", WARNING);
+					printf("%s: Field \"x\" is missing in \"hitbox_size\"\n", WARNING_BEG);
 				if (buffer2 = ParserObj_getElement(buffer->data, "y")) {
 					if (buffer2->type == ParserIntType) {
 						projBuffer.hitbox.y = ParserInt_toInt(buffer2->data);
 					} else
 						return invalidTypeArray(result, path, "Invalid type for field \"y\" in \"hitbox_size\"", buffer2->type, ParserIntType);
 				} else
-					printf("%s: Field \"y\" is missing in \"hitbox_size\"\n", WARNING);
+					printf("%s: Field \"y\" is missing in \"hitbox_size\"\n", WARNING_BEG);
 			} else
 				return invalidTypeArray(result, path, "Invalid type for field \"hitbox_size\"", buffer->type, ParserObjType);
 		} else
-			printf("%s: Field \"hitbox_size\" is missing\n", WARNING);
+			printf("%s: Field \"hitbox_size\" is missing\n", WARNING_BEG);
 		if (buffer = ParserObj_getElement(currProjectile, "base_speed")) {
 		        if (buffer->type == ParserIntType) {
 				projBuffer.speed = ParserInt_toInt(buffer->data);
@@ -235,7 +235,7 @@ Array	loadProjectiles(char *path)
 				return invalidTypeArray(result, path, "Invalid type for field \"base_speed\"", buffer->type, ParserFloatType);
 		} else {
 			projBuffer.minSpeed = -1000;
-			printf("%s: Field \"base_speed\" is missing\n", WARNING);
+			printf("%s: Field \"base_speed\" is missing\n", WARNING_BEG);
 		}
 		if (buffer = ParserObj_getElement(currProjectile, "min_speed")) {
 		        if (buffer->type == ParserIntType) {
@@ -245,7 +245,7 @@ Array	loadProjectiles(char *path)
 			} else
 				return invalidTypeArray(result, path, "Invalid type for field \"min_speed\"", buffer->type, ParserFloatType);
 		} else
-			printf("%s: Field \"min_speed\" is missing\n", WARNING);
+			printf("%s: Field \"min_speed\" is missing\n", WARNING_BEG);
 		if (buffer = ParserObj_getElement(currProjectile, "max_speed")) {
 		        if (buffer->type == ParserIntType) {
 				projBuffer.maxSpeed = ParserInt_toInt(buffer->data);
@@ -255,7 +255,7 @@ Array	loadProjectiles(char *path)
 				return invalidTypeArray(result, path, "Invalid type for field \"max_speed\"", buffer->type, ParserFloatType);
 		} else {
 			projBuffer.maxSpeed = 1000;
-			printf("%s: Field \"max_speed\" is missing\n", WARNING);
+			printf("%s: Field \"max_speed\" is missing\n", WARNING_BEG);
 		}
 		if (projBuffer.maxSpeed < projBuffer.minSpeed) {
 			return invalidTypeArray(result, path, "Maximum speed is lower than minimum speed", buffer->type, ParserFloatType);
@@ -268,7 +268,7 @@ Array	loadProjectiles(char *path)
 			} else
 				return invalidTypeArray(result, path, "Invalid type for field \"base_acceleration\"", buffer->type, ParserFloatType);
 		} else
-			printf("%s: Field \"base_acceleration\" is missing\n", WARNING);
+			printf("%s: Field \"base_acceleration\" is missing\n", WARNING_BEG);
 		if (buffer = ParserObj_getElement(currProjectile, "rotation_speed")) {
 		        if (buffer->type == ParserIntType) {
 				projBuffer.rotaSpeed = ParserInt_toInt(buffer->data);
@@ -277,7 +277,7 @@ Array	loadProjectiles(char *path)
 			} else
 				return invalidTypeArray(result, path, "Invalid type for field \"rotation_speed\"", buffer->type, ParserFloatType);
 		} else
-			printf("%s: Field \"rotation_speed\" is missing\n", WARNING);
+			printf("%s: Field \"rotation_speed\" is missing\n", WARNING_BEG);
 		if (buffer = ParserObj_getElement(currProjectile, "base_angle")) {
 		        if (buffer->type == ParserIntType) {
 				projBuffer.angle = ParserInt_toInt(buffer->data);
@@ -286,7 +286,7 @@ Array	loadProjectiles(char *path)
 			} else
 				return invalidTypeArray(result, path, "Invalid type for field \"base_angle\"", buffer->type, ParserFloatType);
 		} else
-			printf("%s: Field \"base_angle\" is missing\n", WARNING);
+			printf("%s: Field \"base_angle\" is missing\n", WARNING_BEG);
 		if (buffer = ParserObj_getElement(currProjectile, "animation_speed")) {
 		        if (buffer->type == ParserIntType) {
 				projBuffer.animSpeed = ParserInt_toInt(buffer->data);
@@ -295,7 +295,7 @@ Array	loadProjectiles(char *path)
 			} else
 				return invalidTypeArray(result, path, "Invalid type for field \"animation_speed\"", buffer->type, ParserFloatType);
 		} else
-			printf("%s: Field \"animation_speed\" is missing\n", WARNING);
+			printf("%s: Field \"animation_speed\" is missing\n", WARNING_BEG);
 		projBuffer.bankID = i;
 		if (projBuffer.sprite.sprite)
 			sfSprite_setOrigin(projBuffer.sprite.sprite, (sfVector2f){(float)projBuffer.sprite.rect.width / 2, (float)projBuffer.sprite.rect.height / 2});
@@ -343,10 +343,10 @@ Battle	loadBattleScript(char *path)
 	ParserObj	*buffer;
 	ParserObj	*buffer2;
 
-	printf("%s: Loading %s as battle infos\n", INFO, path);
+	printf("%s: Loading %s as battle infos\n", INFO_BEG, path);
 	battle.type = BATTLE_ERROR;
 	if (result.error) {
-		printf("%s: %s\n", ERROR, result.error);
+		printf("%s: %s\n", ERROR_BEG, result.error);
 		result.error = concatf("Error: Couldn't load file '%s':\n%s\n", path, result.error);
 		dispMsg("Battle Error", result.error, 0);
 		free(result.error);
@@ -377,14 +377,14 @@ Battle	loadBattleScript(char *path)
 		} else
 			return invalidType(result, path, "Invalid type for field \"battle_name\"", buffer->type, ParserStringType);
 	} else
-		printf("%s: Field \"battle_name\" is missing", WARNING);
+		printf("%s: Field \"battle_name\" is missing", WARNING_BEG);
 	if (buffer = ParserObj_getElement(result.data, "boss_name")) {
 		if (buffer->type == ParserStringType) {
 			strcpy(battle.boss.name, ParserString_toCharStar(buffer->data));
 		} else
 			return invalidType(result, path, "Invalid type for field \"boss_name\"", buffer->type, ParserStringType);
 	} else
-		printf("%s: Field \"boss_name\" is missing\n", WARNING);
+		printf("%s: Field \"boss_name\" is missing\n", WARNING_BEG);
 	if (buffer = ParserObj_getElement(result.data, "boss_sprite_sheet")) {
 		if (buffer->type == ParserStringType) {
 			battle.bossSprite = createSprite((Sprite_config){
@@ -399,7 +399,7 @@ Battle	loadBattleScript(char *path)
 		} else
 			return invalidType(result, path, "Invalid type for field \"boss_sprite_sheet\"", buffer->type, ParserStringType);
 	} else
-		printf("%s: Field \"boss_sprite_sheet\" is missing\n", WARNING);
+		printf("%s: Field \"boss_sprite_sheet\" is missing\n", WARNING_BEG);
 	if (buffer = ParserObj_getElement(result.data, "projectiles")) {
 		if (buffer->type == ParserStringType) {
 			battle.projectileBank = loadProjectiles(ParserString_toCharStar(buffer->data));
@@ -434,7 +434,7 @@ Battle	loadBattleScript(char *path)
 		} else
 			return invalidType(result, path, "Invalid type for field \"music\"", buffer->type, ParserStringType);
 	} else
-		printf("%s: Field \"boss_sprite_sheet\" is missing\n", WARNING);
+		printf("%s: Field \"boss_sprite_sheet\" is missing\n", WARNING_BEG);
 	if (buffer = ParserObj_getElement(result.data, "boss_sprite_size")) {
 		if (buffer->type == ParserObjType) {
 			if (buffer2 = ParserObj_getElement(buffer->data, "x")) {
@@ -443,18 +443,18 @@ Battle	loadBattleScript(char *path)
 				} else
 					return invalidType(result, path, "Invalid type for field \"x\" in \"boss_sprite_size\"", buffer2->type, ParserIntType);
 			} else
-				printf("%s: Field \"x\" is missing in \"boss_sprite_size\"\n", WARNING);
+				printf("%s: Field \"x\" is missing in \"boss_sprite_size\"\n", WARNING_BEG);
 			if (buffer2 = ParserObj_getElement(buffer->data, "y")) {
 				if (buffer2->type == ParserIntType) {
 					battle.bossSprite.rect.height = ParserInt_toInt(buffer2->data);
 				} else
 					return invalidType(result, path, "Invalid type for field \"y\" in \"boss_sprite_size\"", buffer2->type, ParserIntType);
 			} else
-				printf("%s: Field \"y\" is missing in \"boss_sprite_size\"\n", WARNING);
+				printf("%s: Field \"y\" is missing in \"boss_sprite_size\"\n", WARNING_BEG);
 		} else
 			return invalidType(result, path, "Invalid type for field \"boss_sprite_size\"", buffer->type, ParserObjType);
 	} else
-		printf("%s: Field \"boss_sprite_size\" is missing\n", WARNING);
+		printf("%s: Field \"boss_sprite_size\" is missing\n", WARNING_BEG);
 	if (buffer = ParserObj_getElement(result.data, "boss_hitbox")) {
 		if (buffer->type == ParserObjType) {
 			if (buffer2 = ParserObj_getElement(buffer->data, "x")) {
@@ -463,18 +463,18 @@ Battle	loadBattleScript(char *path)
 				} else
 					return invalidType(result, path, "Invalid type for field \"x\" in \"boss_hitbox\"", buffer2->type, ParserIntType);
 			} else
-				printf("%s: Field \"x\" is missing in \"boss_hitbox\"\n", WARNING);
+				printf("%s: Field \"x\" is missing in \"boss_hitbox\"\n", WARNING_BEG);
 			if (buffer2 = ParserObj_getElement(buffer->data, "y")) {
 				if (buffer2->type == ParserIntType) {
 					battle.bossHitbox.y = ParserInt_toInt(buffer2->data);
 				} else
 					return invalidType(result, path, "Invalid type for field \"y\" in \"boss_hitbox\"", buffer2->type, ParserIntType);
 			} else
-				printf("%s: Field \"y\" is missing in \"boss_hitbox\"\n", WARNING);
+				printf("%s: Field \"y\" is missing in \"boss_hitbox\"\n", WARNING_BEG);
 		} else
 			return invalidType(result, path, "Invalid type for field \"boss_hitbox\"", buffer->type, ParserIntType);
 	} else
-		printf("%s: Field \"boss_hitbox\" is missing\n", WARNING);
+		printf("%s: Field \"boss_hitbox\" is missing\n", WARNING_BEG);
 	if (buffer = ParserObj_getElement(result.data, "player_hitbox")) {
 		if (buffer->type == ParserObjType) {
 			if (buffer2 = ParserObj_getElement(buffer->data, "x")) {
@@ -483,18 +483,18 @@ Battle	loadBattleScript(char *path)
 				} else
 					return invalidType(result, path, "Invalid type for field \"x\" in \"player_hitbox\"", buffer2->type, ParserIntType);
 			} else
-				printf("%s: Field \"x\" is missing in \"player_hitbox\"\n", WARNING);
+				printf("%s: Field \"x\" is missing in \"player_hitbox\"\n", WARNING_BEG);
 			if (buffer2 = ParserObj_getElement(buffer->data, "y")) {
 				if (buffer2->type == ParserIntType) {
 					battle.playerHitbox.y = ParserInt_toInt(buffer2->data);
 				} else
 					return invalidType(result, path, "Invalid type for field \"y\" in \"player_hitbox\"", buffer2->type, ParserIntType);
 			} else
-				printf("%s: Field \"y\" is missing in \"player_hitbox\"\n", WARNING);
+				printf("%s: Field \"y\" is missing in \"player_hitbox\"\n", WARNING_BEG);
 		} else
 			return invalidType(result, path, "Invalid type for field \"player_hitbox\"", buffer->type, ParserObjType);
 	} else
-		printf("%s: Field \"boss_hitbox\" is missing\n", WARNING);
+		printf("%s: Field \"boss_hitbox\" is missing\n", WARNING_BEG);
 	ParserObj_destroy(result.data);
 	for (int j = 0; j < DAMAGES_TYPE_NB; j++)
 	        battle.boss.damageClock[j] = sfClock_create();
@@ -611,7 +611,7 @@ void	battle()
 		err = lua_resume(game.state.battle_infos.Lua_thread, game.state.battle_infos.Lua, 0);
 		if (err == LUA_ERRRUN) {
 			buffer = concatf("A runtime error occurred during battle:\n%s", luaL_checkstring(game.state.battle_infos.Lua_thread, -1));
-			printf("%s: %s\n", ERROR, lua_tostring(Lua, -1));
+			printf("%s: %s\n", ERROR_BEG, lua_tostring(Lua, -1));
 			dispMsg("Battle Error", buffer, 0);
 			free(buffer);
 			back_on_title_screen(-1);
@@ -621,7 +621,7 @@ void	battle()
 			return;
 		} else if (err == LUA_ERRMEM) {
 			buffer = concatf("A runtime error occurred during battle:\n%s: Out of memory", game.state.battle_infos.script);
-			printf("%s: %s: Out of memory\n", ERROR, game.state.battle_infos.script);
+			printf("%s: %s: Out of memory\n", ERROR_BEG, game.state.battle_infos.script);
 			dispMsg("Battle Error", buffer, 0);
 			free(buffer);
 			back_on_title_screen(-1);
@@ -631,7 +631,7 @@ void	battle()
 			return;
 		} else if (err == LUA_ERRERR) {
 			buffer = concatf("An unexpected error occurred during battle:\n%s", game.state.battle_infos.script);
-			printf("%s: %s: Unknown error\n", ERROR, game.state.battle_infos.script);
+			printf("%s: %s: Unknown error\n", ERROR_BEG, game.state.battle_infos.script);
 			dispMsg("Battle Error", buffer, 0);
 			free(buffer);
 			back_on_title_screen(-1);

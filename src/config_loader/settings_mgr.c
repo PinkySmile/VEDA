@@ -13,9 +13,9 @@ void		saveSettings()
 	int		fd;
 	struct stat	st;
 
-	printf("%s: Saving settings\n", INFO);
+	printf("%s: Saving settings\n", INFO_BEG);
 	if (stat("save", &st) == -1) {
-		printf("%s: Creating folder \"save\"\n", INFO);
+		printf("%s: Creating folder \"save\"\n", INFO_BEG);
 		#ifdef __MINGW32__
 			mkdir("save");
 		#else
@@ -24,7 +24,7 @@ void		saveSettings()
 	}
 	fd = open("save/settings.dat", O_WRONLY | O_CREAT, READ_WRITE_RIGHTS);
 	if (fd < 0) {
-		printf("%s: Couldn't save settings (save/settings.dat: %s)\n", ERROR, strerror(errno));
+		printf("%s: Couldn't save settings (save/settings.dat: %s)\n", ERROR_BEG, strerror(errno));
 		return;
 	}
 	write(fd, &game.settings, sizeof(game.settings));
@@ -37,12 +37,12 @@ Settings	loadSettings()
 	int		fd;
 	FILE		*stream;
 
-	printf("%s: Loading settings\n", INFO);
+	printf("%s: Loading settings\n", INFO_BEG);
 	stream = fopen("save/settings.dat", "rb");
 	fd = fileno(stream);
 	memset(&settings, 0, sizeof(settings));
 	if (fd < 0 || read(fd, &settings, sizeof(settings)) != sizeof(settings)) {
-		printf("%s: Couldn't load settings (save/settings.dat: %s)\n", ERROR, fd < 0 ? strerror(errno) : "Corrupted file found");
+		printf("%s: Couldn't load settings (save/settings.dat: %s)\n", ERROR_BEG, fd < 0 ? strerror(errno) : "Corrupted file found");
 		memset(&settings.keys, -1, NB_OF_KEYS);
 		settings.keys[0] = sfKeyZ;
 		settings.keys[1] = sfKeyS;

@@ -18,8 +18,8 @@ void	setVolumes(Array sounds, float volume)
 
 void	manageEvents()
 {
-	sfEvent		event;
-	int		random = rand();
+	sfEvent	event;
+	int	random = rand();
 
 	while (sfRenderWindow_pollEvent(game.ressources.window, &event)) {
 		if (event.type == sfEvtClosed) {
@@ -70,14 +70,13 @@ void	manageEvents()
 		} else if (event.type == sfEvtKeyPressed) {
 			if (game.debug && event.key.code == sfKeyInsert) {
 				void	*buff = realloc(game.state.dialogsOnScreen, sizeof(*game.state.dialogsOnScreen) * (game.state.dialogs + 1));
-				int	random = rand() % (game.state.characters.length + 1);
 				size_t	n = 0;
 
 				if (buff) {
 					game.state.dialogs++;
 					game.state.dialogsOnScreen = buff;
 					memset(&game.state.dialogsOnScreen[game.state.dialogs - 1], 0, sizeof(*game.state.dialogsOnScreen));
-					game.state.dialogsOnScreen[game.state.dialogs - 1].dialogOwnerName = (random == game.state.characters.length ? NULL : ((Character *)game.state.characters.content)[random].name);
+					game.state.dialogsOnScreen[game.state.dialogs - 1].dialogOwnerName = (random % (game.state.characters.length + 1) == game.state.characters.length ? NULL : ((Character *)game.state.characters.content)[random].name);
 					getline(&game.state.dialogsOnScreen[game.state.dialogs - 1].rawText, &n, stdin);
 					game.state.dialogsOnScreen[game.state.dialogs - 1].clock = sfClock_create();
 					game.state.dialogsOnScreen[game.state.dialogs - 1].speed = 0.1;

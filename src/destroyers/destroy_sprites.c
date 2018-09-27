@@ -8,7 +8,7 @@ void	destroySprites()
 {
 	for (int i = 0; i < game.ressources.sprites.length; i++) {
 		if (game.debug)
-			printf("%s: Destroying sprite %i\n", INFO, i);
+			printf("%s: Destroying sprite %i\n", INFO_BEG, i);
 		if (getSprite(i)->sprite != NULL)
 			sfSprite_destroy(getSprite(i)->sprite);
 		if (getSprite(i)->texture != NULL)

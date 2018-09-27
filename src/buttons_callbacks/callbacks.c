@@ -120,9 +120,9 @@ void	changeScreenMode(int new)
 	if (game.ressources.icon.image)
 		icon = sfImage_getPixelsPtr(game.ressources.icon.image);
 	else
-		printf("[ERROR] : Couldn't load icon image\n");
+		printf("%s: Couldn't load icon image\n", ERROR_BEG);
 	if (!title) {
-		printf("%s: Couldn't create window title\n", FATAL);
+		printf("%s: Couldn't create window title\n", FATAL_BEG);
 		dispMsg("Window error", "Couldn't create window title", 0);
 		exit(EXIT_FAILURE);
 	}
@@ -143,7 +143,7 @@ void	changeScreenMode(int new)
 	sfRenderWindow_destroy(game.ressources.window);
 	game.ressources.window = sfRenderWindow_create(mode, title, style, NULL);
 	if (!game.ressources.window) {
-		printf("%s: Couldn't create window\n", FATAL);
+		printf("%s: Couldn't create window\n", FATAL_BEG);
 		dispMsg("Window error", "Couldn't create window object", 0);
 		exit(EXIT_FAILURE);
 	}
@@ -234,7 +234,7 @@ void	changeLanguage(int buttonID)
 {
 	strcpy(game.settings.lang_id, game.ressources.languages[buttonID - game.languagesConf.x].id);
 	for (int i = 0; game.ressources.buttons[i].content; i++) {
-		printf("%s: Destroying button %i\n", INFO, i);
+		printf("%s: Destroying button %i\n", INFO_BEG, i);
 		sfRectangleShape_destroy(game.ressources.buttons[i].rect);
 	}
 	free(game.ressources.buttons);

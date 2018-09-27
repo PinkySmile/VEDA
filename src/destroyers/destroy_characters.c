@@ -7,7 +7,7 @@ void	destroyCharacters()
 {
 	for (int i = 0; i < game.state.characters.length; i++) {
 		if (game.debug)
-			printf("%s: Destroying character %i (%s)\n", INFO, i, ((Character *)game.state.characters.content)[i].name);
+			printf("%s: Destroying character %i (%s)\n", INFO_BEG, i, ((Character *)game.state.characters.content)[i].name);
 		sfClock_destroy(((Character *)game.state.characters.content)[i].movement.animationClock);
 		sfClock_destroy(((Character *)game.state.characters.content)[i].movement.stateClock);
 		sfClock_destroy(((Character *)game.state.characters.content)[i].stats.energyRegenClock);

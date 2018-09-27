@@ -6,19 +6,28 @@
 #include <string.h>
 #include <stdio.h>
 #include "utils.h"
-#include "macros.h"
 #include "loading.h"
 #include "functions.h"
 #include "destructors.h"
+#if defined _WIN32 || defined __WIN32 || defined __WIN32__
+#	include <windows.h>
+#endif
 
 char	*programPath = NULL;
 
 #if defined _WIN32 || defined __WIN32 || defined __WIN32__
 
-#define SIGQUIT 3
-#define SIGBUS 7
+void	setSignalHandler()
+{
+	signal(SIGINT,  &sighandler);
+	signal(SIGILL,  &sighandler);
+	signal(SIGABRT, &sighandler);
+	signal(SIGFPE,  &sighandler);
+	signal(SIGSEGV, &sighandler);
+	signal(SIGTERM, &sighandler);
+}
 
-#endif
+#else
 
 void	setSignalHandler()
 {
@@ -33,13 +42,13 @@ void	setSignalHandler()
 	signal(SIGTERM, &sighandler);
 }
 
+#endif
+
 void	closeConsole(bool debug)
 {
 	#if defined _WIN32 || defined __WIN32 || defined __WIN32__
-	#include <windows.h>
-
 	if (!debug && !FreeConsole())
-		printf("%s: Cannot close main console\n", ERROR);
+		printf("%s: Cannot close main console\n", ERROR_BEG);
 	#else
 	(void)debug;
 	#endif
@@ -50,7 +59,7 @@ void	prepareExit()
 	destroyStruct();
 	Discord_Shutdown();
 	free(programPath);
-	printf("%s: Goodbye !\n", INFO);
+	printf("%s: Goodbye !\n", INFO_BEG);
 }
 
 int	main(int argc, char **args)

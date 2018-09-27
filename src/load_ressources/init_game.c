@@ -30,7 +30,7 @@ void	initDialogsScript()
 	if (luaL_dofile(game.ressources.dialogLuaScript, getAbsolutePath("data/dialogs/script.lua"))) {
 		printf(
 			"%s: An unexpected error occurred when loading %s\n",
-			ERROR,
+			ERROR_BEG,
 			getAbsolutePath("data/dialogs/script.lua")
 		);
 		lua_close(game.ressources.dialogLuaScript);
@@ -42,7 +42,7 @@ void	initGame(bool debug)
 {
 	Character	player;
 
-	printf("%s: Initializating game\n", INFO);
+	printf("%s: Initializating game\n", INFO_BEG);
 	memset(&game, 0, sizeof(game));
 	srand((long)&game);
 	memset(&player, 0, sizeof(player));

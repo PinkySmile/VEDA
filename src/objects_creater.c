@@ -19,7 +19,7 @@ void	*my_malloc(size_t size)
 
 	if (!ptr) {
 		//No memory left :/
-		printf("%s: Allocation failure (%uB)", FATAL, size);
+		printf("%s: Allocation failure (%uB)", FATAL_BEG, size);
 		exit(EXIT_FAILURE);
 	}
 	return (ptr);
@@ -30,7 +30,7 @@ sfText	*createText()
 	sfText	*text = sfText_create();
 
 	if (!text) {
-		printf("%s: Couldn't create text object\n", FATAL);
+		printf("%s: Couldn't create text object\n", FATAL_BEG);
 		dispMsg("Init error", "Couldn't create text object\n\nClick OK to close the application", 0);
 		exit(EXIT_FAILURE);
 	}
@@ -42,7 +42,7 @@ sfRectangleShape	*createRectangleShape()
 	sfRectangleShape	*rect = sfRectangleShape_create();
 
 	if (!rect) {
-		printf("%s: Couldn't create rectangleShape\n", FATAL);
+		printf("%s: Couldn't create rectangleShape\n", FATAL_BEG);
 		dispMsg("Init error", "Couldn't create rectangleShape object\n\nClick OK to close the application", 0);
 		exit(EXIT_FAILURE);
 	}
@@ -59,7 +59,7 @@ sfRenderWindow	*createRenderWindow(sfVideoMode mode, const void *title, sfUint32
 		window = sfRenderWindow_create(mode, title, style, settings);
 	if (!window) {
 		//The window cannot be created, get out of here
-		printf("%s: Couldn't create window\n", FATAL);
+		printf("%s: Couldn't create window\n", FATAL_BEG);
 		dispMsg("Init error", "Couldn't create window object\n\nClick OK to close the application", 0);
 		exit(EXIT_FAILURE);
 	}
@@ -73,7 +73,7 @@ sfSprite	*createSfSprite(sfTexture *texture)
 	if (texture) {
 		sprite = sfSprite_create();
 		if (!sprite) {
-			printf("%s: Couldn't create sprite\n", FATAL);
+			printf("%s: Couldn't create sprite\n", FATAL_BEG);
 			dispMsg("Init error", "Couldn't create sprite object\n\nClick OK to close the application", 0);
 			exit(EXIT_FAILURE);
 		}
@@ -87,9 +87,9 @@ char	*getVersion()
 	int		fd = open("data/version.txt", O_RDONLY);
 	static char	version[10];
 
-	printf("%s: Loading version string\n", INFO);
+	printf("%s: Loading version string\n", INFO_BEG);
 	if (fd < 0) {
-		printf("[ERROR]: data/version.txt: %s\n", strerror(errno));
+		printf("[ERROR_BEG]: data/version.txt: %s\n", strerror(errno));
 		strcpy(version, "?.?.?.?");
 		return (version);
 	}
@@ -134,7 +134,7 @@ sfRenderWindow	*createMainWindow()
 		game.version = getVersion();
 	title = concat("VEDA version ", game.version, false, false);
 	if (!title) {
-		printf("%s: An error occured while creating window title\n", FATAL);
+		printf("%s: An error occured while creating window title\n", FATAL_BEG);
 		dispMsg("Init error", "Couldn't create window title\n\nClick OK to close the application", 0);
 		exit(EXIT_FAILURE);
 	}
@@ -147,7 +147,7 @@ sfRenderWindow	*createMainWindow()
 		game.ressources.icon.texture = sfTexture_createFromImage(image, NULL);
 		icon = sfImage_getPixelsPtr(image);
 	} else
-		printf("%s: Couldn't load icon %s\n", ERROR, getAbsolutePath("data/icon/icon.png"));
+		printf("%s: Couldn't load icon %s\n", ERROR_BEG, getAbsolutePath("data/icon/icon.png"));
 	if (icon)
 		sfRenderWindow_setIcon(game.ressources.window, 32, 32, icon);
 	game.ressources.icon.image = image;

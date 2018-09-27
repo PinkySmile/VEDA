@@ -7,7 +7,7 @@ void	destroyLanguages()
 {
 	for (int i = 0; game.ressources.languages && game.ressources.languages[i].name; i++) {
 		if (game.debug)
-			printf("%s: Destroying language %i (%s)\n", INFO, i, game.ressources.languages[i].name);
+			printf("%s: Destroying language %i (%s)\n", INFO_BEG, i, game.ressources.languages[i].name);
 		for (int j = 0; game.ressources.languages[i].buttons && game.ressources.languages[i].buttons[j]; j++)
 			free(game.ressources.languages[i].buttons[j]);
 		for (int j = 0; game.ressources.languages[i].items && game.ressources.languages[i].items[j]; j++)

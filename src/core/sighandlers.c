@@ -31,16 +31,16 @@ char	*strsignal(int signum)
 
 void	handleFatalSignals(int signum)
 {
-	printf("%s: Caught signal %i (%s). Aborting !\n", FATAL, signum, strsignal(signum));
+	printf("%s: Caught signal %i (%s). Aborting !\n", FATAL_BEG, signum, strsignal(signum));
 	updateDiscordPresence("Game crashed", strsignal(signum), 0, false, "icon", "bug", "VEDA", strsignal(signum));
 	dispMsg("Fatal Error", concatf("Fatal: Caught signal %i (%s)\n\n\nClick OK to close the program", signum, strsignal(signum)), 0);
 	Discord_Shutdown();
-	exit(signo + 128);
+	exit(signum + 128);
 }
 
 void	handleSigInt(int signum)
 {
-	printf("%s: Caught signal %i (%s). Exiting.\n", INFO, signum, strsignal(signum));
+	printf("%s: Caught signal %i (%s). Exiting.\n", INFO_BEG, signum, strsignal(signum));
 	if (game.ressources.window && sfRenderWindow_isOpen(game.ressources.window))
 		sfRenderWindow_close(game.ressources.window);
 	else {
@@ -64,5 +64,5 @@ void	sighandler(int signum)
 	if (signum == SIGINT || signum == SIGTERM)
 		handleSigInt(signum);
 	else
-		handleFatalSignals(signo);
+		handleFatalSignals(signum);
 }
