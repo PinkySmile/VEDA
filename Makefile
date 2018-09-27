@@ -41,7 +41,7 @@ SRC =	main.c					\
 	load_ressources/init_game.c		\
 	load_ressources/languages.c		\
 	load_ressources/level.c			\
-	load_ressources/loadingBar.c		\
+	load_ressources/loading_bar.c		\
 	load_ressources/sounds.c		\
 	load_ressources/sprites.c		\
 						\
@@ -103,6 +103,7 @@ RES =
 all:	$(LIBS) $(NAME)
 
 windows:RES = icon.res
+windows:LDFLAGS += -mwindows
 windows:icon.res all
 
 icon.res:
