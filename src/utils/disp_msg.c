@@ -27,7 +27,7 @@ int	dispMsg(char *title, char *content, int variate)
 	int			buttonClicked = 0;
 
 	if (!font) {
-		printf("%s: Cannot load default font !\nDisplaying the message in the console:\n\n", ERROR);
+		printf("%s: Cannot load default font !\nDisplaying the message in the console:\n\n", ERROR_BEG);
 		printf("%s\n%s\n", title, content);
 	}
 	switch (variate) {
