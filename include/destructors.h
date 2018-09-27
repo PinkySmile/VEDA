@@ -12,5 +12,6 @@ void	destroyLanguages();
 void	destroyCharacters();
 void	destroySfmlObjects();
 void	destroyFonts();
+void	destroyStruct();
 
 #endif

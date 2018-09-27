@@ -1,9 +1,15 @@
-#include <SFML/Graphics.c>
+#include <SFML/Graphics.h>
 #include <SFML/Audio.h>
 #include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
+#include <errno.h>
+#include <fcntl.h>
 #include <stdio.h>
 #include "utils.h"
 #include "macros.h"
+#include "concatf.h"
+#include "structs.h"
 
 extern char	*programPath;
 
@@ -21,7 +27,7 @@ void	*my_malloc(size_t size)
 
 sfText	*createText()
 {
-	sfText	*text = sfRectangleText_create();
+	sfText	*text = sfText_create();
 
 	if (!text) {
 		printf("%s: Couldn't create text object\n", FATAL);
@@ -124,7 +130,8 @@ sfRenderWindow	*createMainWindow()
 	game.settings.baseScale.y = (float)mode.height / 480.0;
 
 	//Load the version and create the title and the window
-	game.version = getVersion();
+	if (!game.version)
+		game.version = getVersion();
 	title = concat("VEDA version ", game.version, false, false);
 	if (!title) {
 		printf("%s: An error occured while creating window title\n", FATAL);

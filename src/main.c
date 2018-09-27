@@ -1,12 +1,15 @@
 #include <SFML/Graphics.h>
 #include <SFML/Audio.h>
+#include <discord_rpc.h>
 #include <signal.h>
 #include <stdlib.h>
+#include <string.h>
 #include <stdio.h>
-#include "functions.h"
 #include "utils.h"
 #include "macros.h"
-#include "discord_rp.h"
+#include "loading.h"
+#include "functions.h"
+#include "destructors.h"
 
 char	*programPath = NULL;
 
@@ -56,7 +59,7 @@ int	main(int argc, char **args)
 
 	closeConsole(debug);
 	setSignalHandler();
-	programPath = getProgramPath(args[0]);
+	programPath = getParentFolder(args[0]);
 	initGame(debug);
 	launchGame();
 	prepareExit();

@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include "configs.h"
 
 const Music_config	musics_conf[] = {
 	{"data/sound/Musics/Puzzle.ogg",	  true},

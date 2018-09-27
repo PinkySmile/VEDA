@@ -3,6 +3,7 @@
 
 #include <SFML/Graphics.h>
 
+void		sighandler(int signum);
 void		launchGame();
 void		manageEvents();
 void		manage_mouse_click(sfMouseButtonEvent event);

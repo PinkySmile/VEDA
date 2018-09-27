@@ -66,6 +66,7 @@ typedef struct {
 	GameState	state;
 	Input		input;
 	sfVector2i	languagesConf;
+	char		*version;
 } game_t;
 
 #endif

@@ -1,8 +1,11 @@
 #include <stdbool.h>
 #include "array.h"
+#include "battle.h"
 #include "button.h"
-#include "language.h"
+#include "object.h"
+#include "sprite.h"
 #include "configs.h"
+#include "language.h"
 
 void		initGame	(bool debug);
 Array		loadMusics	();

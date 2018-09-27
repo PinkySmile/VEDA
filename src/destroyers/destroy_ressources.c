@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <malloc.h>
 #include "destructors.h"
 #include "structs.h"
 #include "battle_lua.h"
@@ -32,4 +33,6 @@ void	destroyStruct()
 
 	printf("%s: Destroying fonts\n", INFO);
 	destroyFonts();
+
+	free(game.version);
 }
