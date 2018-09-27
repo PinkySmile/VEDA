@@ -49,7 +49,7 @@ void	initGame(bool debug)
 	game.debug = debug;
 	initDiscordRichPresence();
 	game.settings = loadSettings();
-	createMainWindow();
+	game.ressources.window = createMainWindow();
 	initDialogsScript();
 	game.input.bufSize = BUFFER_MAX_SIZE;
 	loadRessources();
