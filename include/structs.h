@@ -14,8 +14,6 @@
 #include "icon.h"
 #include "ressources.h"
 #include "game_struct.h"
-
-extern	game_t	game;
-extern	void	(* const game_functions[])();
+#include "globals.h"
 
 #endif
