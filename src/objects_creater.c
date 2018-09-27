@@ -107,9 +107,9 @@ sfRenderWindow	*createMainWindow()
 {
 	char		*title;
 	const sfUint8	*icon = NULL;
-	sfImage		*image;
 	sfVideoMode	mode = {640, 480, 32};
 	sfWindowStyle	style;
+	sfRenderWindow	*window;
 
 	//Get the scaling and the window style from loaded settings
 	switch (game.settings.windowMode) {
@@ -138,18 +138,21 @@ sfRenderWindow	*createMainWindow()
 		dispMsg("Init error", "Couldn't create window title\n\nClick OK to close the application", 0);
 		exit(EXIT_FAILURE);
 	}
-	game.ressources.window = createRenderWindow(mode, title, style, NULL, false);
+	window = createRenderWindow(mode, title, style, NULL, false);
 	free(title);
 
 	//Load the icon and create a sprite out of it
-	image = sfImage_createFromFile(getAbsolutePath("data/icon/icon.png"));
-	if (image) {
-		game.ressources.icon.texture = sfTexture_createFromImage(image, NULL);
-		icon = sfImage_getPixelsPtr(image);
+	if (!game.ressources.icon.image)
+		game.ressources.icon.image = sfImage_createFromFile(getAbsolutePath("data/icon/icon.png"));
+	if (game.ressources.icon.image) {
+		if (!game.ressources.icon.texture)
+			game.ressources.icon.texture = sfTexture_createFromImage(game.ressources.icon.image, NULL);
+		icon = sfImage_getPixelsPtr(game.ressources.icon.image);
 	} else
 		printf("%s: Couldn't load icon %s\n", ERROR_BEG, getAbsolutePath("data/icon/icon.png"));
 	if (icon)
-		sfRenderWindow_setIcon(game.ressources.window, 32, 32, icon);
-	game.ressources.icon.image = image;
-	game.ressources.icon.sprite = createSfSprite(game.ressources.icon.texture);
+		sfRenderWindow_setIcon(window, 32, 32, icon);
+	if (!game.ressources.icon.sprite)
+		game.ressources.icon.sprite = createSfSprite(game.ressources.icon.texture);
+	return window;
 }
