@@ -1,6 +1,7 @@
 #include <malloc.h>
 #include <stdio.h>
 #include <malloc.h>
+#include "structs.h"
 
 void	destroyLanguages()
 {

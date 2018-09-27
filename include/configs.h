@@ -1,6 +1,9 @@
 #ifndef __GLOBALS_HEADER_
 #define __GLOBALS_HEADER_
 
+#include <SFML/Graphics.h>
+#include <stdbool.h>
+
 typedef struct {
 	char		*path;
 	bool		isRepeated;

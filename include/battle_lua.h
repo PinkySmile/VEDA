@@ -1,9 +1,11 @@
 #ifndef __BATTLE_API_H_
 #define __BATTLE_API_H_
 
-#include "lua.h"
-#include "lualib.h"
-#include "lauxlib.h"
+#include <lua.h>
+#include <lualib.h>
+#include <lauxlib.h>
+#include "character.h"
+#include "projectile.h"
 
 //Lua functions
 int	addProjectileLua	(lua_State *Lua);

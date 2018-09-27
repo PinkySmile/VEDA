@@ -1,7 +1,7 @@
 #ifndef __GAME_STRUCT_HEADER_
 #define __GAME_STRUCT_HEADER_
 
-#include <SFML.Graphics.h>
+#include <SFML/Graphics.h>
 #include <lua.h>
 #include "icon.h"
 #include "button.h"
@@ -66,6 +66,7 @@ typedef struct {
 	GameState	state;
 	Input		input;
 	sfVector2i	languagesConf;
+	char		*version;
 } game_t;
 
 #endif

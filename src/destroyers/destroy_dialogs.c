@@ -1,4 +1,5 @@
 #include <lua.h>
+#include "structs.h"
 
 void	destroyDialogs()
 {

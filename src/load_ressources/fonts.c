@@ -1,9 +1,11 @@
-#include "structs.h"
-#include "fonts_conf.h"
-#include "functions.h"
-#include "concatf.h"
 #include <stdlib.h>
 #include <stdio.h>
+#include "utils.h"
+#include "display.h"
+#include "structs.h"
+#include "configs.h"
+#include "functions.h"
+#include "concatf.h"
 
 Array	loadFonts()
 {

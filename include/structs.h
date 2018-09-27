@@ -12,7 +12,6 @@
 #include "list.h"
 #include "battle.h"
 #include "icon.h"
-#include "ressources.h"
 #include "game_struct.h"
 #include "globals.h"
 

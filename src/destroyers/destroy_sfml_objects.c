@@ -1,4 +1,5 @@
 #include <SFML/Graphics.h>
+#include "structs.h"
 
 void	destroySfmlObjects()
 {

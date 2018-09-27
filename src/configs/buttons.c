@@ -1,6 +1,8 @@
 #include <SFML/Graphics.h>
 #include <SFML/Audio.h>
 #include <stdlib.h>
+#include "callbacks.h"
+#include "configs.h"
 #include "buttons_names.h"
 
 const Button_config	button_config[] = {

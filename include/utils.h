@@ -1,6 +1,7 @@
 #include <SFML/Graphics.h>
 #include "character.h"
-#include "array"
+#include "language.h"
+#include "array.h"
 
 char		**split(char *str, char separator);
 int		get_nbrlen(int nbr);
@@ -12,3 +13,7 @@ void		setFont(sfText *text, sfFont *font);
 char		*getButtonContent(int nameId);
 float		isPressed(int keyID, sfRenderWindow *window);
 char		*getKeyString(unsigned char keyID);
+char		*getParentFolder(char *path);
+char		*getAbsolutePath(char *path);
+char		*getKeyString(unsigned char keyID);
+char		*getButtonContent(int nameId);

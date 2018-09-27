@@ -1,15 +1,17 @@
 #include <SFML/Graphics.h>
 #include <SFML/Audio.h>
-#include <string.h>
+#include <discord_rpc.h>
 #include <signal.h>
 #include <stdlib.h>
+#include <string.h>
 #include <stdio.h>
-#include <time.h>
-#include "structs.h"
-#include "functions.h"
-#include "concatf.h"
+#include "utils.h"
 #include "macros.h"
-#include "discord_rp.h"
+#include "loading.h"
+#include "functions.h"
+#include "destructors.h"
+
+char	*programPath = NULL;
 
 #if defined _WIN32 || defined __WIN32 || defined __WIN32__
 
@@ -47,6 +49,7 @@ void	prepareExit()
 {
 	destroyStruct();
 	Discord_Shutdown();
+	free(programPath);
 	printf("%s: Goodbye !\n", INFO);
 }
 
@@ -56,6 +59,7 @@ int	main(int argc, char **args)
 
 	closeConsole(debug);
 	setSignalHandler();
+	programPath = getParentFolder(args[0]);
 	initGame(debug);
 	launchGame();
 	prepareExit();
