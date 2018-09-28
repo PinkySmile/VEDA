@@ -33,6 +33,4 @@ void	destroyStruct()
 
 	printf("%s: Destroying fonts\n", INFO_BEG);
 	destroyFonts();
-
-	free(game.version);
 }
