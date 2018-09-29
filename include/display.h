@@ -7,3 +7,5 @@ void	displayCharacters();
 void	displayLowerLayer();
 void	displayUpperLayer();
 void	displayHUD();
+void	drawLifeBar();
+void	drawEnergyBar();

@@ -39,9 +39,8 @@ Settings	loadSettings()
 
 	printf("%s: Loading settings\n", INFO_BEG);
 	stream = fopen("save/settings.dat", "rb");
-	fd = fileno(stream);
 	memset(&settings, 0, sizeof(settings));
-	if (fd < 0 || read(fd, &settings, sizeof(settings)) != sizeof(settings)) {
+	if (stream == NULL || (fd = fileno(stream)) < 0 || read(fd, &settings, sizeof(settings)) != sizeof(settings)) {
 		printf("%s: Couldn't load settings (save/settings.dat: %s)\n", ERROR_BEG, fd < 0 ? strerror(errno) : "Corrupted file found");
 		memset(&settings.keys, -1, NB_OF_KEYS);
 		settings.keys[0] = sfKeyZ;

@@ -20,10 +20,10 @@ int	getCharacterField	(lua_State *Lua);
 int	setCharacterField	(lua_State *Lua);
 
 //Utils functions
-void	pushCharacter	(lua_State *Lua, Character *character);
-void	pushProjectile	(Projectile *proj, lua_State *Lua);
-void	addDependencies	(lua_State *Lua);
-int	playSound	(char const *path, bool freeAll);
-bool	addProjectile	(int id, int x, int y, int ownerID, float angle, float speed, float rotaSpeed, float accel, int marker);
+void		pushCharacter	(lua_State *Lua, Character *character);
+void		pushProjectile	(Projectile *proj, lua_State *Lua);
+void		addDependencies	(lua_State *Lua);
+int		playSound	(char const *path, bool freeAll);
+Projectile	*addProjectile	(int id, int x, int y, int ownerID, float angle, float speed, float rotaSpeed, float accel, int marker);
 
 #endif

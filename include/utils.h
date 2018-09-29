@@ -1,4 +1,5 @@
 #include <SFML/Graphics.h>
+#include <stdio.h>
 #include "character.h"
 #include "language.h"
 #include "array.h"
@@ -17,3 +18,4 @@ char		*getParentFolder(char *path);
 char		*getAbsolutePath(char *path);
 char		*getKeyString(unsigned char keyID);
 char		*getButtonContent(int nameId);
+ssize_t		getline(char **lineptr, size_t *n, FILE *stream);

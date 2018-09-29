@@ -3,12 +3,12 @@
 
 #include <SFML/Graphics.h>
 
-void		sighandler(int signum);
-void		launchGame();
-void		manageEvents();
-void		manage_mouse_click(sfMouseButtonEvent event);
-void		changeScreenMode(int new);
-void		movePlayer();
-char		*executeCommand(char *cmd, char *args);
+void	sighandler(int signum);
+void	launchGame();
+void	manageEvents();
+void	manage_mouse_click(sfMouseButtonEvent event);
+void	changeScreenMode(int new);
+void	movePlayer();
+char	*executeCommand(char *cmd, char *args);
 
 #endif

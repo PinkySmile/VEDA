@@ -5,6 +5,7 @@
 #include "structs.h"
 #include "functions.h"
 #include "concatf.h"
+#include "display.h"
 #include "graphic.h"
 #include "utils.h"
 
@@ -44,6 +45,7 @@ void	displayCharacter(Character *character, int id, sfSprite *sprite)
 	sfIntRect	rec = {0, 0, 16, 32};
 	sfVector2i	cam = game.state.cameraPos;
 
+	//Check if the character is out of the screen
 	if (character->movement.pos.x + cam.x < -16)
 		return;
 	if (character->movement.pos.y + cam.y < -32)
@@ -52,8 +54,12 @@ void	displayCharacter(Character *character, int id, sfSprite *sprite)
 		return;
 	if (character->movement.pos.y + cam.y > 480)
 		return;
+
+	//Select the good animation
 	rec.top = (character->movement.position / 2 + (character->movement.state * 2) + (character->movement.animation * 2)) * 32;
 	rec.left = (character->movement.position % 2) * 32;
+
+	//Display the sprite
 	if (sprite) {
 		sfSprite_setTextureRect(sprite, rec);
 		image(sprite, character->movement.pos.x + cam.x, character->movement.pos.y + cam.y, 16, 32);
@@ -68,12 +74,11 @@ void	displayCharacters()
 {
 	Character	buff;
 	static int	var = 0;
-	Array		sprites = game.ressources.sprites;
 
 	for (int i = 0; i < game.state.characters.length; i++) {
 		buff = ((Character *)game.state.characters.content)[i];
-		if (MALE_CHARACTER + buff.texture >= 0 && MALE_CHARACTER + buff.texture < sprites.length && (!buff.invulnerabiltyTime || var % 5 <= 3))
-			displayCharacter(&buff, i, ((Sprite *)sprites.content)[MALE_CHARACTER + buff.texture].sprite);
+		if (getSprite(MALE_CHARACTER + buff.texture) && (!buff.invulnerabiltyTime || var % 5 <= 3))
+			displayCharacter(&buff, i, getSprite(MALE_CHARACTER + buff.texture)->sprite);
 	}
 	var = var >= 4 ? 0 : var + 1;
 }
@@ -127,128 +132,6 @@ void	displayUpperLayer()
 		} else if (((Sprite *)sprites.content)[CUTSCENE].sprite && map[i].action == LAUNCH_CUTSCENE && map[i].pos.x + cam.x > -32 && map[i].pos.x + cam.x < 672 && map[i].pos.y + cam.y > -32 && map[i].pos.y + cam.y < 672)
 			image(((Sprite *)sprites.content)[CUTSCENE].sprite, map[i].pos.x + cam.x, map[i].pos.y + cam.y, 16, 16);
 	}
-}
-
-void	drawLifeBar()
-{
-	int		lifeBuffer = getPlayer(game.state.characters.content, game.state.characters.length)->stats.life;
-	int		x = 0;
-	int		y = 0;
-	int		h = 0;
-	int		b = 0;
-	sfIntRect	rec = {0, 0, 16, 16};
-
-	for (int i = 1 ; i <= getPlayer(game.state.characters.content, game.state.characters.length)->stats.lifeMax; i++) {
-		if (lifeBuffer <= 10 && lifeBuffer > 0)
-			rec.left = 48 + 160 * h + 16 * (10 - lifeBuffer);
-		else if (lifeBuffer >= 10)
-			rec.left = 48 + 160 * h;
-		else
-			rec.left = 528;
-		if (((Sprite *)game.ressources.sprites.content)[LIFE_BAR].sprite) {
-			sfSprite_setTextureRect(((Sprite *)game.ressources.sprites.content)[LIFE_BAR].sprite, rec);
-			image(((Sprite *)game.ressources.sprites.content)[LIFE_BAR].sprite, x, 465 - y, 16, 16);
-			rec.left = 16 * h;
-			sfSprite_setTextureRect(((Sprite *)game.ressources.sprites.content)[LIFE_BAR].sprite, rec);
-			image(((Sprite *)game.ressources.sprites.content)[LIFE_BAR].sprite, x, 465 - y, 16, 16);
-		} else {
-			sfRectangleShape_setFillColor(game.ressources.rectangle, (sfColor){h == 0 ? 255 : 0, h == 1 ? 255 : 0, h == 2 ? 255 : 0, 255});
-			if (lifeBuffer <= 10 && lifeBuffer > 0)
-				rect(x, 465 - y + 16 - 16 * lifeBuffer / 10, 16, 16 * lifeBuffer / 10);
-			else if (lifeBuffer >= 10)
-				rect(x, 465 - y, 16, 16);
-		}
-		if (b == 0)
-			x = x + 15;
-		if (b == 1) {
-			h++;
-			if (h == 3) {
-				h = 0;
-				x += 15;
-			}
-		}
-		if (x >= 15 * 10) {
-			x = 0;
-			y += 15;
-		}
-		if (b == 0 && y >= 3 * 15) {
-			h++;
-			y = 0;
-		}
-		if (h == 3 && b == 0) {
-			x = 0;
-			b = 1;
-			h = 0;
-			y = y + 45;
-		}
-		if (y > 500)
-			break;
-		lifeBuffer = lifeBuffer - 10;
-	}
-}
-
-void	drawEnergyBar()
-{
-	int		energyBuffer = getPlayer(game.state.characters.content, game.state.characters.length)->stats.energy;
-	int		x = 0;
-	int		y = 0;
-	int		h = 0;
-	int		b = 0;
-	sfIntRect	rec = {0, 0, 16, 16};
-
-	for (int i = 1 ; i <= getPlayer(game.state.characters.content, game.state.characters.length)->stats.maxEnergy ; i++) {
-		if (energyBuffer <= 10 && energyBuffer > 0)
-			rec.left = 48 + 160 * h + 16 * (10 - energyBuffer);
-		else if (energyBuffer >= 10)
-			rec.left = 48 + 160 * h;
-		else
-			rec.left = 528;
-		if (((Sprite *)game.ressources.sprites.content)[ENERGY_BAR].sprite) {
-			sfSprite_setTextureRect(((Sprite *)game.ressources.sprites.content)[ENERGY_BAR].sprite, rec);
-			image(((Sprite *)game.ressources.sprites.content)[ENERGY_BAR].sprite, 625 - x, 465 - y, 16, 16);
-			rec.left = 16 * h;
-			sfSprite_setTextureRect(((Sprite *)game.ressources.sprites.content)[ENERGY_BAR].sprite, rec);
-			image(((Sprite *)game.ressources.sprites.content)[ENERGY_BAR].sprite, 625 - x, 465 - y, 16, 16);
-		} else {
-			sfRectangleShape_setFillColor(game.ressources.rectangle, (sfColor){h == 0 ? 255 : 0, h == 1 ? 255 : 0, h == 2 ? 255 : 0, 255});
-			if (energyBuffer <= 10 && energyBuffer > 0)
-				rect(625 - x, 465 - y + 16 - 16 * energyBuffer / 10, 16, 16 * energyBuffer / 10);
-			else if (energyBuffer >= 10)
-				rect(625 - x, 465 - y, 16, 16);
-		}
-		if (b == 0)
-			x = x + 15;
-		if (b == 1) {
-			h++;
-			if (h == 3) {
-				h = 0;
-				x += 15;
-			}
-		}
-		if (x >= 15 * 10) {
-			x = 0;
-			y += 15;
-		}
-		if (b == 0 && y >= 3 * 15) {
-			h++;
-			y = 0;
-		}
-		if (h == 3 && b == 0) {
-			x = 0;
-			b = 1;
-			h = 0;
-			y = y + 45;
-		}
-		if (y > 500)
-			break;
-		energyBuffer = energyBuffer - 10;
-	}
-}
-
-void	displayHUD()
-{
-	drawEnergyBar();
-	drawLifeBar();
 }
 
 void	dealDamages(Character *character, int damages, int damageType)

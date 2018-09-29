@@ -8,6 +8,7 @@
 #include "lualib.h"
 #include "lauxlib.h"
 #include "concatf.h"
+#include "battle_lua.h"
 
 extern	const	luaL_Reg	projectiles_lib[];
 extern	const	luaL_Reg	character_lib[];
@@ -51,21 +52,21 @@ Projectile	*addProjectile(int id, int x, int y, int ownerID, float angle, float 
 	return (proj);
 }
 
-void	pushProjectile(Projectile *proj, lua_State *Lua)
+void	pushProjectile(Projectile *proj, lua_State *lua)
 {
-	Projectile	**a = lua_newuserdata(Lua, sizeof(proj));
+	Projectile	**a = lua_newuserdata(lua, sizeof(proj));
 
-	luaL_getmetatable(Lua, "projectile");
-	lua_setmetatable(Lua, -2);
+	luaL_getmetatable(lua, "projectile");
+	lua_setmetatable(lua, -2);
 	*a = proj;
 }
 
-void	pushCharacter(lua_State *Lua, Character *character)
+void	pushCharacter(lua_State *lua, Character *character)
 {
-	Character	**a = lua_newuserdata(Lua, sizeof(character));
+	Character	**a = lua_newuserdata(lua, sizeof(character));
 
-	luaL_getmetatable(Lua, "character");
-	lua_setmetatable(Lua, -2);
+	luaL_getmetatable(lua, "character");
+	lua_setmetatable(lua, -2);
 	*a = character;
 }
 
@@ -130,45 +131,45 @@ int	playSound(char const *path, bool freeAll)
 	return (2);
 }
 
-int	playSoundLua(lua_State *Lua)
+int	playSoundLua(lua_State *lua)
 {
 	int	err;
-	int	arg = lua_tonumber(Lua, 1);
+	int	arg = lua_tonumber(lua, 1);
 
-	if (lua_isnumber(Lua, 1)) {
+	if (lua_isnumber(lua, 1)) {
 		if (arg < 0 || arg > game.ressources.sfx.length) {
-			lua_pushboolean(Lua, false);
-			lua_pushstring(Lua, "index out of range");
+			lua_pushboolean(lua, false);
+			lua_pushstring(lua, "index out of range");
 			return (2);
 		} else if (((sfMusic **)game.ressources.sfx.content)[arg]) {
 			sfMusic_play(((sfMusic **)game.ressources.sfx.content)[arg]);
-			lua_pushboolean(Lua, true);
+			lua_pushboolean(lua, true);
 			return (1);
 		}
 	}
-	err = playSound(luaL_checkstring(Lua, 1), false);
+	err = playSound(luaL_checkstring(lua, 1), false);
 	if (!err) {
-		lua_pushboolean(Lua, true);
+		lua_pushboolean(lua, true);
 		return (1);
 	} else if (err == 1) {
-		lua_pushboolean(Lua, false);
-		lua_pushstring(Lua, "cannot load file");
+		lua_pushboolean(lua, false);
+		lua_pushstring(lua, "cannot load file");
 		return (2);
 	} else if (err == 2) {
-		lua_pushboolean(Lua, false);
-		lua_pushstring(Lua, "all voices are used");
+		lua_pushboolean(lua, false);
+		lua_pushstring(lua, "all voices are used");
 		return (2);
 	}
-	lua_pushboolean(Lua, false);
-	lua_pushstring(Lua, "unknown error");
+	lua_pushboolean(lua, false);
+	lua_pushstring(lua, "unknown error");
 	return (2);
 }
 
-int	destroyProjectile(lua_State *Lua)
+int	destroyProjectile(lua_State *lua)
 {
-	Projectile	**proj = luaL_checkudata(Lua, 1, "projectile");
+	Projectile	**proj = luaL_checkudata(lua, 1, "projectile");
 
-	luaL_argcheck(Lua, proj != NULL, 1, "'projectile' expected");
+	luaL_argcheck(lua, proj != NULL, 1, "'projectile' expected");
 	(*proj)->toRemove = true;
 	*proj = NULL;
 	return (0);
@@ -187,67 +188,67 @@ int	getCharacterIndex(char const *test)
 	return (0);
 }
 
-int	setCharacterField(lua_State *Lua)
+int	setCharacterField(lua_State *lua)
 {
-	Character	**character = luaL_checkudata(Lua, 1, "character");
+	Character	**character = luaL_checkudata(lua, 1, "character");
 	char	const	*buffer;
-	int		index = lua_isnumber(Lua, 2) ? luaL_checknumber(Lua, 2) : getCharacterIndex(luaL_checkstring(Lua, 2));
+	int		index = lua_isnumber(lua, 2) ? luaL_checknumber(lua, 2) : getCharacterIndex(luaL_checkstring(lua, 2));
 
-	luaL_argcheck(Lua, character != NULL, 1, "'character' expected");
+	luaL_argcheck(lua, character != NULL, 1, "'character' expected");
 	if (!*character)
-		luaL_error(Lua, "Trying to access deleted object");
+		luaL_error(lua, "Trying to access deleted object");
 	switch (index) {
 	case 1:
-		(*character)->movement.animation = luaL_checknumber(Lua, 3);
+		(*character)->movement.animation = luaL_checknumber(lua, 3);
 		break;
 	case 2:
-		(*character)->movement.pos.x = luaL_checknumber(Lua, 3);
+		(*character)->movement.pos.x = luaL_checknumber(lua, 3);
 		break;
 	case 3:
-		(*character)->movement.pos.y = luaL_checknumber(Lua, 3);
+		(*character)->movement.pos.y = luaL_checknumber(lua, 3);
 		break;
 	case 4:
-		buffer = luaL_checkstring(Lua, 3);
+		buffer = luaL_checkstring(lua, 3);
 		if (strlen(buffer) >= sizeof((*character)->name))
-			luaL_error(Lua, "Max length for the name is %i but given one has %i characters", strlen(buffer), sizeof((*character)->name));
+			luaL_error(lua, "Max length for the name is %i but given one has %i characters", strlen(buffer), sizeof((*character)->name));
 		strcpy((*character)->name, buffer);
 		break;
 	default:
-		luaL_error(Lua, "This index is in read-only");
+		luaL_error(lua, "This index is in read-only");
 	}
 	return (0);
 }
 
-int	getCharacterField(lua_State *Lua)
+int	getCharacterField(lua_State *lua)
 {
-	Character	**character = luaL_checkudata(Lua, 1, "character");
-	char	const	*ind = !lua_isnumber(Lua, 2) ? luaL_checkstring(Lua, 2) : NULL;
-	int		index = lua_isnumber(Lua, 2) ? luaL_checknumber(Lua, 2) : getCharacterIndex(ind);
+	Character	**character = luaL_checkudata(lua, 1, "character");
+	char	const	*ind = !lua_isnumber(lua, 2) ? luaL_checkstring(lua, 2) : NULL;
+	int		index = lua_isnumber(lua, 2) ? luaL_checknumber(lua, 2) : getCharacterIndex(ind);
 
-	luaL_argcheck(Lua, character != NULL, 1, "'character' expected");
+	luaL_argcheck(lua, character != NULL, 1, "'character' expected");
 	if (!*character)
-		luaL_error(Lua, "Trying to access deleted object");
+		luaL_error(lua, "Trying to access deleted object");
 	switch (index) {
 	case 1:
-		lua_pushnumber(Lua, (*character)->movement.animation);
+		lua_pushnumber(lua, (*character)->movement.animation);
 		break;
 	case 2:
-		lua_pushnumber(Lua, (*character)->movement.pos.x);
+		lua_pushnumber(lua, (*character)->movement.pos.x);
 		break;
 	case 3:
-		lua_pushnumber(Lua, (*character)->movement.pos.y);
+		lua_pushnumber(lua, (*character)->movement.pos.y);
 		break;
 	case 4:
-		lua_pushstring(Lua, (*character)->name);
+		lua_pushstring(lua, (*character)->name);
 		break;
 	default:
 		for (int i = 0; ind && character_lib[i].name; i++) {
 			if (strcmp(character_lib[i].name, ind) == 0) {
-				lua_pushcfunction(Lua, character_lib[i].func);
+				lua_pushcfunction(lua, character_lib[i].func);
 				return (1);
 			}
 		}
-		lua_pushnil(Lua);
+		lua_pushnil(lua);
 	}
 	return (1);
 }
@@ -279,139 +280,139 @@ int	getProjectileIndex(char const *test)
 	return (0);
 }
 
-int	setProjectileField(lua_State *Lua)
+int	setProjectileField(lua_State *lua)
 {
-	Projectile	**proj = luaL_checkudata(Lua, 1, "projectile");
-	int		index = lua_isnumber(Lua, 2) ? luaL_checknumber(Lua, 2) : getProjectileIndex(luaL_checkstring(Lua, 2));
+	Projectile	**proj = luaL_checkudata(lua, 1, "projectile");
+	int		index = lua_isnumber(lua, 2) ? luaL_checknumber(lua, 2) : getProjectileIndex(luaL_checkstring(lua, 2));
 
-	luaL_argcheck(Lua, proj != NULL, 1, "'projectile' expected");
+	luaL_argcheck(lua, proj != NULL, 1, "'projectile' expected");
 	if (!*proj)
-		luaL_error(Lua, "Trying to access deleted object");
+		luaL_error(lua, "Trying to access deleted object");
 	switch (index) {
 	case 2:
-		(*proj)->pos.x = luaL_checknumber(Lua, 3);
+		(*proj)->pos.x = luaL_checknumber(lua, 3);
 		break;
 	case 3:
-		(*proj)->pos.y = luaL_checknumber(Lua, 3);
+		(*proj)->pos.y = luaL_checknumber(lua, 3);
 		break;
 	case 4:
-		(*proj)->speed = luaL_checknumber(Lua, 3);
+		(*proj)->speed = luaL_checknumber(lua, 3);
 		break;
 	case 5:
-		(*proj)->acceleration = luaL_checknumber(Lua, 3);
+		(*proj)->acceleration = luaL_checknumber(lua, 3);
 		break;
 	case 7:
-		(*proj)->angle = luaL_checknumber(Lua, 3);
+		(*proj)->angle = luaL_checknumber(lua, 3);
 		break;
 	case 8:
-		(*proj)->rotaSpeed = luaL_checknumber(Lua, 3);
+		(*proj)->rotaSpeed = luaL_checknumber(lua, 3);
 		break;
 	default:
-		luaL_error(Lua, "This index is in read-only");
+		luaL_error(lua, "This index is in read-only");
 	}
 	return (0);
 }
 
-int	getProjectileField(lua_State *Lua)
+int	getProjectileField(lua_State *lua)
 {
-	Projectile	**proj = luaL_checkudata(Lua, 1, "projectile");
-	char	const	*ind = !lua_isnumber(Lua, 2) ? luaL_checkstring(Lua, 2) : NULL;
-	int		index = lua_isnumber(Lua, 2) ? luaL_checknumber(Lua, 2) : getProjectileIndex(ind);
+	Projectile	**proj = luaL_checkudata(lua, 1, "projectile");
+	char	const	*ind = !lua_isnumber(lua, 2) ? luaL_checkstring(lua, 2) : NULL;
+	int		index = lua_isnumber(lua, 2) ? luaL_checknumber(lua, 2) : getProjectileIndex(ind);
 
-	luaL_argcheck(Lua, proj != NULL, 1, "'projectile' expected");
+	luaL_argcheck(lua, proj != NULL, 1, "'projectile' expected");
 	if (!*proj)
-		luaL_error(Lua, "Trying to access deleted object");
+		luaL_error(lua, "Trying to access deleted object");
 	switch (index) {
 	case 1:
-		lua_pushnumber(Lua, (*proj)->bankID);
+		lua_pushnumber(lua, (*proj)->bankID);
 		break;
 	case 2:
-		lua_pushnumber(Lua, (*proj)->pos.x);
+		lua_pushnumber(lua, (*proj)->pos.x);
 		break;
 	case 3:
-		lua_pushnumber(Lua, (*proj)->pos.y);
+		lua_pushnumber(lua, (*proj)->pos.y);
 		break;
 	case 4:
-		lua_pushnumber(Lua, (*proj)->speed);
+		lua_pushnumber(lua, (*proj)->speed);
 		break;
 	case 5:
-		lua_pushnumber(Lua, (*proj)->acceleration);
+		lua_pushnumber(lua, (*proj)->acceleration);
 		break;
 	case 6:
-		lua_pushnumber(Lua, (*proj)->owner);
+		lua_pushnumber(lua, (*proj)->owner);
 		break;
 	case 7:
-		lua_pushnumber(Lua, (*proj)->angle);
+		lua_pushnumber(lua, (*proj)->angle);
 		break;
 	case 8:
-		lua_pushnumber(Lua, (*proj)->rotaSpeed);
+		lua_pushnumber(lua, (*proj)->rotaSpeed);
 		break;
 	case 9:
-		lua_pushnumber(Lua, (*proj)->maxSpeed);
+		lua_pushnumber(lua, (*proj)->maxSpeed);
 		break;
 	case 10:
-		lua_pushnumber(Lua, (*proj)->minSpeed);
+		lua_pushnumber(lua, (*proj)->minSpeed);
 		break;
 	case 11:
-		lua_pushnumber(Lua, sfTime_asSeconds(sfClock_getElapsedTime((*proj)->clock)));
+		lua_pushnumber(lua, sfTime_asSeconds(sfClock_getElapsedTime((*proj)->clock)));
 		break;
 	default:
 		for (int i = 0; ind && projectiles_lib[i].name; i++) {
 			if (strcmp(projectiles_lib[i].name, ind) == 0) {
-				lua_pushcfunction(Lua, projectiles_lib[i].func);
+				lua_pushcfunction(lua, projectiles_lib[i].func);
 				return (1);
 			}
 		}
-		lua_pushnil(Lua);
+		lua_pushnil(lua);
 	}
 	return (1);
 }
 
-int	stopTime(lua_State *Lua)
+int	stopTime(lua_State *lua)
 {
-	if (!lua_isboolean(Lua, 1))
-		luaL_error(Lua, "Invalid argument #1 to 'stopTime': Expected boolean, got %s", lua_typename(Lua, lua_type(Lua, 1)));
-	game.state.battle_infos.timeStopped = lua_toboolean(Lua, 1);
+	if (!lua_isboolean(lua, 1))
+		luaL_error(lua, "Invalid argument #1 to 'stopTime': Expected boolean, got %s", lua_typename(lua, lua_type(lua, 1)));
+	game.state.battle_infos.timeStopped = lua_toboolean(lua, 1);
 	return 0;
 }
 
-int	getElapsedTime(lua_State *Lua)
+int	getElapsedTime(lua_State *lua)
 {
-	lua_pushnumber(Lua, sfTime_asSeconds(sfClock_getElapsedTime(game.state.battle_infos.clock)));
+	lua_pushnumber(lua, sfTime_asSeconds(sfClock_getElapsedTime(game.state.battle_infos.clock)));
 	return 1;
 }
 
-int	addProjectileLua(lua_State *Lua)
+int	addProjectileLua(lua_State *lua)
 {
-	double		x		= luaL_checknumber(Lua, 1);
-	double		y		= luaL_checknumber(Lua, 2);
-	double		projID		= luaL_checknumber(Lua, 3);
-	double		ownerID		= luaL_checknumber(Lua, 4);
-	double		angle		= luaL_checknumber(Lua, 5);
-	double		speed		= lua_isnone(Lua, 6) ? 0 : luaL_checknumber(Lua, 6);
-	double		rotaSpeed	= lua_isnone(Lua, 7) ? 0 : luaL_checknumber(Lua, 7);
-	double		accel		= lua_isnone(Lua, 8) ? 0 : luaL_checknumber(Lua, 8);
-	double		marker		= lua_isnone(Lua, 9) ? 0 : luaL_checknumber(Lua, 9);
+	double		x		= luaL_checknumber(lua, 1);
+	double		y		= luaL_checknumber(lua, 2);
+	double		projID		= luaL_checknumber(lua, 3);
+	double		ownerID		= luaL_checknumber(lua, 4);
+	double		angle		= luaL_checknumber(lua, 5);
+	double		speed		= lua_isnone(lua, 6) ? 0 : luaL_checknumber(lua, 6);
+	double		rotaSpeed	= lua_isnone(lua, 7) ? 0 : luaL_checknumber(lua, 7);
+	double		accel		= lua_isnone(lua, 8) ? 0 : luaL_checknumber(lua, 8);
+	double		marker		= lua_isnone(lua, 9) ? 0 : luaL_checknumber(lua, 9);
 	Projectile	*proj;
 
 	if (projID >= game.state.battle_infos.projectileBank.length || projID < 0) {
-		lua_pushnil(Lua);
-		lua_pushstring(Lua, "index out of bank range");
+		lua_pushnil(lua);
+		lua_pushstring(lua, "index out of bank range");
 	        return 2;
 	}
 	proj = addProjectile(projID, x, y, ownerID, angle, speed, rotaSpeed, accel, marker);
 	if (!proj)
-		luaL_error(Lua, "Out of memory");
-	pushProjectile(proj, Lua);
+		luaL_error(lua, "Out of memory");
+	pushProjectile(proj, lua);
 	return 1;
 }
 
-int	yield(lua_State *Lua)
+int	yield(lua_State *lua)
 {
-	int	frames = lua_isnone(Lua, 1) ? 1 : luaL_checknumber(Lua, 1);
+	int	frames = lua_isnone(lua, 1) ? 1 : luaL_checknumber(lua, 1);
 
 	game.state.battle_infos.yieldTime = frames;
 	if (frames <= 0)
 		return 0;
-	return lua_yield(Lua, 0);
+	return lua_yield(lua, 0);
 }

@@ -1,5 +1,5 @@
 #include "configParser.h"
-#include <malloc.h>
+#include <stdlib.h>
 
 void	*ParserArray_getElement(ParserArray *array, int index)
 {

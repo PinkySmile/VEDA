@@ -36,6 +36,10 @@ SRC =	main.c					\
 						\
 	dialogs/commands.c			\
 						\
+	hud/draw_hud.c				\
+	hud/life_bar.c 				\
+	hud/energy_bar.c 			\
+						\
 	load_ressources/buttons.c		\
 	load_ressources/fonts.c			\
 	load_ressources/init_game.c		\
@@ -45,6 +49,7 @@ SRC =	main.c					\
 	load_ressources/sounds.c		\
 	load_ressources/sprites.c		\
 						\
+	menus/battle.c				\
 	menus/change_buffer.c			\
 	menus/in_game.c				\
 	menus/main_menu.c			\
@@ -59,6 +64,7 @@ SRC =	main.c					\
 	utils/get_absolute_path.c		\
 	utils/get_nbrlen.c			\
 	utils/get_parent_folder.c		\
+	utils/getline.c				\
 	utils/transform_key_to_string.c		\
 
 OBJ =	$(SRC:%.c=src/%.o)

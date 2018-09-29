@@ -47,13 +47,15 @@ void	setSignalHandler()
 void	closeConsole(bool debug)
 {
 	#if defined _WIN32 || defined __WIN32 || defined __WIN32__
-	if (!debug && !FreeConsole())
+
+	if (!debug && !FreeConsole()) //Not in debug: close the console
 		printf("%s: Cannot close main console\n", ERROR_BEG);
 	else if (debug) {
-		AllocConsole();
-		freopen("CONOUT$", "w", stdout);
+		AllocConsole(); //In debug: Create a new console
+		freopen("CONOUT$", "w", stdout); //Redirect stdout to the console
 	} else
-		freopen("last.log", "w", stdout);
+		freopen("last.log", "w", stdout);//Redirect stdout to 'last.log'
+
 	#else
 	(void)debug;
 	#endif

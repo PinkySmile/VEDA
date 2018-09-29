@@ -1,14 +1,15 @@
-#include <dirent.h>
 #include <sys/types.h>
-#include <stdio.h>
+#include <dirent.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdio.h>
 #include <errno.h>
-#include "structs.h"
+#include "utils.h"
 #include "macros.h"
-#include "functions.h"
+#include "structs.h"
 #include "concatf.h"
 #include "display.h"
+#include "functions.h"
 
 int	getLanguage(Language *languages, char *lang_id)
 {

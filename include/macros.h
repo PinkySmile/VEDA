@@ -4,9 +4,6 @@
 #include "configParser.h"
 #include "enums.h"
 
-#define EXIT_SUCCESS 0
-#define EXIT_FAILURE 1
-
 #define INFO_BEG	"[INFO]   "
 #define ERROR_BEG	"[ERROR]  "
 #define FATAL_BEG	"[FATAL]  "
@@ -29,5 +26,6 @@
 #define CORRUPTED_SAVE_MSG	"The save file is either corrupted or invalid (too old ?)\n\nDo you want to use the save file anyway ?\nNote that this can make things really glitchy or even crash the game"
 
 #define NB_OF_KEYS	20
+#define MAX_HUD_LINES	3
 
 #endif
