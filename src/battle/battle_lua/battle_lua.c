@@ -29,9 +29,11 @@ Projectile	*addProjectile(int id, int x, int y, int ownerID, float angle, float 
 		list = list->next;
 	}
 	proj = malloc(sizeof(*proj));
-	if (!proj && list->prev) {
-		list->prev->next = NULL;
-		free(list);
+	if (!proj) {
+		if (list->prev) {
+			list->prev->next = NULL;
+			free(list);
+		}
 		return (NULL);
 	}
 	list->data = proj;
