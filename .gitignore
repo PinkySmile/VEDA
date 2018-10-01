@@ -16,3 +16,5 @@ levelConverter.exe
 save
 *.exe
 *characters-save.json
+cmake-build*
+.idea
