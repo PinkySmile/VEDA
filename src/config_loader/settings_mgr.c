@@ -69,6 +69,7 @@ Settings	loadSettings()
 		settings.windowSize.y = 480;
 		strcpy(settings.lang_id, "en");
 	}
-	fclose(stream);
+	if (stream)
+		fclose(stream);
 	return (settings);
 }
