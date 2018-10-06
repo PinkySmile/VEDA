@@ -21,7 +21,7 @@ void	back_on_title_screen(int buttonID)
 		game.ressources.buttons[i].displayed = true;
 	}
 	for (int i = 0; i < game.ressources.musics.length; i++)
-		if (((sfMusic **)game.ressources.musics.content)[i] && sfMusic_getStatus(((sfMusic **)game.ressources.musics.content)[i]) == sfPlaying)
+		if (i != MAIN_MENU_MUSIC && getMusic(i) && sfMusic_getStatus(getMusic(i)) == sfPlaying)
 			sfMusic_stop(((sfMusic **)game.ressources.musics.content)[i]);
 	if (game.state.battle_infos.music && sfMusic_getStatus(game.state.battle_infos.music) == sfPlaying)
 		sfMusic_stop(game.state.battle_infos.music);
@@ -61,8 +61,8 @@ void	play_button(int buttonID)
 		free(buffer);
 		game.state.menu = 1;
 	}
-	if (((sfMusic **)game.ressources.musics.content)[MAIN_MENU_MUSIC] && sfMusic_getStatus(((sfMusic **)game.ressources.musics.content)[MAIN_MENU_MUSIC]) == sfPlaying)
-		sfMusic_stop(((sfMusic **)game.ressources.musics.content)[MAIN_MENU_MUSIC]);
+	if (getMusic(MAIN_MENU_MUSIC) && sfMusic_getStatus(getMusic(MAIN_MENU_MUSIC)) == sfPlaying)
+		sfMusic_stop(getMusic(MAIN_MENU_MUSIC));
 }
 
 void	changePlayerName(int buttonID)

@@ -16,7 +16,9 @@
 #define FULLSCREEN		1
 #define BORDERLESS_WINDOW	2
 
-#define	getSprite(id)		(id >= 0 && id < game.ressources.sprites.length ? &((Sprite *)game.ressources.sprites.content)[id] : NULL)
+#define	getSprite(id)		(id >= 0 && id < game.ressources.sprites.length	? &((Sprite *)game.ressources.sprites.content)[id]	: NULL)
+#define	getMusic(id)		(id >= 0 && id < game.ressources.musics.length	? ((sfMusic **)game.ressources.musics.content)[id]	: NULL)
+#define	getSoundEffect(id)	(id >= 0 && id < game.ressources.sfx.length	? ((sfMusic **)game.ressources.sfx.content)[id]		: NULL)
 
 #define	PARSER_INFOS		((ParserInfos[1]) {{'{', '}', '{', '}', ',', '=', "\"'", "--", NULL, NULL, false, false}})
 
