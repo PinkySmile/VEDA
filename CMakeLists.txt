@@ -121,7 +121,8 @@ add_executable(VEDA
         src/utils/getline.c
         src/utils/transform_key_to_string.c
         src/main.c
-        src/objects_creater.c)
+        src/objects_creater.c
+	icon.rc src/utils/unicode_mgr.c)
 
 target_link_libraries(${PROJECT_NAME}
         lua
