@@ -94,6 +94,7 @@ CFLAGS= $(INC)				\
 	-Wall				\
 	-Wextra				\
 	-Wno-parentheses		\
+	-Wno-pointer-sign		\
 	-fdiagnostics-color=always	\
 
 CC =	gcc
