@@ -89,13 +89,10 @@ LDFLAGS =			\
 	-ldiscord-rpc		\
 	-lpthread		\
 
-CFLAGS= $(INC)				\
-	-W				\
-	-Wall				\
-	-Wextra				\
-	-Wno-parentheses		\
-	-Wno-pointer-sign		\
-	-fdiagnostics-color=always	\
+CFLAGS= $(INC)			\
+	-W			\
+	-Wall			\
+	-Wextra			\
 
 CC =	gcc
 

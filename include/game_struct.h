@@ -14,7 +14,7 @@
 
 typedef struct {
 	char		*displayedText;
-	char		*dialogOwnerName;
+	sfUint8		*dialogOwnerName;
 	char		*rawText;
 	int		index;
 	float		speed;

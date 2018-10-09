@@ -25,12 +25,13 @@ Array	loadFonts()
 	for (int i = 0; fonts_conf[i]; i++) {
 		printf("%s: Loading file %s\n", INFO_BEG, fonts_conf[i]);
 		fonts[i] = sfFont_createFromFile(fonts_conf[i]);
-		if (i == ARIAL)
+		if (i == ARIAL) {
 			if (!fonts[i]) {
 				dispMsg("Loading error.", concatf(ERROR_DEFAULT_FONT, fonts_conf[i]), 0);
 				exit(EXIT_FAILURE);
 			} else
 				setFont(game.ressources.text, fonts[ARIAL]);
+		}
 		displayLoadingBar(1, MAX_STEPS, i + 1, len, "Loading fonts");
 		if (!fonts[i])
 			printf("%s: Couldn't load file %s\n", ERROR_BEG, fonts_conf[i]);

@@ -213,7 +213,7 @@ int	setCharacterField(lua_State *lua)
 		buffer = luaL_checkstring(lua, 3);
 		if (strlen(buffer) >= sizeof((*character)->name))
 			luaL_error(lua, "Max length for the name is %i but given one has %i characters", strlen(buffer), sizeof((*character)->name));
-		strcpy((*character)->name, buffer);
+		strcpy((char *)(*character)->name, buffer);
 		break;
 	default:
 		luaL_error(lua, "This index is in read-only");
@@ -241,7 +241,7 @@ int	getCharacterField(lua_State *lua)
 		lua_pushnumber(lua, (*character)->movement.pos.y);
 		break;
 	case 4:
-		lua_pushstring(lua, (*character)->name);
+		lua_pushstring(lua, (char *)(*character)->name);
 		break;
 	default:
 		for (int i = 0; ind && character_lib[i].name; i++) {
@@ -388,8 +388,8 @@ int	addProjectileLua(lua_State *lua)
 {
 	double		x		= luaL_checknumber(lua, 1);
 	double		y		= luaL_checknumber(lua, 2);
-	double		projID		= luaL_checknumber(lua, 3);
-	double		ownerID		= luaL_checknumber(lua, 4);
+	int		projID		= luaL_checkinteger(lua, 3);
+	int		ownerID		= luaL_checkinteger(lua, 4);
 	double		angle		= luaL_checknumber(lua, 5);
 	double		speed		= lua_isnone(lua, 6) ? 0 : luaL_checknumber(lua, 6);
 	double		rotaSpeed	= lua_isnone(lua, 7) ? 0 : luaL_checknumber(lua, 7);

@@ -377,7 +377,7 @@ Battle	loadBattleScript(char *path)
 		printf("%s: Field \"battle_name\" is missing", WARNING_BEG);
 	if (buffer = ParserObj_getElement(result.data, "boss_name")) {
 		if (buffer->type == ParserStringType) {
-			strcpy(battle.boss.name, ParserString_toCharStar(buffer->data));
+			strcpy((char *)battle.boss.name, ParserString_toCharStar(buffer->data));
 		} else
 			return invalidType(result, path, "Invalid type for field \"boss_name\"", buffer->type, ParserStringType);
 	} else

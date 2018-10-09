@@ -45,7 +45,7 @@ void	play_button(int buttonID)
 		loadLevel("data/levels/test");
 		game.state.loadedMap.path = strdup("data/levels/test");
 	}
-	if (strcmp(getPlayer(game.state.characters.content, game.state.characters.length)->name, "") == 0) {
+	if (strcmp((char *)getPlayer(game.state.characters.content, game.state.characters.length)->name, "") == 0) {
 		updateDiscordPresence("Main Menu", "Choosing name", 0, false, "icon", 0, "VEDA", 0);
 		game.state.menu = 6;
 		game.input.bufPos = 0;

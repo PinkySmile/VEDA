@@ -23,7 +23,7 @@ ssize_t	getline(char **lineptr, size_t *n, FILE *stream)
 		size = 128;
 	}
 	while (character != EOF) {
-		if (index > (size - 1)) {
+		if (index > (int)(size - 1)) {
 			size += 128;
 			buffer = realloc(bufptr, size);
 			if (!buffer) {
