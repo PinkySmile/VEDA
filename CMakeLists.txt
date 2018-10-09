@@ -130,4 +130,5 @@ target_link_libraries(${PROJECT_NAME}
         csfml-audio
         csfml-system
         csfml-window
-        csfml-network)
+        csfml-network
+        m)
