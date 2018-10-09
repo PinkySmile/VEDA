@@ -16,16 +16,41 @@
 #define FULLSCREEN		1
 #define BORDERLESS_WINDOW	2
 
-#define	getSprite(id)		(id >= 0 && id < game.ressources.sprites.length ? &((Sprite *)game.ressources.sprites.content)[id] : NULL)
+#define	getSprite(id)		(id >= 0 && id < game.ressources.sprites.length	? &((Sprite *)game.ressources.sprites.content)[id]	: NULL)
+#define	getMusic(id)		(id >= 0 && id < game.ressources.musics.length	? ((sfMusic **)game.ressources.musics.content)[id]	: NULL)
+#define	getSoundEffect(id)	(id >= 0 && id < game.ressources.sfx.length	? ((sfMusic **)game.ressources.sfx.content)[id]		: NULL)
+
+#define NB_OF_KEYS	20
+#define MAX_HUD_LINES	3
 
 #define	PARSER_INFOS		((ParserInfos[1]) {{'{', '}', '{', '}', ',', '=', "\"'", "--", NULL, NULL, false, false}})
+
+#define DEFAULT_KEYS		(unsigned char[NB_OF_KEYS]){\
+	sfKeyZ,\
+	sfKeyS,\
+	sfKeyQ,\
+	sfKeyD,\
+	sfKeyI,\
+	sfKeyEscape,\
+	sfKeyF,\
+	sfKeyC,\
+	sfKeyB,\
+	sfKeyP,\
+	sfKeyU,\
+	sfKeyNum1,\
+	sfKeyNum2,\
+	sfKeyNum3,\
+	sfKeyNum4,\
+	sfKeyNum5,\
+	sfKeyNum6,\
+	sfKeyNum7,\
+	sfKeyNum8,\
+	sfKeyLShift\
+}
 
 #define READ_WRITE_RIGHTS	0664
 
 #define ERROR_DEFAULT_FONT	"Error, couldn't load base font '%s'\nIf you are launching the game with a shortcut, try launching the executable itself\nIf it doesn't work, try reinstalling the game.\n"
 #define CORRUPTED_SAVE_MSG	"The save file is either corrupted or invalid (too old ?)\n\nDo you want to use the save file anyway ?\nNote that this can make things really glitchy or even crash the game"
-
-#define NB_OF_KEYS	20
-#define MAX_HUD_LINES	3
 
 #endif

@@ -62,7 +62,6 @@ SRC =	main.c					\
 	utils/draw_sprite.c			\
 	utils/draw_text.c			\
 	utils/get_absolute_path.c		\
-	utils/get_nbrlen.c			\
 	utils/get_parent_folder.c		\
 	utils/getline.c				\
 	utils/transform_key_to_string.c		\
@@ -95,6 +94,7 @@ CFLAGS= $(INC)				\
 	-Wall				\
 	-Wextra				\
 	-Wno-parentheses		\
+	-Wno-pointer-sign		\
 	-fdiagnostics-color=always	\
 
 CC =	gcc

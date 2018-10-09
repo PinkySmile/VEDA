@@ -11,7 +11,7 @@ typedef struct {
 	sfVector2i	windowSize;
 	unsigned char	keys[NB_OF_KEYS];
 	char		lang_id[256];
-	char		playerName[16];
+	sfUint8		playerName[33];
 	bool		dispFramerate;
 	bool		characterChosed;
 	sfVector2f	baseScale;
