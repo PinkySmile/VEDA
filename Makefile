@@ -8,6 +8,9 @@ SRC =	main.c					\
 						\
 	buttons_callbacks/callbacks.c		\
 						\
+	character/deal_damages.c		\
+	character/move.c			\
+						\
 	config_loader/save_file_mgr.c		\
 	config_loader/settings_mgr.c		\
 						\
@@ -35,6 +38,10 @@ SRC =	main.c					\
 	destroyers/destroy_sprites.c		\
 						\
 	dialogs/commands.c			\
+	dialogs/display_dialogs.c		\
+						\
+	display_map/display_characters.c	\
+	display_map/display_terrain.c		\
 						\
 	hud/draw_hud.c				\
 	hud/life_bar.c 				\
@@ -61,9 +68,11 @@ SRC =	main.c					\
 	utils/display_rectangle.c		\
 	utils/draw_sprite.c			\
 	utils/draw_text.c			\
+	utils/is_key_pressed.c			\
 	utils/get_absolute_path.c		\
 	utils/get_parent_folder.c		\
 	utils/getline.c				\
+	utils/get_player.c			\
 	utils/transform_key_to_string.c		\
 
 OBJ =	$(SRC:%.c=src/%.o)
