@@ -8,7 +8,7 @@ typedef struct {
 	char		musicVolume;
 	char		sfxVolume;
 	char		windowMode;
-	sfVector2i	windowSize;
+	sfVector2u	windowSize;
 	unsigned char	keys[NB_OF_KEYS];
 	char		lang_id[256];
 	sfUint8		playerName[33];

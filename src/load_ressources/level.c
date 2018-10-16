@@ -166,7 +166,7 @@ Object	*loadMap(char *path, char **bg)
 	return (objs);
 }
 
-bool	lineIsValid(char *line)
+bool	lineIsValid(const char *line)
 {
 	bool	cmd = false;
 
@@ -272,7 +272,7 @@ Array	loadCharacters(char *path)
 					if (objBuffer->type != ParserStringType)
 						printf("%s: Field \"name\" in character %i has an invalid type\n", ERROR_BEG, i);
 					else
-						strncpy(buff.name, ParserString_toCharStar(objBuffer->data), 32);
+						strncpy((char *)buff.name, ParserString_toCharStar(objBuffer->data), 32);
 				} else
 					printf("%s: Character %i has no field \"name\"\n", WARNING_BEG, i);
 				objBuffer = ParserObj_getElement(obj, "sprite_id");

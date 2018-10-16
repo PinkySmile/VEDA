@@ -131,7 +131,8 @@ add_executable(
 	src/utils/is_key_pressed.c
 	src/dialogs/display_dialogs.c
 	src/character/deal_damages.c
-	src/character/move.c)
+	src/character/move.c
+)
 
 target_link_libraries(
 	${PROJECT_NAME}
@@ -142,4 +143,5 @@ target_link_libraries(
         csfml-system
         csfml-window
         csfml-network
+        m
 )

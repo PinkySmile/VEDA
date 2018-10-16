@@ -19,7 +19,7 @@ void	*my_malloc(size_t size)
 
 	if (!ptr) {
 		//No memory left :/
-		printf("%s: Allocation failure (%uB)", FATAL_BEG, size);
+		printf("%s: Allocation failure (%uB)", FATAL_BEG, (unsigned int)size);
 		exit(EXIT_FAILURE);
 	}
 	return (ptr);
@@ -126,8 +126,8 @@ sfRenderWindow	*createMainWindow()
 		mode.width = game.settings.windowSize.x;
 		mode.height = game.settings.windowSize.y;
 	}
-	game.settings.baseScale.x = (float)mode.width / 640.0;
-	game.settings.baseScale.y = (float)mode.height / 480.0;
+	game.settings.baseScale.x = (float)mode.width / 640;
+	game.settings.baseScale.y = (float)mode.height / 480;
 
 	//Load the version and create the title and the window
 	if (!game.version)
