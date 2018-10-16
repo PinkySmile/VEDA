@@ -3,10 +3,10 @@
 
 void	destroySfmlObjects()
 {
-	sfText_destroy(game.ressources.text);
-	sfImage_destroy(game.ressources.icon.image);
-	sfSprite_destroy(game.ressources.icon.sprite);
-	sfTexture_destroy(game.ressources.icon.texture);
-	sfRenderWindow_destroy(game.ressources.window);
-	sfRectangleShape_destroy(game.ressources.rectangle);
+	sfText_destroy(game.resources.text);
+	sfImage_destroy(game.resources.icon.image);
+	sfSprite_destroy(game.resources.icon.sprite);
+	sfTexture_destroy(game.resources.icon.texture);
+	sfRenderWindow_destroy(game.resources.window);
+	sfRectangleShape_destroy(game.resources.rectangle);
 }

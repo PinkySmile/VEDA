@@ -3,6 +3,6 @@
 
 void	destroyDialogs()
 {
-	if (game.ressources.dialogLuaScript)
-		lua_close(game.ressources.dialogLuaScript);
+	if (game.resources.dialogLuaScript)
+		lua_close(game.resources.dialogLuaScript);
 }

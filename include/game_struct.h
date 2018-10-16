@@ -58,11 +58,11 @@ typedef struct {
 	sfCircleShape		*circle;
 	sfText			*text;
 	lua_State		*dialogLuaScript;
-} Ressources;
+} Resources;
 
 typedef struct {
 	bool		debug;
-	Ressources	ressources;
+	Resources	resources;
 	Settings	settings;
 	GameState	state;
 	Input		input;

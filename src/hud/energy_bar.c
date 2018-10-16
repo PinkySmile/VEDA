@@ -37,7 +37,7 @@ void	drawEnergyBar()
 			No worries ! I have some sweet rectangles for you.
 			*/
 			sfRectangleShape_setFillColor(
-				game.ressources.rectangle,
+				game.resources.rectangle,
 				(sfColor){
 					currentTier == 0 ? 255 : 0,
 					currentTier == 1 ? 255 : 0,

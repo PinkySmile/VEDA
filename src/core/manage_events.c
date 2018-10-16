@@ -25,14 +25,14 @@ void	manageEvents()
 	sfEvent	event;
 	int	random = rand();
 
-	while (sfRenderWindow_pollEvent(game.ressources.window, &event)) {
+	while (sfRenderWindow_pollEvent(game.resources.window, &event)) {
 		if (event.type == sfEvtClosed) {
-			sfRenderWindow_close(game.ressources.window);
+			sfRenderWindow_close(game.resources.window);
 			if (game.state.menu == 1 || game.state.menu == 7)
 				saveGame(true);
-			for (int i = 0; i < game.ressources.musics.length; i++)
-				if (((sfMusic **)game.ressources.musics.content)[i] && sfMusic_getStatus(((sfMusic **)game.ressources.musics.content)[MAIN_MENU_MUSIC]) == sfPlaying)
-					sfMusic_stop(((sfMusic **)game.ressources.musics.content)[i]);
+			for (int i = 0; i < game.resources.musics.length; i++)
+				if (((sfMusic **)game.resources.musics.content)[i] && sfMusic_getStatus(((sfMusic **)game.resources.musics.content)[MAIN_MENU_MUSIC]) == sfPlaying)
+					sfMusic_stop(((sfMusic **)game.resources.musics.content)[i]);
 		} else if (event.type == sfEvtTextEntered) {
 			if (event.text.unicode == 8 && game.input.bufPos > 0)
 				game.input.buffer[--game.input.bufPos] = 0;
@@ -46,9 +46,9 @@ void	manageEvents()
 			if (game.state.menuSelected - game.languagesConf.y - game.languagesConf.x >= 0 && game.state.menuSelected - game.languagesConf.y - game.languagesConf.x < 4 && game.state.menu == 2) {
 				for (int i = 0; i < 4; i++) {
 					game.settings.keys[i] = 201 + i;
-					game.ressources.buttons[i + game.languagesConf.y + game.languagesConf.x].content = getKeyString(201 + i);
+					game.resources.buttons[i + game.languagesConf.y + game.languagesConf.x].content = getKeyString(201 + i);
 				}
-				game.ressources.buttons[game.state.menuSelected].content = getKeyString(game.settings.keys[game.state.menuSelected - game.languagesConf.y - game.languagesConf.x]);
+				game.resources.buttons[game.state.menuSelected].content = getKeyString(game.settings.keys[game.state.menuSelected - game.languagesConf.y - game.languagesConf.x]);
 				game.state.menuSelected = -1;
 			}
 		} else if (event.type == sfEvtJoystickButtonPressed) {
@@ -62,13 +62,13 @@ void	manageEvents()
 					if (game.settings.keys[i] >= 201 && game.settings.keys[i] <= 204) {
 						for (int i = 0; i < 4; i++) {
 							game.settings.keys[i] = -1;
-							game.ressources.buttons[i + game.languagesConf.y + game.languagesConf.x].content = getKeyString(-1);
+							game.resources.buttons[i + game.languagesConf.y + game.languagesConf.x].content = getKeyString(-1);
 						}
 						break;
 					}
 			if (game.state.menuSelected >= 0 && game.state.menu == 2) {
 				game.settings.keys[game.state.menuSelected - game.languagesConf.y - game.languagesConf.x] = event.joystickButton.button + 205;
-				game.ressources.buttons[game.state.menuSelected].content = getKeyString(event.joystickButton.button + 205);
+				game.resources.buttons[game.state.menuSelected].content = getKeyString(event.joystickButton.button + 205);
 				game.state.menuSelected = -1;
 			}
 		} else if (event.type == sfEvtKeyPressed) {
@@ -102,9 +102,9 @@ void	manageEvents()
 				for (int i = 0; game.input.buffer[i]; i++)
 					buffer[i] = game.input.buffer[i] % 255;
 				game.state.battle_infos = loadBattleScript(/*buffer*/"data/battles/alexandre/battle_normal/info_file.json");
-				for (int i = 0; game.ressources.buttons[i].content; i++) {
-					game.ressources.buttons[i].active = false;
-					game.ressources.buttons[i].displayed = false;
+				for (int i = 0; game.resources.buttons[i].content; i++) {
+					game.resources.buttons[i].active = false;
+					game.resources.buttons[i].displayed = false;
 				}
 				buff = concatf("Fighting %s (%s)", game.state.battle_infos.boss.name, game.state.battle_infos.name);
 				updateDiscordPresence("In Game", buff, 0, false, "icon", NULL, "VEDA", NULL);
@@ -121,9 +121,9 @@ void	manageEvents()
 				game.state.battle_infos.boss.movement.pos.y = 100;
 			}
 			if (game.debug && event.key.code == sfKeyEqual) {
-				for (int i = 0; game.ressources.buttons[i].content; i++) {
-					game.ressources.buttons[i].active = false;
-					game.ressources.buttons[i].displayed = false;
+				for (int i = 0; game.resources.buttons[i].content; i++) {
+					game.resources.buttons[i].active = false;
+					game.resources.buttons[i].displayed = false;
 				}
 				memset(game.input.buffer, 0, BUFFER_MAX_SIZE * sizeof(*game.input.buffer));
 				game.input.bufSize = BUFFER_MAX_SIZE;
@@ -141,13 +141,13 @@ void	manageEvents()
 					if (game.settings.keys[i] >= 201 && game.settings.keys[i] <= 204) {
 						for (int i = 0; i < 4; i++) {
 							game.settings.keys[i] = -1;
-							game.ressources.buttons[i + game.languagesConf.y + game.languagesConf.x].content = getKeyString(-1);
+							game.resources.buttons[i + game.languagesConf.y + game.languagesConf.x].content = getKeyString(-1);
 						}
 						break;
 					}
 			if (game.state.menuSelected >= 0 && game.state.menu == 2) {
 				game.settings.keys[game.state.menuSelected - game.languagesConf.y - game.languagesConf.x] = event.key.code;
-				game.ressources.buttons[game.state.menuSelected].content = getKeyString(event.key.code);
+				game.resources.buttons[game.state.menuSelected].content = getKeyString(event.key.code);
 				game.state.menuSelected = -1;
 			}
 		} else if (event.type == sfEvtMouseMoved) {
@@ -158,9 +158,9 @@ void	manageEvents()
 					game.settings.sfxVolume = 100;
 				else
 					game.settings.sfxVolume = (event.mouseMove.x - 140) / 3;
-				setVolumes(game.ressources.sfx, game.settings.sfxVolume);
-				if (((sfMusic **)game.ressources.sfx.content)[DIRT1 + random % 4])
-					sfMusic_play(((sfMusic **)game.ressources.sfx.content)[DIRT1 + random % 4]);
+				setVolumes(game.resources.sfx, game.settings.sfxVolume);
+				if (((sfMusic **)game.resources.sfx.content)[DIRT1 + random % 4])
+					sfMusic_play(((sfMusic **)game.resources.sfx.content)[DIRT1 + random % 4]);
 			} else if (game.state.menuSelected == 2 && game.state.menu == 3) {
 				if (event.mouseMove.x <= 140)
 					game.settings.musicVolume = 0;
@@ -168,7 +168,7 @@ void	manageEvents()
 					game.settings.musicVolume = 100;
 				else
 					game.settings.musicVolume = (event.mouseMove.x - 140) / 3;
-				setVolumes(game.ressources.musics, game.settings.musicVolume);
+				setVolumes(game.resources.musics, game.settings.musicVolume);
 			}
 		} else if (event.type == sfEvtMouseButtonReleased) {
 			if (game.state.menu == 3)

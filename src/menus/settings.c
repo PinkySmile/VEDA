@@ -9,24 +9,24 @@ void	audio()
 {
 	char	*nbrs[2];
 
-	for (int i = 0; i < 640; i += ((Sprite *)game.ressources.sprites.content)[MENU_BACKGROUND].size.x) {
-		if (((Sprite *)game.ressources.sprites.content)[MENU_BACKGROUND].size.x == 0)
+	for (int i = 0; i < 640; i += ((Sprite *)game.resources.sprites.content)[MENU_BACKGROUND].size.x) {
+		if (((Sprite *)game.resources.sprites.content)[MENU_BACKGROUND].size.x == 0)
 			break;
-		for (int j = 0; j < 640; j += ((Sprite *)game.ressources.sprites.content)[MENU_BACKGROUND].size.y) {
-			image(((Sprite *)game.ressources.sprites.content)[MENU_BACKGROUND].sprite, i, j, -1, -1);
-			if (((Sprite *)game.ressources.sprites.content)[MENU_BACKGROUND].size.y == 0)
+		for (int j = 0; j < 640; j += ((Sprite *)game.resources.sprites.content)[MENU_BACKGROUND].size.y) {
+			image(((Sprite *)game.resources.sprites.content)[MENU_BACKGROUND].sprite, i, j, -1, -1);
+			if (((Sprite *)game.resources.sprites.content)[MENU_BACKGROUND].size.y == 0)
 				break;
 		}
 	}
-	sfRectangleShape_setFillColor(game.ressources.rectangle, (sfColor){100, 100, 100, 255});
+	sfRectangleShape_setFillColor(game.resources.rectangle, (sfColor){100, 100, 100, 255});
 	rect(0, 0, 512, 96);
-	sfRectangleShape_setFillColor(game.ressources.rectangle, (sfColor){255, 255, 255, 255});
+	sfRectangleShape_setFillColor(game.resources.rectangle, (sfColor){255, 255, 255, 255});
 	rect(140, 14, 300, 20);
 	rect(140, 62, 300, 20);
-	sfRectangleShape_setFillColor(game.ressources.rectangle, (sfColor){255, 0, 0, 255});
+	sfRectangleShape_setFillColor(game.resources.rectangle, (sfColor){255, 0, 0, 255});
 	rect(130 + game.settings.sfxVolume * 3, 6, 20, 36);
 	rect(130 + game.settings.musicVolume * 3, 54, 20, 36);
-	sfText_setCharacterSize(game.ressources.text, 20);
+	sfText_setCharacterSize(game.resources.text, 20);
 	text("Sound effects", 5, 8, false);
 	text("Musics", 5, 56, false);
 	nbrs[0] = concatf("%i%%", game.settings.sfxVolume);
@@ -41,56 +41,56 @@ void	audio()
 
 void	options()
 {
-	for (int i = 0; i < 640; i += ((Sprite *)game.ressources.sprites.content)[MENU_BACKGROUND].size.x) {
-		if (((Sprite *)game.ressources.sprites.content)[MENU_BACKGROUND].size.x == 0)
+	for (int i = 0; i < 640; i += ((Sprite *)game.resources.sprites.content)[MENU_BACKGROUND].size.x) {
+		if (((Sprite *)game.resources.sprites.content)[MENU_BACKGROUND].size.x == 0)
 			break;
-		for (int j = 0; j < 640; j += ((Sprite *)game.ressources.sprites.content)[MENU_BACKGROUND].size.y) {
-			image(((Sprite *)game.ressources.sprites.content)[MENU_BACKGROUND].sprite, i, j, -1, -1);
-			if (((Sprite *)game.ressources.sprites.content)[MENU_BACKGROUND].size.y == 0)
+		for (int j = 0; j < 640; j += ((Sprite *)game.resources.sprites.content)[MENU_BACKGROUND].size.y) {
+			image(((Sprite *)game.resources.sprites.content)[MENU_BACKGROUND].sprite, i, j, -1, -1);
+			if (((Sprite *)game.resources.sprites.content)[MENU_BACKGROUND].size.y == 0)
 				break;
 		}
 	}
 	for (int i = 0; i <= 2; i++) {
 		if (game.settings.windowMode == i) {
-			game.ressources.buttons[i + 10].textColor = (sfColor){0, 120, 0, 255};
-			game.ressources.buttons[i + 10].color = (sfColor){220, 220, 0, 255};
+			game.resources.buttons[i + 10].textColor = (sfColor){0, 120, 0, 255};
+			game.resources.buttons[i + 10].color = (sfColor){220, 220, 0, 255};
 		} else {
-			game.ressources.buttons[i + 10].textColor = (sfColor){0, 0, 0, 255};
-			game.ressources.buttons[i + 10].color = (sfColor){205, 205, 205, 255};
+			game.resources.buttons[i + 10].textColor = (sfColor){0, 0, 0, 255};
+			game.resources.buttons[i + 10].color = (sfColor){205, 205, 205, 255};
 		}
 	}
 	if (game.settings.dispFramerate)
-		game.ressources.buttons[13].color = (sfColor){0, 255, 0, 255};
+		game.resources.buttons[13].color = (sfColor){0, 255, 0, 255};
 	else
-		game.ressources.buttons[13].color = (sfColor){255, 0, 0, 255};
+		game.resources.buttons[13].color = (sfColor){255, 0, 0, 255};
 }
 
 void	controls()
 {
-	for (int i = 0; i < 640; i += ((Sprite *)game.ressources.sprites.content)[MENU_BACKGROUND].size.x) {
-		if (((Sprite *)game.ressources.sprites.content)[MENU_BACKGROUND].size.x == 0)
+	for (int i = 0; i < 640; i += ((Sprite *)game.resources.sprites.content)[MENU_BACKGROUND].size.x) {
+		if (((Sprite *)game.resources.sprites.content)[MENU_BACKGROUND].size.x == 0)
 			break;
-		for (int j = 0; j < 640; j += ((Sprite *)game.ressources.sprites.content)[MENU_BACKGROUND].size.y) {
-			image(((Sprite *)game.ressources.sprites.content)[MENU_BACKGROUND].sprite, i, j, -1, -1);
-			if (((Sprite *)game.ressources.sprites.content)[MENU_BACKGROUND].size.y == 0)
+		for (int j = 0; j < 640; j += ((Sprite *)game.resources.sprites.content)[MENU_BACKGROUND].size.y) {
+			image(((Sprite *)game.resources.sprites.content)[MENU_BACKGROUND].sprite, i, j, -1, -1);
+			if (((Sprite *)game.resources.sprites.content)[MENU_BACKGROUND].size.y == 0)
 				break;
 		}
 	}
-	if (getLanguage(game.ressources.languages, game.settings.lang_id) < 0 || game.ressources.languages[getLanguage(game.ressources.languages, game.settings.lang_id)].keys == NULL)
+	if (getLanguage(game.resources.languages, game.settings.lang_id) < 0 || game.resources.languages[getLanguage(game.resources.languages, game.settings.lang_id)].keys == NULL)
 		return;
-	for (int i = 0; game.ressources.languages[getLanguage(game.ressources.languages, game.settings.lang_id)].keys[i] && i < NB_OF_KEYS; i++) {
-		sfRectangleShape_setFillColor(game.ressources.rectangle, (sfColor){100, 100, 100, 255});
+	for (int i = 0; game.resources.languages[getLanguage(game.resources.languages, game.settings.lang_id)].keys[i] && i < NB_OF_KEYS; i++) {
+		sfRectangleShape_setFillColor(game.resources.rectangle, (sfColor){100, 100, 100, 255});
 		rect(i / 10 * 272, i % 10 * 48, 272, 48);
-		sfText_setCharacterSize(game.ressources.text, 17);
-		sfText_setColor(game.ressources.text, (sfColor){255, 255, 255, 255});
+		sfText_setCharacterSize(game.resources.text, 17);
+		sfText_setColor(game.resources.text, (sfColor){255, 255, 255, 255});
 		if (game.settings.keys[i] == (unsigned char)-1)
-			sfText_setColor(game.ressources.text, (sfColor){0, 0, 0, 255});
+			sfText_setColor(game.resources.text, (sfColor){0, 0, 0, 255});
 		else
 			for (int j = 0; j < NB_OF_KEYS; j++)
 				if ((j != i && game.settings.keys[j] == game.settings.keys[i])) {
-					sfText_setColor(game.ressources.text, (sfColor){255, 0, 0, 255});
+					sfText_setColor(game.resources.text, (sfColor){255, 0, 0, 255});
 					break;
 				}
-		text(game.ressources.languages[getLanguage(game.ressources.languages, game.settings.lang_id)].keys[i], 5 + i / 10 * 272, i % 10 * 48 + 15, false);
+		text(game.resources.languages[getLanguage(game.resources.languages, game.settings.lang_id)].keys[i], 5 + i / 10 * 272, i % 10 * 48 + 15, false);
 	}
 }

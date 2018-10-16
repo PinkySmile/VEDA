@@ -16,6 +16,6 @@ void	image(sfSprite *sprite, int x, int y, int width, int height)
 			scale.y = game.settings.baseScale.y;
 		sfSprite_setScale(sprite, scale);
 		sfSprite_setPosition(sprite, pos);
-		sfRenderWindow_drawSprite(game.ressources.window, sprite, NULL);
+		sfRenderWindow_drawSprite(game.resources.window, sprite, NULL);
 	}
 }

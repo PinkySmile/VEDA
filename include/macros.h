@@ -16,12 +16,19 @@
 #define FULLSCREEN		1
 #define BORDERLESS_WINDOW	2
 
-#define	getSprite(id)		(id >= 0 && id < game.ressources.sprites.length	? &((Sprite *)game.ressources.sprites.content)[id]	: NULL)
-#define	getMusic(id)		(id >= 0 && id < game.ressources.musics.length	? ((sfMusic **)game.ressources.musics.content)[id]	: NULL)
-#define	getSoundEffect(id)	(id >= 0 && id < game.ressources.sfx.length	? ((sfMusic **)game.ressources.sfx.content)[id]		: NULL)
-
 #define NB_OF_KEYS	20
 #define MAX_HUD_LINES	3
+
+#define	getSprite(id)		(id >= 0 && id < game.resources.sprites.length	? &((Sprite *)game.resources.sprites.content)[id]	: NULL)
+#define	getMusic(id)		(id >= 0 && id < game.resources.musics.length	? ((sfMusic **)game.resources.musics.content)[id]	: NULL)
+#define	getSoundEffect(id)	(id >= 0 && id < game.ressources.sfx.length	? ((sfMusic **)game.ressources.sfx.content)[id]		: NULL)
+#define isObjectInWindow(obj)	(obj.pos.x + cam.x > -32 && obj.pos.x + cam.x < 672 && obj.pos.y + cam.y > -32 && obj.pos.y + cam.y < 672)
+#define getKey(id)		(id >= 0 && id < NB_OF_KEYS ? game.settings.keys[id] : 0)
+
+#define PLAYER_SIZE		(sfVector2f){16, 32}
+#define PLAYER_HITBOX_OFFSET	(sfVector2f){3,  16}
+#define PLAYER_HITBOX_SIZE	(sfVector2f){10, 14}
+#define OBJECT_SIZE		(sfVector2f){16, 16}
 
 #define	PARSER_INFOS		((ParserInfos[1]) {{'{', '}', '{', '}', ',', '=', "\"'", "--", NULL, NULL, false, false}})
 

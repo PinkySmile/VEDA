@@ -26,10 +26,10 @@ typedef struct {
 } Item;
 
 typedef struct {
-	bool	up;
-	bool	right;
-	bool	down;
-	bool	left;
+	unsigned int	up;
+	unsigned int	right;
+	unsigned int	down;
+	unsigned int	left;
 } Directions;
 
 typedef	struct {
@@ -75,5 +75,7 @@ typedef struct {
 	char		**dialogsStrings;
 	enum sfx	stepSound;
 } Character;
+
+void	dealDamages(Character *character, int damages, int damageType);
 
 #endif

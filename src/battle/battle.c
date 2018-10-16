@@ -163,7 +163,7 @@ Array	loadProjectiles(char *path)
 				});
 				projBuffer.needToDestroySprite = true;
 			} else if (buffer->type == ParserIntType) {
-				projBuffer.sprite = ((Sprite *)game.ressources.sprites.content)[ParserInt_toInt(buffer->data) % game.ressources.sprites.length];
+				projBuffer.sprite = ((Sprite *)game.resources.sprites.content)[ParserInt_toInt(buffer->data) % game.resources.sprites.length];
 			} else
 				return invalidTypeArray(result, path, "Invalid type for field \"sprite_sheet\"", buffer->type, ParserStringType);
 		} else
@@ -392,7 +392,7 @@ Battle	loadBattleScript(char *path)
 			});
 			battle.needToDestroySprite = true;
 		} else if (buffer->type == ParserIntType) {
-			battle.bossSprite = ((Sprite *)game.ressources.sprites.content)[ParserInt_toInt(buffer->data) % game.ressources.sprites.length];
+			battle.bossSprite = ((Sprite *)game.resources.sprites.content)[ParserInt_toInt(buffer->data) % game.resources.sprites.length];
 		} else
 			return invalidType(result, path, "Invalid type for field \"boss_sprite_sheet\"", buffer->type, ParserStringType);
 	} else
@@ -427,7 +427,7 @@ Battle	loadBattleScript(char *path)
 				true,
 			});
 		} else if (buffer->type == ParserIntType) {
-			battle.music = ((sfMusic **)game.ressources.musics.content)[ParserInt_toInt(buffer->data) % game.ressources.musics.length];
+			battle.music = ((sfMusic **)game.resources.musics.content)[ParserInt_toInt(buffer->data) % game.resources.musics.length];
 		} else
 			return invalidType(result, path, "Invalid type for field \"music\"", buffer->type, ParserStringType);
 	} else

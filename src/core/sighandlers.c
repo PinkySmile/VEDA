@@ -48,8 +48,8 @@ void	handleFatalSignals(int signum)
 void	handleSigInt(int signum)
 {
 	printf("%s: Caught signal %i (%s). Exiting.\n", INFO_BEG, signum, strsignal(signum));
-	if (game.ressources.window && sfRenderWindow_isOpen(game.ressources.window))
-		sfRenderWindow_close(game.ressources.window);
+	if (game.resources.window && sfRenderWindow_isOpen(game.resources.window))
+		sfRenderWindow_close(game.resources.window);
 	else {
 		Discord_Shutdown();
 		exit(EXIT_SUCCESS);

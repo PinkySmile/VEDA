@@ -39,8 +39,8 @@ void	buf_modif()
 {
 	sfUint32	*buffer = getCleanedString(game.input.buffer, time(NULL) % 2);
 
-	sfText_setColor(game.ressources.text, (sfColor){255, 255, 255, 255});
-	sfText_setCharacterSize(game.ressources.text, 15);
+	sfText_setColor(game.resources.text, (sfColor){255, 255, 255, 255});
+	sfText_setCharacterSize(game.resources.text, 15);
 	text((char *)buffer, 10, 10, true);
 	free(buffer);
 }
@@ -49,11 +49,11 @@ void	changeName()
 {
 	sfUint32	*buffer = getCleanedString(game.input.buffer, time(NULL) % 2);
 
-	sfText_setColor(game.ressources.text, (sfColor){255, 255, 255, 255});
-	sfText_setCharacterSize(game.ressources.text, 20);
+	sfText_setColor(game.resources.text, (sfColor){255, 255, 255, 255});
+	sfText_setCharacterSize(game.resources.text, 20);
 	text("How do people call you ?", 50, 50, false);
-	sfText_setCharacterSize(game.ressources.text, 15);
-	sfText_setColor(game.ressources.text, (sfColor){100, 100, 100, 255});
+	sfText_setCharacterSize(game.resources.text, 15);
+	sfText_setColor(game.resources.text, (sfColor){100, 100, 100, 255});
 	text((char *)buffer, 100, 100, true);
 	free(buffer);
 }

@@ -17,8 +17,7 @@ char	*programPath = NULL;
 
 #if defined _WIN32 || defined __WIN32 || defined __WIN32__
 
-void	setSignalHandler()
-{
+void	setSignalHandler() {
 	signal(SIGINT,  &sighandler);
 	signal(SIGILL,  &sighandler);
 	signal(SIGABRT, &sighandler);
@@ -44,9 +43,8 @@ void	setSignalHandler()
 
 #endif
 
-void	closeConsole(bool debug)
-{
-	#if defined _WIN32 || defined __WIN32 || defined __WIN32__
+void	closeConsole(bool debug) {
+#if defined _WIN32 || defined __WIN32 || defined __WIN32__
 
 	if (!debug && !FreeConsole()) //Not in debug: close the console
 		printf("%s: Cannot close main console\n", ERROR_BEG);
@@ -56,23 +54,22 @@ void	closeConsole(bool debug)
 	} else
 		freopen("last.log", "w", stdout);//Redirect stdout to 'last.log'
 
-	#else
+#else
 	(void)debug;
-	#endif
+#endif
 }
 
-void	prepareExit()
-{
+void	prepareExit() {
 	destroyStruct();
 	Discord_Shutdown();
 	free(programPath);
 	printf("%s: Goodbye !\n", INFO_BEG);
 }
 
-int	main(int argc, char **args)
-{
-	bool	debug = (argc == 2 && !strcmp("debug", args[1]));
+int	main(int argc, char **args) {
+	bool debug = (argc == 2 && !strcmp("debug", args[1]));
 
+	debug = true;
 	closeConsole(debug);
 	setSignalHandler();
 	programPath = getParentFolder(args[0]);

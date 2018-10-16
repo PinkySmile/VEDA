@@ -5,11 +5,11 @@
 
 void	destroyFonts()
 {
-	for (int i = 0; i < game.ressources.fonts.length; i++) {
+	for (int i = 0; i < game.resources.fonts.length; i++) {
 		if (game.debug)
 			printf("%s: Destroying font %i\n", INFO_BEG, i);
-		if (((sfFont **)game.ressources.fonts.content)[i] != NULL)
-			sfFont_destroy(((sfFont **)game.ressources.fonts.content)[i]);
+		if (((sfFont **)game.resources.fonts.content)[i] != NULL)
+			sfFont_destroy(((sfFont **)game.resources.fonts.content)[i]);
 	}
-	free(game.ressources.fonts.content);
+	free(game.resources.fonts.content);
 }

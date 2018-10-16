@@ -11,30 +11,30 @@
 
 void	loadRessources()
 {
-	game.ressources.rectangle	= createRectangleShape();
-	game.ressources.text		= createText();
-	game.ressources.fonts		= loadFonts();
-	game.ressources.sprites		= loadSprites();
-	game.ressources.musics		= loadMusics();
-	game.ressources.sfx		= loadSfx();
-	game.ressources.languages	= loadLanguages();
-	game.ressources.buttons		= loadButtons();
-	setVolumes(game.ressources.sfx, game.settings.sfxVolume);
-	setVolumes(game.ressources.musics, game.settings.musicVolume);
+	game.resources.rectangle	= createRectangleShape();
+	game.resources.text		= createText();
+	game.resources.fonts		= loadFonts();
+	game.resources.sprites		= loadSprites();
+	game.resources.musics		= loadMusics();
+	game.resources.sfx		= loadSfx();
+	game.resources.languages	= loadLanguages();
+	game.resources.buttons		= loadButtons();
+	setVolumes(game.resources.sfx, game.settings.sfxVolume);
+	setVolumes(game.resources.musics, game.settings.musicVolume);
 }
 
 void	initDialogsScript()
 {
-	game.ressources.dialogLuaScript = luaL_newstate();
-	addDependencies(game.ressources.dialogLuaScript);
-	if (luaL_dofile(game.ressources.dialogLuaScript, getAbsolutePath("data/dialogs/script.lua"))) {
+	game.resources.dialogLuaScript = luaL_newstate();
+	addDependencies(game.resources.dialogLuaScript);
+	if (luaL_dofile(game.resources.dialogLuaScript, getAbsolutePath("data/dialogs/script.lua"))) {
 		printf(
 			"%s: An unexpected error occurred when loading %s\n",
 			ERROR_BEG,
 			getAbsolutePath("data/dialogs/script.lua")
 		);
-		lua_close(game.ressources.dialogLuaScript);
-		game.ressources.dialogLuaScript = NULL;
+		lua_close(game.resources.dialogLuaScript);
+		game.resources.dialogLuaScript = NULL;
 	}
 }
 
@@ -49,9 +49,9 @@ void	initGame(bool debug)
 	game.debug = debug;
 	initDiscordRichPresence();
 	game.settings = loadSettings();
-	game.ressources.window = createMainWindow();
+	game.resources.window = createMainWindow();
 	initDialogsScript();
 	game.input.bufSize = BUFFER_MAX_SIZE;
 	loadRessources();
-	sfRenderWindow_setFramerateLimit(game.ressources.window, 60);
+	sfRenderWindow_setFramerateLimit(game.resources.window, 60);
 }

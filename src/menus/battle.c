@@ -41,7 +41,7 @@ void	displayProjectiles()
 		sfSprite_setRotation(proj->sprite.sprite, proj->angle);
 		sfSprite_setPosition(proj->sprite.sprite, pos);
 		sfSprite_setTextureRect(proj->sprite.sprite, proj->sprite.rect);
-		sfRenderWindow_drawSprite(game.ressources.window, proj->sprite.sprite, NULL);
+		sfRenderWindow_drawSprite(game.resources.window, proj->sprite.sprite, NULL);
 	}
 }
 
@@ -153,9 +153,9 @@ void	battle()
 		}
 	}
 	if (game.state.battle_infos.music && sfMusic_getStatus(game.state.battle_infos.music) != sfPlaying) {
-		for (int i = 0; i < game.ressources.musics.length; i++)
-			if (((sfMusic **)game.ressources.musics.content)[i] && sfMusic_getStatus(game.state.battle_infos.music) == sfPlaying)
-				sfMusic_stop(((sfMusic **)game.ressources.musics.content)[i]);
+		for (int i = 0; i < game.resources.musics.length; i++)
+			if (((sfMusic **)game.resources.musics.content)[i] && sfMusic_getStatus(game.state.battle_infos.music) == sfPlaying)
+				sfMusic_stop(((sfMusic **)game.resources.musics.content)[i]);
 		sfMusic_play(game.state.battle_infos.music);
 		sfMusic_setVolume(game.state.battle_infos.music, game.settings.musicVolume);
 	}
@@ -172,20 +172,23 @@ void	battle()
 		sfSprite_setTextureRect(game.state.battle_infos.bossSprite.sprite, game.state.battle_infos.bossSprite.rect);
 		image(game.state.battle_infos.bossSprite.sprite, game.state.battle_infos.boss.movement.pos.x + game.state.cameraPos.x, game.state.battle_infos.boss.movement.pos.y + game.state.cameraPos.y, -1, -1);
 	} else {
-		sfRectangleShape_setOutlineColor(game.ressources.rectangle, (sfColor){0, 0, 0, 0});
-		sfRectangleShape_setFillColor(game.ressources.rectangle, (sfColor){255, 0, 0, 255});
+		sfRectangleShape_setOutlineColor(game.resources.rectangle, (sfColor){0, 0, 0, 0});
+		sfRectangleShape_setFillColor(game.resources.rectangle, (sfColor){255, 0, 0, 255});
 		rect(game.state.battle_infos.boss.movement.pos.x + game.state.cameraPos.x, game.state.battle_infos.boss.movement.pos.y + game.state.cameraPos.y, game.state.battle_infos.bossSprite.rect.width, game.state.battle_infos.bossSprite.rect.height);
 	}
 	displayUpperLayer();
 	displayProjectiles();
 	displayHUD();
 	if (!game.state.battle_infos.timeStopped) {
-		movePlayer();
+		moveCharacter(getPlayer(game.state.characters.content, game.state.characters.length), (sfVector2f){
+			isKeyPressed(getKey(KEY_RIGHT), game.resources.window) - isKeyPressed(getKey(KEY_LEFT), game.resources.window),
+			isKeyPressed(getKey(KEY_DOWN), game.resources.window) - isKeyPressed(getKey(KEY_UP), game.resources.window),
+		});
 		updateProjectiles(&game.state.battle_infos.projectiles);
 		for (int i = 0; i < game.state.characters.length; i++)
 			((Character *)game.state.characters.content)[i].invulnerabiltyTime -= ((Character *)game.state.characters.content)[i].invulnerabiltyTime > 0 ? 1 : 0;
 	} else {
-		sfRectangleShape_setFillColor(game.ressources.rectangle, (sfColor){255, 230, 255, 55});
+		sfRectangleShape_setFillColor(game.resources.rectangle, (sfColor){255, 230, 255, 55});
 		rect(0, 0, 640, 480);
 	}
 	for (int i = 0; i < game.state.characters.length; i++)

@@ -40,7 +40,7 @@ Button	*loadButtons()
 	Button_config	config;
 
 	for (; button_config[len].callback; len++);
-	for (; game.ressources.languages && game.ressources.languages[langs].name; langs++);
+	for (; game.resources.languages && game.resources.languages[langs].name; langs++);
 	printf("%s: Loading %i buttons\n", INFO_BEG, len + langs + NB_OF_KEYS);
 	buttons = malloc(sizeof(*buttons) * (len + langs + NB_OF_KEYS + 1));
 	if (!buttons) {
@@ -58,12 +58,12 @@ Button	*loadButtons()
 	config.disabled = false;
 	config.color = (sfColor){255, 255, 0, 255};
 	config.callback = &changeLanguage;
-	for (int i = 0; game.ressources.languages && game.ressources.languages[i].name; i++) {
+	for (int i = 0; game.resources.languages && game.resources.languages[i].name; i++) {
 		displayLoadingBar(6, MAX_STEPS, i + len, len + langs + NB_OF_KEYS, "Creating buttons");
-		config.pos = (sfVector2f){300 - strlen(game.ressources.languages[i].name) * 7, 50 * i + 10};
-		config.size = (sfVector2f){40 + strlen(game.ressources.languages[i].name) * 7, 40};
+		config.pos = (sfVector2f){300 - strlen(game.resources.languages[i].name) * 7, 50 * i + 10};
+		config.size = (sfVector2f){40 + strlen(game.resources.languages[i].name) * 7, 40};
 		buttons[i + len] = createButton(config, false);
-		buttons[i + len].content = game.ressources.languages[i].name;
+		buttons[i + len].content = game.resources.languages[i].name;
 	}
 	config.size = (sfVector2f){150, 40};
 	config.color = (sfColor){255, 255, 255, 255};

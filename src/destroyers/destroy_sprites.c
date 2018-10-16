@@ -6,7 +6,7 @@
 
 void	destroySprites()
 {
-	for (int i = 0; i < game.ressources.sprites.length; i++) {
+	for (int i = 0; i < game.resources.sprites.length; i++) {
 		if (game.debug)
 			printf("%s: Destroying sprite %i\n", INFO_BEG, i);
 		if (getSprite(i)->sprite != NULL)
@@ -14,5 +14,5 @@ void	destroySprites()
 		if (getSprite(i)->texture != NULL)
 			sfTexture_destroy(getSprite(i)->texture);
 	}
-	free(game.ressources.sprites.content);
+	free(game.resources.sprites.content);
 }

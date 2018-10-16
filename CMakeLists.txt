@@ -7,7 +7,8 @@ include_directories(include)
 include_directories(lib/concatf/include)
 include_directories(lib/configParser/include)
 
-add_executable(VEDA
+add_executable(
+	VEDA
         include/array.h
         include/battle.h
         include/battle_lua.h
@@ -19,7 +20,7 @@ add_executable(VEDA
         include/creators.h
         include/destructors.h
         include/discord_rp.h
-        include/display.h
+	include/display.h
         include/enums.h
         include/functions.h
         include/game_struct.h
@@ -122,13 +123,23 @@ add_executable(VEDA
         src/utils/transform_key_to_string.c
         src/main.c
         src/objects_creater.c
-	icon.rc src/utils/unicode_mgr.c)
+	icon.rc
+	src/utils/unicode_mgr.c
+	src/display_map/display_terrain.c
+	src/display_map/display_characters.c
+	src/utils/get_player.c
+	src/utils/is_key_pressed.c
+	src/dialogs/display_dialogs.c
+	src/character/deal_damages.c
+	src/character/move.c)
 
-target_link_libraries(${PROJECT_NAME}
+target_link_libraries(
+	${PROJECT_NAME}
         lua
         discord-rpc
         csfml-graphics
         csfml-audio
         csfml-system
         csfml-window
-        csfml-network)
+        csfml-network
+)

@@ -18,10 +18,10 @@ bool	button_is_clicked(Button button, sfVector2f click_pos)
 
 void	which_button(sfVector2f pos)
 {
-	for (int i = 0; game.ressources.buttons[i].content; i++)
-		if (button_is_clicked(game.ressources.buttons[i], pos)) {
-			printf("%s: Clicked on button %i (%s)\n", INFO_BEG, i, game.ressources.buttons[i].content);
-			game.ressources.buttons[i].callback(i);
+	for (int i = 0; game.resources.buttons[i].content; i++)
+		if (button_is_clicked(game.resources.buttons[i], pos)) {
+			printf("%s: Clicked on button %i (%s)\n", INFO_BEG, i, game.resources.buttons[i].content);
+			game.resources.buttons[i].callback(i);
 			break;
 		}
 }

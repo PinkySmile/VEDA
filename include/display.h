@@ -9,3 +9,4 @@ void	displayUpperLayer();
 void	displayHUD();
 void	drawLifeBar();
 void	drawEnergyBar();
+void	displayDialogs();

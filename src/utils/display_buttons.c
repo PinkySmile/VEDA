@@ -11,28 +11,28 @@ char	*getButtonContent(int nameId)
 	if (nameId < 0)
 		return ("");
 	if (
-		getLanguage(game.ressources.languages, game.settings.lang_id) < 0 ||
-		game.ressources.languages[
-			getLanguage(game.ressources.languages, game.settings.lang_id)
+		getLanguage(game.resources.languages, game.settings.lang_id) < 0 ||
+		game.resources.languages[
+			getLanguage(game.resources.languages, game.settings.lang_id)
 		].buttons == NULL
 	)
 		return ("");
 	for (
 		;
-		game.ressources.languages[
-			getLanguage(game.ressources.languages, game.settings.lang_id)
+		game.resources.languages[
+			getLanguage(game.resources.languages, game.settings.lang_id)
 		].buttons[len];
 		len++
 	);
 	if (
 		nameId < len &&
-		game.ressources.languages[
-			getLanguage(game.ressources.languages, game.settings.lang_id)
+		game.resources.languages[
+			getLanguage(game.resources.languages, game.settings.lang_id)
 		].buttons[nameId]
 	)
 		return (
-			game.ressources.languages[
-				getLanguage(game.ressources.languages, game.settings.lang_id)
+			game.resources.languages[
+				getLanguage(game.resources.languages, game.settings.lang_id)
 			].buttons[nameId]
 		);
 	return ("");
@@ -40,8 +40,8 @@ char	*getButtonContent(int nameId)
 
 void	dispButtons()
 {
-	Button		*buttons = game.ressources.buttons;
-	sfRenderWindow	*window = game.ressources.window;
+	Button		*buttons = game.resources.buttons;
+	sfRenderWindow	*window = game.resources.window;
 	sfVector2f	pos;
 	sfVector2f	size;
 	sfColor		color;
@@ -49,8 +49,8 @@ void	dispButtons()
 	int		blue;
 	int		green;
 
-	sfText_setCharacterSize(game.ressources.text, 20);
-	sfText_setScale(game.ressources.text, game.settings.baseScale);
+	sfText_setCharacterSize(game.resources.text, 20);
+	sfText_setScale(game.resources.text, game.settings.baseScale);
 	for (int i = 0; buttons && buttons[i].content; i++) {
 		if (buttons[i].displayed && buttons[i].rect) {
 			color.a = buttons[i].color.a;
@@ -93,7 +93,7 @@ void	dispButtons()
 			        blue += 15;
 			        green += 15;
 			}
-			sfText_setColor(game.ressources.text, buttons[i].textColor);
+			sfText_setColor(game.resources.text, buttons[i].textColor);
 			text(buttons[i].content, buttons[i].pos.x + 10, buttons[i].pos.y + 8, false);
 		}
 	}

@@ -30,7 +30,7 @@ Array	loadFonts()
 				dispMsg("Loading error.", concatf(ERROR_DEFAULT_FONT, fonts_conf[i]), 0);
 				exit(EXIT_FAILURE);
 			} else
-				setFont(game.ressources.text, fonts[ARIAL]);
+				setFont(game.resources.text, fonts[ARIAL]);
 		displayLoadingBar(1, MAX_STEPS, i + 1, len, "Loading fonts");
 		if (!fonts[i])
 			printf("%s: Couldn't load file %s\n", ERROR_BEG, fonts_conf[i]);

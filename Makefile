@@ -122,7 +122,7 @@ lib/concatf/libconcatf.a:
 	$(MAKE) -C lib/concatf $(RULE)
 
 $(NAME):$(OBJ)
-	g++ -o $(NAME) $(OBJ) $(LDFLAGS) $(CSFML) $(RES) 
+	g++ -o $(NAME) $(OBJ) $(LDFLAGS) $(CSFML) $(RES)
 
 clean:
 	$(MAKE) -C lib/concatf clean

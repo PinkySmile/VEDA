@@ -142,17 +142,17 @@ sfRenderWindow	*createMainWindow()
 	free(title);
 
 	//Load the icon and create a sprite out of it
-	if (!game.ressources.icon.image)
-		game.ressources.icon.image = sfImage_createFromFile(getAbsolutePath("data/icon/icon.png"));
-	if (game.ressources.icon.image) {
-		if (!game.ressources.icon.texture)
-			game.ressources.icon.texture = sfTexture_createFromImage(game.ressources.icon.image, NULL);
-		icon = sfImage_getPixelsPtr(game.ressources.icon.image);
+	if (!game.resources.icon.image)
+		game.resources.icon.image = sfImage_createFromFile(getAbsolutePath("data/icon/icon.png"));
+	if (game.resources.icon.image) {
+		if (!game.resources.icon.texture)
+			game.resources.icon.texture = sfTexture_createFromImage(game.resources.icon.image, NULL);
+		icon = sfImage_getPixelsPtr(game.resources.icon.image);
 	} else
 		printf("%s: Couldn't load icon %s\n", ERROR_BEG, getAbsolutePath("data/icon/icon.png"));
 	if (icon)
 		sfRenderWindow_setIcon(window, 32, 32, icon);
-	if (!game.ressources.icon.sprite)
-		game.ressources.icon.sprite = createSfSprite(game.ressources.icon.texture);
+	if (!game.resources.icon.sprite)
+		game.resources.icon.sprite = createSfSprite(game.resources.icon.texture);
 	return window;
 }

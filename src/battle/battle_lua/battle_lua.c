@@ -2,11 +2,11 @@
 #include <malloc.h>
 #include <time.h>
 #include <string.h>
+#include <lua.h>
+#include <lualib.h>
+#include <lauxlib.h>
 #include "structs.h"
 #include "functions.h"
-#include "lua.h"
-#include "lualib.h"
-#include "lauxlib.h"
 #include "concatf.h"
 #include "battle_lua.h"
 
@@ -139,12 +139,12 @@ int	playSoundLua(lua_State *lua)
 	int	arg = lua_tonumber(lua, 1);
 
 	if (lua_isnumber(lua, 1)) {
-		if (arg < 0 || arg > game.ressources.sfx.length) {
+		if (arg < 0 || arg > game.resources.sfx.length) {
 			lua_pushboolean(lua, false);
 			lua_pushstring(lua, "index out of range");
 			return (2);
-		} else if (((sfMusic **)game.ressources.sfx.content)[arg]) {
-			sfMusic_play(((sfMusic **)game.ressources.sfx.content)[arg]);
+		} else if (((sfMusic **)game.resources.sfx.content)[arg]) {
+			sfMusic_play(((sfMusic **)game.resources.sfx.content)[arg]);
 			lua_pushboolean(lua, true);
 			return (1);
 		}
