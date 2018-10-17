@@ -42,29 +42,35 @@ void	displayCharacter(Character *character, int id, sfSprite *sprite)
 		sfRectangleShape_setOutlineThickness(game.resources.rectangle, 1);
 		sfRectangleShape_setFillColor(game.resources.rectangle, (sfColor){0, 0, 0, 0});
 		sfRectangleShape_setOutlineColor(game.resources.rectangle, (sfColor){0, 0, 0, 255});
-		rect(character->movement.pos.x, character->movement.pos.y, PLAYER_SIZE.x - 1, PLAYER_SIZE.y - 1);
+		rect(
+			character->movement.pos.x + cam.x,
+			character->movement.pos.y + cam.y,
+			PLAYER_SIZE.x - 1,
+			PLAYER_SIZE.y - 1
+		);
+		sfRectangleShape_setOutlineColor(game.resources.rectangle, (sfColor){0, 255, 0, 255});
 		rect(
 			character->movement.pos.x + cam.x + character->movement.blocked.right,
-			character->movement.pos.y + cam.y,
+			character->movement.pos.y + cam.y + PLAYER_HITBOX_OFFSET.y,
 			0,
-			OBJECT_SIZE.y
+			PLAYER_HITBOX_SIZE.y
 		);
 		rect(
 			character->movement.pos.x + cam.x - character->movement.blocked.left,
-			character->movement.pos.y + cam.y,
+			character->movement.pos.y + cam.y + PLAYER_HITBOX_OFFSET.y,
 			0,
-			OBJECT_SIZE.y
+			PLAYER_HITBOX_SIZE.y
 		);
 		rect(
-			character->movement.pos.x + cam.x,
+			character->movement.pos.x + cam.x + PLAYER_HITBOX_OFFSET.x,
 			character->movement.pos.y + cam.y + character->movement.blocked.down,
-			OBJECT_SIZE.x,
+			PLAYER_HITBOX_SIZE.x,
 			0
 		);
 		rect(
-			character->movement.pos.x + cam.x,
+			character->movement.pos.x + cam.x + PLAYER_HITBOX_OFFSET.x,
 			character->movement.pos.y + cam.y - character->movement.blocked.up,
-			OBJECT_SIZE.x,
+			PLAYER_HITBOX_SIZE.x,
 			0
 		);
 		sfRectangleShape_setOutlineColor(game.resources.rectangle, (sfColor){255, 0, 0, 255});
@@ -74,6 +80,7 @@ void	displayCharacter(Character *character, int id, sfSprite *sprite)
 			PLAYER_HITBOX_SIZE.x - 1,
 			PLAYER_HITBOX_SIZE.y - 1
 		);
+		sfRectangleShape_setOutlineThickness(game.resources.rectangle, 0);
 	}
 }
 

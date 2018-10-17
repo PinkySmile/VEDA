@@ -26,55 +26,65 @@ void	moveCharacter(Character *character, sfVector2f direction)
 	}
 	character->stepSound = IRON;
 	if (character->movement.canMove) {
-		memset(&character->movement.blocked, 0, sizeof(character->movement.blocked));
+		character->movement.blocked.up		= 0x7FFFFFFF;
+		character->movement.blocked.left	= 0x7FFFFFFF;
+		character->movement.blocked.down	= 0x7FFFFFFF;
+		character->movement.blocked.right	= 0x7FFFFFFF;
+
 		for (int i = 0; map && map[i].layer; i++) {
 			if (map[i].solid) {
 				distance.x = map[i].pos.x - pos.x;
 				distance.y = map[i].pos.y - pos.y;
 				if (
-					distance.x > PLAYER_HITBOX_OFFSET.x + PLAYER_HITBOX_SIZE.x &&
+					distance.x >= PLAYER_HITBOX_OFFSET.x + PLAYER_HITBOX_SIZE.x &&
 					distance.x < character->movement.blocked.right &&
-					map[i].pos.y + OBJECT_SIZE.y > pos.x + PLAYER_HITBOX_OFFSET.y &&
-					map[i].pos.y < pos.y + PLAYER_HITBOX_OFFSET.y + PLAYER_HITBOX_SIZE.y
+					pos.y + PLAYER_HITBOX_OFFSET.y + PLAYER_HITBOX_SIZE.y > map[i].pos.y &&
+					pos.y + PLAYER_HITBOX_OFFSET.y < map[i].pos.y + OBJECT_SIZE.y
 				)
-					character->movement.blocked.right = abs(distance.x);
+					character->movement.blocked.right = distance.x;
 
 				else if (
-					distance.x < PLAYER_HITBOX_OFFSET.x &&
-					distance.x < character->movement.blocked.left
+					distance.x <= PLAYER_HITBOX_OFFSET.x &&
+					-distance.x - OBJECT_SIZE.x < character->movement.blocked.left &&
+					pos.y + PLAYER_HITBOX_OFFSET.y + PLAYER_HITBOX_SIZE.y > map[i].pos.y &&
+					pos.y + PLAYER_HITBOX_OFFSET.y < map[i].pos.y + OBJECT_SIZE.y
 				)
-					character->movement.blocked.left = abs(distance.x);
+					character->movement.blocked.left = -distance.x - OBJECT_SIZE.x;
 
 				if (
-					distance.y > PLAYER_HITBOX_OFFSET.y + PLAYER_HITBOX_SIZE.y &&
-					distance.y < character->movement.blocked.down
+					distance.y >= PLAYER_HITBOX_OFFSET.y + PLAYER_HITBOX_SIZE.y &&
+					distance.y < character->movement.blocked.down &&
+					pos.x + PLAYER_HITBOX_OFFSET.x < map[i].pos.x + OBJECT_SIZE.x &&
+					pos.x + PLAYER_HITBOX_OFFSET.x + PLAYER_HITBOX_SIZE.x > map[i].pos.x
 				)
-					character->movement.blocked.down = abs(distance.y);
+					character->movement.blocked.down = distance.y;
 
 				else if (
-					distance.y < PLAYER_HITBOX_OFFSET.y &&
-					distance.y < character->movement.blocked.up
+					distance.y <= PLAYER_HITBOX_OFFSET.y &&
+					-distance.y - OBJECT_SIZE.y < character->movement.blocked.up &&
+					pos.x + PLAYER_HITBOX_OFFSET.x < map[i].pos.x + OBJECT_SIZE.x &&
+					pos.x + PLAYER_HITBOX_OFFSET.x + PLAYER_HITBOX_SIZE.x > map[i].pos.x
 				)
-					character->movement.blocked.up = abs(distance.y);
+					character->movement.blocked.up = -distance.y - OBJECT_SIZE.y;
 			}
 		}
 		character->movement.speed = 0;
-		if (direction.x > 0) {
+		if (direction.x > 0 && character->movement.blocked.right > PLAYER_HITBOX_SIZE.x + PLAYER_HITBOX_OFFSET.x) {
 			character->movement.pos.x += direction.x;
 			character->movement.state = MOVING;
 			character->movement.position = RIGHT;
 		}
-		if (direction.x < 0) {
+		if (direction.x < 0 && character->movement.blocked.left > -PLAYER_HITBOX_OFFSET.x) {
 			character->movement.pos.x += direction.x;
 			character->movement.state = MOVING;
 			character->movement.position = LEFT;
 		}
-		if (direction.y > 0) {
+		if (direction.y > 0 && character->movement.blocked.down > PLAYER_HITBOX_SIZE.y + PLAYER_HITBOX_OFFSET.y) {
 			character->movement.pos.y += direction.y;
 			character->movement.state = MOVING;
 			character->movement.position = DOWN;
 		}
-		if (direction.y < 0) {
+		if (direction.y < 0 && character->movement.blocked.up > -PLAYER_HITBOX_OFFSET.y) {
 			character->movement.pos.y += direction.y;
 			character->movement.state = MOVING;
 			character->movement.position = UP;

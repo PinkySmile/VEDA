@@ -26,10 +26,10 @@ typedef struct {
 } Item;
 
 typedef struct {
-	unsigned int	up;
-	unsigned int	right;
-	unsigned int	down;
-	unsigned int	left;
+	int	up;
+	int	right;
+	int	down;
+	int	left;
 } Directions;
 
 typedef	struct {

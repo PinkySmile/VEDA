@@ -33,26 +33,26 @@
 #define	PARSER_INFOS		((ParserInfos[1]) {{'{', '}', '{', '}', ',', '=', "\"'", "--", NULL, NULL, false, false}})
 
 #define DEFAULT_KEYS		(unsigned char[NB_OF_KEYS]){\
-	sfKeyZ,\
-	sfKeyS,\
-	sfKeyQ,\
-	sfKeyD,\
-	sfKeyI,\
-	sfKeyEscape,\
-	sfKeyF,\
-	sfKeyC,\
-	sfKeyB,\
-	sfKeyP,\
-	sfKeyU,\
-	sfKeyNum1,\
-	sfKeyNum2,\
-	sfKeyNum3,\
-	sfKeyNum4,\
-	sfKeyNum5,\
-	sfKeyNum6,\
-	sfKeyNum7,\
-	sfKeyNum8,\
-	sfKeyLShift\
+	sfKeyZ,		\
+	sfKeyS,		\
+	sfKeyQ,		\
+	sfKeyD,		\
+	sfKeyI,		\
+	sfKeyEscape,	\
+	sfKeyF,		\
+	sfKeyC,		\
+	sfKeyB,		\
+	sfKeyP,		\
+	sfKeyU,		\
+	sfKeyNum1,	\
+	sfKeyNum2,	\
+	sfKeyNum3,	\
+	sfKeyNum4,	\
+	sfKeyNum5,	\
+	sfKeyNum6,	\
+	sfKeyNum7,	\
+	sfKeyNum8,	\
+	sfKeyLShift	\
 }
 
 #define READ_WRITE_RIGHTS	0664
