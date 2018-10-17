@@ -21,9 +21,10 @@
 
 #define	getSprite(id)		(id >= 0 && id < game.resources.sprites.length	? &((Sprite *)game.resources.sprites.content)[id]	: NULL)
 #define	getMusic(id)		(id >= 0 && id < game.resources.musics.length	? ((sfMusic **)game.resources.musics.content)[id]	: NULL)
-#define	getSoundEffect(id)	(id >= 0 && id < game.ressources.sfx.length	? ((sfMusic **)game.ressources.sfx.content)[id]		: NULL)
+#define	getSoundEffect(id)	(id >= 0 && id < game.resources.sfx.length	? ((sfMusic **)game.resources.sfx.content)[id]		: NULL)
 #define isObjectInWindow(obj)	(obj.pos.x + cam.x > -32 && obj.pos.x + cam.x < 672 && obj.pos.y + cam.y > -32 && obj.pos.y + cam.y < 672)
 #define getKey(id)		(id >= 0 && id < NB_OF_KEYS ? game.settings.keys[id] : 0)
+#define ABS(x)			(x < 0 ? -x : x)
 
 #define PLAYER_SIZE		(sfVector2f){16, 32}
 #define PLAYER_HITBOX_OFFSET	(sfVector2f){3,  16}

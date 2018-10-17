@@ -14,17 +14,14 @@ void	moveCharacter(Character *character, sfVector2f direction)
 	float		stateSeconds = sfTime_asSeconds(sfClock_getElapsedTime(character->movement.stateClock));
 	sfVector2f	pos = character->movement.pos;
 	sfVector2f	distance;
+	bool		moved = false;
 
-	if (character->movement.state == MOVING && animationSeconds >= 0.1 / character->movement.speed) {
-		character->movement.animation = !character->movement.animation;
-		if (getMusic(character->stepSound))
-			sfMusic_play(getMusic(character->stepSound));
-		sfClock_restart(character->movement.animationClock);
-	} else if (character->movement.state == MOVING && stateSeconds >= 0.3) {
+	if (character->movement.state == MOVING && stateSeconds >= 0.3) {
 		character->movement.state = STATIC;
 		character->movement.animation = 0;
 	}
 	character->stepSound = IRON;
+	character->movement.speed = 0;
 	if (character->movement.canMove) {
 		character->movement.blocked.up		= 0x7FFFFFFF;
 		character->movement.blocked.left	= 0x7FFFFFFF;
@@ -71,23 +68,41 @@ void	moveCharacter(Character *character, sfVector2f direction)
 		character->movement.speed = 0;
 		if (direction.x > 0 && character->movement.blocked.right > PLAYER_HITBOX_SIZE.x + PLAYER_HITBOX_OFFSET.x) {
 			character->movement.pos.x += direction.x;
-			character->movement.state = MOVING;
 			character->movement.position = RIGHT;
+			moved = true;
+			if (ABS(direction.x) > character->movement.speed)
+				character->movement.speed = ABS(direction.x);
 		}
 		if (direction.x < 0 && character->movement.blocked.left > -PLAYER_HITBOX_OFFSET.x) {
 			character->movement.pos.x += direction.x;
-			character->movement.state = MOVING;
 			character->movement.position = LEFT;
+			moved = true;
+			if (ABS(direction.x) > character->movement.speed)
+				character->movement.speed = ABS(direction.x);
 		}
 		if (direction.y > 0 && character->movement.blocked.down > PLAYER_HITBOX_SIZE.y + PLAYER_HITBOX_OFFSET.y) {
 			character->movement.pos.y += direction.y;
-			character->movement.state = MOVING;
 			character->movement.position = DOWN;
+			moved = true;
+			if (ABS(direction.y) > character->movement.speed)
+				character->movement.speed = ABS(direction.y);
 		}
 		if (direction.y < 0 && character->movement.blocked.up > -PLAYER_HITBOX_OFFSET.y) {
 			character->movement.pos.y += direction.y;
-			character->movement.state = MOVING;
 			character->movement.position = UP;
+			moved = true;
+			if (ABS(direction.y) > character->movement.speed)
+				character->movement.speed = ABS(direction.y);
+		}
+		if (moved) {
+			character->movement.state = MOVING;
+			sfClock_restart(character->movement.stateClock);
+			if (sfTime_asSeconds(sfClock_getElapsedTime(character->movement.animationClock)) >= 0.2 / character->movement.speed) {
+				character->movement.animation = !character->movement.animation;
+				if (getSoundEffect(character->stepSound))
+					sfMusic_play(getSoundEffect(character->stepSound));
+				sfClock_restart(character->movement.animationClock);
+			}
 		}
 	}
 }
