@@ -53,7 +53,7 @@ void	manageEvents()
 			}
 		} else if (event.type == sfEvtJoystickButtonPressed) {
 			if ((game.state.menu == 1 || game.state.menu == 7) && game.settings.keys[KEY_PAUSE] == event.joystickButton.button + 205) {
-				back_on_title_screen(-1);
+				backOnTitleScreen(-1);
 				saveGame(true);
 				continue;
 			}
@@ -132,7 +132,7 @@ void	manageEvents()
 				continue;
 			}
 			if ((game.state.menu == 1 || game.state.menu == 7) && game.settings.keys[KEY_PAUSE] == event.key.code) {
-				back_on_title_screen(-1);
+				backOnTitleScreen(-1);
 				saveGame(true);
 				continue;
 			}

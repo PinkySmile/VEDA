@@ -120,7 +120,7 @@ void	battle()
 			printf("%s: %s\n", ERROR_BEG, lua_tostring(game.state.battle_infos.lua_thread, -1));
 			dispMsg("Battle Error", buffer, 0);
 			free(buffer);
-			back_on_title_screen(-1);
+			backOnTitleScreen(-1);
 			if (game.state.battle_infos.music)
 				sfMusic_stop(game.state.battle_infos.music);
 			launchlua = true;
@@ -130,7 +130,7 @@ void	battle()
 			printf("%s: %s: Out of memory\n", ERROR_BEG, game.state.battle_infos.script);
 			dispMsg("Battle Error", buffer, 0);
 			free(buffer);
-			back_on_title_screen(-1);
+			backOnTitleScreen(-1);
 			if (game.state.battle_infos.music)
 				sfMusic_stop(game.state.battle_infos.music);
 			launchlua = true;
@@ -140,7 +140,7 @@ void	battle()
 			printf("%s: %s: Unknown error\n", ERROR_BEG, game.state.battle_infos.script);
 			dispMsg("Battle Error", buffer, 0);
 			free(buffer);
-			back_on_title_screen(-1);
+			backOnTitleScreen(-1);
 			sfMusic_stop(game.state.battle_infos.music);
 			launchlua = true;
 			return;

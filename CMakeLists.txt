@@ -71,7 +71,7 @@ add_executable(
         lib/configParser/sources/strings.c
         src/battle/battle_lua/battle_lua.c
         src/battle/battle.c
-        src/buttons_callbacks/callbacks.c
+	src/buttons_callbacks/menus.c
         src/config_loader/save_file_mgr.c
         src/config_loader/settings_mgr.c
         src/configs/buttons.c
@@ -123,7 +123,6 @@ add_executable(
         src/utils/transform_key_to_string.c
         src/main.c
         src/objects_creater.c
-	icon.rc
 	src/utils/unicode_mgr.c
 	src/display_map/display_terrain.c
 	src/display_map/display_characters.c
@@ -132,6 +131,10 @@ add_executable(
 	src/dialogs/display_dialogs.c
 	src/character/deal_damages.c
 	src/character/move.c
+	src/buttons_callbacks/change_window_mode.c
+	src/buttons_callbacks/settings_menus.c
+	src/buttons_callbacks/options_buttons.c
+	icon.rc
 )
 
 target_link_libraries(

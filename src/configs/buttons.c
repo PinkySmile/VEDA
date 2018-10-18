@@ -12,7 +12,7 @@ const Button_config	button_config[] = {
 		{150, 40},
 		{205, 205, 205, 255},
 		{0, 0, 0, 255},
-		&play_button,
+		&playButton,
 		true
 	},
 	{//1
@@ -84,7 +84,7 @@ const Button_config	button_config[] = {
 		{150, 40},
 		{205, 205, 205, 255},
 		{0, 0, 0, 255},
-		&back_on_title_screen,
+		&backOnTitleScreen,
 		false
 	},
 	{//9
@@ -93,7 +93,7 @@ const Button_config	button_config[] = {
 		{100, 40},
 		{205, 205, 205, 255},
 		{0, 0, 0, 255},
-		&back_on_title_screen,
+		&backOnTitleScreen,
 		false
 	},
 	{//10

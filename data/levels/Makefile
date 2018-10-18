@@ -1,7 +1,6 @@
 NAME =	levelConverter
 
 SRC = 	levelConverter.c	\
-	../../src/concat.c	\
 
 OBJ =	$(SRC:%.c=%.o)
 

@@ -6,7 +6,10 @@ SRC =	main.c					\
 	battle/battle.c				\
 	battle/battle_lua/battle_lua.c		\
 						\
-	buttons_callbacks/callbacks.c		\
+	buttons_callbacks/change_window_mode.c	\
+	buttons_callbacks/menus.c		\
+	buttons_callbacks/options_buttons.c	\
+	buttons_callbacks/settings_menus.c	\
 						\
 	character/deal_damages.c		\
 	character/move.c			\
