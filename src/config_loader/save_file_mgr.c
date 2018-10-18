@@ -6,6 +6,7 @@
 #include <stdbool.h>
 #include <errno.h>
 #include <stdlib.h>
+#include "creators.h"
 #include "utils.h"
 #include "loading.h"
 #include "structs.h"
@@ -15,18 +16,21 @@
 
 void	saveLevel(char *path, Object *objs, char *header)
 {
+	FILE	*stream;
+	size_t	len;
 	int	fd;
-	char	*buffer = "test";
+	char	*buffer;
 
 	printf("%s: Saving to %s\n", INFO_BEG, path);
-	fd = open(path, O_WRONLY | O_CREAT, 0664);
-	if (fd < 0) {
+	stream = fopen(path, "wb");
+	if (!stream) {
 		printf("%s: Cannot open save file (%s: %s)\n", ERROR_BEG, path, strerror(errno));
 		buffer = concatf("Cannot open save file (%s: %s)\n", path, strerror(errno));
 		dispMsg("Error", buffer, 0);
 		free(buffer);
 		return;
 	}
+	fd = fileno(stream);/*
 	write(fd, header, strlen(header));
 	for (int i = 0; objs[i].layer; i++) {
 		buffer = concatf("\n%i %i %i %i %i %i %f %i %i %i %i %i %i %i %i %i",
@@ -49,8 +53,14 @@ void	saveLevel(char *path, Object *objs, char *header)
 		);
 		write(fd, buffer, strlen(buffer));
 		free(buffer);
-	}
-	close(fd);
+	}*/
+	len = strlen(header);
+	write(fd, &len, sizeof(len));
+	write(fd, header, len);
+	for (len = 0; objs[len].layer; len++);
+	write(fd, &len, sizeof(len));
+	write(fd, objs, sizeof(*objs) * len);
+	fclose(stream);
 }
 
 bool	saveGame(bool level)
@@ -67,7 +77,7 @@ bool	saveGame(bool level)
 	printf("%s: Saving game\n", INFO_BEG);
 	if (stat("save", &st) == -1) {
 		printf("%s: Creating folder \"save\"\n", INFO_BEG);
-		#ifdef __MINGW32__
+		#if defined _WIN32 || defined __WIN32 || defined __WIN32__
 			success = (mkdir("save") == 0);
 		#else
 			success = (mkdir("save", 0766) == 0);
@@ -134,13 +144,31 @@ bool	saveGame(bool level)
 	return (true);
 }
 
+Object	*loadSavedMap(char *path, char **bg)
+{
+	int	len = 0;
+	FILE	*stream = fopen(path, "rb");
+	int	fd = fileno(stream);
+	Object	*map;
+
+	read(fd, &len, sizeof(len));
+	printf("%i\n", len);
+	*bg = my_malloc(len + 1);
+	(*bg)[read(fd, *bg, len)] = 0;
+	read(fd, &len, sizeof(len));
+	printf("%i\n", len);
+	map = my_malloc(len * sizeof(*map));
+	read(fd, map, len * sizeof(*map));
+	return (map);
+}
+
 void	loadGame()
 {
 	int		fd;
 	bool		use = false;
 	char		*buffer;
 	int		len = 0;
-	struct stat	st;
+	struct	stat	st;
 
 	printf("%s: Loading game\n", INFO_BEG);
 	fd = open("save/game.dat", O_RDONLY);
@@ -170,7 +198,7 @@ void	loadGame()
 		buffer = concat(game.state.loadedMap.path, "/level/floor0.sav", false, false);
 		if (stat(buffer, &st) != -1) {
 			free(game.state.loadedMap.objects);
-			game.state.loadedMap.objects = loadMap(buffer, &game.state.loadedMap.backgroundPath);
+			game.state.loadedMap.objects = loadSavedMap(buffer, &game.state.loadedMap.backgroundPath);
 			free(buffer);
 			free(game.state.characters.content);
 			buffer = concatf("%s/characters-save.json", game.state.loadedMap.path);
