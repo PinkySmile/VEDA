@@ -73,7 +73,7 @@ void	moveCharacter(Character *character, sfVector2f direction)
 			if (ABS(direction.x) > character->movement.speed)
 				character->movement.speed = ABS(direction.x);
 		}
-		if (direction.x < 0 && character->movement.blocked.left > -PLAYER_HITBOX_OFFSET.x) {
+		if (direction.x < 0 && character->movement.blocked.left > -PLAYER_HITBOX_OFFSET.x + 1) {
 			character->movement.pos.x += direction.x;
 			character->movement.position = LEFT;
 			moved = true;
@@ -87,7 +87,7 @@ void	moveCharacter(Character *character, sfVector2f direction)
 			if (ABS(direction.y) > character->movement.speed)
 				character->movement.speed = ABS(direction.y);
 		}
-		if (direction.y < 0 && character->movement.blocked.up > -PLAYER_HITBOX_OFFSET.y) {
+		if (direction.y < 0 && character->movement.blocked.up > -PLAYER_HITBOX_OFFSET.y + 1) {
 			character->movement.pos.y += direction.y;
 			character->movement.position = UP;
 			moved = true;
@@ -97,7 +97,7 @@ void	moveCharacter(Character *character, sfVector2f direction)
 		if (moved) {
 			character->movement.state = MOVING;
 			sfClock_restart(character->movement.stateClock);
-			if (sfTime_asSeconds(sfClock_getElapsedTime(character->movement.animationClock)) >= 0.2 / character->movement.speed) {
+			if (animationSeconds >= 0.2 / character->movement.speed) {
 				character->movement.animation = !character->movement.animation;
 				if (getSoundEffect(character->stepSound))
 					sfMusic_play(getSoundEffect(character->stepSound));
