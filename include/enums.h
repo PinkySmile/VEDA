@@ -79,6 +79,7 @@ enum keys {
 };
 
 enum musics {
+	MUSIC_NONE = -1,
 	GAME_OVER,
 	MACABRE,
 	MYSTERIOUS,
@@ -101,6 +102,7 @@ enum battles {
 };
 
 enum sfx {
+	SFX_NONE = -1,
 	IRON,
 	ERROR_SOUND,
 	EXCLAMATION,

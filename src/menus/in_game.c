@@ -50,7 +50,6 @@ void	execAction(Object obj)
 void	inGame()
 {
 	Character	*player = getPlayer(game.state.characters.content, game.state.characters.length);
-	char		*tmp = NULL;
 
 	if (player->movement.speed < 0)
 		player->movement.speed = 0;
