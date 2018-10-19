@@ -146,19 +146,18 @@ bool	saveGame(bool level)
 
 Object	*loadSavedMap(char *path, char **bg)
 {
-	int	len = 0;
+	size_t	len = 0;
 	FILE	*stream = fopen(path, "rb");
 	int	fd = fileno(stream);
 	Object	*map;
 
 	read(fd, &len, sizeof(len));
-	printf("%i\n", len);
 	*bg = my_malloc(len + 1);
 	(*bg)[read(fd, *bg, len)] = 0;
 	read(fd, &len, sizeof(len));
-	printf("%i\n", len);
-	map = my_malloc(len * sizeof(*map));
+	map = my_malloc((len + 1) * sizeof(*map));
 	read(fd, map, len * sizeof(*map));
+	map[len].layer = 0;
 	return (map);
 }
 
@@ -185,10 +184,9 @@ void	loadGame()
 		use = (dispMsg("Error", CORRUPTED_SAVE_MSG, 4) == 6);
 		if (!use)
 			return;
-	} else if ((game.state.loadedMap.path = malloc(len + 1)) == NULL) {
-		printf("%s: Couldn't allocate %iB\n", FATAL_BEG, len + 1);
-		exit(EXIT_FAILURE);
-	} else if (read(fd, game.state.loadedMap.path, len) != len && !use) {
+	}
+	game.state.loadedMap.path = my_malloc(len + 1);
+	if (read(fd, game.state.loadedMap.path, len) != len && !use) {
 		printf("%s: Corrupted save file detected: Unexpected <EOF> map\n", ERROR_BEG);
 		use = (dispMsg("Error", CORRUPTED_SAVE_MSG, 4) == 6);
 		if (!use)
