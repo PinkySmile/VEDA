@@ -42,11 +42,22 @@ Array	loadMusics()
 	return (array);
 }
 
+sfSoundBuffer	*createSoundBuffer(Music_config config)
+{
+	sfSoundBuffer	*buffer = NULL;
+
+	printf("%s: Loading file %s\n", INFO_BEG, config.path);
+	buffer = sfSoundBuffer_createFromFile(config.path);
+	if (!buffer)
+		printf("%s: Couldn't load file %s\n", ERROR_BEG, config.path);
+	return (buffer);
+}
+
 Array	loadSfx()
 {
-	Array	array = {NULL, 0};
-	int	len = 0;
-	sfMusic	**sfx = NULL;
+	Array		array = {NULL, 0};
+	int		len = 0;
+	sfSoundBuffer	**sfx = NULL;
 
 	for (; sfx_conf[len].path; len++);
 	printf("%s: Loading %i sfx sounds\n", INFO_BEG, len);
@@ -59,7 +70,7 @@ Array	loadSfx()
 	array.content = sfx;
 	for (int i = 0; sfx_conf[i].path; i++) {
 		displayLoadingBar(4, MAX_STEPS, i, len, "Loading sound effects");
-		sfx[i] = createMusic(sfx_conf[i]);
+		sfx[i] = createSoundBuffer(sfx_conf[i]);
 	}
 	printf("%s: Sounds loaded !\n", INFO_BEG);
 	return (array);

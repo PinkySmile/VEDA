@@ -1,4 +1,5 @@
 #include <SFML/Graphics.h>
+#include <SFML/Audio.h>
 #include <stdio.h>
 #include "character.h"
 #include "language.h"
@@ -19,3 +20,4 @@ char		*getAbsolutePath(char *path);
 char		*getKeyString(unsigned char keyID);
 char		*getButtonContent(int nameId);
 ssize_t		getline(char **lineptr, size_t *n, FILE *stream);
+int		playSoundEffect(sfSoundBuffer *buffer);

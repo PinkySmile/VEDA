@@ -6,6 +6,7 @@
 #include "macros.h"
 #include "character.h"
 #include "object.h"
+#include "utils.h"
 
 void	moveCharacter(Character *character, sfVector2f direction)
 {
@@ -100,7 +101,7 @@ void	moveCharacter(Character *character, sfVector2f direction)
 			if (animationSeconds >= 0.2 / character->movement.speed) {
 				character->movement.animation = !character->movement.animation;
 				if (getSoundEffect(character->stepSound))
-					sfMusic_play(getSoundEffect(character->stepSound));
+					playSoundEffect(getSoundEffect(character->stepSound));
 				sfClock_restart(character->movement.animationClock);
 			}
 		}

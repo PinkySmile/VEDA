@@ -171,7 +171,7 @@ bool	lineIsValid(const char *line)
 	bool	cmd = false;
 
 	for (int i = 0; line[i]; i++) {
-		if (line[i] == '§')
+		if (line[i] == '%')
 			cmd = !cmd;
 		if (line[i] == '\\' && line[i + 1])
 			i++;
@@ -350,7 +350,7 @@ Array	loadCharacters(char *path)
 					if (objBuffer->type != ParserStringType)
 						printf("%s: Field \"battle_script\" in character %i has an invalid type\n", ERROR_BEG, i);
 					else
-				        	buff.battleScript = strdup(ParserString_toCharStar(objBuffer->data));
+				        	strncpy(buff.battleScript, strdup(ParserString_toCharStar(objBuffer->data)), PATH_MAX);
 				} else
 					printf("%s: Character %i has no field \"battle_info\"\n", WARNING_BEG, i);
 				objBuffer = ParserObj_getElement(obj, "dialogs");

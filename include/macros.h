@@ -19,9 +19,10 @@
 #define NB_OF_KEYS	20
 #define MAX_HUD_LINES	3
 
+#define	getCharacter(id)	(id >= 0 && id < game.state.characters.length	? &((Character *)game.state.characters.content)[id]	: NULL)
 #define	getSprite(id)		(id >= 0 && id < game.resources.sprites.length	? &((Sprite *)game.resources.sprites.content)[id]	: NULL)
 #define	getMusic(id)		(id >= 0 && id < game.resources.musics.length	? ((sfMusic **)game.resources.musics.content)[id]	: NULL)
-#define	getSoundEffect(id)	(id >= 0 && id < game.resources.sfx.length	? ((sfMusic **)game.resources.sfx.content)[id]		: NULL)
+#define	getSoundEffect(id)	(id >= 0 && id < game.resources.sfx.length	? ((sfSoundBuffer **)game.resources.sfx.content)[id]	: NULL)
 #define isObjectInWindow(obj)	(obj.pos.x + cam.x > -32 && obj.pos.x + cam.x < 672 && obj.pos.y + cam.y > -32 && obj.pos.y + cam.y < 672)
 #define getKey(id)		(id >= 0 && id < NB_OF_KEYS ? game.settings.keys[id] : 0)
 #define ABS(x)			(x < 0 ? -x : x)

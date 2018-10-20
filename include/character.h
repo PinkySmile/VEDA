@@ -3,6 +3,7 @@
 
 #include <SFML/Graphics.h>
 #include <stdbool.h>
+#include <limits.h>
 #include "enums.h"
 #include "macros.h"
 #include "array.h"
@@ -71,7 +72,8 @@ typedef struct {
 	int		damageDisplay[DAMAGES_TYPE_NB];
 	sfClock		*damageClock[DAMAGES_TYPE_NB];
 	Dialog		dialogs;
-	char		*battleScript;
+	char		battleScript[PATH_MAX];
+	char		dialogsScript[PATH_MAX];
 	char		**dialogsStrings;
 	enum sfx	stepSound;
 } Character;

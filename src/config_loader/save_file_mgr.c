@@ -6,6 +6,7 @@
 #include <stdbool.h>
 #include <errno.h>
 #include <stdlib.h>
+#include "destructors.h"
 #include "creators.h"
 #include "utils.h"
 #include "loading.h"
@@ -14,7 +15,7 @@
 #include "functions.h"
 #include "concatf.h"
 
-void	saveLevel(char *path, Object *objs, char *header)
+void	saveLevel(char *path, Object *objs, char *header, Array characters)
 {
 	FILE	*stream;
 	size_t	len;
@@ -60,6 +61,14 @@ void	saveLevel(char *path, Object *objs, char *header)
 	for (len = 0; objs[len].layer; len++);
 	write(fd, &len, sizeof(len));
 	write(fd, objs, sizeof(*objs) * len);
+	write(fd, &characters.length, sizeof(characters.length));
+	write(fd, characters.content, sizeof(Character) * characters.length);
+	for (int i = 0; i < characters.length; i++)
+		write(
+			fd,
+			((Character *)characters.content)[i].inventory.content,
+			((Character *)characters.content)[i].inventory.length * sizeof(Item)
+		);
 	fclose(stream);
 }
 
@@ -67,12 +76,12 @@ bool	saveGame(bool level)
 {
 	int		fd;
 	struct stat	st;
-	bool		success = false;
+	bool		success;
 	int		len = 0;
 	char		*buffer = NULL;
-	ParserObj	obj;
-	Character	charac;
-	ParserList	*result = malloc(sizeof(ParserList));
+	//ParserObj	obj;
+	//Character	charac;
+	//ParserList	*result = malloc(sizeof(ParserList));
 
 	printf("%s: Saving game\n", INFO_BEG);
 	if (stat("save", &st) == -1) {
@@ -107,13 +116,13 @@ bool	saveGame(bool level)
 		dispMsg("Error", "Couldn't write to save file\nNo space on disk ?", 0);
 		return (false);
 	}
-	if (write(fd, game.state.loadedMap.path,len) != len) {
+	if (write(fd, game.state.loadedMap.path, len) != len) {
 		printf("%s: Couldn't write save file\n", ERROR_BEG);
 		close(fd);
 		dispMsg("Error", "Couldn't write to save file\nNo space on disk ?", 0);
 		return (false);
 	}
-	close(fd);
+	close(fd);/*
 	if (result) {
 		memset(result, 0, sizeof(*result));
 		for (int i = 0; i < game.state.characters.length; i++) {
@@ -134,11 +143,11 @@ bool	saveGame(bool level)
 		Parser_createFile(buffer, result, ParserListType, NULL);
 		ParserList_destroy(result);
 		free(buffer);
-	}
+	}*/
 	if (level) {
 		buffer = concat(game.state.loadedMap.path, "/level/floor0.sav", false, false);
 		remove(buffer);
-		saveLevel(buffer, game.state.loadedMap.objects, game.state.loadedMap.backgroundPath);
+		saveLevel(buffer, game.state.loadedMap.objects, game.state.loadedMap.backgroundPath, game.state.characters);
 		free(buffer);
 	}
 	return (true);
@@ -158,6 +167,22 @@ Object	*loadSavedMap(char *path, char **bg)
 	map = my_malloc((len + 1) * sizeof(*map));
 	read(fd, map, len * sizeof(*map));
 	map[len].layer = 0;
+	read(fd, &game.state.characters.length, sizeof(game.state.characters.length));
+	game.state.characters.content = my_malloc(sizeof(Character) * game.state.characters.length);
+	read(fd, game.state.characters.content, sizeof(Character) * game.state.characters.length);
+	for (int i = 0; i < game.state.characters.length; i++) {
+		for (int j = 0; j < DAMAGES_TYPE_NB; j++)
+			getCharacter(i)->damageClock[j] = sfClock_create();
+		getCharacter(i)->movement.animationClock = sfClock_create();
+		getCharacter(i)->movement.stateClock = sfClock_create();
+		getCharacter(i)->stats.energyRegenClock = sfClock_create();
+		getCharacter(i)->inventory.content = my_malloc(getCharacter(i)->inventory.length);
+		read(
+			fd,
+			getCharacter(i)->inventory.content,
+			getCharacter(i)->inventory.length * sizeof(Item)
+		);
+	}
 	return (map);
 }
 
@@ -166,7 +191,7 @@ void	loadGame()
 	int		fd;
 	bool		use = false;
 	char		*buffer;
-	int		len = 0;
+	unsigned int	len = 0;
 	struct	stat	st;
 
 	printf("%s: Loading game\n", INFO_BEG);
@@ -179,7 +204,7 @@ void	loadGame()
 	free(game.state.loadedMap.backgroundPath);
 	free(game.state.loadedMap.path);
 	game.state.loadedMap.objects = NULL;
-	if (read(fd, &len, sizeof(len)) != sizeof(len) && !use) {
+	if (read(fd, &len, sizeof(len)) != sizeof(len)) {
 		printf("%s: Corrupted save file detected: Unexpected <EOF> len\n", ERROR_BEG);
 		use = (dispMsg("Error", CORRUPTED_SAVE_MSG, 4) == 6);
 		if (!use)
@@ -196,13 +221,13 @@ void	loadGame()
 		buffer = concat(game.state.loadedMap.path, "/level/floor0.sav", false, false);
 		if (stat(buffer, &st) != -1) {
 			free(game.state.loadedMap.objects);
+			destroyCharacters();
 			game.state.loadedMap.objects = loadSavedMap(buffer, &game.state.loadedMap.backgroundPath);
-			free(buffer);
-			free(game.state.characters.content);
+			/*free(buffer);
 			buffer = concatf("%s/characters-save.json", game.state.loadedMap.path);
-			game.state.characters = loadCharacters(buffer);
+			game.state.characters = loadCharacters(buffer);*/
 			if (game.state.characters.content)
-				((Character *)game.state.characters.content)[0].isPlayer = true;
+				getCharacter(0)->isPlayer = true;
 		} else if (stat(game.state.loadedMap.path, &st) != -1) {
 			loadLevel(game.state.loadedMap.path);
 		} else if (!use) {

@@ -76,7 +76,9 @@ SRC =	main.c					\
 	utils/get_parent_folder.c		\
 	utils/getline.c				\
 	utils/get_player.c			\
+	utils/play_sound_effect.c		\
 	utils/transform_key_to_string.c		\
+	utils/unicode_mgr.c			\
 
 OBJ =	$(SRC:%.c=src/%.o)
 

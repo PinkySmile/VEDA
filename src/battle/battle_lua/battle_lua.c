@@ -90,9 +90,9 @@ int	playSound(char const *path, bool freeAll)
 		for (int i = 0; i < 16; i++) {
 			if (paths[i]) {
 				free(paths[i]);
-				sfSound_destroy(musics[i]);
 				sfSoundBuffer_destroy(buffers[i]);
 			}
+			sfSound_destroy(musics[i]);
 		}
 		return (0);
 	}

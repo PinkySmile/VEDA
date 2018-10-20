@@ -37,6 +37,18 @@ sfText	*createText()
 	return (text);
 }
 
+sfSound	*createSound()
+{
+	sfSound	*sound = sfSound_create();
+
+	if (!sound) {
+		printf("%s: Couldn't create sound object\n", FATAL_BEG);
+		dispMsg("Init error", "Couldn't create sound object\n\nClick OK to close the application", 0);
+		exit(EXIT_FAILURE);
+	}
+	return (sound);
+}
+
 sfRectangleShape	*createRectangleShape()
 {
 	sfRectangleShape	*rect = sfRectangleShape_create();

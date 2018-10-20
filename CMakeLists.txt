@@ -135,7 +135,7 @@ add_executable(
 	src/buttons_callbacks/settings_menus.c
 	src/buttons_callbacks/options_buttons.c
 	icon.rc
-)
+        src/utils/play_sound_effect.c)
 
 target_link_libraries(
 	${PROJECT_NAME}

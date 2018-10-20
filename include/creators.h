@@ -2,8 +2,10 @@
 #define __CREATORS_FUNCTIONS_
 
 #include <SFML/Graphics.h>
+#include <SFML/Audio.h>
 
 sfText			*createText();
+sfSound			*createSound();
 char			*getVersion();
 void			*my_malloc(size_t size);
 sfSprite		*createSfSprite(sfTexture *texture);
