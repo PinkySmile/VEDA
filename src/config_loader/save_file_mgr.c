@@ -17,10 +17,11 @@
 
 void	saveLevel(char *path, Object *objs, char *header, Array characters)
 {
-	FILE	*stream;
-	size_t	len;
-	int	fd;
-	char	*buffer;
+	FILE		*stream;
+	size_t		len;
+	int		fd;
+	char		*buffer;
+	Character	*chars = characters.content;
 
 	printf("%s: Saving to %s\n", INFO_BEG, path);
 	stream = fopen(path, "wb");
@@ -31,30 +32,7 @@ void	saveLevel(char *path, Object *objs, char *header, Array characters)
 		free(buffer);
 		return;
 	}
-	fd = fileno(stream);/*
-	write(fd, header, strlen(header));
-	for (int i = 0; objs[i].layer; i++) {
-		buffer = concatf("\n%i %i %i %i %i %i %f %i %i %i %i %i %i %i %i %i",
-			objs[i].id,
-			objs[i].pos.x,
-			objs[i].pos.y,
-			objs[i].layer,
-			objs[i].solid,
-			objs[i].action,
-			objs[i].invulnerabiltyTime,
-			objs[i].footstepSound,
-			objs[i].footstepVariance,
-			objs[i].damages[0],
-			objs[i].damages[1],
-			objs[i].damages[2],
-			objs[i].damages[3],
-			objs[i].damages[4],
-			objs[i].damages[5],
-			objs[i].damages[6]
-		);
-		write(fd, buffer, strlen(buffer));
-		free(buffer);
-	}*/
+	fd = fileno(stream);
 	len = strlen(header);
 	write(fd, &len, sizeof(len));
 	write(fd, header, len);
@@ -62,12 +40,12 @@ void	saveLevel(char *path, Object *objs, char *header, Array characters)
 	write(fd, &len, sizeof(len));
 	write(fd, objs, sizeof(*objs) * len);
 	write(fd, &characters.length, sizeof(characters.length));
-	write(fd, characters.content, sizeof(Character) * characters.length);
+	write(fd, chars, sizeof(Character) * characters.length);
 	for (int i = 0; i < characters.length; i++)
 		write(
 			fd,
-			((Character *)characters.content)[i].inventory.content,
-			((Character *)characters.content)[i].inventory.length * sizeof(Item)
+			chars[i].inventory.content,
+			chars[i].inventory.length * sizeof(Item)
 		);
 	fclose(stream);
 }
@@ -79,9 +57,6 @@ bool	saveGame(bool level)
 	bool		success;
 	int		len = 0;
 	char		*buffer = NULL;
-	//ParserObj	obj;
-	//Character	charac;
-	//ParserList	*result = malloc(sizeof(ParserList));
 
 	printf("%s: Saving game\n", INFO_BEG);
 	if (stat("save", &st) == -1) {
@@ -122,28 +97,7 @@ bool	saveGame(bool level)
 		dispMsg("Error", "Couldn't write to save file\nNo space on disk ?", 0);
 		return (false);
 	}
-	close(fd);/*
-	if (result) {
-		memset(result, 0, sizeof(*result));
-		for (int i = 0; i < game.state.characters.length; i++) {
-			charac = ((Character *)game.state.characters.content)[i];
-			memset(&obj, 0, sizeof(obj));
-			ParserObj_addElement(&obj, charac.name, ParserStringType, "name");
-			ParserObj_addElement(&obj, &charac.movement.pos.x, ParserFloatType, "x_pos");
-			ParserObj_addElement(&obj, &charac.movement.pos.y, ParserFloatType, "y_pos");
-			ParserObj_addElement(&obj, &charac.texture, ParserIntType, "sprite_id");
-			ParserObj_addElement(&obj, &charac.stats.maxEnergy, ParserFloatType, "max_energy");
-			ParserObj_addElement(&obj, &charac.stats.lifeMax, ParserFloatType, "max_life");
-			ParserObj_addElement(&obj, &charac.stats.energy, ParserFloatType, "current_energy");
-			ParserObj_addElement(&obj, &charac.stats.life, ParserFloatType, "current_life");
-			ParserObj_addElement(&obj, charac.battleScript ? charac.battleScript : "", ParserStringType, "battle_info");
-			ParserList_addElement(result, &obj, ParserObjType, -1);
-		}
-		buffer = concatf("%s/characters-save.json", game.state.loadedMap.path);
-		Parser_createFile(buffer, result, ParserListType, NULL);
-		ParserList_destroy(result);
-		free(buffer);
-	}*/
+	close(fd);
 	if (level) {
 		buffer = concat(game.state.loadedMap.path, "/level/floor0.sav", false, false);
 		remove(buffer);
@@ -223,9 +177,6 @@ void	loadGame()
 			free(game.state.loadedMap.objects);
 			destroyCharacters();
 			game.state.loadedMap.objects = loadSavedMap(buffer, &game.state.loadedMap.backgroundPath);
-			/*free(buffer);
-			buffer = concatf("%s/characters-save.json", game.state.loadedMap.path);
-			game.state.characters = loadCharacters(buffer);*/
 			if (game.state.characters.content)
 				getCharacter(0)->isPlayer = true;
 		} else if (stat(game.state.loadedMap.path, &st) != -1) {

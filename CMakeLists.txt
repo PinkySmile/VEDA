@@ -144,6 +144,7 @@ add_executable(
 	src/events/event_key_pressed.c
 	src/events/event_mouse_moved.c
 	src/events/event_mouse_released.c
+	src/utils/random.c
 )
 
 target_link_libraries(

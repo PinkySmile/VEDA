@@ -85,6 +85,7 @@ SRC =	main.c					\
 	utils/getline.c				\
 	utils/get_player.c			\
 	utils/play_sound_effect.c		\
+	utils/random.c				\
 	utils/transform_key_to_string.c		\
 	utils/unicode_mgr.c			\
 

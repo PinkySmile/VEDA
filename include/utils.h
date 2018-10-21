@@ -22,3 +22,8 @@ char		*getKeyString(unsigned char keyID);
 char		*getButtonContent(int nameId);
 ssize_t		getline(char **lineptr, size_t *n, FILE *stream);
 int		playSoundEffect(sfSoundBuffer *buffer);
+
+#if defined _WIN32 || defined __WIN32 || defined __WIN32__
+	long	random();
+	void	srandom(long seed);
+#endif
