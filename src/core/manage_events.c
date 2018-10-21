@@ -39,7 +39,7 @@ void	manageEvents()
 			else if (event.text.unicode != 8)
 				game.input.buffer[game.input.bufPos < game.input.bufSize ? game.input.bufPos++ : game.input.bufPos - 1] = event.text.unicode;
 		} else if (event.type == sfEvtMouseButtonPressed) {
-			manage_mouse_click(event.mouseButton);
+			manageMouseClick(event.mouseButton);
 		} else if (event.type == sfEvtJoystickMoved) {
 			if (event.joystickMove.position < 3 && event.joystickMove.position > -3)
 				continue;
@@ -158,7 +158,6 @@ void	manageEvents()
 					game.settings.sfxVolume = 100;
 				else
 					game.settings.sfxVolume = (event.mouseMove.x - 140) / 3;
-				setVolumes(game.resources.sfx, game.settings.sfxVolume);
 				if (((sfMusic **)game.resources.sfx.content)[DIRT1 + random % 4])
 					sfMusic_play(((sfMusic **)game.resources.sfx.content)[DIRT1 + random % 4]);
 			} else if (game.state.menuSelected == 2 && game.state.menu == 3) {

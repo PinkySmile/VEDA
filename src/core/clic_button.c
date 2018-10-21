@@ -6,7 +6,7 @@
 #include <stdbool.h>
 #include "structs.h"
 
-bool	button_is_clicked(Button button, sfVector2f click_pos)
+bool	buttonIsClicked(Button button, sfVector2f click_pos)
 {
 	sfVector2f	size = {button.size.x * game.settings.baseScale.x, button.size.y * game.settings.baseScale.y};
 	sfVector2f	pos = {button.pos.x * game.settings.baseScale.x, button.pos.y * game.settings.baseScale.y};
@@ -16,17 +16,17 @@ bool	button_is_clicked(Button button, sfVector2f click_pos)
 	return (is_in_y && is_in_x && button.active);
 }
 
-void	which_button(sfVector2f pos)
+void	whichButton(sfVector2f pos)
 {
 	for (int i = 0; game.resources.buttons[i].content; i++)
-		if (button_is_clicked(game.resources.buttons[i], pos)) {
+		if (buttonIsClicked(game.resources.buttons[i], pos)) {
 			printf("%s: Clicked on button %i (%s)\n", INFO_BEG, i, game.resources.buttons[i].content);
 			game.resources.buttons[i].callback(i);
 			break;
 		}
 }
 
-void	manage_mouse_click(sfMouseButtonEvent event)
+void	manageMouseClick(sfMouseButtonEvent event)
 {
 	sfVector2f	pos = {event.x, event.y};
 
@@ -40,5 +40,5 @@ void	manage_mouse_click(sfMouseButtonEvent event)
 		}
 	}
 	if (event.button == sfMouseLeft)
-		which_button(pos);
+		whichButton(pos);
 }

@@ -19,7 +19,6 @@ void	loadRessources()
 	game.resources.sfx		= loadSfx();
 	game.resources.languages	= loadLanguages();
 	game.resources.buttons		= loadButtons();
-	setVolumes(game.resources.sfx, game.settings.sfxVolume);
 	setVolumes(game.resources.musics, game.settings.musicVolume);
 }
 
