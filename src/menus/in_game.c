@@ -30,7 +30,7 @@ void	execAction(Object obj)
 		}
 	}
 	if (obj.footstepSound > player->stepSound)
-		player->stepSound = obj.footstepSound + rand() % obj.footstepVariance;
+		player->stepSound = obj.footstepSound + random() % obj.footstepVariance;
 	switch(obj.action) {
 	case DEAL_DAMAGES:
 		for (int i = 0; i < DAMAGES_TYPE_NB; i++) {

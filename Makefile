@@ -23,10 +23,8 @@ SRC =	main.c					\
 	configs/sounds.c			\
 	configs/sprites.c			\
 						\
-	core/clic_button.c			\
 	core/globals.c				\
 	core/launch_game.c			\
-	core/manage_events.c			\
 	core/sighandlers.c			\
 						\
 	destroyers/destroy_battle.c		\
@@ -45,6 +43,16 @@ SRC =	main.c					\
 						\
 	display_map/display_characters.c	\
 	display_map/display_terrain.c		\
+						\
+	events/event_closed.c			\
+	events/event_joystick_button_pressed.c	\
+	events/event_joystick_moved.c		\
+	events/event_key_pressed.c		\
+	events/event_mouse_click.c		\
+	events/event_mouse_moved.c		\
+	events/event_mouse_released.c		\
+	events/event_text_entered.c		\
+	events/manage_events.c			\
 						\
 	hud/draw_hud.c				\
 	hud/life_bar.c 				\

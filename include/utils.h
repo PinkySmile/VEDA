@@ -14,7 +14,7 @@ int		findLanguage(char *lang_id);
 int		getLanguageArrayLen();
 void		setFont(sfText *text, sfFont *font);
 char		*getButtonContent(int nameId);
-float		isKeyPressed(int keyID, sfRenderWindow *window);
+float		isKeyPressed(unsigned int keyID, sfRenderWindow *window);
 char		*getKeyString(unsigned char keyID);
 char		*getParentFolder(char *path);
 char		*getAbsolutePath(char *path);
