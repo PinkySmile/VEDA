@@ -32,7 +32,7 @@ void	displayFramerate()
 void	debug_displayPosition()
 {
 	static	int	color = 255;
-	Character	*player = getPlayer(game.state.characters.content, game.state.characters.length);
+	Character	*player = getPlayer();
 	char		*tmp;
 
 	sfText_setCharacterSize(game.resources.text, 10);

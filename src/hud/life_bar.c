@@ -5,7 +5,7 @@
 
 void	drawLifeBar()
 {
-	Character	*player = getPlayer(game.state.characters.content, game.state.characters.length);
+	Character	*player = getPlayer();
 	int		lifeBuffer = player->stats.energy;
 	int		xPos = 0;
 	int		yPos = 0;

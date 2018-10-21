@@ -5,7 +5,7 @@
 
 void	drawEnergyBar()
 {
-	Character	*player = getPlayer(game.state.characters.content, game.state.characters.length);
+	Character	*player = getPlayer();
 	int		energyBuffer = player->stats.energy;
 	int		xPos = 0;
 	int		yPos = 0;

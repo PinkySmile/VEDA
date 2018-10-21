@@ -7,10 +7,11 @@
 
 char		**split(char *str, char separator);
 int		get_nbrlen(int nbr);
-Character	*getPlayer(Character *characters, int len);
+Character	*getPlayer();
 void		setVolumes(Array sounds, float volume);
 int		dispMsg(char *title, char *content, int variate);
-int		getLanguage(Language *languages, char *lang_id);
+int		findLanguage(char *lang_id);
+int		getLanguageArrayLen();
 void		setFont(sfText *text, sfFont *font);
 char		*getButtonContent(int nameId);
 float		isKeyPressed(int keyID, sfRenderWindow *window);

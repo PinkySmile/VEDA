@@ -11,7 +11,7 @@
 
 void	execAction(Object obj)
 {
-	Character	*player = getPlayer(game.state.characters.content, game.state.characters.length);
+	Character	*player = getPlayer();
 
 	if (obj.solid) {
 		switch(player->movement.position) {
@@ -49,7 +49,7 @@ void	execAction(Object obj)
 
 void	inGame()
 {
-	Character	*player = getPlayer(game.state.characters.content, game.state.characters.length);
+	Character	*player = getPlayer();
 
 	if (player->movement.speed < 0)
 		player->movement.speed = 0;

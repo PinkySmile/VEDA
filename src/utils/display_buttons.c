@@ -11,28 +11,28 @@ char	*getButtonContent(int nameId)
 	if (nameId < 0)
 		return ("");
 	if (
-		getLanguage(game.resources.languages, game.settings.lang_id) < 0 ||
+		findLanguage(game.settings.lang_id) < 0 ||
 		game.resources.languages[
-			getLanguage(game.resources.languages, game.settings.lang_id)
+			findLanguage(game.settings.lang_id)
 		].buttons == NULL
 	)
 		return ("");
 	for (
 		;
 		game.resources.languages[
-			getLanguage(game.resources.languages, game.settings.lang_id)
+			findLanguage(game.settings.lang_id)
 		].buttons[len];
 		len++
 	);
 	if (
 		nameId < len &&
 		game.resources.languages[
-			getLanguage(game.resources.languages, game.settings.lang_id)
+			findLanguage(game.settings.lang_id)
 		].buttons[nameId]
 	)
 		return (
 			game.resources.languages[
-				getLanguage(game.resources.languages, game.settings.lang_id)
+				findLanguage(game.settings.lang_id)
 			].buttons[nameId]
 		);
 	return ("");

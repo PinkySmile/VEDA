@@ -9,12 +9,12 @@ void	audio()
 {
 	char	*nbrs[2];
 
-	for (int i = 0; i < 640; i += ((Sprite *)game.resources.sprites.content)[MENU_BACKGROUND].size.x) {
+	for (int i = 0; i < 640; i += getSprite(MENU_BACKGROUND)->size.x) {
 		if (((Sprite *)game.resources.sprites.content)[MENU_BACKGROUND].size.x == 0)
 			break;
-		for (int j = 0; j < 640; j += ((Sprite *)game.resources.sprites.content)[MENU_BACKGROUND].size.y) {
-			image(((Sprite *)game.resources.sprites.content)[MENU_BACKGROUND].sprite, i, j, -1, -1);
-			if (((Sprite *)game.resources.sprites.content)[MENU_BACKGROUND].size.y == 0)
+		for (int j = 0; j < 640; j += getSprite(MENU_BACKGROUND)->size.y) {
+			image(getSprite(MENU_BACKGROUND)->sprite, i, j, -1, -1);
+			if (getSprite(MENU_BACKGROUND)->size.y == 0)
 				break;
 		}
 	}
@@ -41,12 +41,12 @@ void	audio()
 
 void	options()
 {
-	for (int i = 0; i < 640; i += ((Sprite *)game.resources.sprites.content)[MENU_BACKGROUND].size.x) {
+	for (int i = 0; i < 640; i += getSprite(MENU_BACKGROUND)->size.x) {
 		if (((Sprite *)game.resources.sprites.content)[MENU_BACKGROUND].size.x == 0)
 			break;
-		for (int j = 0; j < 640; j += ((Sprite *)game.resources.sprites.content)[MENU_BACKGROUND].size.y) {
-			image(((Sprite *)game.resources.sprites.content)[MENU_BACKGROUND].sprite, i, j, -1, -1);
-			if (((Sprite *)game.resources.sprites.content)[MENU_BACKGROUND].size.y == 0)
+		for (int j = 0; j < 640; j += getSprite(MENU_BACKGROUND)->size.y) {
+			image(getSprite(MENU_BACKGROUND)->sprite, i, j, -1, -1);
+			if (getSprite(MENU_BACKGROUND)->size.y == 0)
 				break;
 		}
 	}
@@ -67,18 +67,18 @@ void	options()
 
 void	controls()
 {
-	for (int i = 0; i < 640; i += ((Sprite *)game.resources.sprites.content)[MENU_BACKGROUND].size.x) {
-		if (((Sprite *)game.resources.sprites.content)[MENU_BACKGROUND].size.x == 0)
+	for (int i = 0; i < 640; i += getSprite(MENU_BACKGROUND)->size.x) {
+		if (getSprite(MENU_BACKGROUND)->size.x == 0)
 			break;
-		for (int j = 0; j < 640; j += ((Sprite *)game.resources.sprites.content)[MENU_BACKGROUND].size.y) {
-			image(((Sprite *)game.resources.sprites.content)[MENU_BACKGROUND].sprite, i, j, -1, -1);
-			if (((Sprite *)game.resources.sprites.content)[MENU_BACKGROUND].size.y == 0)
+		for (int j = 0; j < 640; j += getSprite(MENU_BACKGROUND)->size.y) {
+			image(getSprite(MENU_BACKGROUND)->sprite, i, j, -1, -1);
+			if (getSprite(MENU_BACKGROUND)->size.y == 0)
 				break;
 		}
 	}
-	if (getLanguage(game.resources.languages, game.settings.lang_id) < 0 || game.resources.languages[getLanguage(game.resources.languages, game.settings.lang_id)].keys == NULL)
+	if (getLanguage(findLanguage(game.settings.lang_id))->keys == NULL)
 		return;
-	for (int i = 0; game.resources.languages[getLanguage(game.resources.languages, game.settings.lang_id)].keys[i] && i < NB_OF_KEYS; i++) {
+	for (int i = 0; game.resources.languages[findLanguage(game.settings.lang_id)].keys[i] && i < NB_OF_KEYS; i++) {
 		sfRectangleShape_setFillColor(game.resources.rectangle, (sfColor){100, 100, 100, 255});
 		rect(i / 10 * 272, i % 10 * 48, 272, 48);
 		sfText_setCharacterSize(game.resources.text, 17);
@@ -91,6 +91,6 @@ void	controls()
 					sfText_setColor(game.resources.text, (sfColor){255, 0, 0, 255});
 					break;
 				}
-		text(game.resources.languages[getLanguage(game.resources.languages, game.settings.lang_id)].keys[i], 5 + i / 10 * 272, i % 10 * 48 + 15, false);
+		text(getLanguage(findLanguage(game.settings.lang_id))->keys[i], 5 + i / 10 * 272, i % 10 * 48 + 15, false);
 	}
 }

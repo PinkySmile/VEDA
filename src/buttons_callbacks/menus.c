@@ -45,7 +45,7 @@ void	playButton(int buttonID)
 		loadLevel("data/levels/test");
 		game.state.loadedMap.path = strdup("data/levels/test");
 	}
-	if (strcmp((char *)getPlayer(game.state.characters.content, game.state.characters.length)->name, "") == 0) {
+	if (strcmp((char *)getPlayer()->name, "") == 0) {
 		updateDiscordPresence("Main Menu", "Choosing name", 0, false, "icon", 0, "VEDA", 0);
 		game.state.menu = 6;
 		game.input.bufPos = 0;
@@ -56,7 +56,7 @@ void	playButton(int buttonID)
 		game.resources.buttons[14].displayed = true;
 		memset(game.input.buffer, 0, sizeof(*game.input.buffer) * 17);
 	} else {
-		buffer = concatf("Playing as \"%s\"", getPlayer(game.state.characters.content, game.state.characters.length)->name);
+		buffer = concatf("Playing as \"%s\"", getPlayer()->name);
 		updateDiscordPresence("In Game", buffer, 0, false, "icon", 0, "VEDA", 0);
 		free(buffer);
 		game.state.menu = 1;
@@ -67,7 +67,7 @@ void	playButton(int buttonID)
 
 void	changePlayerName(int buttonID)
 {
-	Character	*player = getPlayer(game.state.characters.content, game.state.characters.length);
+	Character	*player = getPlayer();
 	char		*buffer;
 
 	(void)buttonID;

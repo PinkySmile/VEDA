@@ -110,7 +110,7 @@ void	manageEvents()
 				updateDiscordPresence("In Game", buff, 0, false, "icon", NULL, "VEDA", NULL);
 				free(buff);
 				game.state.menu = 7;
-				if (!getPlayer(game.state.characters.content, game.state.characters.length)) {
+				if (!getPlayer()) {
 					loadGame();
 					if (!game.state.loadedMap.objects || !game.state.characters.content) {
 						loadLevel("data/levels/test");

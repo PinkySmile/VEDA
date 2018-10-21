@@ -99,7 +99,7 @@ void	battle()
 	int			err;
 	char			*buffer;
 
-	game.state.battle_infos.player = getPlayer(game.state.characters.content, game.state.characters.length);
+	game.state.battle_infos.player = getPlayer();
 	if (launchlua) {
 		if (!game.state.battle_infos.lua) {
 			game.state.menu = 1;
@@ -180,7 +180,7 @@ void	battle()
 	displayProjectiles();
 	displayHUD();
 	if (!game.state.battle_infos.timeStopped) {
-		moveCharacter(getPlayer(game.state.characters.content, game.state.characters.length), (sfVector2f){
+		moveCharacter(getPlayer(), (sfVector2f){
 			isKeyPressed(getKey(KEY_RIGHT), game.resources.window) - isKeyPressed(getKey(KEY_LEFT), game.resources.window),
 			isKeyPressed(getKey(KEY_DOWN), game.resources.window) - isKeyPressed(getKey(KEY_UP), game.resources.window),
 		});

@@ -11,8 +11,18 @@
 #include "display.h"
 #include "functions.h"
 
-int	getLanguage(Language *languages, char *lang_id)
+int	getLanguageArrayLen()
 {
+	int	len = 0;
+
+	for (len = 0; game.resources.languages && game.resources.languages[len].name; len++);
+	return len;
+}
+
+int	findLanguage(char *lang_id)
+{
+	Language	*languages = game.resources.languages;
+
 	for (int i = 0; languages && languages[i].name; i++)
 		if (!strcmp(languages[i].id, lang_id))
 			return (i);
