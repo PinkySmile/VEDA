@@ -6,6 +6,7 @@
 #include <stdbool.h>
 #include <errno.h>
 #include <stdlib.h>
+#include <callbacks.h>
 #include "destructors.h"
 #include "creators.h"
 #include "utils.h"
@@ -21,6 +22,7 @@ void	saveLevel(char *path, Object *objs, char *header, Array characters)
 	size_t		len;
 	int		fd;
 	char		*buffer;
+	char		head = SAVED_LEVEL_HEADER;
 	Character	*chars = characters.content;
 
 	printf("%s: Saving to %s\n", INFO_BEG, path);
@@ -34,6 +36,7 @@ void	saveLevel(char *path, Object *objs, char *header, Array characters)
 	}
 	fd = fileno(stream);
 	len = strlen(header);
+	write(fd, &head, sizeof(head));
 	write(fd, &len, sizeof(len));
 	write(fd, header, len);
 	for (len = 0; objs[len].layer; len++);
@@ -112,8 +115,31 @@ Object	*loadSavedMap(char *path, char **bg)
 	size_t	len = 0;
 	FILE	*stream = fopen(path, "rb");
 	int	fd = fileno(stream);
+	char	head;
 	Object	*map;
 
+	read(fd, &head, sizeof(head));
+	if (head < SAVED_LEVEL_HEADER) {
+		printf(
+			"%s: %s: Invalid header version: Save file has been created with a too old version (Save v%i > Save v%i).\n",
+			ERROR_BEG,
+			path,
+			SAVED_LEVEL_HEADER,
+			head
+		);
+		close(fd);
+		return NULL;
+	} else if (head > SAVED_LEVEL_HEADER) {
+		printf(
+			"%s: %s: Invalid header version: Client is outdated (Save v%i < Save v%i).\n",
+			ERROR_BEG,
+			path,
+			SAVED_LEVEL_HEADER,
+			head
+		);
+		close(fd);
+		return NULL;
+	}
 	read(fd, &len, sizeof(len));
 	*bg = my_malloc(len + 1);
 	(*bg)[read(fd, *bg, len)] = 0;
@@ -145,6 +171,7 @@ void	loadGame()
 	int		fd;
 	bool		use = false;
 	char		*buffer;
+	void		*buf;
 	unsigned int	len = 0;
 	struct	stat	st;
 
@@ -161,15 +188,19 @@ void	loadGame()
 	if (read(fd, &len, sizeof(len)) != sizeof(len)) {
 		printf("%s: Corrupted save file detected: Unexpected <EOF> len\n", ERROR_BEG);
 		use = (dispMsg("Error", CORRUPTED_SAVE_MSG, 4) == 6);
-		if (!use)
+		if (!use) {
+			close(fd);
 			return;
+		}
 	}
 	game.state.loadedMap.path = my_malloc(len + 1);
 	if (read(fd, game.state.loadedMap.path, len) != len && !use) {
 		printf("%s: Corrupted save file detected: Unexpected <EOF> map\n", ERROR_BEG);
 		use = (dispMsg("Error", CORRUPTED_SAVE_MSG, 4) == 6);
-		if (!use)
+		if (!use) {
+			close(fd);
 			return;
+		}
 	} else {
 		game.state.loadedMap.path[len] = 0;
 		buffer = concat(game.state.loadedMap.path, "/level/floor0.sav", false, false);
@@ -179,19 +210,27 @@ void	loadGame()
 			game.state.loadedMap.objects = loadSavedMap(buffer, &game.state.loadedMap.backgroundPath);
 			if (game.state.characters.content)
 				getCharacter(0)->isPlayer = true;
+			if ((!game.state.loadedMap.objects || !game.state.characters.content) && !use) {
+				printf("%s: Corrupted save file detected: Saved map has invalid data\n", ERROR_BEG);
+				if (!use)
+					use = (dispMsg("Error", CORRUPTED_SAVE_MSG, 4) == 6);
+				if (!use) {
+					close(fd);
+					return;
+				}
+			}
 		} else if (stat(game.state.loadedMap.path, &st) != -1) {
 			loadLevel(game.state.loadedMap.path);
+			buf = concatf(CORRUPTED_LEVEL, buffer);
+			if (!use)
+				use = (dispMsg("Error", buf, 4) == 6);
+			free(buf);
+			if ((!game.state.loadedMap.objects || !game.state.characters.content) && !use)
+				backOnTitleScreen(-1);
 		} else if (!use) {
 			printf("%s: Corrupted save file detected: Saved map not found\n", ERROR_BEG);
-			use = (dispMsg("Error", CORRUPTED_SAVE_MSG, 4) == 6);
-			if (!use) {
-				close(fd);
-				return;
-			}
-		}
-		if ((!game.state.loadedMap.objects || !game.state.characters.content) && !use) {
-			printf("%s: Corrupted save file detected: Saved map has invalid data\n", ERROR_BEG);
-			use = (dispMsg("Error", CORRUPTED_SAVE_MSG, 4) == 6);
+			if (!use)
+				use = (dispMsg("Error", CORRUPTED_SAVE_MSG, 4) == 6);
 			if (!use) {
 				close(fd);
 				return;
