@@ -212,8 +212,7 @@ void	loadGame()
 				getCharacter(0)->isPlayer = true;
 			if ((!game.state.loadedMap.objects || !game.state.characters.content) && !use) {
 				printf("%s: Corrupted save file detected: Saved map has invalid data\n", ERROR_BEG);
-				if (!use)
-					use = (dispMsg("Error", CORRUPTED_SAVE_MSG, 4) == 6);
+				use = (dispMsg("Error", CORRUPTED_SAVE_MSG, 4) == 6);
 				if (!use) {
 					close(fd);
 					return;
@@ -222,15 +221,13 @@ void	loadGame()
 		} else if (stat(game.state.loadedMap.path, &st) != -1) {
 			loadLevel(game.state.loadedMap.path);
 			buf = concatf(CORRUPTED_LEVEL, buffer);
-			if (!use)
-				use = (dispMsg("Error", buf, 4) == 6);
+			use = (dispMsg("Error", buf, 4) == 6);
 			free(buf);
 			if ((!game.state.loadedMap.objects || !game.state.characters.content) && !use)
 				backOnTitleScreen(-1);
 		} else if (!use) {
 			printf("%s: Corrupted save file detected: Saved map not found\n", ERROR_BEG);
-			if (!use)
-				use = (dispMsg("Error", CORRUPTED_SAVE_MSG, 4) == 6);
+			use = (dispMsg("Error", CORRUPTED_SAVE_MSG, 4) == 6);
 			if (!use) {
 				close(fd);
 				return;
