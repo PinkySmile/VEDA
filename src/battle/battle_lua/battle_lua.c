@@ -5,6 +5,7 @@
 #include <lua.h>
 #include <lualib.h>
 #include <lauxlib.h>
+#include <utils.h>
 #include "structs.h"
 #include "functions.h"
 #include "concatf.h"
@@ -139,12 +140,12 @@ int	playSoundLua(lua_State *lua)
 	int	arg = lua_tonumber(lua, 1);
 
 	if (lua_isnumber(lua, 1)) {
-		if (arg < 0 || arg > game.resources.sfx.length) {
+		if (!getSoundEffect(arg)) {
 			lua_pushboolean(lua, false);
 			lua_pushstring(lua, "index out of range");
 			return (2);
-		} else if (((sfMusic **)game.resources.sfx.content)[arg]) {
-			sfMusic_play(((sfMusic **)game.resources.sfx.content)[arg]);
+		} else if (getSoundEffect(arg)) {
+			playSoundEffect(getSoundEffect(arg));
 			lua_pushboolean(lua, true);
 			return (1);
 		}
