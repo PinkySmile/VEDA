@@ -2,13 +2,14 @@
 #define __PROJECTILE_HEADER_
 
 #include <SFML/Graphics.h>
+#include <stdbool.h>
 #include "sprite.h"
 
 typedef struct {
 	int		bankID;
 	Sprite		sprite;
 	sfVector2f	pos;
-	sfVector2i	hitbox;
+	sfVector2u	hitbox;
 	float		speed;
 	float		acceleration;
 	int		marker;
@@ -18,8 +19,8 @@ typedef struct {
 	bool		needToDestroySprite;
 	int		animSpeed;
 	float		rotaSpeed;
-	int		maxSpeed;
-	int		minSpeed;
+	float		maxSpeed;
+	float		minSpeed;
 	bool		toRemove;
 	int		lifeTime;
 	sfClock		*clock;

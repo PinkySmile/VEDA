@@ -145,6 +145,9 @@ add_executable(
 	src/events/event_mouse_moved.c
 	src/events/event_mouse_released.c
 	src/utils/random.c
+	src/load_ressources/projectiles.c
+	src/load_ressources/context_callbacks.c
+	include/context.h
 )
 
 target_link_libraries(

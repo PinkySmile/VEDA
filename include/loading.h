@@ -21,3 +21,4 @@ void		loadLevel	(char *path);
 Object		*loadMap	(char *path, char **bg);
 Sprite		createSprite	(Sprite_config config);
 sfMusic		*createMusic	(Music_config config);
+Array		loadProjectiles(char *path);
