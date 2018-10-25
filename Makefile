@@ -58,6 +58,7 @@ SRC =	main.c					\
 	hud/life_bar.c 				\
 	hud/energy_bar.c 			\
 						\
+	load_ressources/battle.c		\
 	load_ressources/buttons.c		\
 	load_ressources/context_callbacks.c	\
 	load_ressources/fonts.c			\

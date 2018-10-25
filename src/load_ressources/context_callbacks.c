@@ -5,6 +5,8 @@
 #include <context.h>
 #include <memory.h>
 #include <stdio.h>
+#include <string.h>
+#include <battle_lua.h>
 
 void	performLongJump(Context *context, contextIssue issue)
 {
@@ -68,13 +70,13 @@ bool	getObjectElement(Context *context)
 	return (false);
 }
 
-bool	createProjectileSprite(ParserObj *obj, void *data, char *err_buffer)
+bool	loadSprite(ParserObj *obj, void *data, char *err_buffer)
 {
-	Projectile	*projBuffer = data;
+	SpriteLoaded	*sprite = data;
 
 	(void)err_buffer;
 	if (obj->type == ParserStringType) {
-		projBuffer->sprite = createSprite(
+		sprite->sprite = createSprite(
 			(Sprite_config) {
 				ParserString_toCharStar(obj->data),
 				(sfVector2f){1, 1},
@@ -82,9 +84,9 @@ bool	createProjectileSprite(ParserObj *obj, void *data, char *err_buffer)
 				(sfVector2i){0, 0},
 			}
 		);
-		projBuffer->needToDestroySprite = true;
+		sprite->needToDestroy = true;
 	} else if (obj->type == ParserIntType)
-		projBuffer->sprite = *getSprite((game.resources.sprites.length + ParserInt_toInt(obj->data)) % game.resources.sprites.length);
+		sprite->sprite = *getSprite((game.resources.sprites.length + ParserInt_toInt(obj->data)) % game.resources.sprites.length);
 	return (true);
 }
 
@@ -154,12 +156,79 @@ bool	getDuppedString(ParserObj *obj, void *data, char *err_buffer)
 {
 	char	**str = data;
 
-	*str = ParserString_toCharStar(obj->data);
+	*str = strdup(ParserString_toCharStar(obj->data));
 	if (!*str) {
 		sprintf(err_buffer, "strdup failed\n");
 		return (false);
 	}
 	return (true);
+}
+
+bool	copyStringInBuffer(ParserObj *obj, void *data, char *err_buffer)
+{
+	(void)err_buffer;
+	strcpy(data, ParserString_toCharStar(obj->data));
+	return (true);
+}
+
+bool	loadProjectilesScript(ParserObj *obj, void *data, char *err_buffer)
+{
+	Array	*array = data;
+
+	*array = loadProjectiles(ParserString_toCharStar(obj->data));
+	if (array->length < 0) {
+		sprintf(
+			err_buffer,
+			"An error occured when loading projectiles from file %s",
+			ParserString_toCharStar(obj->data)
+		);
+		return (false);
+	}
+	return (true);
+}
+
+bool	loadBattleLuaScript(ParserObj *obj, void *data, char *err_buffer)
+{
+	Battle	*battle = data;
+	int	err;
+
+	battle->lua = luaL_newstate();
+	battle->script = strdup(ParserString_toCharStar(obj->data));
+	addDependencies(battle->lua);
+	err = luaL_dofile(battle->lua, ParserString_toCharStar(obj->data));
+	if (err == LUA_ERRRUN) {
+		sprintf(
+			err_buffer,
+			"A runtime error occurred when loading %s\n%s",
+			ParserString_toCharStar(obj->data),
+			luaL_checkstring(battle->lua, -1)
+		);
+		return false;
+	} else if (err) {
+		sprintf(
+			err_buffer,
+			"An unexpected error occurred when loading %s",
+			ParserString_toCharStar(obj->data)
+		);
+		return false;
+	}
+	return true;
+}
+
+bool	loadMusic(ParserObj *obj, void *data, char *err_buffer)
+{
+	MusicLoaded	*music = data;
+
+	(void)err_buffer;
+	if (obj->type == ParserStringType) {
+		music->music = createMusic((Music_config){
+			ParserString_toCharStar(obj->data),
+			true,
+		});
+		music->needToDestroy = true;
+	} else if (obj->type == ParserIntType)
+		music->music = getMusic(ParserInt_toInt(obj->data));
+	return true;
 }
 
 bool	getBattleType(ParserObj *obj, void *data, char *err_buffer)

@@ -74,7 +74,7 @@ Array	loadProjectiles(char *path)
 
 		context.data = &projBuffer;
 		context.index = "sprite_sheet";
-		context.useElement = createProjectileSprite;
+		context.useElement = loadSprite;
 		context.expectedType = ContextIntType | ContextStringType;
 		getObjectElement(&context);
 

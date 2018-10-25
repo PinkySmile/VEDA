@@ -6,8 +6,9 @@
 #include "sprite.h"
 
 typedef struct {
-	int		bankID;
 	Sprite		sprite;
+	bool		needToDestroySprite;
+	int		bankID;
 	sfVector2f	pos;
 	sfVector2u	hitbox;
 	float		speed;
@@ -16,7 +17,6 @@ typedef struct {
 	int		animation;
 	int		owner;
 	float		angle;
-	bool		needToDestroySprite;
 	int		animSpeed;
 	float		rotaSpeed;
 	float		maxSpeed;

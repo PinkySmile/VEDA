@@ -2,17 +2,25 @@
 #define VEDA_CONTEXT_H
 
 #include <configParser.h>
+#include <SFML/Audio.h>
 #include <setjmp.h>
+#include "sprite.h"
 
 #define ERROR_BUFFER_SIZE 4096
 
 typedef struct ContextStruct Context;
 
-bool	createProjectileSprite(ParserObj *obj, void *data, char *err_buffer);
-bool	getUintVector(ParserObj *obj, void *data, char *err_buffer);
+bool	loadMusic(ParserObj *obj, void *data, char *err_buffer);
+bool	loadSprite(ParserObj *obj, void *data, char *err_buffer);
 bool	getInteger(ParserObj *obj, void *data, char *err_buffer);
+bool	getBattleType(ParserObj *obj, void *data, char *err_buffer);
+bool	getUintVector(ParserObj *obj, void *data, char *err_buffer);
+bool	getDuppedString(ParserObj *obj, void *data, char *err_buffer);
 bool	getFloatingNumber(ParserObj *obj, void *data, char *err_buffer);
 bool	getPositiveInteger(ParserObj *obj, void *data, char *err_buffer);
+bool	copyStringInBuffer(ParserObj *obj, void *data, char *err_buffer);
+bool	loadBattleLuaScript(ParserObj *obj, void *data, char *err_buffer);
+bool	loadProjectilesScript(ParserObj *obj, void *data, char *err_buffer);
 bool	getPositiveFloatingNumber(ParserObj *obj, void *data, char *err_buffer);
 
 bool	getObjectElement(Context *context);
@@ -40,6 +48,16 @@ typedef enum contextIssue {
 	INVALID_TYPE,
 	USAGE_FAILED,
 } contextIssue;
+
+typedef struct SpriteLoaded {
+	Sprite	sprite;
+	bool	needToDestroy;
+} SpriteLoaded;
+
+typedef struct MusicLoaded {
+	sfMusic	*music;
+	bool	needToDestroy;
+} MusicLoaded;
 
 struct ContextStruct {
 	ParserObj	*object;

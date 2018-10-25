@@ -148,7 +148,7 @@ add_executable(
 	src/load_ressources/projectiles.c
 	src/load_ressources/context_callbacks.c
 	include/context.h
-)
+	src/load_ressources/battle.c)
 
 target_link_libraries(
 	${PROJECT_NAME}

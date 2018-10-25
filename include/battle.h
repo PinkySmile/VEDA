@@ -11,17 +11,17 @@
 #include "enums.h"
 
 typedef struct {
+	Sprite		bossSprite;
+	bool		needToDestroySprite;
+	sfMusic		*music;
+	bool		needToDestroyMusic;
 	enum battles	type;
 	Character	boss;
 	sfVector2f	bossHitbox;
-	Sprite		bossSprite;
 	Character	*player;
 	sfVector2f	playerHitbox;
 	list_t		projectiles;
 	Array		projectileBank;
-	bool		needToDestroySprite;
-	bool		needToDestroyMusic;
-	sfMusic		*music;
 	char		*name;
 	char		*script;
 	sfClock		*clock;
