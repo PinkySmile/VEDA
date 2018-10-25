@@ -8,7 +8,6 @@
 #include <save.h>
 #include <callbacks.h>
 #include <menus.h>
-#include <mem.h>
 
 void	debug_keyCommands(sfEvent *event)
 {
