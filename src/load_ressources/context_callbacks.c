@@ -146,6 +146,34 @@ bool	getFloatingNumber(ParserObj *obj, void *data, char *err_buffer)
 	return (true);
 }
 
+bool	getDuppedString(ParserObj *obj, void *data, char *err_buffer)
+{
+	char	**str = data;
+
+	*str = ParserString_toCharStar(obj->data);
+	if (!*str) {
+		sprintf(err_buffer, "strdup failed\n");
+		return (false);
+	}
+	return (true);
+}
+
+bool	getBattleType(ParserObj *obj, void *data, char *err_buffer)
+{
+	if (obj->type == ParserStringType) {
+		if (strcmp(ParserString_toCharStar(obj->data), "DANMAKU") == 0)
+			*(enum battles *)data = DANMAKU_BATTLE;
+		else {
+			sprintf(err_buffer, "Unknown battle type '%s'", ParserString_toCharStar(obj->data));
+			return false;
+		}
+	} else if (obj->type == ParserIntType) {
+		*(enum battles *)data = ParserInt_toInt(obj->data);
+	} else
+		return (false);
+	return (true);
+}
+
 bool	getUintVector(ParserObj *obj, void *data, char *err_buffer)
 {
 	Context		context;
