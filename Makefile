@@ -59,11 +59,13 @@ SRC =	main.c					\
 	hud/energy_bar.c 			\
 						\
 	load_ressources/buttons.c		\
+	load_ressources/context_callbacks.c	\
 	load_ressources/fonts.c			\
 	load_ressources/init_game.c		\
 	load_ressources/languages.c		\
 	load_ressources/level.c			\
 	load_ressources/loading_bar.c		\
+	load_ressources/projectiles.c		\
 	load_ressources/sounds.c		\
 	load_ressources/sprites.c		\
 						\

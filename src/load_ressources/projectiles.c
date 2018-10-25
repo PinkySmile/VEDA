@@ -3,7 +3,7 @@
 #include <concatf.h>
 #include <setjmp.h>
 #include <utils.h>
-#include <mem.h>
+#include <memory.h>
 #include <malloc.h>
 #include <loading.h>
 #include <context.h>

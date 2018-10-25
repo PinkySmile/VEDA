@@ -3,7 +3,7 @@
 #include <loading.h>
 #include <configParser.h>
 #include <context.h>
-#include <mem.h>
+#include <memory.h>
 #include <stdio.h>
 
 void	performLongJump(Context *context, contextIssue issue)
@@ -72,6 +72,7 @@ bool	createProjectileSprite(ParserObj *obj, void *data, char *err_buffer)
 {
 	Projectile	*projBuffer = data;
 
+	(void)err_buffer;
 	if (obj->type == ParserStringType) {
 		projBuffer->sprite = createSprite(
 			(Sprite_config) {
@@ -84,6 +85,7 @@ bool	createProjectileSprite(ParserObj *obj, void *data, char *err_buffer)
 		projBuffer->needToDestroySprite = true;
 	} else if (obj->type == ParserIntType)
 		projBuffer->sprite = *getSprite((game.resources.sprites.length + ParserInt_toInt(obj->data)) % game.resources.sprites.length);
+	return (true);
 }
 
 bool	getPositiveInteger(ParserObj *obj, void *data, char *err_buffer)
@@ -96,7 +98,7 @@ bool	getPositiveInteger(ParserObj *obj, void *data, char *err_buffer)
 		*nbr = ParserFloat_toFloat(obj->data);
 	else
 		return (false);
-	if (nbr < 0) {
+	if (*nbr < 0) {
 		sprintf(err_buffer, "%i isn ot a positive number", *nbr);
 		return (false);
 	}
@@ -113,7 +115,7 @@ bool	getPositiveFloatingNumber(ParserObj *obj, void *data, char *err_buffer)
 		*nbr = ParserFloat_toFloat(obj->data);
 	else
 		return (false);
-	if (nbr < 0) {
+	if (*nbr < 0) {
 		sprintf(err_buffer, "%.2f isn ot a positive number", *nbr);
 		return (false);
 	}
@@ -124,6 +126,7 @@ bool	getInteger(ParserObj *obj, void *data, char *err_buffer)
 {
 	int	*nbr = data;
 
+	(void)err_buffer;
 	if (obj->type == ParserIntType)
 		*nbr = ParserInt_toInt(obj->data);
 	else if (obj->type == ParserFloatType)
@@ -137,6 +140,7 @@ bool	getFloatingNumber(ParserObj *obj, void *data, char *err_buffer)
 {
 	float	*nbr = data;
 
+	(void)err_buffer;
 	if (obj->type == ParserIntType)
 		*nbr = ParserInt_toInt(obj->data);
 	else if (obj->type == ParserFloatType)
