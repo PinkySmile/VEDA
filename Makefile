@@ -5,6 +5,8 @@ SRC =	main.c					\
 						\
 	battle/battle.c				\
 	battle/battle_lua/battle_lua.c		\
+	battle/battle_lua/characters.c		\
+	battle/battle_lua/projectiles.c		\
 						\
 	buttons_callbacks/change_window_mode.c	\
 	buttons_callbacks/menus.c		\

@@ -69,6 +69,7 @@ void	prepareExit() {
 int	main(int argc, char **args) {
 	bool debug = (argc == 2 && !strcmp("debug", args[1]));
 
+	debug = true;
 	closeConsole(debug);
 	setSignalHandler();
 	programPath = getParentFolder(args[0]);

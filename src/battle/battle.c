@@ -60,36 +60,6 @@ const luaL_Reg game_api[] = {
 	{NULL, NULL}
 };
 
-Battle	invalidData(ParserResult result, char *path, char *message)
-{
-	Battle		battle;
-	char		*buffer;
-
-	Parser_destroyData(result.data, result.type);
-	memset(&battle, 0, sizeof(battle));
-	battle.type = BATTLE_ERROR;
-	printf("%s: %s: %s\n", ERROR_BEG, path, message);
-	buffer = concatf("Error: File '%s' contains invalid battle data:\n%s", path, message);
-	dispMsg("Battle Error", buffer, 0);
-	free(buffer);
-	return battle;
-}
-
-Battle	invalidType(ParserResult result, char *path, char *message, ParserTypes got, ParserTypes expected)
-{
-	Battle		battle;
-	char		*buffer;
-
-	Parser_destroyData(result.data, result.type);
-	memset(&battle, 0, sizeof(battle));
-	battle.type = BATTLE_ERROR;
-	printf("%s: %s: %s\n", ERROR_BEG, path, message);
-	buffer = concatf("Error: File '%s' contains invalid battle data:\n%s:\n%s expected but got %s\n", path, message, typeToString(expected), typeToString(got));
-	dispMsg("Battle Error", buffer, 0);
-	free(buffer);
-	return battle;
-}
-
 void	addDependencies(lua_State *lua)
 {
 	luaL_openlibs(lua);

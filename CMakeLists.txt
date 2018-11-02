@@ -7,38 +7,8 @@ include_directories(include)
 include_directories(lib/concatf/include)
 include_directories(lib/configParser/include)
 
-add_executable(
-	VEDA
-	include/array.h
-	include/battle.h
-	include/battle_lua.h
-	include/button.h
-	include/buttons_names.h
-	include/callbacks.h
-	include/character.h
-	include/configs.h
-	include/creators.h
-	include/destructors.h
-	include/discord_rp.h
-	include/display.h
-	include/enums.h
-	include/functions.h
-	include/game_struct.h
-	include/globals.h
-	include/graphic.h
-	include/icon.h
-	include/language.h
-	include/list.h
-	include/loading.h
-	include/macros.h
-	include/menus.h
-	include/object.h
-	include/projectile.h
-	include/save.h
-	include/settings.h
-	include/sprite.h
-	include/structs.h
-	include/utils.h
+add_library(
+	concatf
 	lib/concatf/include/concatf.h
 	lib/concatf/include/flags.h
 	lib/concatf/sources/concat.c
@@ -56,6 +26,10 @@ add_executable(
 	lib/concatf/sources/str.c
 	lib/concatf/sources/sub_strings.c
 	lib/concatf/sources/uint_to_str.c
+)
+
+add_library(
+	configParser
 	lib/configParser/include/concatf.h
 	lib/configParser/include/configParser.h
 	lib/configParser/sources/arrays.c
@@ -69,6 +43,43 @@ add_executable(
 	lib/configParser/sources/lists.c
 	lib/configParser/sources/parser.c
 	lib/configParser/sources/strings.c
+)
+
+add_executable(
+	VEDA
+	icon.rc
+	include/array.h
+	include/battle.h
+	include/battle_lua.h
+	include/button.h
+	include/buttons_names.h
+	include/callbacks.h
+	include/character.h
+	include/configs.h
+	include/context.h
+	include/creators.h
+	include/destructors.h
+	include/discord_rp.h
+	include/display.h
+	include/enums.h
+	include/events.h
+	include/functions.h
+	include/game_struct.h
+	include/globals.h
+	include/graphic.h
+	include/icon.h
+	include/language.h
+	include/list.h
+	include/loading.h
+	include/macros.h
+	include/menus.h
+	include/object.h
+	include/projectile.h
+	include/save.h
+	include/settings.h
+	include/sprite.h
+	include/structs.h
+	include/utils.h
 	src/battle/battle_lua/battle_lua.c
 	src/battle/battle.c
 	src/buttons_callbacks/menus.c
@@ -134,10 +145,8 @@ add_executable(
 	src/buttons_callbacks/change_window_mode.c
 	src/buttons_callbacks/settings_menus.c
 	src/buttons_callbacks/options_buttons.c
-	icon.rc
 	src/utils/play_sound_effect.c
 	src/events/event_closed.c
-	include/events.h
 	src/events/event_text_entered.c
 	src/events/event_joystick_moved.c
 	src/events/event_joystick_button_pressed.c
@@ -146,8 +155,9 @@ add_executable(
 	src/events/event_mouse_released.c
 	src/load_ressources/projectiles.c
 	src/load_ressources/context_callbacks.c
-	include/context.h
-	src/load_ressources/battle.c)
+	src/load_ressources/battle.c
+	src/battle/battle_lua/projectiles.c
+	src/battle/battle_lua/characters.c)
 
 target_link_libraries(
 	${PROJECT_NAME}
@@ -158,5 +168,7 @@ target_link_libraries(
 	csfml-system
 	csfml-window
 	csfml-network
+	concatf
+	configParser
 	m
 )
