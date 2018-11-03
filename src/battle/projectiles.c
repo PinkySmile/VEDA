@@ -176,16 +176,36 @@ int	destroyProjectile(lua_State *lua)
 {
 	Projectile	**proj = luaL_checkudata(lua, 1, "projectile");
 	int		index = 0;
+	list_t		*list;
 
 	luaL_argcheck(lua, proj != NULL, 1, "'projectile' expected");
 	if (!*proj) {
 		printf("%s: Projectile has already been destroyed", INFO_BEG);
 		return 0;
 	}
-	for (list_t *list = &game.state.battle_infos.projectiles; list && list->data != *proj; list = list->next)
+	for (list = &game.state.battle_infos.projectiles; list && list->data != *proj; list = list->next)
 		index++;
-	printf("%s: Removing projectile %i\n", INFO_BEG, index);
-	(*proj)->toRemove = true;
+	sfClock_destroy((*proj)->clock);
+	sfClock_destroy((*proj)->animClock);
+	free(*proj);
+
+	if (list && list->prev) {
+		list->prev->next = list->next;
+		if (list->next)
+			list->next->prev = list->prev;
+	} else if (list) {
+		if (!list->next)
+			list->data = NULL;
+		else {
+			list_t	*buffer = list->next;
+
+			list->data = list->next->data;
+			list->next = list->next->next;
+			free(buffer);
+		}
+	}
+
+	printf("%s: Removed projectile %i\n", INFO_BEG, index);
 	*proj = NULL;
 	return (0);
 }
@@ -205,7 +225,7 @@ int	addProjectileLua(lua_State *lua)
 
 	if (projID >= game.state.battle_infos.projectileBank.length || projID < 0) {
 		lua_pushnil(lua);
-		lua_pushstring(lua, "index out of bank range");
+		lua_pushstring(lua, "Index out of bank range");
 		return 2;
 	}
 	proj = addProjectile(projID, x, y, ownerID, angle, speed, rotaSpeed, accel, marker);

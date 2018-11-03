@@ -52,36 +52,6 @@ void	updateProjectiles(list_t *proj_list)
 
 	for (list_t *list = proj_list; list && list->data; list = list->next) {
 		proj = list->data;
-		while (proj->toRemove) {
-			buffer = list->next;
-			sfClock_destroy(proj->clock);
-			sfClock_destroy(proj->animClock);
-			free(proj);
-			if (list->prev) {
-				list->prev->next = list->next;
-			} else {
-				if (!list->next) {
-					list->data = NULL;
-					return;
-				} else {
-					list->data = list->next->data;
-					list->next = list->next->next;
-					free(buffer);
-					buffer = list->next;
-				}
-			}
-			if (list->next) {
-				list->next->prev = list->prev;
-			} else
-				return;
-			list = buffer;
-			proj = list->data;
-			if (!proj)
-				break;
-		}
-	}
-	for (list_t *list = proj_list; list && list->data; list = list->next) {
-		proj = list->data;
 		proj->pos.x += cos(proj->angle * M_PI / 180) * proj->speed;
 		proj->pos.y += sin(proj->angle * M_PI / 180) * proj->speed;
 		proj->speed += proj->acceleration;

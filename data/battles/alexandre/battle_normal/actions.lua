@@ -1,5 +1,3 @@
-local projs = {}
-
 function onProjectileDie(projectile)
 
 end
@@ -109,6 +107,7 @@ end
 
 function doAttack2()
 	local	succ, err
+	local	projs = {}
 
 	for i = 1, 30 do
 		projs[i] = vedaApi.addProjectile(

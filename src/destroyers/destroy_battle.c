@@ -9,6 +9,8 @@ void	destroyBattle(Battle battle)
 	list_t	*list = &battle.projectiles;
 
 	if (battle.lua) {
+		if (battle.lua)
+			lua_close(battle.lua);
 		sfClock_destroy(battle.clock);
 		free(battle.script);
 		free(battle.name);
@@ -28,17 +30,6 @@ void	destroyBattle(Battle battle)
 		}
 		free(battle.projectileBank.content);
 		battle.projectileBank.length = 0;
-		if (battle.lua)
-			lua_close(battle.lua);
-		for (; list->next; list = list->next);
-		for (; list && list->data; list = list->prev) {
-			Projectile	*proj = list->data;
-
-			sfClock_destroy(proj->clock);
-			sfClock_destroy(proj->animClock);
-			free(list->data);
-			free(list->next);
-		}
 		if (battle.music && battle.needToDestroyMusic) {
 			sfMusic_stop(battle.music);
 			sfMusic_destroy(battle.music);

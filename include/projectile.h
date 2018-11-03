@@ -21,7 +21,6 @@ typedef struct {
 	float		rotaSpeed;
 	float		maxSpeed;
 	float		minSpeed;
-	bool		toRemove;
 	int		lifeTime;
 	sfClock		*clock;
 	sfClock		*animClock;
