@@ -175,11 +175,16 @@ void	pushProjectile(Projectile *proj, lua_State *lua)
 int	destroyProjectile(lua_State *lua)
 {
 	Projectile	**proj = luaL_checkudata(lua, 1, "projectile");
+	int		index = 0;
 
 	luaL_argcheck(lua, proj != NULL, 1, "'projectile' expected");
-	if (!*proj)
+	if (!*proj) {
+		printf("%s: Projectile has already been destroyed", INFO_BEG);
 		return 0;
-	printf("%s: Removing projectile\n", INFO_BEG);
+	}
+	for (list_t *list = &game.state.battle_infos.projectiles; list && list->data != *proj; list = list->next)
+		index++;
+	printf("%s: Removing projectile %i\n", INFO_BEG, index);
 	(*proj)->toRemove = true;
 	*proj = NULL;
 	return (0);

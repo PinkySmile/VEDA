@@ -28,6 +28,8 @@ void	destroyBattle(Battle battle)
 		}
 		free(battle.projectileBank.content);
 		battle.projectileBank.length = 0;
+		if (battle.lua)
+			lua_close(battle.lua);
 		for (; list->next; list = list->next);
 		for (; list && list->data; list = list->prev) {
 			Projectile	*proj = list->data;
@@ -41,7 +43,5 @@ void	destroyBattle(Battle battle)
 			sfMusic_stop(battle.music);
 			sfMusic_destroy(battle.music);
 		}
-		if (battle.lua)
-			lua_close(battle.lua);
 	}
 }
