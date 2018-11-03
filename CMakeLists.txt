@@ -49,7 +49,7 @@ add_executable(
 	VEDA
 	icon.rc
 	include/array.h
-	include/battle.h
+	include/lib.h
 	include/battle_lua.h
 	include/button.h
 	include/buttons_names.h
@@ -80,8 +80,8 @@ add_executable(
 	include/sprite.h
 	include/structs.h
 	include/utils.h
-	src/battle/battle_lua/battle_lua.c
-	src/battle/battle.c
+	src/battle/base_functions.c
+	src/battle/lib.c
 	src/buttons_callbacks/menus.c
 	src/config_loader/save_file_mgr.c
 	src/config_loader/settings_mgr.c
@@ -156,8 +156,9 @@ add_executable(
 	src/load_ressources/projectiles.c
 	src/load_ressources/context_callbacks.c
 	src/load_ressources/battle.c
-	src/battle/battle_lua/projectiles.c
-	src/battle/battle_lua/characters.c)
+	src/battle/projectiles.c
+	src/battle/characters.c
+)
 
 target_link_libraries(
 	${PROJECT_NAME}

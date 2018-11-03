@@ -10,7 +10,7 @@
 #include "settings.h"
 #include "sprite.h"
 #include "object.h"
-#include "battle.h"
+#include "lib.h"
 
 typedef struct {
 	char		*displayedText;

@@ -18,6 +18,7 @@ int	getProjectileField	(lua_State *Lua);
 int	setProjectileField	(lua_State *Lua);
 int	getCharacterField	(lua_State *Lua);
 int	setCharacterField	(lua_State *Lua);
+int	char2string		(lua_State *Lua);
 
 //Utils functions
 void		pushCharacter	(lua_State *Lua, Character *character);

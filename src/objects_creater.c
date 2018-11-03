@@ -101,7 +101,7 @@ char	*getVersion()
 
 	printf("%s: Loading version string\n", INFO_BEG);
 	if (fd < 0) {
-		printf("[ERROR_BEG]: data/version.txt: %s\n", strerror(errno));
+		printf("%s: data/version.txt: %s\n", ERROR_BEG, strerror(errno));
 		strcpy(version, "?.?.?.?");
 		return (version);
 	}

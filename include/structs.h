@@ -10,7 +10,7 @@
 #include "object.h"
 #include "projectile.h"
 #include "list.h"
-#include "battle.h"
+#include "lib.h"
 #include "icon.h"
 #include "game_struct.h"
 #include "globals.h"

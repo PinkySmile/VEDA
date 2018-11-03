@@ -1,7 +1,7 @@
 #ifndef _DESTRUCTOR_FUNCTIONS_
 #define _DESTRUCTOR_FUNCTIONS_
 
-#include "battle.h"
+#include "lib.h"
 
 void	destroySprites();
 void	destroySounds();

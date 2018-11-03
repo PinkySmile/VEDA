@@ -177,6 +177,9 @@ int	destroyProjectile(lua_State *lua)
 	Projectile	**proj = luaL_checkudata(lua, 1, "projectile");
 
 	luaL_argcheck(lua, proj != NULL, 1, "'projectile' expected");
+	if (!*proj)
+		return 0;
+	printf("%s: Removing projectile\n", INFO_BEG);
 	(*proj)->toRemove = true;
 	*proj = NULL;
 	return (0);

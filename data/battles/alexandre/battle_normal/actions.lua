@@ -33,10 +33,7 @@ function onPlayerMove(player, direction)
 end
 
 function yield(timer)
-	for i = 1, timer do
-		vedaApi.yield()
-		collectGarbage()
-	end
+	vedaApi.yield(timer)
 end
 
 function doAttack1()
@@ -108,24 +105,13 @@ function doAttack1()
 	vedaApi.yield(30)
 	boss.animation = 11
 	vedaApi.yield(70)
-	for i, projectile in pairs(projectiles) do
-		projectile:setToRemove()
-	end
-end
-
-function collectGarbage()
-	for i, k in pairs(projs) do
-		if k.lifeTime > 12 then
-			k:setToRemove()
-			projs[i] = nil
-		end
-	end
 end
 
 function doAttack2()
 	local	succ, err
+
 	for i = 1, 30 do
-		projs[#projs + 1] = vedaApi.addProjectile(
+		projs[i] = vedaApi.addProjectile(
 			108,
 			0 + i * 16,
 			0,
@@ -144,7 +130,7 @@ function doAttack2()
 	vedaApi.stopTime(false)
 	yield(120)
 	for i = 1, 30 do
-		projs[#projs + 1] = vedaApi.addProjectile(
+		projs[30 + i] = vedaApi.addProjectile(
 			532,
 			480 - i * 16,
 			0,
@@ -177,11 +163,11 @@ function bossAI()
 	proj.rotationSpeed = 0;
 	vedaApi.playSound(0)
 	vedaApi.yield(30)
-	proj:setToRemove()
+	proj = nil
+	collectgarbage()
 	doAttack1()
 	while true do
 		doAttack2()
 		yield(30)
-		collectGarbage()
 	end
 end

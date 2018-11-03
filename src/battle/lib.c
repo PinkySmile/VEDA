@@ -27,15 +27,6 @@ int	proj2string(lua_State *lua)
 	return 1;
 }
 
-int	char2string(lua_State *lua)
-{
-	Character	**proj = luaL_checkudata(lua, 1, "character");
-
-	luaL_argcheck(lua, proj != NULL, 1, "'character' expected");
-	lua_pushfstring(lua, "character ('%s')", (*proj)->name);
-	return 1;
-}
-
 const luaL_Reg character_lib[] = {
 	{"__index", getCharacterField},
 	{"__newindex", setCharacterField},
@@ -48,6 +39,7 @@ const luaL_Reg projectiles_lib[] = {
 	{"__index", getProjectileField},
 	{"__newindex", setProjectileField},
 	{"__tostring", proj2string},
+	{"__gc", destroyProjectile},
 	{NULL, NULL}
 };
 

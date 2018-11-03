@@ -125,6 +125,7 @@ int	yield(lua_State *lua)
 	int	frames = lua_isnone(lua, 1) ? 1 : luaL_checknumber(lua, 1);
 
 	game.state.battle_infos.yieldTime = frames;
+
 	if (frames <= 0)
 		return 0;
 	return lua_yield(lua, 0);

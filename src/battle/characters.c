@@ -7,6 +7,15 @@
 
 extern	const	luaL_Reg	character_lib[];
 
+int	char2string(lua_State *lua)
+{
+	Character	**proj = luaL_checkudata(lua, 1, "character");
+
+	luaL_argcheck(lua, proj != NULL, 1, "'character' expected");
+	lua_pushfstring(lua, "character ('%s')", (*proj)->name);
+	return 1;
+}
+
 void	pushCharacter(lua_State *lua, Character *character)
 {
 	Character	**a = lua_newuserdata(lua, sizeof(character));
