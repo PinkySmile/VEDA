@@ -1,7 +1,7 @@
 #include <SFML/Graphics.h>
 #include <lua.h>
 #include <malloc.h>
-#include "lib.h"
+#include "battle.h"
 #include "projectile.h"
 
 void	destroyBattle(Battle battle)

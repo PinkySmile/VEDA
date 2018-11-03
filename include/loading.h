@@ -1,6 +1,6 @@
 #include <stdbool.h>
 #include "array.h"
-#include "lib.h"
+#include "battle.h"
 #include "button.h"
 #include "object.h"
 #include "sprite.h"

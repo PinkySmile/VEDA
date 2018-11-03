@@ -49,7 +49,7 @@ add_executable(
 	VEDA
 	icon.rc
 	include/array.h
-	include/lib.h
+	include/battle.h
 	include/battle_lua.h
 	include/button.h
 	include/buttons_names.h
