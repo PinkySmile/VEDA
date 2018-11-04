@@ -18,16 +18,7 @@ function onPlayerShoot(player, mousePos)
 end
 
 function onPlayerMove(player, direction)
-	if direction == 0 and player.position.y > 0 then
-		player.position.y = player.position.y - 1
-	elseif direction == 1 and player.direction.x < 540 then
-		player.position.x = player.position.x + 1
-	elseif direction == 2 and player.position.y < 480 then
-		player.position.y = player.position.y + 1
-	elseif direction == 3 and player.position.x > 0 then
-		player.position.x = player.position.x - 1
-	end
-	vedaApi.updatePlayer(player)
+	player:move(direction);
 end
 
 function yield(timer)

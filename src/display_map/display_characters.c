@@ -2,9 +2,57 @@
 #include "structs.h"
 #include "graphic.h"
 
+void	debug_displayCharacterHitboxs(Character *character)
+{
+	sfVector2i	cam = game.state.cameraPos;
+
+	sfRectangleShape_setOutlineThickness(game.resources.rectangle, 1);
+	sfRectangleShape_setFillColor(game.resources.rectangle, (sfColor){0, 0, 0, 0});
+	sfRectangleShape_setOutlineColor(game.resources.rectangle, (sfColor){0, 0, 0, 255});
+	rect(
+		character->movement.pos.x + cam.x,
+		character->movement.pos.y + cam.y,
+		PLAYER_SIZE.x - 1,
+		PLAYER_SIZE.y - 1
+	);
+	sfRectangleShape_setOutlineColor(game.resources.rectangle, (sfColor){0, 255, 0, 255});
+	rect(
+		character->movement.pos.x + cam.x + character->movement.blocked.right,
+		character->movement.pos.y + cam.y + PLAYER_HITBOX_OFFSET.y,
+		0,
+		PLAYER_HITBOX_SIZE.y
+	);
+	rect(
+		character->movement.pos.x + cam.x - character->movement.blocked.left,
+		character->movement.pos.y + cam.y + PLAYER_HITBOX_OFFSET.y,
+		0,
+		PLAYER_HITBOX_SIZE.y
+	);
+	rect(
+		character->movement.pos.x + cam.x + PLAYER_HITBOX_OFFSET.x,
+		character->movement.pos.y + cam.y + character->movement.blocked.down,
+		PLAYER_HITBOX_SIZE.x,
+		0
+	);
+	rect(
+		character->movement.pos.x + cam.x + PLAYER_HITBOX_OFFSET.x,
+		character->movement.pos.y + cam.y - character->movement.blocked.up,
+		PLAYER_HITBOX_SIZE.x,
+		0
+	);
+	sfRectangleShape_setOutlineColor(game.resources.rectangle, (sfColor){255, 0, 0, 255});
+	rect(
+		character->movement.pos.x + cam.x + PLAYER_HITBOX_OFFSET.x,
+		character->movement.pos.y + cam.y + PLAYER_HITBOX_OFFSET.y,
+		PLAYER_HITBOX_SIZE.x - 1,
+		PLAYER_HITBOX_SIZE.y - 1
+	);
+	sfRectangleShape_setOutlineThickness(game.resources.rectangle, 0);
+}
+
 void	displayCharacter(Character *character, int id, sfSprite *sprite)
 {
-	sfIntRect	rec = {0, 0, 16, 32};
+	sfIntRect	rec = {0, 0, 32, 32};
 	sfVector2i	cam = game.state.cameraPos;
 
 	//Check if the character is out of the screen
@@ -18,13 +66,13 @@ void	displayCharacter(Character *character, int id, sfSprite *sprite)
 		return;
 
 	//Select the good animation
-	rec.top = (character->movement.position / 2 + (character->movement.state * 2) + (character->movement.animation * 2)) * 32;
+	rec.top = (character->movement.position / 2 + character->movement.state * 2 + character->movement.animation * 2) * 32;
 	rec.left = (character->movement.position % 2) * 32;
 
 	//Display the sprite
 	if (sprite) {
 		sfSprite_setTextureRect(sprite, rec);
-		image(sprite, character->movement.pos.x + cam.x, character->movement.pos.y + cam.y, 16, 32);
+		image(sprite, character->movement.pos.x + cam.x, character->movement.pos.y + cam.y, 32, 32);
 	} else {
 		sfRectangleShape_setOutlineColor(game.resources.rectangle, (sfColor){0, 0, 0, 0});
 		sfRectangleShape_setFillColor(
@@ -38,50 +86,8 @@ void	displayCharacter(Character *character, int id, sfSprite *sprite)
 		rect(character->movement.pos.x + cam.x, character->movement.pos.y + cam.y, 16, 32);
 	}
 
-	if (game.debug) {
-		sfRectangleShape_setOutlineThickness(game.resources.rectangle, 1);
-		sfRectangleShape_setFillColor(game.resources.rectangle, (sfColor){0, 0, 0, 0});
-		sfRectangleShape_setOutlineColor(game.resources.rectangle, (sfColor){0, 0, 0, 255});
-		rect(
-			character->movement.pos.x + cam.x,
-			character->movement.pos.y + cam.y,
-			PLAYER_SIZE.x - 1,
-			PLAYER_SIZE.y - 1
-		);
-		sfRectangleShape_setOutlineColor(game.resources.rectangle, (sfColor){0, 255, 0, 255});
-		rect(
-			character->movement.pos.x + cam.x + character->movement.blocked.right,
-			character->movement.pos.y + cam.y + PLAYER_HITBOX_OFFSET.y,
-			0,
-			PLAYER_HITBOX_SIZE.y
-		);
-		rect(
-			character->movement.pos.x + cam.x - character->movement.blocked.left,
-			character->movement.pos.y + cam.y + PLAYER_HITBOX_OFFSET.y,
-			0,
-			PLAYER_HITBOX_SIZE.y
-		);
-		rect(
-			character->movement.pos.x + cam.x + PLAYER_HITBOX_OFFSET.x,
-			character->movement.pos.y + cam.y + character->movement.blocked.down,
-			PLAYER_HITBOX_SIZE.x,
-			0
-		);
-		rect(
-			character->movement.pos.x + cam.x + PLAYER_HITBOX_OFFSET.x,
-			character->movement.pos.y + cam.y - character->movement.blocked.up,
-			PLAYER_HITBOX_SIZE.x,
-			0
-		);
-		sfRectangleShape_setOutlineColor(game.resources.rectangle, (sfColor){255, 0, 0, 255});
-		rect(
-			character->movement.pos.x + cam.x + PLAYER_HITBOX_OFFSET.x,
-			character->movement.pos.y + cam.y + PLAYER_HITBOX_OFFSET.y,
-			PLAYER_HITBOX_SIZE.x - 1,
-			PLAYER_HITBOX_SIZE.y - 1
-		);
-		sfRectangleShape_setOutlineThickness(game.resources.rectangle, 0);
-	}
+	if (game.debug)
+		debug_displayCharacterHitboxs(character);
 }
 
 void	displayCharacters()

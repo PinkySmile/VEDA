@@ -18,7 +18,6 @@ typedef struct {
 	enum battles	type;
 	Character	boss;
 	sfVector2f	bossHitbox;
-	Character	*player;
 	sfVector2f	playerHitbox;
 	list_t		projectiles;
 	Array		projectileBank;

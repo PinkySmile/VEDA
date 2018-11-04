@@ -63,92 +63,119 @@ void	updateProjectiles(list_t *proj_list)
 	}
 }
 
-void	battle()
+bool	resumeLuaSession(lua_State *thread, lua_State *Lua)
 {
-	static	bool		launchlua = true;
-	int			err;
-	char			*buffer;
+	int	err;
+	char	*buffer;
 
-	game.state.battle_infos.player = getPlayer();
-	if (launchlua) {
-		if (!game.state.battle_infos.lua) {
-			game.state.menu = 1;
-			return;
-		}
-		game.state.battle_infos.lua_thread = lua_newthread(game.state.battle_infos.lua);
-		launchlua = false;
-		pushCharacter(game.state.battle_infos.lua_thread, game.state.battle_infos.player);
-		lua_setglobal(game.state.battle_infos.lua_thread, "player");
-		pushCharacter(game.state.battle_infos.lua_thread, &game.state.battle_infos.boss);
-		lua_setglobal(game.state.battle_infos.lua_thread, "boss");
-		lua_getglobal(game.state.battle_infos.lua_thread, "bossAI");
-	}
-	if (game.state.battle_infos.yieldTime <= 0) {
-		err = lua_resume(game.state.battle_infos.lua_thread, game.state.battle_infos.lua, 0);
-		if (err == LUA_ERRRUN) {
-			buffer = concatf("A runtime error occurred during battle:\n%s", luaL_checkstring(game.state.battle_infos.lua_thread, -1));
-			printf("%s: %s\n", ERROR_BEG, lua_tostring(game.state.battle_infos.lua_thread, -1));
-			dispMsg("Battle Error", buffer, 0);
-			free(buffer);
-			backOnTitleScreen(-1);
-			if (game.state.battle_infos.music)
-				sfMusic_stop(game.state.battle_infos.music);
-			launchlua = true;
-			return;
-		} else if (err == LUA_ERRMEM) {
-			buffer = concatf("A runtime error occurred during battle:\n%s: Out of memory", game.state.battle_infos.script);
-			printf("%s: %s: Out of memory\n", ERROR_BEG, game.state.battle_infos.script);
-			dispMsg("Battle Error", buffer, 0);
-			free(buffer);
-			backOnTitleScreen(-1);
-			if (game.state.battle_infos.music)
-				sfMusic_stop(game.state.battle_infos.music);
-			launchlua = true;
-			return;
-		} else if (err == LUA_ERRERR) {
-			buffer = concatf("An unexpected error occurred during battle:\n%s", game.state.battle_infos.script);
-			printf("%s: %s: Unknown error\n", ERROR_BEG, game.state.battle_infos.script);
-			dispMsg("Battle Error", buffer, 0);
-			free(buffer);
-			backOnTitleScreen(-1);
+	err = lua_resume(thread, Lua, 0);
+
+	if (err == LUA_ERRRUN) {
+		buffer = concatf("A runtime error occurred during battle:\n%s", luaL_checkstring(game.state.battle_infos.lua_thread, -1));
+		printf("%s: %s\n", ERROR_BEG, lua_tostring(game.state.battle_infos.lua_thread, -1));
+	} else if (err == LUA_ERRMEM) {
+		buffer = concatf("A runtime error occurred during battle:\n%s: Out of memory", game.state.battle_infos.script);
+		printf("%s: %s: Out of memory\n", ERROR_BEG, game.state.battle_infos.script);
+	} else if (err == LUA_ERRERR) {
+		buffer = concatf("An unexpected error occurred during battle:\n%s", game.state.battle_infos.script);
+		printf("%s: %s: Unknown error\n", ERROR_BEG, game.state.battle_infos.script);
+	} else if (!err) {
+		game.state.menu = 1;
+		if (game.state.battle_infos.music)
 			sfMusic_stop(game.state.battle_infos.music);
-			launchlua = true;
-			return;
-		} else if (!err) {
-			launchlua = true;
-			game.state.menu = 1;
-			if (game.state.battle_infos.music)
-				sfMusic_stop(game.state.battle_infos.music);
-			return;
-		}
+		return true;
+	} else
+		return false;
+
+	dispMsg("Battle Error", buffer, 0);
+	free(buffer);
+	backOnTitleScreen(-1);
+	if (game.state.battle_infos.music)
+		sfMusic_stop(game.state.battle_infos.music);
+	return true;
+}
+
+void	initBattle()
+{
+	if (!game.state.battle_infos.lua) {
+		game.state.menu = 1;
+		return;
 	}
-	if (game.state.battle_infos.music && sfMusic_getStatus(game.state.battle_infos.music) != sfPlaying) {
-		for (int i = 0; i < game.resources.musics.length; i++)
-			if (((sfMusic **)game.resources.musics.content)[i] && sfMusic_getStatus(game.state.battle_infos.music) == sfPlaying)
-				sfMusic_stop(((sfMusic **)game.resources.musics.content)[i]);
-		sfMusic_play(game.state.battle_infos.music);
-		sfMusic_setVolume(game.state.battle_infos.music, game.settings.musicVolume);
-	}
-	if (game.state.battle_infos.yieldTime > 0)
-		game.state.battle_infos.yieldTime--;
-	displayLowerLayer();
-	displayCharacters();
+	if (game.state.battle_infos.lua_thread)
+		lua_close(game.state.battle_infos.lua_thread);
+	game.state.battle_infos.lua_thread = lua_newthread(game.state.battle_infos.lua);
+	pushCharacter(game.state.battle_infos.lua_thread, getPlayer());
+	lua_setglobal(game.state.battle_infos.lua_thread, "player");
+	pushCharacter(game.state.battle_infos.lua_thread, &game.state.battle_infos.boss);
+	lua_setglobal(game.state.battle_infos.lua_thread, "boss");
+	lua_getglobal(game.state.battle_infos.lua_thread, "bossAI");
+}
+
+void	displayBattleBoss()
+{
 	if (game.state.battle_infos.bossSprite.sprite) {
 		game.state.battle_infos.bossSprite.rect = getRect(
-			(sfVector2u){game.state.battle_infos.bossSprite.rect.width, game.state.battle_infos.bossSprite.rect.height},
+			(sfVector2u){
+				game.state.battle_infos.bossSprite.rect.width,
+				game.state.battle_infos.bossSprite.rect.height
+			},
 			sfTexture_getSize(game.state.battle_infos.bossSprite.texture),
 			game.state.battle_infos.boss.movement.animation
 		);
-		sfSprite_setTextureRect(game.state.battle_infos.bossSprite.sprite, game.state.battle_infos.bossSprite.rect);
-		image(game.state.battle_infos.bossSprite.sprite, game.state.battle_infos.boss.movement.pos.x + game.state.cameraPos.x, game.state.battle_infos.boss.movement.pos.y + game.state.cameraPos.y, -1, -1);
+		sfSprite_setTextureRect(
+			game.state.battle_infos.bossSprite.sprite,
+			game.state.battle_infos.bossSprite.rect
+		);
+		image(
+			game.state.battle_infos.bossSprite.sprite,
+			game.state.battle_infos.boss.movement.pos.x + game.state.cameraPos.x,
+			game.state.battle_infos.boss.movement.pos.y + game.state.cameraPos.y,
+			-1,
+			-1
+		);
+
 	} else {
 		sfRectangleShape_setOutlineColor(game.resources.rectangle, (sfColor){0, 0, 0, 0});
 		sfRectangleShape_setFillColor(game.resources.rectangle, (sfColor){255, 0, 0, 255});
-		rect(game.state.battle_infos.boss.movement.pos.x + game.state.cameraPos.x, game.state.battle_infos.boss.movement.pos.y + game.state.cameraPos.y, game.state.battle_infos.bossSprite.rect.width, game.state.battle_infos.bossSprite.rect.height);
+		rect(
+			game.state.battle_infos.boss.movement.pos.x + game.state.cameraPos.x,
+			game.state.battle_infos.boss.movement.pos.y + game.state.cameraPos.y,
+			game.state.battle_infos.bossSprite.rect.width,
+			game.state.battle_infos.bossSprite.rect.height
+		);
 	}
+
+	if (game.debug)
+		debug_displayCharacterHitboxs(&game.state.battle_infos.boss);
+}
+
+void	battle()
+{
+	static	bool	launchlua = true;
+
+	if (launchlua) {
+		initBattle();
+		launchlua = false;
+		for (int i = 0; i < game.resources.musics.length; i++)
+			if (getMusic(i) && sfMusic_getStatus(game.state.battle_infos.music) == sfPlaying)
+				sfMusic_stop(getMusic(i));
+		sfMusic_play(game.state.battle_infos.music);
+		sfMusic_setVolume(game.state.battle_infos.music, game.settings.musicVolume);
+	}
+
+	if (game.state.battle_infos.yieldTime <= 0)
+		launchlua = resumeLuaSession(game.state.battle_infos.lua_thread, game.state.battle_infos.lua);
+
+	if (game.state.battle_infos.yieldTime > 0)
+		game.state.battle_infos.yieldTime--;
+
+	displayLowerLayer();
+	displayCharacters();
+	displayBattleBoss();
 	displayUpperLayer();
 	displayProjectiles();
 	displayHUD();
+
 	if (!game.state.battle_infos.timeStopped) {
 		moveCharacter(getPlayer(), (sfVector2f){
 			isKeyPressed(getKey(KEY_RIGHT), game.resources.window) - isKeyPressed(getKey(KEY_LEFT), game.resources.window),
@@ -156,12 +183,13 @@ void	battle()
 		});
 		updateProjectiles(&game.state.battle_infos.projectiles);
 		for (int i = 0; i < game.state.characters.length; i++)
-			((Character *)game.state.characters.content)[i].invulnerabiltyTime -= ((Character *)game.state.characters.content)[i].invulnerabiltyTime > 0 ? 1 : 0;
+			getCharacter(i)->invulnerabiltyTime -= getCharacter(i)->invulnerabiltyTime > 0 ? 1 : 0;
 	} else {
 		sfRectangleShape_setFillColor(game.resources.rectangle, (sfColor){255, 230, 255, 55});
 		rect(0, 0, 640, 480);
 	}
+
 	for (int i = 0; i < game.state.characters.length; i++)
-		if (((Character *)game.state.characters.content)[i].stats.life > 10 * ((Character *)game.state.characters.content)[i].stats.lifeMax)
-			((Character *)game.state.characters.content)[i].stats.life = 10 * ((Character *)game.state.characters.content)[i].stats.lifeMax;
+		if (getCharacter(i)->stats.life > 10 * getCharacter(i)->stats.lifeMax)
+			getCharacter(i)->stats.life = 10 * getCharacter(i)->stats.lifeMax;
 }
