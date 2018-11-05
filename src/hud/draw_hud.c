@@ -1,7 +1,10 @@
+#include <utils.h>
 #include "display.h"
 
 void	displayHUD()
 {
-	drawEnergyBar();
-	drawLifeBar();
+	if (getPlayer()) {
+		drawEnergyBar();
+		drawLifeBar();
+	}
 }
