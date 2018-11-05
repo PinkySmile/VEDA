@@ -9,6 +9,7 @@
 #include <callbacks.h>
 #include <menus.h>
 #include <string.h>
+#include <creators.h>
 
 void	debug_keyCommands(sfEvent *event)
 {
@@ -16,6 +17,8 @@ void	debug_keyCommands(sfEvent *event)
 	void	*buff;
 	long	nbr = random();
 	size_t	n = 0;
+	static sfRenderWindow *windows[10];
+	static bool created = false;
 
 	if (event->key.code == sfKeyInsert) {
 		buff = realloc(game.state.dialogsOnScreen, sizeof(*game.state.dialogsOnScreen) * (game.state.dialogs + 1));
@@ -65,7 +68,7 @@ void	debug_keyCommands(sfEvent *event)
 		game.state.battle_infos.boss.movement.pos.x = 100;
 		game.state.battle_infos.boss.movement.pos.y = 100;
 
-	} else if (game.debug && event->key.code == sfKeyEqual) {
+	} else if (event->key.code == sfKeyEqual) {
 		for (int i = 0; game.resources.buttons[i].content; i++) {
 			game.resources.buttons[i].active = false;
 			game.resources.buttons[i].displayed = false;
@@ -74,6 +77,21 @@ void	debug_keyCommands(sfEvent *event)
 		game.input.bufSize = BUFFER_MAX_SIZE;
 		game.input.bufPos = 0;
 		game.state.menu = BUFFER_MODIFIER_MENU;
+
+	} else if (event->key.code == sfKeyE) {
+		if (!created) {
+			*windows = game.resources.window;
+			for (int i = 1; i < 10; i++) {
+				windows[i] = createMainWindow();
+				sfRenderWindow_setFramerateLimit(windows[i], 60);
+			}
+			created = true;
+		}
+		for (int i = 0; i < 10; i++) {
+			sfRenderWindow_clear(windows[i], (sfColor){255, 255, 255, 255});
+			sfRenderWindow_display(windows[i]);
+		}
+		game.resources.window = windows[random() % 10];
 	}
 }
 
