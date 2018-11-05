@@ -84,12 +84,14 @@ SRC =	main.c					\
 	utils/display_rectangle.c		\
 	utils/draw_sprite.c			\
 	utils/draw_text.c			\
+	utils/is_folder.c			\
 	utils/is_key_pressed.c			\
 	utils/get_absolute_path.c		\
 	utils/get_parent_folder.c		\
 	utils/getline.c				\
 	utils/get_player.c			\
 	utils/play_sound_effect.c		\
+	utils/split.c				\
 	utils/transform_key_to_string.c		\
 	utils/unicode_mgr.c			\
 

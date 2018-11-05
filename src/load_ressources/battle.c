@@ -9,6 +9,8 @@
 #include <setjmp.h>
 #include <context.h>
 
+extern	size_t	copySize;
+
 Battle	loadBattleScript(char *path)
 {
 	Battle		battle = game.state.battle_infos;
@@ -68,6 +70,7 @@ Battle	loadBattleScript(char *path)
 	context.expectedType = ContextStringType;
 	getObjectElement(&context);
 
+	copySize = 32;
 	context.data = battle.boss.name;
 	context.index = "boss_name";
 	context.useElement = copyStringInBuffer;

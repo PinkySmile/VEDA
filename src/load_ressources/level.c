@@ -1,9 +1,3 @@
-#include "utils.h"
-#include "structs.h"
-#include "macros.h"
-#include "concatf.h"
-#include "functions.h"
-#include "configParser.h"
 #include <errno.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -12,45 +6,18 @@
 #include <errno.h>
 #include <unistd.h>
 #include <fcntl.h>
-#include <sys/stat.h>
 #include <sys/types.h>
+#include "utils.h"
+#include "structs.h"
+#include "macros.h"
+#include "context.h"
+#include "concatf.h"
+#include "functions.h"
+#include "configParser.h"
 
-extern game_t game;
+extern	size_t	copySize;
 
-bool	isFolder(char *path)
-{
-	struct stat path_stat;
-
-	if (stat(path, &path_stat) < 0)
-		return (false);
-	return S_ISDIR(path_stat.st_mode);
-}
-
-char	**split(char *str, char sep)
-{
-	char	**result;
-	int	len = 2;
-	int	buf = 1;
-
-	for (int i = 0; str[i]; len += str[i++] == sep);
-	result = malloc(len * sizeof(*result));
-	if (result) {
-		*result = strdup(str);
-		if (!*result) {
-			free(result);
-			return (NULL);
-		}
-		for (int i = 0; str[i]; i++)
-			if (str[i] == sep) {
-				(*result)[i] = '\0';
-				result[buf++] = *result + i + 1;
-			}
-		result[buf] = NULL;
-	}
-	return (result);
-}
-
-bool	is_nbr(char *nbr)
+bool	is_nbr(const char *nbr)
 {
 	int	i = 0;
 	for (; nbr[i] && (nbr[i] == '+' || nbr[i] == '-'); i++);
@@ -240,142 +207,137 @@ Array	loadCharacters(char *path)
 	char		*buffer = NULL;
 	ParserObj	*objBuffer;
 	Character	buff;
+	Context		context;
+	int		i = 0;
 
 	if (result.error) {
 		buffer = concatf("Error: Cannot load file %s: %s\n", path, result.error);
 		dispMsg("Loading error", buffer, 0);
 		free(buffer);
+		return (Array){NULL, -1};
 	} else if (result.type != ParserListType) {
 		buffer = concatf("Error: Cannot load file %s: Invalid type\n", path, result.error);
 		dispMsg("Loading error", buffer, 0);
 		free(buffer);
 		Parser_destroyData(result.data, result.type);
-	} else {
-		array = ParserList_toArray(result.data);
-		if (array.length < 0) {
-			buffer = concatf("Error: Cannot load file %s: Invalid array types\n", path);
-			dispMsg("Loading error", buffer, 0);
-			free(buffer);
-		} else if (array.type != ParserObjType) {
-			buffer = concatf("Error: Cannot load file %s: Invalid array type\n", path);
-			dispMsg("Loading error", buffer, 0);
-			free(buffer);
-		} else {
-			characters.length = array.length;
-			characters.content = malloc(array.length * sizeof(Character));
-			memset(characters.content, 0, array.length * sizeof(Character));
-			for (int i = 0; i < array.length; i++) {
-				memset(&buff, 0, sizeof(buff));
-				obj = ParserArray_getElement(&array, i);
-				objBuffer = ParserObj_getElement(obj, "name");
-				if (objBuffer) {
-					if (objBuffer->type != ParserStringType)
-						printf("%s: Field \"name\" in character %i has an invalid type\n", ERROR_BEG, i);
-					else
-						strncpy((char *)buff.name, ParserString_toCharStar(objBuffer->data), 32);
-				} else
-					printf("%s: Character %i has no field \"name\"\n", WARNING_BEG, i);
-				objBuffer = ParserObj_getElement(obj, "sprite_id");
-				if (objBuffer) {
-					if (objBuffer->type != ParserIntType)
-						printf("%s: Field \"sprite_id\" in character %i has an invalid type\n", ERROR_BEG, i);
-					else
-						buff.texture = ParserInt_toInt(objBuffer->data);
-				} else
-					printf("%s: Character %i has no field \"sprite_id\"\n", WARNING_BEG, i);
-				objBuffer = ParserObj_getElement(obj, "x_pos");
-				if (objBuffer) {
-					if (objBuffer->type == ParserFloatType)
-				        	buff.movement.pos.x = ParserFloat_toFloat(objBuffer->data);
-					else if (objBuffer->type == ParserIntType)
-				        	buff.movement.pos.x = ParserInt_toInt(objBuffer->data);
-					else
-						printf("%s: Field \"x_pos\" in character %i has an invalid type\n", ERROR_BEG, i);
-				} else
-					printf("%s: Character %i has no field \"x_pos\"\n", WARNING_BEG, i);
-				objBuffer = ParserObj_getElement(obj, "y_pos");
-				if (objBuffer) {
-					if (objBuffer->type == ParserFloatType)
-				        	buff.movement.pos.y = ParserFloat_toFloat(objBuffer->data);
-					else if (objBuffer->type == ParserIntType)
-				        	buff.movement.pos.y = ParserInt_toInt(objBuffer->data);
-					else
-						printf("%s: Field \"y_pos\" in character %i has an invalid type\n", ERROR_BEG, i);
-				} else
-					printf("%s: Character %i has no field \"y_pos\"\n", WARNING_BEG, i);
-				objBuffer = ParserObj_getElement(obj, "max_life");
-				if (objBuffer) {
-					if (objBuffer->type == ParserFloatType)
-				        	buff.stats.lifeMax = ParserFloat_toFloat(objBuffer->data);
-					else if (objBuffer->type == ParserIntType)
-				        	buff.stats.lifeMax = ParserInt_toInt(objBuffer->data);
-					else
-						printf("%s: Field \"max_life\" in character %i has an invalid type\n", ERROR_BEG, i);
-				} else
-					printf("%s: Character %i has no field \"max_life\"\n", WARNING_BEG, i);
-				buff.stats.life = buff.stats.lifeMax * 10;
-				objBuffer = ParserObj_getElement(obj, "current_life");
-				if (objBuffer) {
-					if (objBuffer->type == ParserFloatType)
-				        	buff.stats.life = ParserFloat_toFloat(objBuffer->data);
-					else if (objBuffer->type == ParserIntType)
-				        	buff.stats.life = ParserInt_toInt(objBuffer->data);
-					else
-						printf("%s: Field \"current_life\" in character %i has an invalid type\n", ERROR_BEG, i);
-				} else
-					printf("%s: Character %i has no field \"current_life\"\n", WARNING_BEG, i);
-				objBuffer = ParserObj_getElement(obj, "max_energy");
-				if (objBuffer) {
-					if (objBuffer->type == ParserFloatType)
-				        	buff.stats.maxEnergy = ParserFloat_toFloat(objBuffer->data);
-					else if (objBuffer->type == ParserIntType)
-				        	buff.stats.maxEnergy = ParserInt_toInt(objBuffer->data);
-					else
-						printf("%s: Field \"max_energy\" in character %i has an invalid type\n", ERROR_BEG, i);
-				} else
-					printf("%s: Character %i has no field \"max_energy\"\n", WARNING_BEG, i);
-				buff.stats.energy = buff.stats.maxEnergy * 10;
-				objBuffer = ParserObj_getElement(obj, "current_energy");
-				if (objBuffer) {
-					if (objBuffer->type == ParserFloatType)
-				        	buff.stats.energy = ParserFloat_toFloat(objBuffer->data);
-					else if (objBuffer->type == ParserIntType)
-				        	buff.stats.energy = ParserInt_toInt(objBuffer->data);
-					else
-						printf("%s: Field \"current_energy\" in character %i has an invalid type\n", ERROR_BEG, i);
-				} else
-					printf("%s: Character %i has no field \"current_energy\"\n", WARNING_BEG, i);
-				objBuffer = ParserObj_getElement(obj, "battle_info");
-				if (objBuffer) {
-					if (objBuffer->type != ParserStringType)
-						printf("%s: Field \"battle_script\" in character %i has an invalid type\n", ERROR_BEG, i);
-					else
-				        	strncpy(buff.battleScript, strdup(ParserString_toCharStar(objBuffer->data)), PATH_MAX);
-				} else
-					printf("%s: Character %i has no field \"battle_info\"\n", WARNING_BEG, i);
-				objBuffer = ParserObj_getElement(obj, "dialogs");
-				if (objBuffer) {
-					if (objBuffer->type != ParserStringType)
-						printf("%s: Field \"dialogs\" in character %i has an invalid type\n", ERROR_BEG, i);
-					else if (!isFolder(ParserString_toCharStar(objBuffer->data)))
-						printf("%s: In field \"dialogs\" of character %i: %s is not a folder\n", ERROR_BEG, i, ParserString_toCharStar(objBuffer->data));
-					else if (!(buff.dialogsStrings = loadDialogs(ParserString_toCharStar(objBuffer->data))))
-				        	printf("%s: In field \"dialogs\" of character %i: An error occurred during parsing of %s\n", ERROR_BEG, i, ParserString_toCharStar(objBuffer->data));
-				} else
-					printf("%s: Character %i has no field \"battle_info\"\n", WARNING_BEG, i);
-				buff.movement.canMove = true;
-				buff.movement.animationClock = sfClock_create();
-				buff.movement.stateClock = sfClock_create();
-				buff.stats.energyRegenClock = sfClock_create();
-				for (int j = 0; j < DAMAGES_TYPE_NB; j++)
-					buff.damageClock[j] = sfClock_create();
-				((Character *)characters.content)[i] = buff;
-			}
-		}
+		return (Array){NULL, -1};
+	}
+
+	array = ParserList_toArray(result.data);
+	if (array.length < 0) {
+		buffer = concatf("Error: Cannot load file %s: Inconsistent types in array\n", path);
+		dispMsg("Loading error", buffer, 0);
+		free(buffer);
 		free(array.content);
 		Parser_destroyData(result.data, result.type);
-
+		return (Array){NULL, -1};
+	} else if (array.type != ParserObjType) {
+		buffer = concatf("Error: Cannot load file %s: Invalid array type\n", path);
+		dispMsg("Loading error", buffer, 0);
+		free(buffer);
+		free(array.content);
+		Parser_destroyData(result.data, result.type);
+		return (Array){NULL, -1};
 	}
+
+	if (setjmp(context.jumpBuffer)) {
+		Parser_destroyData(result.data, result.type);
+		printf("%s: %s: %s\n", ERROR_BEG, path, context.error);
+		buffer = concatf(
+			"Error: File '%s' contains invalid data:\nCharacter number %i\n%s\n",
+			path,
+			i + 1,
+			context.error
+		);
+		dispMsg("Battle Error", buffer, 0);
+		free(buffer);
+		return (Array){NULL, -1};
+	}
+
+	context.onMissing = DISPLAY_WARNING;
+	context.onInvalidType = LONG_JUMP;
+	context.onUseFail = LONG_JUMP;
+	characters.length = array.length;
+	characters.content = malloc(array.length * sizeof(Character));
+	memset(characters.content, 0, array.length * sizeof(Character));
+
+	for (; i < array.length; i++) {
+		obj = ParserArray_getElement(&array, i);
+		memset(&buff, 0, sizeof(buff));
+		context.object = obj;
+
+		copySize = 32;
+		context.data = &buff.name;
+		context.index = "name";
+		context.useElement = copyStringInBuffer;
+		context.expectedType = ContextStringType;
+		getObjectElement(&context);
+
+		context.data = &buff.texture;
+		context.index = "sprite_id";
+		context.useElement = getPositiveInteger;
+		context.expectedType = ContextIntType;
+		getObjectElement(&context);
+		if (buff.texture + MALE_CHARACTER >= game.resources.sprites.length || buff.texture + MALE_CHARACTER < 0)
+			buff.texture = MALE_CHARACTER;
+
+		context.data = &buff.movement.pos;
+		context.index = "position";
+		context.useElement = getFloatVector;
+		context.expectedType = ContextObjType;
+		getObjectElement(&context);
+
+		context.data = &buff.stats.lifeMax;
+		context.index = "max_life";
+		context.useElement = getPositiveInteger;
+		context.expectedType = ContextIntType;
+		getObjectElement(&context);
+		buff.stats.life = buff.stats.lifeMax * 10;
+
+		context.data = &buff.stats.life;
+		context.index = "current_life";
+		context.useElement = getPositiveInteger;
+		context.expectedType = ContextIntType;
+		getObjectElement(&context);
+
+		context.data = &buff.stats.maxEnergy;
+		context.index = "max_energy";
+		context.useElement = getPositiveInteger;
+		context.expectedType = ContextIntType;
+		getObjectElement(&context);
+		buff.stats.energy = buff.stats.maxEnergy * 10;
+
+		context.data = &buff.stats.energy;
+		context.index = "current_energy";
+		context.useElement = getPositiveInteger;
+		context.expectedType = ContextIntType;
+		getObjectElement(&context);
+
+		copySize = PATH_MAX;
+		context.data = &buff.battleScript;
+		context.index = "battle_info";
+		context.useElement = copyStringInBuffer;
+		context.expectedType = ContextStringType;
+		getObjectElement(&context);
+
+		context.data = &buff.dialogsStrings;
+		context.index = "dialogs";
+		context.useElement = loadDialogsFile;
+		context.expectedType = ContextStringType;
+		getObjectElement(&context);
+
+		buff.movement.canMove = true;
+		buff.movement.animationClock = sfClock_create();
+		buff.movement.stateClock = sfClock_create();
+		buff.stats.energyRegenClock = sfClock_create();
+		for (int j = 0; j < DAMAGES_TYPE_NB; j++)
+			buff.damageClock[j] = sfClock_create();
+		((Character *)characters.content)[i] = buff;
+	}
+
+	free(array.content);
+	Parser_destroyData(result.data, result.type);
+
 	return (characters);
 }
 
@@ -400,14 +362,14 @@ void	loadLevel(char *path)
 		buff.stats.energyRegenClock = sfClock_create();
 		for (int j = 0; j < DAMAGES_TYPE_NB; j++)
 			buff.damageClock[j] = sfClock_create();
-		((Character *)game.state.characters.content)[0] = buff;
+		*getCharacter(0) = buff;
 		buff.movement.animationClock = sfClock_create();
 		buff.movement.stateClock = sfClock_create();
 		buff.stats.energyRegenClock = sfClock_create();
 		for (int j = 0; j < DAMAGES_TYPE_NB; j++)
 			buff.damageClock[j] = sfClock_create();
-		((Character *)game.state.characters.content)[1] = buff;
+		*getCharacter(1) = buff;
 	}
-	((Character *)game.state.characters.content)[0].isPlayer = true;
+	getCharacter(0)->isPlayer = true;
 	free(buffer);
 }

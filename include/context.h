@@ -15,6 +15,8 @@ bool	loadSprite(ParserObj *obj, void *data, char *err_buffer);
 bool	getInteger(ParserObj *obj, void *data, char *err_buffer);
 bool	getBattleType(ParserObj *obj, void *data, char *err_buffer);
 bool	getUintVector(ParserObj *obj, void *data, char *err_buffer);
+bool	getFloatVector(ParserObj *obj, void *data, char *err_buffer);
+bool	loadDialogsFile(ParserObj *obj, void *data, char *err_buffer);
 bool	getDuppedString(ParserObj *obj, void *data, char *err_buffer);
 bool	getFloatingNumber(ParserObj *obj, void *data, char *err_buffer);
 bool	getPositiveInteger(ParserObj *obj, void *data, char *err_buffer);

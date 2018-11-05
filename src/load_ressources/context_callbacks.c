@@ -7,11 +7,9 @@
 #include <stdio.h>
 #include <string.h>
 #include <battle_lua.h>
+#include <utils.h>
 
-void	performLongJump(Context *context, contextIssue issue)
-{
-	longjmp(context->jumpBuffer, issue);
-}
+size_t	copySize = 32;
 
 bool	getObjectElement(Context *context)
 {
@@ -167,7 +165,7 @@ bool	getDuppedString(ParserObj *obj, void *data, char *err_buffer)
 bool	copyStringInBuffer(ParserObj *obj, void *data, char *err_buffer)
 {
 	(void)err_buffer;
-	strcpy(data, ParserString_toCharStar(obj->data));
+	strncpy(data, ParserString_toCharStar(obj->data), copySize);
 	return (true);
 }
 
@@ -263,7 +261,7 @@ bool	getUintVector(ParserObj *obj, void *data, char *err_buffer)
 	context.onInvalidType = LONG_JUMP;
 	context.onUseFail = LONG_JUMP;
 
-	context.expectedType = ContextIntType | ContextFloatType;
+	context.expectedType = ContextIntType;
 	context.object = obj->data;
 
 	context.data = &vector.x;
@@ -278,4 +276,55 @@ bool	getUintVector(ParserObj *obj, void *data, char *err_buffer)
 
 	*(sfVector2u *)data = vector;
 	return (true);
+}
+
+bool	getFloatVector(ParserObj *obj, void *data, char *err_buffer)
+{
+	Context		context;
+	sfVector2f	vector;
+
+	memset(&context, 0, sizeof(context));
+
+	if (setjmp(context.jumpBuffer)) {
+		strcpy(err_buffer, context.error);
+		return false;
+	}
+
+	context.onMissing = LONG_JUMP;
+	context.onInvalidType = LONG_JUMP;
+	context.onUseFail = LONG_JUMP;
+
+	context.expectedType = ContextIntType | ContextFloatType;
+	context.object = obj->data;
+
+	context.data = &vector.x;
+	context.index = "x";
+	context.useElement = getFloatingNumber;
+	getObjectElement(&context);
+
+	context.data = &vector.y;
+	context.index = "y";
+	context.useElement = getFloatingNumber;
+	getObjectElement(&context);
+
+	*(sfVector2f *)data = vector;
+	return (true);
+}
+
+bool	loadDialogsFile(ParserObj *obj, void *data, char *err_buffer)
+{
+	char	***strings = data;
+
+	if (!isFolder(ParserString_toCharStar(obj->data))) {
+		sprintf(err_buffer, "%s is not a folder\n", ParserString_toCharStar(obj->data));
+		return false;
+	} else if (!(*strings = loadDialogs(ParserString_toCharStar(obj->data)))) {
+		sprintf(
+			err_buffer,
+			"An error occurred during parsing of file %s\n",
+			ParserString_toCharStar(obj->data)
+		);
+		return false;
+	}
+	return true;
 }

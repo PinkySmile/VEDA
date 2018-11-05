@@ -158,6 +158,8 @@ add_executable(
 	src/load_ressources/battle.c
 	src/battle/projectiles.c
 	src/battle/characters.c
+	src/utils/split.c
+	src/utils/is_folder.c
 )
 
 target_link_libraries(
