@@ -35,6 +35,8 @@ int	getCharacterIndex(char const *test)
 		return (3);
 	else if (strcmp(test, "name") == 0)
 		return (4);
+	else if (strcmp(test, "id") == 0)
+		return (5);
 	return (0);
 }
 
@@ -74,6 +76,7 @@ int	getCharacterField(lua_State *lua)
 	Character	**character = luaL_checkudata(lua, 1, "character");
 	char	const	*ind = !lua_isnumber(lua, 2) ? luaL_checkstring(lua, 2) : NULL;
 	int		index = lua_isnumber(lua, 2) ? luaL_checknumber(lua, 2) : getCharacterIndex(ind);
+	int		charID = -1;
 
 	luaL_argcheck(lua, character != NULL, 1, "'character' expected");
 	if (!*character)
@@ -90,6 +93,14 @@ int	getCharacterField(lua_State *lua)
 			break;
 		case 4:
 			lua_pushstring(lua, (char *)(*character)->name);
+			break;
+		case 5:
+			for (int i = 0; i < game.state.characters.length; i++)
+				if (getCharacter(i) == *character) {
+					charID = i;
+					break;
+				}
+			lua_pushnumber(lua, charID);
 			break;
 		default:
 			for (int i = 0; ind && character_lib[i].name; i++) {
