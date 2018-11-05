@@ -5,7 +5,7 @@
 #include "loading.h"
 #include "concatf.h"
 
-void	changeScreenMode(int new)
+void	changeScreenMode(enum windowMode new)
 {
 	char		*title = concat("VEDA version ", getVersion(), false, false);
 	sfVideoMode	mode = {game.settings.windowSize.x, game.settings.windowSize.y, 32};
@@ -25,14 +25,19 @@ void	changeScreenMode(int new)
 	if (game.settings.windowMode == new)
 		return;
 	game.settings.windowMode = new;
-	if (game.settings.windowMode == FULLSCREEN) {
+	switch (new) {
+	case FULLSCREEN:
 		style = sfFullscreen;
 		mode = sfVideoMode_getDesktopMode();
-	} else if (game.settings.windowMode == BORDERLESS_WINDOW) {
+		break;
+	case BORDERLESS_WINDOW:
 		style = sfNone;
 		mode = sfVideoMode_getDesktopMode();
-	} else
+		break;
+	default:
 		style = sfTitlebar | sfClose;
+	}
+
 	game.settings.baseScale.x = (float)mode.width / 640.0;
 	game.settings.baseScale.y = (float)mode.height / 480.0;
 	sfRenderWindow_close(game.resources.window);
