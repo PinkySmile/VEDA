@@ -39,6 +39,7 @@ Settings	loadSettings()
 	Settings	settings;
 	int		fd = -1;
 	FILE		*stream;
+	sfVideoMode	mode = sfVideoMode_getDesktopMode();
 
 	printf("%s: Loading settings\n", INFO_BEG);
 	stream = fopen("save/settings.dat", "rb");
@@ -56,5 +57,12 @@ Settings	loadSettings()
 		printf("%s: Couldn't load settings (save/settings.dat: %s)\n", ERROR_BEG, fd < 0 ? strerror(errno) : "Empty file found");
 	if (stream)
 		fclose(stream);
+	if (settings.windowSize.x > mode.width)
+		settings.windowSize.x = mode.width;
+	if (game.settings.windowMode == FULLSCREEN || game.settings.windowMode == BORDERLESS_WINDOW) {
+		settings.windowSize.x = mode.width;
+		settings.windowSize.y = mode.height;
+	} else if (settings.windowSize.y > mode.height - 60)
+		settings.windowSize.y = mode.height - 60;
 	return (settings);
 }
