@@ -7,7 +7,7 @@
 typedef struct {
 	char		musicVolume;
 	char		sfxVolume;
-	char		windowMode;
+	enum windowMode	windowMode;
 	sfVector2u	windowSize;
 	unsigned char	keys[NB_OF_KEYS];
 	char		lang_id[256];

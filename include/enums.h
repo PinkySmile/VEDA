@@ -1,6 +1,12 @@
 #ifndef __ENUM_HEADER_
 #define __ENUM_HEADER_
 
+enum windowMode {
+	WINDOWED,
+	FULLSCREEN,
+	BORDERLESS_WINDOW,
+};
+
 enum damagesTypes {
 	TRUE_DAMAGE,
 	FIRE_DAMAGE,

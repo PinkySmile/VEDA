@@ -12,10 +12,6 @@
 #define BUFFER_MAX_SIZE	100
 #define MAX_STEPS	6
 
-#define WINDOWED		0
-#define FULLSCREEN		1
-#define BORDERLESS_WINDOW	2
-
 #define NB_OF_KEYS	20
 #define MAX_HUD_LINES	3
 
