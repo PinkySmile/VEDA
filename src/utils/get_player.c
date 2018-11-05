@@ -9,5 +9,5 @@ Character	*getPlayer()
 	for (int i = 0; i < len; i++)
 		if (array[i].isPlayer)
 			return (&array[i]);
-	return (array);
+	return (NULL);
 }
