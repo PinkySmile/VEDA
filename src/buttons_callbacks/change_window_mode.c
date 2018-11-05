@@ -7,7 +7,7 @@
 
 void	changeScreenMode(int new)
 {
-	char		*title = concat("VEDA version ", getVersion(), false, true);
+	char		*title = concat("VEDA version ", getVersion(), false, false);
 	sfVideoMode	mode = {game.settings.windowSize.x, game.settings.windowSize.y, 32};
 	sfWindowStyle	style;
 	const sfUint8	*icon = NULL;
