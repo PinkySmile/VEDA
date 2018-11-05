@@ -122,7 +122,7 @@ int	getProjectileField(lua_State *lua)
 	return (1);
 }
 
-Projectile	*addProjectile(int id, int x, int y, int ownerID, float angle, float speed, float rotaSpeed, float accel, int marker)
+Projectile	*addProjectile(int id, float x, float y, int ownerID, float angle, float speed, float rotaSpeed, float accel, int marker)
 {
 	Projectile	*bank = game.state.battle_infos.projectileBank.content;
 	Projectile	*proj;
@@ -217,10 +217,10 @@ int	addProjectileLua(lua_State *lua)
 	int		projID		= luaL_checkinteger(lua, 3);
 	int		ownerID		= luaL_checkinteger(lua, 4);
 	double		angle		= luaL_checknumber(lua, 5);
-	double		speed		= lua_isnone(lua, 6) ? 0 : luaL_checknumber(lua, 6);
-	double		rotaSpeed	= lua_isnone(lua, 7) ? 0 : luaL_checknumber(lua, 7);
-	double		accel		= lua_isnone(lua, 8) ? 0 : luaL_checknumber(lua, 8);
-	double		marker		= lua_isnone(lua, 9) ? 0 : luaL_checknumber(lua, 9);
+	double		speed		= lua_isnoneornil(lua, 6) ? 0 : luaL_checknumber(lua, 6);
+	double		rotaSpeed	= lua_isnoneornil(lua, 7) ? 0 : luaL_checknumber(lua, 7);
+	double		accel		= lua_isnoneornil(lua, 8) ? 0 : luaL_checknumber(lua, 8);
+	double		marker		= lua_isnoneornil(lua, 9) ? 0 : luaL_checknumber(lua, 9);
 	Projectile	*proj;
 
 	if (projID >= game.state.battle_infos.projectileBank.length || projID < 0) {
