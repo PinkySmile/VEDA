@@ -76,7 +76,7 @@ void	controls()
 				break;
 		}
 	}
-	if (getLanguage(findLanguage(game.settings.lang_id))->keys == NULL)
+	if (!getLanguage(findLanguage(game.settings.lang_id)) || !getLanguage(findLanguage(game.settings.lang_id))->keys)
 		return;
 	for (int i = 0; game.resources.languages[findLanguage(game.settings.lang_id)].keys[i] && i < NB_OF_KEYS; i++) {
 		sfRectangleShape_setFillColor(game.resources.rectangle, (sfColor){100, 100, 100, 255});
