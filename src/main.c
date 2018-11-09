@@ -17,7 +17,8 @@ char	*programPath = NULL;
 
 #if defined _WIN32 || defined __WIN32 || defined __WIN32__
 
-void	setSignalHandler() {
+void	setSignalHandler()
+{
 	signal(SIGINT,  &sighandler);
 	signal(SIGILL,  &sighandler);
 	signal(SIGABRT, &sighandler);
@@ -43,7 +44,8 @@ void	setSignalHandler()
 
 #endif
 
-void	closeConsole(bool debug) {
+void	closeConsole(bool debug)
+{
 #if defined _WIN32 || defined __WIN32 || defined __WIN32__
 
 	if (!debug && !FreeConsole()) //Not in debug: close the console
@@ -59,14 +61,16 @@ void	closeConsole(bool debug) {
 #endif
 }
 
-void	prepareExit() {
+void	prepareExit()
+{
 	destroyStruct();
 	Discord_Shutdown();
 	free(programPath);
 	printf("%s: Goodbye !\n", INFO_BEG);
 }
 
-int	main(int argc, char **args) {
+int	main(int argc, char **args)
+{
 	bool debug = (argc == 2 && !strcmp("debug", args[1]));
 
 	closeConsole(debug);
