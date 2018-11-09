@@ -26,7 +26,7 @@ Battle	loadBattleScript(char *path)
 	if (result.error) {
 		printf("%s: %s\n", ERROR_BEG, result.error);
 		result.error = concatf("Error: Couldn't load file '%s':\n%s\n", path, result.error);
-		dispMsg("Battle Error", result.error, 0);
+		dispMsg("Battle Error", result.error, MB_OK | MB_ICONERROR);
 		free(result.error);
 		return battle;
 	} else if (result.type != ParserObjType) {
@@ -34,7 +34,7 @@ Battle	loadBattleScript(char *path)
 		memset(&battle, 0, sizeof(battle));
 		printf("%s: %s: Invalid type found in the file\n", ERROR_BEG, path);
 		buffer = concatf("Error: %s: Invalid type found in the file\n", path);
-		dispMsg("Battle Error", buffer, 0);
+		dispMsg("Battle Error", buffer, MB_OK | MB_ICONERROR);
 		free(buffer);
 		return battle;
 	}
@@ -47,7 +47,7 @@ Battle	loadBattleScript(char *path)
 			path,
 			context.error
 		);
-		dispMsg("Battle Error", buffer, 0);
+		dispMsg("Battle Error", buffer, MB_OK | MB_ICONERROR);
 		free(buffer);
 		Parser_destroyData(result.data, result.type);
 		return battle;

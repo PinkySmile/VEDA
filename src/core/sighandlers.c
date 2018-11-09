@@ -41,7 +41,7 @@ void	handleFatalSignals(int signum)
 {
 	printf("%s: Caught signal %i (%s). Aborting !\n", FATAL_BEG, signum, strsignal(signum));
 	updateDiscordPresence("Game crashed", strsignal(signum), 0, false, "icon", "bug", "VEDA", strsignal(signum));
-	dispMsg("Fatal Error", concatf("Fatal: Caught signal %i (%s)\n\n\nClick OK to close the program", signum, strsignal(signum)), 0);
+	dispMsg("Fatal Error", concatf("Fatal: Caught signal %i (%s)\n\n\nClick OK to close the program", signum, strsignal(signum)), MB_OK | MB_ICONERROR);
 	Discord_Shutdown();
 	exit(signum + 128);
 }

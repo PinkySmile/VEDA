@@ -27,7 +27,7 @@ Array	loadFonts()
 		fonts[i] = sfFont_createFromFile(fonts_conf[i]);
 		if (i == ARIAL) {
 			if (!fonts[i]) {
-				dispMsg("Loading error.", concatf(ERROR_DEFAULT_FONT, fonts_conf[i]), 0);
+				dispMsg("Loading error.", concatf(ERROR_DEFAULT_FONT, fonts_conf[i]), MB_OK | MB_ICONERROR);
 				exit(EXIT_FAILURE);
 			} else
 				setFont(game.resources.text, fonts[ARIAL]);

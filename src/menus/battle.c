@@ -87,7 +87,7 @@ bool	resumeLuaSession(lua_State *thread, lua_State *Lua)
 	} else
 		return false;
 
-	dispMsg("Battle Error", buffer, 0);
+	dispMsg("Battle Error", buffer, MB_OK | MB_ICONERROR);
 	free(buffer);
 	backOnTitleScreen(-1);
 	if (game.state.battle_infos.music)

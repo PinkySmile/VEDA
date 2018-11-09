@@ -162,7 +162,7 @@ char	**loadDialogs(char *path)
 	if (stream == NULL) {
 		printf("%s: %s: %s\n", ERROR_BEG, buffer, strerror(errno));
 		buff = concatf("%s: %s\n", buffer, strerror(errno));
-		dispMsg("Error", buff, 0);
+		dispMsg("Error", buff, MB_OK | MB_ICONWARNING);
 		free(buff);
 		return NULL;
 	}
@@ -212,12 +212,12 @@ Array	loadCharacters(char *path)
 
 	if (result.error) {
 		buffer = concatf("Error: Cannot load file %s: %s\n", path, result.error);
-		dispMsg("Loading error", buffer, 0);
+		dispMsg("Loading error", buffer, MB_OK | MB_ICONERROR);
 		free(buffer);
 		return (Array){NULL, -1};
 	} else if (result.type != ParserListType) {
 		buffer = concatf("Error: Cannot load file %s: Invalid type\n", path, result.error);
-		dispMsg("Loading error", buffer, 0);
+		dispMsg("Loading error", buffer, MB_OK | MB_ICONERROR);
 		free(buffer);
 		Parser_destroyData(result.data, result.type);
 		return (Array){NULL, -1};
@@ -226,14 +226,14 @@ Array	loadCharacters(char *path)
 	array = ParserList_toArray(result.data);
 	if (array.length < 0) {
 		buffer = concatf("Error: Cannot load file %s: Inconsistent types in array\n", path);
-		dispMsg("Loading error", buffer, 0);
+		dispMsg("Loading error", buffer, MB_OK | MB_ICONERROR);
 		free(buffer);
 		free(array.content);
 		Parser_destroyData(result.data, result.type);
 		return (Array){NULL, -1};
 	} else if (array.type != ParserObjType) {
 		buffer = concatf("Error: Cannot load file %s: Invalid array type\n", path);
-		dispMsg("Loading error", buffer, 0);
+		dispMsg("Loading error", buffer, MB_OK | MB_ICONERROR);
 		free(buffer);
 		free(array.content);
 		Parser_destroyData(result.data, result.type);
@@ -249,7 +249,7 @@ Array	loadCharacters(char *path)
 			i + 1,
 			context.error
 		);
-		dispMsg("Battle Error", buffer, 0);
+		dispMsg("Battle Error", buffer, MB_OK | MB_ICONERROR);
 		free(buffer);
 		return (Array){NULL, -1};
 	}

@@ -19,7 +19,7 @@ void	changeScreenMode(enum windowMode new)
 		printf("%s: Couldn't load icon image\n", ERROR_BEG);
 	if (!title) {
 		printf("%s: Couldn't create window title\n", FATAL_BEG);
-		dispMsg("Window error", "Couldn't create window title", 0);
+		dispMsg("Window error", "Couldn't create window title", MB_OK | MB_ICONERROR);
 		exit(EXIT_FAILURE);
 	}
 	if (game.settings.windowMode == new)
@@ -45,7 +45,7 @@ void	changeScreenMode(enum windowMode new)
 	game.resources.window = sfRenderWindow_create(mode, title, style, NULL);
 	if (!game.resources.window) {
 		printf("%s: Couldn't create window\n", FATAL_BEG);
-		dispMsg("Window error", "Couldn't create window object", 0);
+		dispMsg("Window error", "Couldn't create window object", MB_OK | MB_ICONERROR);
 		exit(EXIT_FAILURE);
 	}
 	if (icon)

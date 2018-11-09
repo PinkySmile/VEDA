@@ -31,7 +31,7 @@ sfText	*createText()
 
 	if (!text) {
 		printf("%s: Couldn't create text object\n", FATAL_BEG);
-		dispMsg("Init error", "Couldn't create text object\n\nClick OK to close the application", 0);
+		dispMsg("Init error", "Couldn't create text object\n\nClick OK to close the application", MB_OK | MB_ICONERROR);
 		exit(EXIT_FAILURE);
 	}
 	return (text);
@@ -43,7 +43,7 @@ sfSound	*createSound()
 
 	if (!sound) {
 		printf("%s: Couldn't create sound object\n", FATAL_BEG);
-		dispMsg("Init error", "Couldn't create sound object\n\nClick OK to close the application", 0);
+		dispMsg("Init error", "Couldn't create sound object\n\nClick OK to close the application", MB_OK | MB_ICONERROR);
 		exit(EXIT_FAILURE);
 	}
 	return (sound);
@@ -55,7 +55,7 @@ sfRectangleShape	*createRectangleShape()
 
 	if (!rect) {
 		printf("%s: Couldn't create rectangleShape\n", FATAL_BEG);
-		dispMsg("Init error", "Couldn't create rectangleShape object\n\nClick OK to close the application", 0);
+		dispMsg("Init error", "Couldn't create rectangleShape object\n\nClick OK to close the application", MB_OK | MB_ICONERROR);
 		exit(EXIT_FAILURE);
 	}
 	return (rect);
@@ -72,7 +72,7 @@ sfRenderWindow	*createRenderWindow(sfVideoMode mode, const void *title, sfUint32
 	if (!window) {
 		//The window cannot be created, get out of here
 		printf("%s: Couldn't create window\n", FATAL_BEG);
-		dispMsg("Init error", "Couldn't create window object\n\nClick OK to close the application", 0);
+		dispMsg("Init error", "Couldn't create window object\n\nClick OK to close the application", MB_OK | MB_ICONERROR);
 		exit(EXIT_FAILURE);
 	}
 	return window;
@@ -86,7 +86,7 @@ sfSprite	*createSfSprite(sfTexture *texture)
 		sprite = sfSprite_create();
 		if (!sprite) {
 			printf("%s: Couldn't create sprite\n", FATAL_BEG);
-			dispMsg("Init error", "Couldn't create sprite object\n\nClick OK to close the application", 0);
+			dispMsg("Init error", "Couldn't create sprite object\n\nClick OK to close the application", MB_OK | MB_ICONERROR);
 			exit(EXIT_FAILURE);
 		}
 		sfSprite_setTexture(sprite, texture, sfTrue);
@@ -147,7 +147,7 @@ sfRenderWindow	*createMainWindow()
 	title = concat("VEDA version ", game.version, false, false);
 	if (!title) {
 		printf("%s: An error occured while creating window title\n", FATAL_BEG);
-		dispMsg("Init error", "Couldn't create window title\n\nClick OK to close the application", 0);
+		dispMsg("Init error", "Couldn't create window title\n\nClick OK to close the application", MB_OK | MB_ICONERROR);
 		exit(EXIT_FAILURE);
 	}
 	window = createRenderWindow(mode, title, style, NULL, false);

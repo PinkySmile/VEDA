@@ -46,18 +46,18 @@ typedef struct {
 } GameState;
 
 typedef struct {
-	Icon			icon;
-	Button			*buttons;
-	Array			sprites;
-	Array			musics;
-	Array			sfx;
-	Array			fonts;
-	sfRenderWindow		*window;
-	Language		*languages;
-	sfRectangleShape	*rectangle;
-	sfCircleShape		*circle;
-	sfText			*text;
-	lua_State		*dialogLuaScript;
+	Icon		icon;
+	Button		*buttons;
+	Array		sprites;
+	Array		musics;
+	Array		sfx;
+	Array		fonts;
+	sfRenderWindow	*window;
+	Language	*languages;
+	sfRectangleShape*rectangle;
+	sfCircleShape	*circle;
+	sfText		*text;
+	lua_State	*dialogLuaScript;
 } Resources;
 
 typedef struct {
@@ -67,6 +67,7 @@ typedef struct {
 	GameState	state;
 	Input		input;
 	sfVector2i	languagesConf;
+	sfVector2u	newSize;
 	char		*version;
 } game_t;
 
