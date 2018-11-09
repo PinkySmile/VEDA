@@ -27,6 +27,7 @@ enum buttons_names {
 	WINDOWED_BUTTON,
 	DISP_FPS,
 	CONFIRM,
+	APPLY,
 };
 
 #endif

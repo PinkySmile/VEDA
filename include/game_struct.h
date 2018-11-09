@@ -53,6 +53,7 @@ typedef struct {
 	Array		sfx;
 	Array		fonts;
 	sfRenderWindow	*window;
+	sfView		*view;
 	Language	*languages;
 	sfRectangleShape*rectangle;
 	sfCircleShape	*circle;

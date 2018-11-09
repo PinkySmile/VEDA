@@ -13,3 +13,4 @@ void	borderless		(int buttonID);
 void	windowed		(int buttonID);
 void	FPS_button		(int buttonID);
 void	changePlayerName	(int buttonID);
+void	applyNewWindowSize	(int buttonID);

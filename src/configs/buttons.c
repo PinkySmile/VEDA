@@ -141,6 +141,15 @@ const Button_config	button_config[] = {
 		&changePlayerName,
 		false
 	},
+	{//15
+		APPLY,
+		{440, 172},
+		{125, 40},
+		{205, 205, 205, 255},
+		{255, 255, 255, 255},
+		&applyNewWindowSize,
+		false
+	},
 	{//NULL terminator
 		-1,
 		{0, 0},

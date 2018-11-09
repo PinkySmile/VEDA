@@ -18,6 +18,7 @@ void	audio()
 				break;
 		}
 	}
+
 	sfRectangleShape_setFillColor(game.resources.rectangle, (sfColor){100, 100, 100, 255});
 	rect(0, 0, 512, 96);
 	sfRectangleShape_setFillColor(game.resources.rectangle, (sfColor){255, 255, 255, 255});
@@ -41,6 +42,9 @@ void	audio()
 
 void	options()
 {
+	char		*buffer;
+	sfVideoMode	max = sfVideoMode_getDesktopMode();
+
 	for (int i = 0; i < 640; i += getSprite(MENU_BACKGROUND)->size.x) {
 		if (((Sprite *)game.resources.sprites.content)[MENU_BACKGROUND].size.x == 0)
 			break;
@@ -63,6 +67,27 @@ void	options()
 		game.resources.buttons[13].color = (sfColor){0, 255, 0, 255};
 	else
 		game.resources.buttons[13].color = (sfColor){255, 0, 0, 255};
+	if (game.newSize.x != game.settings.windowSize.x || game.newSize.y != game.settings.windowSize.y)
+		game.resources.buttons[15].textColor = (sfColor){0, 0, 0, 255};
+	else
+		game.resources.buttons[15].textColor = (sfColor){255, 255, 255, 255};
+
+	if (game.settings.windowMode == WINDOWED) {
+		sfRectangleShape_setFillColor(game.resources.rectangle, (sfColor){100, 100, 100, 255});
+		rect(232, 100, 512, 96);
+		sfRectangleShape_setFillColor(game.resources.rectangle, (sfColor){255, 255, 255, 255});
+		rect(272, 109, 300, 20);
+		rect(272, 147, 300, 20);
+		sfRectangleShape_setFillColor(game.resources.rectangle, (sfColor){255, 0, 0, 255});
+		rect(262 + (game.newSize.x - 256) * 300 / (max.width - 256), 101, 20, 36);
+		rect(262 + (game.newSize.y - 144) * 300 / (max.height - 144), 139, 20, 36);
+		sfText_setCharacterSize(game.resources.text, 20);
+		text("X:", 240, 104, false);
+		text("Y:", 240, 142, false);
+		buffer = concatf("%ux%u", game.newSize.x, game.newSize.y);
+		if (buffer)
+			text(buffer, 252, 172, false);
+	}
 }
 
 void	controls()

@@ -14,7 +14,11 @@ void	options_button(int buttonID)
 		game.resources.buttons[i].active = true;
 		game.resources.buttons[i].displayed = true;
 	}
+	game.resources.buttons[15].active = game.settings.windowMode == WINDOWED;
+	game.resources.buttons[15].displayed = game.settings.windowMode == WINDOWED;
+	game.newSize = game.settings.windowSize;
 }
+
 void	audio_button(int buttonID)
 {
 	(void)buttonID;
