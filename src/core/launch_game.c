@@ -54,8 +54,8 @@ void	debug_displayPosition()
 void	displayDebugElements()
 {
 	sfText_setCharacterSize(game.resources.text, 10);
-	text("Debug mode", 580, 0, false);
 	sfText_setColor(game.resources.text, (sfColor){255, 255, 255, 255});
+	text("Debug mode", 580, 0, false);
 	switch (game.state.menu) {
 	case IN_GAME_MENU:
 		debug_displayPosition();

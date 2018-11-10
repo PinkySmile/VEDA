@@ -83,6 +83,7 @@ void	options()
 		game.resources.buttons[15].shadeStep = 15;
 	}
 
+	sfText_setColor(game.resources.text, (sfColor){255, 255, 255, 255});
 	sfRectangleShape_setFillColor(game.resources.rectangle, (sfColor){100, 100, 100, 255});
 	rect(232, 100, 512, 96);
 	sfRectangleShape_setFillColor(game.resources.rectangle, (sfColor){255, 255, 255, 255});
