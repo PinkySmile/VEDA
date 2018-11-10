@@ -205,7 +205,6 @@ Array	loadCharacters(char *path)
 	ParserArray	array;
 	ParserObj	*obj;
 	char		*buffer = NULL;
-	ParserObj	*objBuffer;
 	Character	buff;
 	Context		context;
 	int		i = 0;

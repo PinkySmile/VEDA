@@ -14,7 +14,6 @@ extern	size_t	copySize;
 Battle	loadBattleScript(char *path)
 {
 	Battle		battle = game.state.battle_infos;
-	int		err;
 	ParserResult	result = Parser_parseFile(path, NULL);
 	char		*buffer;
 	Context		context;

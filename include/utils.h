@@ -1,6 +1,7 @@
 #include <SFML/Graphics.h>
 #include <SFML/Audio.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include "character.h"
 #include "language.h"
 #include "array.h"

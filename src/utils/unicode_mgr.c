@@ -3,7 +3,7 @@
 #include <string.h>
 #include <malloc.h>
 
-size_t	strlen_unicode(sfUint32 *str)
+size_t	strlen_unicode(const sfUint32 *str)
 {
 	size_t i = 0;
 
@@ -11,7 +11,7 @@ size_t	strlen_unicode(sfUint32 *str)
 	return (i);
 }
 
-size_t	calcStringLen(sfUint32 *str)
+size_t	calcStringLen(const sfUint32 *str)
 {
 	size_t	len = 0;
 
@@ -54,7 +54,7 @@ sfUint32	*convertUtf8toUtf32(sfUint8 *str, sfUint32 *buffer)
 	int	bufferIndex = 0;
 
 	if (!buffer)
-		buffer = malloc(strlen(str) * sizeof(*buffer));
+		buffer = malloc(strlen((char *)str) * sizeof(*buffer));
 	if (!buffer)
 		return (NULL);
 	for (int i = 0; str[i]; i++)

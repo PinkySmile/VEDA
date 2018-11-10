@@ -194,7 +194,7 @@ void	loadGame()
 		}
 	}
 	game.state.loadedMap.path = my_malloc(len + 1);
-	if (read(fd, game.state.loadedMap.path, len) != len && !use) {
+	if ((unsigned)read(fd, game.state.loadedMap.path, len) != len && !use) {
 		printf("%s: Corrupted save file detected: Unexpected <EOF> map\n", ERROR_BEG);
 		use = (dispMsg("Error", CORRUPTED_SAVE_MSG, MB_YESNO | MB_ICONWARNING) == IDYES);
 		if (!use) {

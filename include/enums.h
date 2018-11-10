@@ -5,6 +5,7 @@ enum windowMode {
 	WINDOWED,
 	FULLSCREEN,
 	BORDERLESS_WINDOW,
+	NUMBER_OF_WINDOW_MODES,
 };
 
 enum damagesTypes {

@@ -48,7 +48,6 @@ void	displayProjectiles()
 void	updateProjectiles(list_t *proj_list)
 {
 	Projectile	*proj;
-	list_t		*buffer;
 
 	for (list_t *list = proj_list; list && list->data; list = list->next) {
 		proj = list->data;
