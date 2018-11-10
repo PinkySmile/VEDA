@@ -24,6 +24,7 @@ Button	createButton(Button_config config, bool createName)
 	button.active = config.disabled;
 	button.color = config.color;
 	button.textColor = config.textColor;
+	button.shadeStep = 15;
 	if (button.rect) {
 		sfRectangleShape_setSize(button.rect, button.size);
 		sfRectangleShape_setPosition(button.rect, button.pos);

@@ -54,9 +54,15 @@ void	dispButtons()
 	for (int i = 0; buttons && buttons[i].content; i++) {
 		if (buttons[i].displayed && buttons[i].rect) {
 			color.a = buttons[i].color.a;
-			red = buttons[i].color.r - 150;
-			blue = buttons[i].color.b - 150;
-			green = buttons[i].color.g - 150;
+			if (buttons[i].shadeStep > 0) {
+				red = buttons[i].color.r - buttons[i].shadeStep * 10 * buttons[i].color.r / 255;
+				blue = buttons[i].color.b - buttons[i].shadeStep * 10 * buttons[i].color.b / 255;
+				green = buttons[i].color.g - buttons[i].shadeStep * 10 * buttons[i].color.g / 255;
+			} else {
+				red = buttons[i].color.r - buttons[i].shadeStep * 10 * (255 - buttons[i].color.r) / 255;
+				blue = buttons[i].color.b - buttons[i].shadeStep * 10 * (255 - buttons[i].color.b) / 255;
+				green = buttons[i].color.g - buttons[i].shadeStep * 10 * (255 - buttons[i].color.g) / 255;
+			}
 			size = buttons[i].size;
 			pos = buttons[i].pos;
 			for (int j = 0; j < 10; j++) {
@@ -89,9 +95,15 @@ void	dispButtons()
 				sfRectangleShape_setPosition(buttons[i].rect, realPos);
 				sfRectangleShape_setSize(buttons[i].rect, realSize);
 				sfRenderWindow_drawRectangleShape(window, buttons[i].rect, NULL);
-			        red += 15;
-			        blue += 15;
-			        green += 15;
+				if (buttons[i].shadeStep > 0) {
+					red += buttons[i].shadeStep * buttons[i].color.r / 255;
+					blue += buttons[i].shadeStep * buttons[i].color.b / 255;
+					green += buttons[i].shadeStep * buttons[i].color.g / 255;
+				} else {
+					red += buttons[i].shadeStep * (255 - buttons[i].color.r) / 255;
+					blue += buttons[i].shadeStep * (255 - buttons[i].color.b) / 255;
+					green += buttons[i].shadeStep * (255 - buttons[i].color.g) / 255;
+				}
 			}
 			sfText_setColor(game.resources.text, buttons[i].textColor);
 			text(buttons[i].content, buttons[i].pos.x + 10, buttons[i].pos.y + 8, false);

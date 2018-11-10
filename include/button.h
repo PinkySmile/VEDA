@@ -9,6 +9,7 @@ typedef struct {
 	sfVector2f		pos;
 	sfVector2f		size;
 	sfColor			color;
+	int			shadeStep;
 	sfColor			textColor;
 	void			(*callback)(int);
 	sfRectangleShape	*rect;
