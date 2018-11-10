@@ -119,7 +119,7 @@ sfRenderWindow	*createMainWindow()
 {
 	char		*title;
 	const sfUint8	*icon = NULL;
-	sfVideoMode	mode = {640, 480, 32};
+	sfVideoMode	mode = {game.settings.windowSize.x, game.settings.windowSize.y, 32};
 	sfWindowStyle	style;
 	sfRenderWindow	*window;
 
@@ -127,17 +127,16 @@ sfRenderWindow	*createMainWindow()
 	switch (game.settings.windowMode) {
 	case FULLSCREEN:
 		style = sfFullscreen;
-		mode = sfVideoMode_getDesktopMode();
+			mode = sfVideoMode_getDesktopMode();
 		break;
 	case BORDERLESS_WINDOW:
 		style = sfNone;
-		mode = sfVideoMode_getDesktopMode();
 		break;
 	default:
 		style = sfTitlebar | sfClose;
-		mode.width = game.settings.windowSize.x;
-		mode.height = game.settings.windowSize.y;
+		game.settings.windowMode = WINDOWED;
 	}
+
 	game.settings.baseScale.x = (float)mode.width / 640;
 	game.settings.baseScale.y = (float)mode.height / 480;
 
@@ -166,5 +165,8 @@ sfRenderWindow	*createMainWindow()
 		sfRenderWindow_setIcon(window, 32, 32, icon);
 	if (!game.resources.icon.sprite)
 		game.resources.icon.sprite = createSfSprite(game.resources.icon.texture);
+
+	//Grab the cursor
+	sfRenderWindow_setMouseCursorGrabbed(window, game.settings.windowMode != WINDOWED);
 	return window;
 }

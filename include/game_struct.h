@@ -69,6 +69,7 @@ typedef struct {
 	Input		input;
 	sfVector2i	languagesConf;
 	sfVector2u	newSize;
+	enum windowMode	newMode;
 	char		*version;
 } game_t;
 

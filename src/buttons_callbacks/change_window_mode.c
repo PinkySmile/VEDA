@@ -5,10 +5,10 @@
 #include "loading.h"
 #include "concatf.h"
 
-void	changeScreenMode(enum windowMode new)
+void	changeScreenMode(enum windowMode new, sfVector2u newSize)
 {
 	char		*title = concat("VEDA version ", getVersion(), false, false);
-	sfVideoMode	mode = {game.settings.windowSize.x, game.settings.windowSize.y, 32};
+	sfVideoMode	mode = {newSize.x, newSize.y, 32};
 	sfWindowStyle	style;
 	const sfUint8	*icon = NULL;
 
@@ -22,9 +22,19 @@ void	changeScreenMode(enum windowMode new)
 		dispMsg("Window error", "Couldn't create window title", MB_OK | MB_ICONERROR);
 		exit(EXIT_FAILURE);
 	}
-	if (game.settings.windowMode == new)
+
+	//Check if the window needs to be changed
+	if (
+		game.settings.windowMode == new && (
+			(game.settings.windowSize.x == newSize.x && game.settings.windowSize.y == newSize.y) ||
+			new == FULLSCREEN
+		)
+	)
 		return;
+
+	game.settings.windowSize = newSize;
 	game.settings.windowMode = new;
+
 	switch (new) {
 	case FULLSCREEN:
 		style = sfFullscreen;
@@ -32,7 +42,6 @@ void	changeScreenMode(enum windowMode new)
 		break;
 	case BORDERLESS_WINDOW:
 		style = sfNone;
-		mode = sfVideoMode_getDesktopMode();
 		break;
 	default:
 		style = sfTitlebar | sfClose;
@@ -56,35 +65,23 @@ void	changeScreenMode(enum windowMode new)
 void	applyNewWindowSize(int buttonID)
 {
 	(void)buttonID;
-	game.settings.windowSize = game.newSize;
-	game.settings.baseScale = (sfVector2f){game.newSize.x / 640., game.newSize.y / 480.};
-	sfRenderWindow_setSize(game.resources.window, game.newSize);
-	if (game.resources.view)
-		sfView_destroy(game.resources.view);
-	game.resources.view = sfView_createFromRect((sfFloatRect){0, 0, game.newSize.x, game.newSize.y});
-	sfRenderWindow_setView(game.resources.window, game.resources.view);
+	changeScreenMode(game.newMode, game.newSize);
 }
 
 void	borderless(int buttonID)
 {
 	(void)buttonID;
-	changeScreenMode(BORDERLESS_WINDOW);
-	game.resources.buttons[15].active = false;
-	game.resources.buttons[15].displayed = false;
+	game.newMode = BORDERLESS_WINDOW;
 }
 
 void	windowed(int buttonID)
 {
 	(void)buttonID;
-	changeScreenMode(WINDOWED);
-	game.resources.buttons[15].active = true;
-	game.resources.buttons[15].displayed = true;
+	game.newMode = WINDOWED;
 }
 
 void	fullScreen(int buttonID)
 {
 	(void)buttonID;
-	changeScreenMode(FULLSCREEN);
-	game.resources.buttons[15].active = false;
-	game.resources.buttons[15].displayed = false;
+	game.newMode = FULLSCREEN;
 }

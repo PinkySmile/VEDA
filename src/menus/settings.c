@@ -44,6 +44,7 @@ void	options()
 {
 	char		*buffer;
 	sfVideoMode	max = sfVideoMode_getDesktopMode();
+	sfVector2u	newSize = game.newSize;
 
 	for (int i = 0; i < 640; i += getSprite(MENU_BACKGROUND)->size.x) {
 		if (((Sprite *)game.resources.sprites.content)[MENU_BACKGROUND].size.x == 0)
@@ -54,8 +55,8 @@ void	options()
 				break;
 		}
 	}
-	for (int i = 0; i <= 2; i++) {
-		if (game.settings.windowMode == i) {
+	for (enum windowMode i = WINDOWED; i < NUMBER_OF_WINDOW_MODES; i++) {
+		if (game.newMode == i) {
 			game.resources.buttons[i + 10].textColor = (sfColor){0, 120, 0, 255};
 			game.resources.buttons[i + 10].color = (sfColor){220, 220, 0, 255};
 		} else {
@@ -67,27 +68,35 @@ void	options()
 		game.resources.buttons[13].color = (sfColor){0, 255, 0, 255};
 	else
 		game.resources.buttons[13].color = (sfColor){255, 0, 0, 255};
-	if (game.newSize.x != game.settings.windowSize.x || game.newSize.y != game.settings.windowSize.y)
+	if (
+		game.settings.windowMode == game.newMode && (
+			(game.settings.windowSize.x == newSize.x && game.settings.windowSize.y == newSize.y) ||
+			game.newMode == FULLSCREEN
+		)
+	) {
+		game.resources.buttons[15].color = (sfColor){0, 0, 0, 255};
+		game.resources.buttons[15].textColor = (sfColor){155, 155, 155, 255};
+		game.resources.buttons[15].shadeStep = -4;
+	} else {
+		game.resources.buttons[15].color = (sfColor){205, 205, 205, 255};
 		game.resources.buttons[15].textColor = (sfColor){0, 0, 0, 255};
-	else
-		game.resources.buttons[15].textColor = (sfColor){255, 255, 255, 255};
-
-	if (game.settings.windowMode == WINDOWED) {
-		sfRectangleShape_setFillColor(game.resources.rectangle, (sfColor){100, 100, 100, 255});
-		rect(232, 100, 512, 96);
-		sfRectangleShape_setFillColor(game.resources.rectangle, (sfColor){255, 255, 255, 255});
-		rect(272, 109, 300, 20);
-		rect(272, 147, 300, 20);
-		sfRectangleShape_setFillColor(game.resources.rectangle, (sfColor){255, 0, 0, 255});
-		rect(262 + (game.newSize.x - 256) * 300 / (max.width - 256), 101, 20, 36);
-		rect(262 + (game.newSize.y - 144) * 300 / (max.height - 144), 139, 20, 36);
-		sfText_setCharacterSize(game.resources.text, 20);
-		text("X:", 240, 104, false);
-		text("Y:", 240, 142, false);
-		buffer = concatf("%ux%u", game.newSize.x, game.newSize.y);
-		if (buffer)
-			text(buffer, 252, 172, false);
+		game.resources.buttons[15].shadeStep = 15;
 	}
+
+	sfRectangleShape_setFillColor(game.resources.rectangle, (sfColor){100, 100, 100, 255});
+	rect(232, 100, 512, 96);
+	sfRectangleShape_setFillColor(game.resources.rectangle, (sfColor){255, 255, 255, 255});
+	rect(272, 109, 300, 20);
+	rect(272, 147, 300, 20);
+	sfRectangleShape_setFillColor(game.resources.rectangle, (sfColor){255, 0, 0, 255});
+	rect(262 + (game.newSize.x - 256) * 300 / (max.width - 256), 101, 20, 36);
+	rect(262 + (game.newSize.y - 144) * 300 / (max.height - 144), 139, 20, 36);
+	sfText_setCharacterSize(game.resources.text, 20);
+	text("X:", 240, 104, false);
+	text("Y:", 240, 142, false);
+	buffer = concatf("%ux%u", game.newSize.x, game.newSize.y);
+	if (buffer)
+		text(buffer, 252, 172, false);
 }
 
 void	controls()
