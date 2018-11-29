@@ -8,6 +8,7 @@
 #include <destructors.h>
 #include <loading.h>
 #include <callbacks.h>
+#include <sys/stat.h>
 #include "macros.h"
 #include "creators.h"
 #include "utils.h"
@@ -24,12 +25,11 @@ Object	*loadSavedMap(char *path, char **bg)
 	Object	*map;
 
 	read(fd, &head, sizeof(head));
-	if (head < SAVED_LEVEL_HEADER) {
+	if (head == 0) {
 		printf(
-			"%s: %s: Invalid header version: Save file has been created with a too old version (Save v%i > Save v%i).\n",
+			"%s: %s: Invalid header version: Save file has been created with a too old version (Save v%i is not supported).\n",
 			ERROR_BEG,
 			path,
-			SAVED_LEVEL_HEADER,
 			head
 		);
 		close(fd);
