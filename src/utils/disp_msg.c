@@ -13,6 +13,8 @@ int	dispMsg(char *title, char *content, int variate)
 #include <stdio.h>
 #include "macros.h"
 
+#define ICON_ERROR_PATH "data/icon/error.png"
+
 int	dispMsg(char *title, char *content, int variate)
 {
 	char			**buttons = NULL;
@@ -25,20 +27,26 @@ int	dispMsg(char *title, char *content, int variate)
 	sfText			*text = sfText_create();
 	int			nbOfButtons = 0;
 	int			buttonClicked = 0;
+	sfTexture		*texture = NULL;
+	sfSprite		*sprite = sfSprite_create();
+	bool			hasIcon = false;
 
 	if (!font) {
 		printf("%s: Cannot load default font !\nDisplaying the message in the console:\n\n", ERROR_BEG);
 		printf("%s\n%s\n", title, content);
 	}
-	switch (variate) {
-	case 0:
-		buttons = (char *[1]){"OK"};
-		nbOfButtons = 1;
-		break;
-	case 4:
-		buttons = (char *[2]){"Yes", "No"};
+	if (variate & MB_ICONERROR) {
+		hasIcon = true;
+		texture = sfTexture_createFromFile(ICON_ERROR_PATH, NULL);
+		sfSprite_setTexture(sprite, texture, true);
+		sfSprite_setPosition(sprite, (sfVector2f){20, 30});
+	}
+	if (variate & MB_YESNO) {
+		buttons = (char *[2]) {"Yes", "No"};
 		nbOfButtons = 2;
-		break;
+	} else {
+		buttons = (char *[1]) {"OK"};
+		nbOfButtons = 1;
 	}
 	win = sfRenderWindow_create(mode, title ? title : "null", sfTitlebar | sfClose, NULL);
 	if (text && font)
@@ -68,10 +76,12 @@ int	dispMsg(char *title, char *content, int variate)
 		}
 		if (text) {
 			sfText_setColor(text, (sfColor){0, 0, 0, 255});
-			sfText_setPosition(text, (sfVector2f){10, 40});
-			sfText_setString(text, content ? content : "null");
+			sfText_setPosition(text, (sfVector2f){10 + 60 * hasIcon, 40});
+			sfText_setString(text, content ? content : "(null)");
 			sfRenderWindow_drawText(win, text, NULL);
 		}
+		if (hasIcon)
+			sfRenderWindow_drawSprite(win, sprite, NULL);
 		for (int i = 0; i < nbOfButtons; i++) {
 			if (rect) {
 				sfRectangleShape_setPosition(rect, (sfVector2f){400 - 70 * (nbOfButtons - i), 150});
