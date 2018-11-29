@@ -1,5 +1,3 @@
-#include "structs.h"
-#include "macros.h"
 #include <unistd.h>
 #include <stdio.h>
 #include <string.h>
@@ -7,6 +5,9 @@
 #include <fcntl.h>
 #include <sys/types.h>
 #include <sys/stat.h>
+#include "structs.h"
+#include "macros.h"
+#include "utils.h"
 
 void	saveSettings()
 {
@@ -34,18 +35,11 @@ void	saveSettings()
 	close(fd);
 }
 
-Settings	loadSettings()
+Settings	getDefaultSettings()
 {
 	Settings	settings;
-	int		fd = -1;
-	FILE		*stream;
-	sfVideoMode	mode = sfVideoMode_getDesktopMode();
 
-	printf("%s: Loading settings\n", INFO_BEG);
-	stream = fopen("save/settings.dat", "rb");
 	memset(&settings, 0, sizeof(settings));
-	if (stream)
-		fd = fileno(stream);
 	for (int i = 0; i < NB_OF_KEYS; i++)
 		settings.keys[i] = DEFAULT_KEYS[i];
 	settings.sfxVolume = 100;
@@ -53,16 +47,50 @@ Settings	loadSettings()
 	settings.windowSize.x = 640;
 	settings.windowSize.y = 480;
 	strcpy(settings.lang_id, "en");
-	if (fd < 0 || read(fd, &settings, sizeof(settings)) <= 0)
-		printf("%s: Couldn't load settings (save/settings.dat: %s)\n", ERROR_BEG, fd < 0 ? strerror(errno) : "Empty file found");
+	return settings;
+}
+
+Settings	loadSettings()
+{
+	Settings	settings;
+	int		fd = -1;
+	FILE		*stream;
+	sfVideoMode	mode = sfVideoMode_getDesktopMode();
+	ssize_t		readBytes = 0;
+
+	printf("%s: Loading settings\n", INFO_BEG);
+	stream = fopen("save/settings.dat", "rb");
+	if (stream)
+		fd = fileno(stream);
+	readBytes = read(fd, &settings, sizeof(settings));
+	if (fd < 0) {
+		printf(
+			"%s: Couldn't load settings (save/settings.dat: %s)\n",
+			ERROR_BEG,
+			strerror(errno)
+		);
+		settings = getDefaultSettings();
+	}
+	if (readBytes <= 0) {
+		printf(
+			"%s: Couldn't load settings (save/settings.dat: Empty file found)\n",
+			ERROR_BEG
+		);
+		settings = getDefaultSettings();
+	}
 	if (stream)
 		fclose(stream);
-	if (settings.windowSize.x > mode.width)
-		settings.windowSize.x = mode.width;
 	if (game.settings.windowMode == FULLSCREEN || game.settings.windowMode == BORDERLESS_WINDOW) {
 		settings.windowSize.x = mode.width;
 		settings.windowSize.y = mode.height;
-	} else if (settings.windowSize.y > mode.height - 60)
-		settings.windowSize.y = mode.height - 60;
+	} else {
+		if (settings.windowSize.x > mode.width)
+			settings.windowSize.x = mode.width;
+		if (settings.windowSize.y > mode.height - 60)
+			settings.windowSize.y = mode.height - 60;
+		if (!getLanguage(findLanguage(settings.lang_id)))
+			strcpy(settings.lang_id, "en");
+	}
+	settings.dispFramerate = true;
 	return (settings);
 }
