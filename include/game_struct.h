@@ -43,6 +43,7 @@ typedef struct {
 	int		dialogs;
 	DialogDisplayed	*dialogsOnScreen;
 	int		menuSelected;
+	sfVideoMode	currentDesktopMode;
 } GameState;
 
 typedef struct {

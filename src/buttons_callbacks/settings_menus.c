@@ -18,6 +18,7 @@ void	options_button(int buttonID)
 	game.resources.buttons[15].displayed = true;
 	game.newSize = game.settings.windowSize;
 	game.newMode = game.settings.windowMode;
+	game.state.currentDesktopMode = sfVideoMode_getDesktopMode();
 }
 
 void	audio_button(int buttonID)

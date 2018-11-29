@@ -4,8 +4,6 @@
 
 void	manageMouseMoved(sfEvent *event)
 {
-	sfVideoMode	max = sfVideoMode_getDesktopMode();
-
 	if (game.state.menuSelected == 1 && game.state.menu == 3) {
 		if (event->mouseMove.x <= 140 * game.settings.baseScale.x)
 			game.settings.sfxVolume = 0;
@@ -29,16 +27,16 @@ void	manageMouseMoved(sfEvent *event)
 		if (event->mouseMove.x <= 272 * game.settings.baseScale.x)
 			game.newSize.x = 256;
 		else if (event->mouseMove.x >= 572 * game.settings.baseScale.x)
-			game.newSize.x = max.width;
+			game.newSize.x = game.state.currentDesktopMode.width;
 		else
-			game.newSize.x = (event->mouseMove.x / game.settings.baseScale.x - 272) * (max.width - 256) / 300 + 256;
+			game.newSize.x = (event->mouseMove.x / game.settings.baseScale.x - 272) * (game.state.currentDesktopMode.width - 256) / 300 + 256;
 
 	} else if (game.state.menuSelected == 2 && game.state.menu == 4) {
 		if (event->mouseMove.x <= 272 * game.settings.baseScale.x)
 			game.newSize.y = 144;
 		else if (event->mouseMove.x >= 572 * game.settings.baseScale.x)
-			game.newSize.y = max.height;
+			game.newSize.y = game.state.currentDesktopMode.height;
 		else
-			game.newSize.y = (event->mouseMove.x / game.settings.baseScale.x - 272) * (max.height - 144) / 300 + 144;
+			game.newSize.y = (event->mouseMove.x / game.settings.baseScale.x - 272) * (game.state.currentDesktopMode.height - 144) / 300 + 144;
 	}
 }

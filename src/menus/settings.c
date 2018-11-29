@@ -43,7 +43,6 @@ void	audio()
 void	options()
 {
 	char		*buffer;
-	sfVideoMode	max = sfVideoMode_getDesktopMode();
 	sfVector2u	newSize = game.newSize;
 
 	for (int i = 0; i < 640; i += getSprite(MENU_BACKGROUND)->size.x) {
@@ -90,8 +89,8 @@ void	options()
 	rect(272, 109, 300, 20);
 	rect(272, 147, 300, 20);
 	sfRectangleShape_setFillColor(game.resources.rectangle, (sfColor){255, 0, 0, 255});
-	rect(262 + (game.newSize.x - 256) * 300 / (max.width - 256), 101, 20, 36);
-	rect(262 + (game.newSize.y - 144) * 300 / (max.height - 144), 139, 20, 36);
+	rect(262 + (game.newSize.x - 256) * 300 / (game.state.currentDesktopMode.width - 256), 101, 20, 36);
+	rect(262 + (game.newSize.y - 144) * 300 / (game.state.currentDesktopMode.height - 144), 139, 20, 36);
 	sfText_setCharacterSize(game.resources.text, 20);
 	text("X:", 240, 104, false);
 	text("Y:", 240, 142, false);

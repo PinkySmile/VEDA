@@ -39,7 +39,6 @@ void	whichButton(sfVector2f pos)
 void	manageMouseClick(sfMouseButtonEvent event)
 {
 	sfVector2f	pos = {event.x, event.y};
-	sfVideoMode	max = sfVideoMode_getDesktopMode();
 
 	if (game.state.menu == AUDIO_MENU) {
 		if (
@@ -85,9 +84,9 @@ void	manageMouseClick(sfMouseButtonEvent event)
 			if (pos.x <= 272 * game.settings.baseScale.x)
 				game.newSize.x = 256;
 			else if (pos.x >= 572 * game.settings.baseScale.x)
-				game.newSize.x = max.width;
+				game.newSize.x = game.state.currentDesktopMode.width;
 			else
-				game.newSize.x = (pos.x / game.settings.baseScale.x - 272) * (max.width - 256) / 300 + 256;
+				game.newSize.x = (pos.x / game.settings.baseScale.x - 272) * (game.state.currentDesktopMode.width - 256) / 300 + 256;
 			printf("%s: Clicked on sfx volume control\n", INFO_BEG);
 
 		} else if (
@@ -100,9 +99,9 @@ void	manageMouseClick(sfMouseButtonEvent event)
 			if (pos.x <= 272 * game.settings.baseScale.x)
 				game.newSize.y = 144;
 			else if (pos.x >= 572 * game.settings.baseScale.x)
-				game.newSize.y = max.height;
+				game.newSize.y = game.state.currentDesktopMode.height;
 			else
-				game.newSize.y = (pos.x / game.settings.baseScale.x - 272) * (max.height - 144) / 300 + 144;
+				game.newSize.y = (pos.x / game.settings.baseScale.x - 272) * (game.state.currentDesktopMode.height - 144) / 300 + 144;
 			printf("%s: Clicked on music volume control\n", INFO_BEG);
 		}
 	}
