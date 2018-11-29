@@ -62,7 +62,7 @@ typedef struct {
 	lua_State	*dialogLuaScript;
 } Resources;
 
-typedef struct {
+typedef struct game_s {
 	bool		debug;
 	Resources	resources;
 	Settings	settings;
