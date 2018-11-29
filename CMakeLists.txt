@@ -70,6 +70,7 @@ add_executable(
 	include/icon.h
 	include/language.h
 	include/list.h
+	include/io_utils.h
 	include/loading.h
 	include/macros.h
 	include/menus.h
@@ -161,7 +162,8 @@ add_executable(
 	src/utils/split.c
 	src/utils/is_folder.c
 	src/character/exec_action.c
-)
+	src/utils/io/write.c
+	src/utils/io/read.c include/display_messagebox.h)
 
 target_link_libraries(
 	${PROJECT_NAME}

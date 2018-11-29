@@ -95,6 +95,9 @@ SRC =	main.c					\
 	utils/split.c				\
 	utils/transform_key_to_string.c		\
 	utils/unicode_mgr.c			\
+						\
+	utils/io/read.c				\
+	utils/io/write.c			\
 
 OBJ =	$(SRC:%.c=src/%.o)
 

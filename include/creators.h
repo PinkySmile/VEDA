@@ -3,6 +3,7 @@
 
 #include <SFML/Graphics.h>
 #include <SFML/Audio.h>
+#include <stdbool.h>
 
 sfText			*createText();
 sfSound			*createSound();
