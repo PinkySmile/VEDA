@@ -19,7 +19,8 @@ void	*my_malloc(size_t size)
 
 	if (!ptr) {
 		//No memory left :/
-		printf("%s: Allocation failure (%luB)\n", FATAL_BEG, (long unsigned int)size);
+		printf("%s: Allocation failure (%lluB)\n", FATAL_BEG, (long long unsigned int)size);
+		dispMsg("Memory allocation error", ALLOC_ERROR_MSG, MB_ICONERROR | MB_OK);
 		exit(EXIT_FAILURE);
 	}
 	return (ptr);

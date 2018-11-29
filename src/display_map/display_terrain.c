@@ -46,15 +46,18 @@ void	displayObject(Object *obj)
 
 void	displayLowerLayer()
 {
-	Object		*map = game.state.loadedMap.objects;
+	Object		*objects = game.state.loadedMap.objects;
 	sfVector2i	cam = game.state.cameraPos;
 
-	if (!map)
+	if (!objects)
 		return;
-	for (int i = 0; map[i].layer; i++)
+	for (int i = 0; objects[i].layer; i++) {
 		//Check if the object is inside the window and on the good layer
-		if (map[i].layer == 1 && isObjectInWindow(map[i]))
-			displayObject(&map[i]);
+		for (int j = 0; j < game.state.characters.length; j++)
+			execAction(objects[i], getCharacter(j));
+		if (objects[i].layer == 1 && isObjectInWindow(objects[i]))
+			displayObject(&objects[i]);
+	}
 }
 
 void	displayUpperLayer()

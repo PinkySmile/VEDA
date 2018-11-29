@@ -21,7 +21,6 @@ void	moveCharacter(Character *character, sfVector2f direction)
 		character->movement.state = STATIC;
 		character->movement.animation = 0;
 	}
-	character->stepSound = IRON;
 	character->movement.speed = 0;
 	if (character->movement.canMove) {
 		character->movement.blocked.up		= 0x7FFFFFFF;
