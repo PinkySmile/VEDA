@@ -37,8 +37,6 @@ void	playButton(int buttonID)
 	free(game.state.loadedMap.objects);
 	game.state.loadedMap.objects = NULL;
 	loadGame();
-	for (Character *player = getPlayer(); player; player = getPlayer())
-		player->isPlayer = false;
 	for (int i = 0; game.resources.buttons[i].content; i++) {
 		game.resources.buttons[i].active = false;
 		game.resources.buttons[i].displayed = false;
