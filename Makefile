@@ -15,6 +15,7 @@ SRC =	main.c					\
 						\
 	character/deal_damages.c		\
 	character/move.c			\
+	character/exec_action.c			\
 						\
 	config_loader/save_file_mgr.c		\
 	config_loader/settings_mgr.c		\
