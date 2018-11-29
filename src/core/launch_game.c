@@ -36,10 +36,17 @@ void	debug_displayPosition()
 	char		*tmp;
 
 	sfText_setCharacterSize(game.resources.text, 10);
+	if (player)
+		tmp = concatf(
+			"X: %f\nY: %f\ncamX: %i\ncamY: %i\n",
+			player->movement.pos.x,
+			player->movement.pos.y,
+			game.state.cameraPos.x,
+			game.state.cameraPos.y
+		);
+	else
 	tmp = concatf(
-		"X: %f\nY: %f\ncamX: %i\ncamY: %i\n",
-		player->movement.pos.x,
-		player->movement.pos.y,
+		"No player found\ncamX: %i\ncamY: %i\n",
 		game.state.cameraPos.x,
 		game.state.cameraPos.y
 	);
