@@ -160,6 +160,7 @@ add_executable(
 	src/battle/characters.c
 	src/utils/split.c
 	src/utils/is_folder.c
+	src/character/exec_action.c
 )
 
 target_link_libraries(

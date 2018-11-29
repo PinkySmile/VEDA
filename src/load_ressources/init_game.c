@@ -43,7 +43,7 @@ void	initGame(bool debug)
 
 	printf("%s: Initializating game\n", INFO_BEG);
 	memset(&game, 0, sizeof(game));
-	srandom((long)&game);
+	srandom((long long)&game);
 	memset(&player, 0, sizeof(player));
 	game.debug = debug;
 	initDiscordRichPresence();

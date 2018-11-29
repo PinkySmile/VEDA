@@ -7,6 +7,7 @@
 #include "enums.h"
 #include "macros.h"
 #include "array.h"
+#include "object.h"
 
 typedef struct {
 	int	dialogId;
@@ -79,5 +80,6 @@ typedef struct {
 } Character;
 
 void	dealDamages(Character *character, int damages, int damageType);
+void	execAction(Object obj, Character *character);
 
 #endif

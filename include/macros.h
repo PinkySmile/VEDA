@@ -29,6 +29,13 @@
 #define PLAYER_HITBOX_SIZE	(sfVector2f){10, 14}
 #define OBJECT_SIZE		(sfVector2f){16, 16}
 
+#define ALLOC_ERROR_MSG		"An error occurred when trying to reserve memory.\n\
+If you are playing on a low memory machine, this can cause this kind of error.\n\
+Try closing some programs.\n\
+More informations can be found in last.log\n\n\
+Click OK to close the application"
+
+
 #define	PARSER_INFOS		((ParserInfos[1]) {{'{', '}', '{', '}', ',', '=', "\"'", "--", NULL, NULL, false, false}})
 
 #define MB_USERICON					  128

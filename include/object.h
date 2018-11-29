@@ -2,6 +2,7 @@
 #define __OBJECT_HEADER_
 
 #include <SFML/Graphics.h>
+#include <stdbool.h>
 #include "enums.h"
 
 typedef struct {
