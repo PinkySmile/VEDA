@@ -17,7 +17,8 @@ SRC =	main.c					\
 	character/move.c			\
 	character/exec_action.c			\
 						\
-	config_loader/save_file_mgr.c		\
+	config_loader/save_file_mgr/save.c	\
+	config_loader/save_file_mgr/load.c	\
 	config_loader/settings_mgr.c		\
 						\
 	configs/buttons.c			\
