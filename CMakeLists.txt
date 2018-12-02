@@ -84,8 +84,8 @@ add_executable(
 	src/battle/base_functions.c
 	src/battle/lib.c
 	src/buttons_callbacks/menus.c
-	src/config_loader/save_file_mgr/save.c
-	src/config_loader/settings_mgr.c
+	src/saved_configs_mgr/save_file_mgr/saving/game.c
+	src/saved_configs_mgr/settings_mgr.c
 	src/configs/buttons.c
 	src/configs/fonts.c
 	src/configs/menus.c
@@ -163,7 +163,12 @@ add_executable(
 	src/utils/is_folder.c
 	src/character/exec_action.c
 	src/utils/io/write.c
-	src/utils/io/read.c include/display_messagebox.h src/config_loader/save_file_mgr/load.c)
+	src/utils/io/read.c
+	include/display_messagebox.h
+	src/saved_configs_mgr/save_file_mgr/loading/game.c
+	src/saved_configs_mgr/save_file_mgr/loading/map.c
+	src/configs/map_loading.c
+	src/saved_configs_mgr/save_file_mgr/saving/map.c)
 
 target_link_libraries(
 	${PROJECT_NAME}

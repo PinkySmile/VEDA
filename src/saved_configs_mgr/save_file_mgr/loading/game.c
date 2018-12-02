@@ -9,67 +9,14 @@
 #include <loading.h>
 #include <callbacks.h>
 #include <sys/stat.h>
+#include <globals.h>
+#include <save.h>
 #include "macros.h"
 #include "creators.h"
 #include "utils.h"
 #include "character.h"
 #include "object.h"
 #include "game_struct.h"
-
-Object	*loadSavedMap(char *path, char **bg)
-{
-	size_t	len = 0;
-	FILE	*stream = fopen(path, "rb");
-	int	fd = fileno(stream);
-	char	head;
-	Object	*map;
-
-	read(fd, &head, sizeof(head));
-	if (head == 0) {
-		printf(
-			"%s: %s: Invalid header version: Save file has been created with a too old version (Save v%i is not supported).\n",
-			ERROR_BEG,
-			path,
-			head
-		);
-		close(fd);
-		return NULL;
-	} else if (head > SAVED_LEVEL_HEADER) {
-		printf(
-			"%s: %s: Invalid header version: Client is outdated (Save v%i < Save v%i).\n",
-			ERROR_BEG,
-			path,
-			SAVED_LEVEL_HEADER,
-			head
-		);
-		close(fd);
-		return NULL;
-	}
-	read(fd, &len, sizeof(len));
-	*bg = my_malloc(len + 1);
-	(*bg)[read(fd, *bg, len)] = 0;
-	read(fd, &len, sizeof(len));
-	map = my_malloc((len + 1) * sizeof(*map));
-	read(fd, map, len * sizeof(*map));
-	map[len].layer = 0;
-	read(fd, &game.state.characters.length, sizeof(game.state.characters.length));
-	game.state.characters.content = my_malloc(sizeof(Character) * game.state.characters.length);
-	read(fd, game.state.characters.content, sizeof(Character) * game.state.characters.length);
-	for (int i = 0; i < game.state.characters.length; i++) {
-		for (int j = 0; j < DAMAGES_TYPE_NB; j++)
-			getCharacter(i)->damageClock[j] = sfClock_create();
-		getCharacter(i)->movement.animationClock = sfClock_create();
-		getCharacter(i)->movement.stateClock = sfClock_create();
-		getCharacter(i)->stats.energyRegenClock = sfClock_create();
-		getCharacter(i)->inventory.content = my_malloc(getCharacter(i)->inventory.length);
-		read(
-			fd,
-			getCharacter(i)->inventory.content,
-			getCharacter(i)->inventory.length * sizeof(Item)
-		);
-	}
-	return (map);
-}
 
 void	loadGame()
 {
@@ -79,11 +26,16 @@ void	loadGame()
 	void		*buf;
 	unsigned int	len = 0;
 	struct	stat	st;
+	char		currentPath[PATH_MAX];
 
-	printf("%s: Loading game\n", INFO_BEG);
+	if (!getcwd(currentPath, PATH_MAX)) {
+		printf("%s: getcwd: %s\n", ERROR_BEG, strerror(errno));
+		memset(currentPath, 0, PATH_MAX);
+	}
+	printf("%s: Loading game save file '%s/save/game.dat'\n", INFO_BEG, currentPath);
 	fd = open("save/game.dat", O_RDONLY);
 	if (fd < 0) {
-		printf("%s: Cannot open save file (save/game.dat: %s)\n", ERROR_BEG, strerror(errno));
+		printf("%s: Cannot open save file (%s/save/game.dat: %s)\n", ERROR_BEG, currentPath, strerror(errno));
 		return;
 	}
 	free(game.state.loadedMap.objects);
@@ -91,7 +43,7 @@ void	loadGame()
 	free(game.state.loadedMap.path);
 	game.state.loadedMap.objects = NULL;
 	if (read(fd, &len, sizeof(len)) != sizeof(len)) {
-		printf("%s: Corrupted save file detected: Unexpected <EOF> len\n", ERROR_BEG);
+		printf("%s: Corrupted save file detected: Unexpected <EOF>\n", ERROR_BEG);
 		use = (dispMsg("Error", CORRUPTED_SAVE_MSG, MB_YESNO | MB_ICONWARNING) == IDYES);
 		if (!use) {
 			close(fd);
@@ -100,7 +52,7 @@ void	loadGame()
 	}
 	game.state.loadedMap.path = my_malloc(len + 1);
 	if ((unsigned)read(fd, game.state.loadedMap.path, len) != len && !use) {
-		printf("%s: Corrupted save file detected: Unexpected <EOF> map\n", ERROR_BEG);
+		printf("%s: Corrupted save file detected: Unexpected <EOF>\n", ERROR_BEG);
 		use = (dispMsg("Error", CORRUPTED_SAVE_MSG, MB_YESNO | MB_ICONWARNING) == IDYES);
 		if (!use) {
 			close(fd);
@@ -141,5 +93,5 @@ void	loadGame()
 		free(buffer);
 	}
 	close(fd);
-	printf("%s: Done\n", INFO_BEG);
+	printf("%s: Save file loaded\n", INFO_BEG);
 }
