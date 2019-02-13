@@ -8,6 +8,7 @@
 #include <destructors.h>
 #include <loading.h>
 #include <callbacks.h>
+#include <sys/stat.h>
 #include "macros.h"
 #include "creators.h"
 #include "utils.h"
