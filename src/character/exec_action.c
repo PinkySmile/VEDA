@@ -6,26 +6,28 @@ void	execAction(Object obj, Character *character)
 {
 	//If the character is not on the object, return
 	if (!(
-		character->movement.pos.x + PLAYER_HITBOX_OFFSET.x + PLAYER_HITBOX_SIZE.x < obj.pos.x ||
-		character->movement.pos.y + PLAYER_HITBOX_OFFSET.y + PLAYER_HITBOX_SIZE.y < obj.pos.y ||
+		character->movement.pos.x + PLAYER_HITBOX_OFFSET.x + PLAYER_HITBOX_SIZE.x < obj.pos.x + 1 ||
+		character->movement.pos.y + PLAYER_HITBOX_OFFSET.y + PLAYER_HITBOX_SIZE.y < obj.pos.y + 1 ||
 		character->movement.pos.x + PLAYER_HITBOX_OFFSET.x > obj.pos.x + OBJECT_SIZE.x ||
 		character->movement.pos.y + PLAYER_HITBOX_OFFSET.y > obj.pos.y + OBJECT_SIZE.y
 	)) {
 		if (obj.solid) {
 			switch (character->movement.position) {
 			case LEFT:
-				character->movement.pos.x = obj.pos.x - PLAYER_HITBOX_OFFSET.x + OBJECT_SIZE.x;
+				character->movement.pos.x = obj.pos.x - PLAYER_HITBOX_OFFSET.x + OBJECT_SIZE.x + 1;
 				break;
 			case RIGHT:
 				character->movement.pos.x = obj.pos.x - PLAYER_HITBOX_OFFSET.x - PLAYER_HITBOX_SIZE.x;
 				break;
 			case UP:
-				character->movement.pos.y = obj.pos.y - PLAYER_HITBOX_OFFSET.y + OBJECT_SIZE.y;
+				character->movement.pos.y = obj.pos.y - PLAYER_HITBOX_OFFSET.y + OBJECT_SIZE.y + 1;
 				break;
 			case DOWN:
 				character->movement.pos.y = obj.pos.y - PLAYER_HITBOX_OFFSET.y - PLAYER_HITBOX_SIZE.y;
 				break;
 			}
+			character->movement.state = STATIC;
+			character->movement.animation = 0;
 		}
 
 		if (obj.footstepSound > character->stepSound)

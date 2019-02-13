@@ -17,6 +17,11 @@ void	moveCharacter(Character *character, sfVector2f direction)
 	sfVector2f	distance;
 	bool		moved = false;
 
+	if (direction.x && direction.y) {
+		moveCharacter(character, (sfVector2f){direction.x, 0});
+		moveCharacter(character, (sfVector2f){0, direction.y});
+		return;
+	}
 	if (character->movement.state == MOVING && stateSeconds >= 0.3) {
 		character->movement.state = STATIC;
 		character->movement.animation = 0;
@@ -66,33 +71,41 @@ void	moveCharacter(Character *character, sfVector2f direction)
 			}
 		}
 		character->movement.speed = 0;
-		if (direction.x > 0 && character->movement.blocked.right > PLAYER_HITBOX_SIZE.x + PLAYER_HITBOX_OFFSET.x) {
-			character->movement.pos.x += direction.x;
+		if (direction.x > 0) {
 			character->movement.position = RIGHT;
-			moved = true;
-			if (ABS(direction.x) > character->movement.speed)
-				character->movement.speed = ABS(direction.x);
+			if (character->movement.blocked.right > PLAYER_HITBOX_SIZE.x + PLAYER_HITBOX_OFFSET.x) {
+				character->movement.pos.x += direction.x;
+				moved = true;
+				if (ABS(direction.x) > character->movement.speed)
+					character->movement.speed = ABS(direction.x);
+			}
 		}
-		if (direction.x < 0 && character->movement.blocked.left > -PLAYER_HITBOX_OFFSET.x + 1) {
-			character->movement.pos.x += direction.x;
+		if (direction.x < 0) {
 			character->movement.position = LEFT;
-			moved = true;
-			if (ABS(direction.x) > character->movement.speed)
-				character->movement.speed = ABS(direction.x);
+			if (character->movement.blocked.left > -PLAYER_HITBOX_OFFSET.x + 1) {
+				character->movement.pos.x += direction.x;
+				moved = true;
+				if (ABS(direction.x) > character->movement.speed)
+					character->movement.speed = ABS(direction.x);
+			}
 		}
-		if (direction.y > 0 && character->movement.blocked.down > PLAYER_HITBOX_SIZE.y + PLAYER_HITBOX_OFFSET.y) {
-			character->movement.pos.y += direction.y;
+		if (direction.y > 0) {
 			character->movement.position = DOWN;
-			moved = true;
-			if (ABS(direction.y) > character->movement.speed)
-				character->movement.speed = ABS(direction.y);
+			if (character->movement.blocked.down > PLAYER_HITBOX_SIZE.y + PLAYER_HITBOX_OFFSET.y) {
+				character->movement.pos.y += direction.y;
+				moved = true;
+				if (ABS(direction.y) > character->movement.speed)
+					character->movement.speed = ABS(direction.y);
+			}
 		}
-		if (direction.y < 0 && character->movement.blocked.up > -PLAYER_HITBOX_OFFSET.y + 1) {
-			character->movement.pos.y += direction.y;
+		if (direction.y < 0) {
 			character->movement.position = UP;
-			moved = true;
-			if (ABS(direction.y) > character->movement.speed)
-				character->movement.speed = ABS(direction.y);
+			if (character->movement.blocked.up > -PLAYER_HITBOX_OFFSET.y + 1) {
+				character->movement.pos.y += direction.y;
+				moved = true;
+				if (ABS(direction.y) > character->movement.speed)
+					character->movement.speed = ABS(direction.y);
+			}
 		}
 		if (moved) {
 			character->movement.state = MOVING;
