@@ -45,11 +45,11 @@ void	debug_displayPosition()
 			game.state.cameraPos.y
 		);
 	else
-	tmp = concatf(
-		"No player found\ncamX: %i\ncamY: %i\n",
-		game.state.cameraPos.x,
-		game.state.cameraPos.y
-	);
+		tmp = concatf(
+			"No player found\ncamX: %i\ncamY: %i\n",
+			game.state.cameraPos.x,
+			game.state.cameraPos.y
+		);
 	sfText_setColor(game.resources.text, (sfColor) {abs(color), abs(color), abs(color), 255});
 	text(tmp, 0, game.settings.dispFramerate ? 10 : 0, false);
 	free(tmp);

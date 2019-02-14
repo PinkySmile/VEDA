@@ -26,7 +26,7 @@ void	dealDamages(Character *character, int damages, int damageType)
 	if (damageType != TRUE_DAMAGE) {
 		res = getResistances(character, damageType);
 		for (int i = 0; i < 5; i++)
-			character->wornItems[i].durability -= damages / 10;
+			character->wornItems[i].durability -= damages / 10.;
 		character->stats.life -= damages * (20 / (sqrt(res) + 20));
 	} else
 		character->stats.life -= damages;

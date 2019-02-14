@@ -17,15 +17,12 @@ void	moveCharacter(Character *character, sfVector2f direction)
 	sfVector2f	distance;
 	bool		moved = false;
 
-	if (direction.x && direction.y) {
-		moveCharacter(character, (sfVector2f){direction.x, 0});
-		moveCharacter(character, (sfVector2f){0, direction.y});
-		return;
-	}
 	if (character->movement.state == MOVING && stateSeconds >= 0.3) {
 		character->movement.state = STATIC;
 		character->movement.animation = 0;
 	}
+	if (!direction.x && !direction.y)
+		return;
 	character->movement.speed = 0;
 	if (character->movement.canMove) {
 		character->movement.blocked.up		= 0x7FFFFFFF;

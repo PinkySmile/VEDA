@@ -33,21 +33,18 @@ void	execAction(Object obj, Character *character)
 		if (obj.footstepSound > character->stepSound)
 			character->stepSound = obj.footstepSound + random() % obj.footstepVariance;
 		switch (obj.action) {
-			case DEAL_DAMAGES:
-				for (int i = 0; i < DAMAGES_TYPE_NB; i++) {
-					if (obj.damages[i] && (character->invulnerabiltyTime <= 0 || obj.damages[i] < 0)) {
-						dealDamages(character, obj.damages[i], i);
-						character->invulnerabiltyTime =
-							obj.invulnerabiltyTime > character->invulnerabiltyTime ?
-							obj.invulnerabiltyTime :
-							character->invulnerabiltyTime;
-					}
+		case DEAL_DAMAGES:
+			for (int i = 0; i < DAMAGES_TYPE_NB; i++) {
+				if (obj.damages[i] && (character->invulnerabiltyTime <= 0 || obj.damages[i] < 0)) {
+					dealDamages(character, obj.damages[i], i);
+					character->invulnerabiltyTime = obj.invulnerabiltyTime;
 				}
-				break;
-			case CHANGE_MUSIC:
-				break;
-			case LAUNCH_CUTSCENE:
-				break;
+			}
+			break;
+		case CHANGE_MUSIC:
+			break;
+		case LAUNCH_CUTSCENE:
+			break;
 		}
 	}
 }
