@@ -1,4 +1,5 @@
 #include <SFML/Graphics.h>
+#include <display.h>
 #include "structs.h"
 #include "graphic.h"
 
@@ -92,13 +93,14 @@ void	displayCharacter(Character *character, int id, sfSprite *sprite)
 
 void	displayCharacters()
 {
-	Character	buff;
+	Character	*buff;
 	static int	var = 0;
 
 	for (int i = 0; i < game.state.characters.length; i++) {
-		buff = ((Character *)game.state.characters.content)[i];
-		if (getSprite(MALE_CHARACTER + buff.texture) && (!buff.invulnerabiltyTime || var % 5 <= 3))
-			displayCharacter(&buff, i, getSprite(MALE_CHARACTER + buff.texture)->sprite);
+		buff = &((Character *)game.state.characters.content)[i];
+		if (getSprite(MALE_CHARACTER + buff->texture) && (!buff->invulnerabiltyTime || var % 5 <= 3))
+			displayCharacter(buff, i, getSprite(MALE_CHARACTER + buff->texture)->sprite);
+		displayDamagesTakenBy(buff);
 	}
 	var = var >= 4 ? 0 : var + 1;
 }

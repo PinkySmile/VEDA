@@ -180,7 +180,7 @@ int	destroyProjectile(lua_State *lua)
 
 	luaL_argcheck(lua, proj != NULL, 1, "'projectile' expected");
 	if (!*proj) {
-		printf("%s: Projectile has already been destroyed", INFO_BEG);
+		printf("%s: Projectile has already been destroyed\n", INFO_BEG);
 		return 0;
 	}
 	for (list = &game.state.battle_infos.projectiles; list && list->data != *proj; list = list->next)

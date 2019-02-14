@@ -23,10 +23,8 @@ void	inGame()
 			isKeyPressed(getKey(KEY_UP), game.resources.window),
 		});
 	}
-	if (game.state.dialogs) {
-		image(getSprite(DIALOG_BOX)->sprite, 0, 380, 640, 100);
+	if (game.state.dialogs)
 		displayDialogs();
-	}
 	for (int i = 0; i < game.state.characters.length; i++) {
 		Character	*chara = getCharacter(i);
 
@@ -34,6 +32,7 @@ void	inGame()
 		if (chara->stats.life > 10 * chara->stats.lifeMax)
 			chara->stats.life = 10 * chara->stats.lifeMax;
 		chara->invulnerabiltyTime -= chara->invulnerabiltyTime > 0 ? 1 : 0;
+		moveCharacter(chara, (sfVector2f){0, 0});
 	}
 
 	if (player) {

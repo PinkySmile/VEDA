@@ -45,6 +45,7 @@ bool	addCharacter(char c, char **str, bool reallocBuffer)
 
 void	displayDialogs()
 {
+	image(getSprite(DIALOG_BOX)->sprite, 0, 380, 640, 100);
 	for (int i = 0; i < game.state.dialogs; i++) {
 		if (!game.state.dialogsOnScreen[i].displayedText)
 			game.state.dialogsOnScreen[i].displayedText = concatf("%s: ", game.state.dialogsOnScreen[i].dialogOwnerName);
