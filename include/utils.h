@@ -25,6 +25,7 @@ ssize_t		getline(char **lineptr, size_t *n, FILE *stream);
 int		playSoundEffect(sfSoundBuffer *buffer);
 char		**split(char *str, char sep);
 bool		isFolder(char *path);
+sfVector2f	getTextSize(const char *str, const sfFont *font, unsigned size);
 
 #if defined _WIN32 || defined __WIN32 || defined __WIN32__
 	#define random()	rand()

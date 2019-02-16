@@ -11,5 +11,6 @@ void	drawLifeBar();
 void	drawEnergyBar();
 void	displayDialogs();
 void	displayDamagesTakenBy(Character *character);
+void	createDialog(char *rawStr, Character *character);
 
 void	debug_displayCharacterHitboxs(Character *character);

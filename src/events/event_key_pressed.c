@@ -10,32 +10,25 @@
 #include <menus.h>
 #include <string.h>
 #include <creators.h>
+#include <display.h>
 
 void	debug_keyCommands(sfEvent *event)
 {
 	char	buffer[100];
-	void	*buff;
+	char	*buff = NULL;
 	long	nbr = random();
 	size_t	n = 0;
-	static sfRenderWindow *windows[10];
-	static bool created = false;
+	static	sfRenderWindow *windows[10];
+	static	bool created = false;
 
 	if (event->key.code == sfKeyInsert) {
-		buff = realloc(game.state.dialogsOnScreen, sizeof(*game.state.dialogsOnScreen) * (game.state.dialogs + 1));
-		if (buff) {
-			game.state.dialogs++;
-			game.state.dialogsOnScreen = buff;
-			memset(&game.state.dialogsOnScreen[game.state.dialogs - 1], 0, sizeof(*game.state.dialogsOnScreen));
-			game.state.dialogsOnScreen[game.state.dialogs - 1].dialogOwnerName = (
-				getCharacter(nbr % (game.state.characters.length + 1)) ?
-				NULL :
-				getCharacter(nbr % game.state.characters.length)->name
-			);
-			getline(&game.state.dialogsOnScreen[game.state.dialogs - 1].rawText, &n, stdin);
-			game.state.dialogsOnScreen[game.state.dialogs - 1].clock = sfClock_create();
-			game.state.dialogsOnScreen[game.state.dialogs - 1].speed = 0.1;
-		}
-
+		getline(&buff, &n, stdin);
+		createDialog(
+			buff,
+			getCharacter(nbr % (game.state.characters.length + 1)) ?
+			NULL :
+			getCharacter(nbr % game.state.characters.length)
+		);
 	} else if (event->key.code == sfKeyDelete) {
 		for (int i = 0; i < game.state.dialogs; i++) {
 			free(game.state.dialogsOnScreen[i].displayedText);

@@ -2,12 +2,14 @@
 #define __CHARACTER_HEADER_
 
 #include <SFML/Graphics.h>
+#include <SFML/Audio.h>
 #include <stdbool.h>
 #include <limits.h>
 #include "enums.h"
 #include "macros.h"
 #include "array.h"
 #include "object.h"
+#include "sprite.h"
 
 typedef struct {
 	int	dialogId;
@@ -77,6 +79,8 @@ typedef struct {
 	char		dialogsScript[PATH_MAX];
 	char		**dialogsStrings;
 	enum sfx	stepSound;
+	Sprite		*dialogFace;
+	sfSoundBuffer	*dialogSound;
 } Character;
 
 void	dealDamages(Character *character, int damages, int damageType);

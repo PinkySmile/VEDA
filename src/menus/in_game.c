@@ -23,8 +23,6 @@ void	inGame()
 			isKeyPressed(getKey(KEY_UP), game.resources.window),
 		});
 	}
-	if (game.state.dialogs)
-		displayDialogs();
 	for (int i = 0; i < game.state.characters.length; i++) {
 		Character	*chara = getCharacter(i);
 
@@ -50,4 +48,6 @@ void	inGame()
 	displayCharacters();
 	displayUpperLayer();
 	displayHUD();
+	if (game.state.dialogs)
+		displayDialogs();
 }

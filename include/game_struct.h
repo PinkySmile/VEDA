@@ -18,6 +18,8 @@ typedef struct {
 	char		*rawText;
 	int		index;
 	float		speed;
+	sfSound		*sound;
+	Sprite		*sprite;
 	sfClock		*clock;
 } DialogDisplayed;
 
