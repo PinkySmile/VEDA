@@ -21,8 +21,9 @@ void	saveLevel(char *path, Object *objs, char *header, Array characters)
 	FILE		*stream;
 	size_t		len;
 	int		fd;
+	int		magic = SAVE_FILES_MAGIC_NUMBER;
+	char		ver = SAVED_LEVEL_VERSION;
 	char		*buffer;
-	char		head = SAVED_LEVEL_HEADER;
 	Character	*chars = characters.content;
 
 	printf("%s: Saving to %s\n", INFO_BEG, path);
@@ -36,7 +37,8 @@ void	saveLevel(char *path, Object *objs, char *header, Array characters)
 	}
 	fd = fileno(stream);
 	len = strlen(header);
-	write(fd, &head, sizeof(head));
+	write(fd, &magic, sizeof(magic));
+	write(fd, &ver, sizeof(ver));
 	write(fd, &len, sizeof(len));
 	write(fd, header, len);
 	for (len = 0; objs[len].layer; len++);
@@ -58,6 +60,7 @@ bool	saveGame(bool level)
 	int		fd;
 	struct stat	st;
 	bool		success;
+	int		magic = SAVE_FILES_MAGIC_NUMBER;
 	int		len = 0;
 	char		*buffer = NULL;
 
@@ -88,6 +91,12 @@ bool	saveGame(bool level)
 		return (false);
 	}
 	len = game.state.loadedMap.path ? strlen(game.state.loadedMap.path) : 0;
+	if (write(fd, &magic, sizeof(magic)) != sizeof(magic)) {
+		printf("%s: Couldn't write save file\n", ERROR_BEG);
+		close(fd);
+		dispMsg("Error", "Couldn't write to save file\nNo space on disk ?", MB_OK | MB_ICONERROR);
+		return (false);
+	}
 	if (write(fd, &len, sizeof(len)) != sizeof(len)) {
 		printf("%s: Couldn't write save file\n", ERROR_BEG);
 		close(fd);

@@ -41,8 +41,10 @@ Click OK to close the application"
 
 #define	PARSER_INFOS		((ParserInfos[1]) {{'{', '}', '{', '}', ',', '=', "\"'", "--", NULL, NULL, false, false}})
 
-#define	SAVED_LEVEL_HEADER	1
-#define	SAVED_SETTINGS_HEADER	101
+#define SAVED_LEVEL_VERSION			2
+#define	SAVED_SETTINGS_HEADER			101
+#define	SAVE_FILES_MAGIC_NUMBER			0x000042A3
+#define	SAVE_FILES_MAGIC_NUMBER_REVERSED	0xA3420000
 
 #define DEFAULT_KEYS		(unsigned char[NB_OF_KEYS]){\
 	sfKeyZ,		\
@@ -70,7 +72,6 @@ Click OK to close the application"
 #define READ_WRITE_RIGHTS	0664
 
 #define ERROR_DEFAULT_FONT	"Error, couldn't load base font '%s'\nIf you are launching the game with a shortcut, try launching the executable itself\nIf it doesn't work, try reinstalling the game.\n"
-#define CORRUPTED_SAVE_MSG	"The save file is either corrupted or invalid (too old ?)\n\nDo you want to use the save file anyway ?\nNote that this can make things really glitchy or even crash the game"
-#define CORRUPTED_LEVEL		"An error occurred when trying to load level %s.\n\nDo you want to use the save file anyway ?\nNote that this can make things really glitchy or even crash the game"
+#define CORRUPTED_SAVE_MSG	"The save file is either corrupted or invalid (too old ?)\n\nDo you want to create a new one ?"
 
 #endif

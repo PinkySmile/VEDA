@@ -2,6 +2,6 @@
 #include "settings.h"
 
 bool		saveGame	(bool level);
-void		loadGame	();
+bool		loadGame	();
 void		saveSettings	();
 Settings	loadSettings	(void);

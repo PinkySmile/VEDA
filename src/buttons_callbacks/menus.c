@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
+#include <menus.h>
 #include "save.h"
 #include "utils.h"
 #include "loading.h"
@@ -36,7 +37,8 @@ void	playButton(int buttonID)
 	(void)buttonID;
 	free(game.state.loadedMap.objects);
 	game.state.loadedMap.objects = NULL;
-	loadGame();
+	if (!loadGame())
+		return;
 	for (int i = 0; game.resources.buttons[i].content; i++) {
 		game.resources.buttons[i].active = false;
 		game.resources.buttons[i].displayed = false;
@@ -47,7 +49,7 @@ void	playButton(int buttonID)
 	}
 	if (getPlayer() && strcmp((char *)getPlayer()->name, "") == 0) {
 		updateDiscordPresence("Main Menu", "Choosing name", 0, false, "icon", 0, "VEDA", 0);
-		game.state.menu = 6;
+		game.state.menu = CHANGE_NAME_MENU;
 		game.input.bufPos = 0;
 		game.input.bufSize = 32;
 		game.resources.buttons[9].active = true;
@@ -62,7 +64,7 @@ void	playButton(int buttonID)
 			buffer = concatf("Playing as \"%s\"", getPlayer()->name);
 		updateDiscordPresence("In Game", buffer, 0, false, "icon", 0, "VEDA", 0);
 		free(buffer);
-		game.state.menu = 1;
+		game.state.menu = IN_GAME_MENU;
 	}
 	if (getMusic(MAIN_MENU_MUSIC) && sfMusic_getStatus(getMusic(MAIN_MENU_MUSIC)) == sfPlaying)
 		sfMusic_stop(getMusic(MAIN_MENU_MUSIC));
