@@ -13,7 +13,7 @@
 
 extern char	*programPath;
 
-void	*my_malloc(size_t size)
+void	*protectedMalloc(size_t size)
 {
 	void	*ptr = malloc(size);
 

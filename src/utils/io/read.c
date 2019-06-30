@@ -43,7 +43,7 @@ double	readFloat(int fd)
 void	*readBuffer(int fd, void *buffer, size_t size)
 {
 	if (!buffer)
-		buffer = my_malloc(size);
+		buffer = protectedMalloc(size);
 	read(fd, buffer, size);
 	return buffer;
 }
@@ -51,7 +51,7 @@ void	*readBuffer(int fd, void *buffer, size_t size)
 char	*readString(int fd)
 {
 	size_t	len = readVarInt(fd);
-	char	*buffer = my_malloc(len + 1);
+	char	*buffer = protectedMalloc(len + 1);
 
 	readBuffer(fd, buffer, len);
 	buffer[len] = '\0';
