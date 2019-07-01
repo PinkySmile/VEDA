@@ -117,16 +117,19 @@ CSFML = -lcsfml-audio		\
 		-lcsfml-system		\
 		-lcsfml-window		\
 
-
-LDFLAGS =				\
+LIBS_PATHS =				\
 	-L lib/configParser	\
 	-L lib/concatf		\
-	-lm					\
-	-lconcatf			\
-	-lconfigParser		\
-	-llua				\
-	-ldiscord-rpc		\
-	-lpthread			\
+
+LD_LIBS =			\
+	-lm				\
+	-lconcatf		\
+	-lconfigParser	\
+	-llua			\
+	-ldiscord-rpc	\
+	-lpthread		\
+
+LDFLAGS =	$(LIBS_PATHS) $(LD_LIBS)
 
 CFLAGS= $(INC)	\
 		-W		\
@@ -174,11 +177,7 @@ ffclean:fclean
 
 re:	fclean all
 
+dbg:	LDFLAGS = $(LIBS_PATHS) $(LD_LIBS)
 dbg:	CFLAGS += -g -O0
 dbg:	RULE = dbg
 dbg:	ffclean all
-
-epi:	CSFML = -lc_graph_prog
-epi:	CFLAGS += -g -O0
-epi:	RULE = dbg
-epi:	re
