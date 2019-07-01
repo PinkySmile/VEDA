@@ -1,6 +1,7 @@
 #ifndef VEDA_DISPLAY_MESSAGEBOX_H
 #define VEDA_DISPLAY_MESSAGEBOX_H
 
+#ifndef MB_USERICON
 #define MB_USERICON					  128
 #define MB_ICONASTERISK 				   64
 #define MB_ICONEXCLAMATION				 0x30
@@ -44,5 +45,6 @@
 #define IDIGNORE					    5
 #define IDYES						    6
 #define IDNO						    7
+#endif
 
 #endif //VEDA_DISPLAY_MESSAGEBOX_H
