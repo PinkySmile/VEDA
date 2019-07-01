@@ -26,7 +26,7 @@ add_library(
 	lib/concatf/sources/str.c
 	lib/concatf/sources/sub_strings.c
 	lib/concatf/sources/uint_to_str.c
-)
+	include/logger.h)
 
 add_library(
 	configParser
@@ -163,7 +163,7 @@ add_executable(
 	src/utils/is_folder.c
 	src/character/exec_action.c
 	src/utils/io/write.c
-	src/utils/io/read.c include/display_messagebox.h src/config_loader/save_file_mgr/load.c src/hud/display_damages.c src/dialogs/create_dialog.c src/utils/get_text_size.c)
+	src/utils/io/read.c include/display_messagebox.h src/config_loader/save_file_mgr/load.c src/hud/display_damages.c src/dialogs/create_dialog.c src/utils/get_text_size.c src/utils/logger.c)
 
 target_link_libraries(
 	${PROJECT_NAME}
