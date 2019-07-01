@@ -28,14 +28,14 @@ bool	getPositiveFloatingNumber(ParserObj *obj, void *data, char *err_buffer);
 bool	getObjectElement(Context *context);
 
 typedef enum contextTypes {
-	ContextBooleanType	= 1 << 0,
-	ContextStringType	= 1 << 1,
-	ContextFloatType	= 1 << 2,
-	ContextArrayType	= 1 << 3,
-	ContextObjType		= 1 << 4,
-	ContextListType		= 1 << 5,
-	ContextIntType		= 1 << 6,
-	ContextNullType		= 1 << 7,
+	ContextBooleanType	= 1U << 0U,
+	ContextStringType	= 1U << 1U,
+	ContextFloatType	= 1U << 2U,
+	ContextArrayType	= 1U << 3U,
+	ContextObjType		= 1U << 4U,
+	ContextListType		= 1U << 5U,
+	ContextIntType		= 1U << 6U,
+	ContextNullType		= 1U << 7U,
 } contextTypes;
 
 typedef enum contextActions {
