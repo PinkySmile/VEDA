@@ -96,6 +96,7 @@ SRC =										\
 	utils/getline.c							\
 	utils/get_player.c						\
 	utils/get_text_size.c					\
+	utils/logger.c							\
 	utils/play_sound_effect.c				\
 	utils/split.c							\
 	utils/transform_key_to_string.c			\
@@ -139,13 +140,12 @@ RULE =	all
 LIBS =	lib/configParser/libconfigParser.a	\
 		lib/concatf/libconcatf.a			\
 
-RES =	
+ifeq ($(OS),Windows_NT)
+	RES = icon.res
+	LDFLAGS += -mwindows
+endif
 
-all:	$(LIBS) $(NAME)
-
-windows:RES = icon.res
-windows:LDFLAGS += -mwindows
-windows:icon.res all
+all:	$(LIBS) $(RES) $(NAME)
 
 icon.res:
 	windres icon.rc -O coff -o icon.res
