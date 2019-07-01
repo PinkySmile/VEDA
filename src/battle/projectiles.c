@@ -3,6 +3,7 @@
 #include <lua.h>
 #include <lualib.h>
 #include <lauxlib.h>
+#include <logger.h>
 #include "structs.h"
 
 extern	const	luaL_Reg	projectiles_lib[];
@@ -180,7 +181,7 @@ int	destroyProjectile(lua_State *lua)
 
 	luaL_argcheck(lua, proj != NULL, 1, "'projectile' expected");
 	if (!*proj) {
-		printf("%s: Projectile has already been destroyed\n", INFO_BEG);
+		logMsg(LOGGER_WARNING, "This projectile has already been destroyed");
 		return 0;
 	}
 	for (list = &game.state.battle_infos.projectiles; list && list->data != *proj; list = list->next)
@@ -205,7 +206,7 @@ int	destroyProjectile(lua_State *lua)
 		}
 	}
 
-	printf("%s: Removed projectile %i\n", INFO_BEG, index);
+	logMsg(LOGGER_DEBUG, "Removed projectile %i", index);
 	*proj = NULL;
 	return (0);
 }
@@ -220,7 +221,7 @@ int	addProjectileLua(lua_State *lua)
 	double		speed		= lua_isnoneornil(lua, 6) ? 0 : luaL_checknumber(lua, 6);
 	double		rotaSpeed	= lua_isnoneornil(lua, 7) ? 0 : luaL_checknumber(lua, 7);
 	double		accel		= lua_isnoneornil(lua, 8) ? 0 : luaL_checknumber(lua, 8);
-	double		marker		= lua_isnoneornil(lua, 9) ? 0 : luaL_checknumber(lua, 9);
+	int		marker		= lua_isnoneornil(lua, 9) ? 0 : luaL_checknumber(lua, 9);
 	Projectile	*proj;
 
 	if (projID >= game.state.battle_infos.projectileBank.length || projID < 0) {
@@ -231,6 +232,11 @@ int	addProjectileLua(lua_State *lua)
 	proj = addProjectile(projID, x, y, ownerID, angle, speed, rotaSpeed, accel, marker);
 	if (!proj)
 		luaL_error(lua, "Out of memory");
+	logMsg(
+		LOGGER_DEBUG,
+		"Added new projectile: x %f, y %f, id %i, owner %i, angle %f, speed %f, rotation speed %f, acceleration %f, marker %i",
+		x, y, projID, ownerID, angle, speed, rotaSpeed, accel, marker
+	);
 	pushProjectile(proj, lua);
 	return 1;
 }

@@ -65,15 +65,15 @@ typedef struct {
 } Resources;
 
 typedef struct game_s {
+	char		version[10];
 	bool		debug;
-	Resources	resources;
 	Settings	settings;
 	GameState	state;
+	Resources	resources;
 	Input		input;
 	sfVector2i	languagesConf;
 	sfVector2u	newSize;
 	enum windowMode	newMode;
-	char		*version;
 } game_t;
 
 #endif

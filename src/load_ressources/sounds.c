@@ -5,17 +5,18 @@
 #include "functions.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <logger.h>
 
 sfMusic	*createMusic(Music_config config)
 {
 	sfMusic	*music = NULL;
 
-	printf("%s: Loading file %s\n", INFO_BEG, config.path);
+	logMsg(LOGGER_DEBUG, "Loading file %s", config.path);
 	music = sfMusic_createFromFile(config.path);
 	if (music)
 		sfMusic_setLoop(music, config.isRepeated);
 	else
-		printf("%s: Couldn't load file %s\n", ERROR_BEG, config.path);
+		logMsg(LOGGER_ERROR, "Couldn't load file %s", config.path);
 	return (music);
 }
 
@@ -26,10 +27,10 @@ Array	loadMusics()
 	sfMusic	**musics = NULL;
 
 	for (; musics_conf[len].path; len++);
-	printf("%s: Loading %i musics\n", INFO_BEG, len);
+	logMsg(LOGGER_INFO, "Loading %i musics", len);
 	musics = malloc(sizeof(*musics) * len);
 	if (!musics) {
-		printf("%s: Couldn't allocate %liB of memory\n", FATAL_BEG, (long)sizeof(*musics) * len);
+		logMsg(LOGGER_FATAL, "Couldn't allocate %liB of memory", (long)sizeof(*musics) * len);
 		exit(EXIT_FAILURE);
 	}
 	array.length = len;
@@ -38,7 +39,7 @@ Array	loadMusics()
 		displayLoadingBar(3, MAX_STEPS, i, len, "Loading musics");
 		musics[i] = createMusic(musics_conf[i]);
 	}
-	printf("%s: Musics loaded !\n", INFO_BEG);
+	logMsg(LOGGER_INFO, "Musics loaded !");
 	return (array);
 }
 
@@ -46,10 +47,10 @@ sfSoundBuffer	*createSoundBuffer(Music_config config)
 {
 	sfSoundBuffer	*buffer = NULL;
 
-	printf("%s: Loading file %s\n", INFO_BEG, config.path);
+	logMsg(LOGGER_INFO, "Loading file %s", config.path);
 	buffer = sfSoundBuffer_createFromFile(config.path);
 	if (!buffer)
-		printf("%s: Couldn't load file %s\n", ERROR_BEG, config.path);
+		logMsg(LOGGER_ERROR, "Couldn't load file %s", config.path);
 	return (buffer);
 }
 
@@ -60,10 +61,10 @@ Array	loadSfx()
 	sfSoundBuffer	**sfx = NULL;
 
 	for (; sfx_conf[len].path; len++);
-	printf("%s: Loading %i sfx sounds\n", INFO_BEG, len);
+	logMsg(LOGGER_INFO, "Loading %i sfx sounds", len);
 	sfx = malloc(sizeof(*sfx) * len);
 	if (!sfx) {
-		printf("%s: Couldn't allocate %liB of memory\n", FATAL_BEG, (long)sizeof(*sfx) * len);
+		logMsg(LOGGER_FATAL, "Couldn't allocate %liB of memory", (long)sizeof(*sfx) * len);
 		exit(EXIT_FAILURE);
 	}
 	array.length = len;
@@ -72,6 +73,6 @@ Array	loadSfx()
 		displayLoadingBar(4, MAX_STEPS, i, len, "Loading sound effects");
 		sfx[i] = createSoundBuffer(sfx_conf[i]);
 	}
-	printf("%s: Sounds loaded !\n", INFO_BEG);
+	logMsg(LOGGER_INFO, "Sounds loaded !");
 	return (array);
 }

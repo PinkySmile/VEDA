@@ -3,6 +3,7 @@
 #include <malloc.h>
 #include <stdbool.h>
 #include <stdio.h>
+#include <logger.h>
 #include "loading.h"
 #include "structs.h"
 
@@ -10,7 +11,7 @@ void	changeLanguage(int buttonID)
 {
 	strcpy(game.settings.lang_id, game.resources.languages[buttonID - game.languagesConf.x].id);
 	for (int i = 0; game.resources.buttons[i].content; i++) {
-		printf("%s: Destroying button %i\n", INFO_BEG, i);
+		logMsg(LOGGER_DEBUG, "Destroying button %i", i);
 		sfRectangleShape_destroy(game.resources.buttons[i].rect);
 	}
 	free(game.resources.buttons);

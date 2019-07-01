@@ -3,13 +3,14 @@
 #include <malloc.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <logger.h>
 #include "game_struct.h"
 
 void	createDialog(char *rawStr, Character *character)
 {
 	game.state.dialogsOnScreen = realloc(game.state.dialogsOnScreen, sizeof(*game.state.dialogsOnScreen) * (game.state.dialogs + 1));
 	if (!game.state.dialogsOnScreen){
-		printf("%s: Cannot create dialog box: Memory allocation error (%lu)\n", FATAL_BEG, sizeof(*game.state.dialogsOnScreen) * (game.state.dialogs + 1));
+		logMsg(LOGGER_FATAL, "Cannot create dialog box: Memory allocation error (%lu)", (unsigned long)sizeof(*game.state.dialogsOnScreen) * (game.state.dialogs + 1));
 		exit(EXIT_FAILURE);
 	}
 	game.state.dialogs++;

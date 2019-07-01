@@ -1,6 +1,7 @@
 #include <lauxlib.h>
 #include <string.h>
 #include <stdlib.h>
+#include <logger.h>
 #include "save.h"
 #include "utils.h"
 #include "structs.h"
@@ -27,9 +28,9 @@ void	initDialogsScript()
 	game.resources.dialogLuaScript = luaL_newstate();
 	addDependencies(game.resources.dialogLuaScript);
 	if (luaL_dofile(game.resources.dialogLuaScript, getAbsolutePath("data/dialogs/script.lua"))) {
-		printf(
-			"%s: An unexpected error occurred when loading %s\n",
-			ERROR_BEG,
+		logMsg(
+			LOGGER_ERROR,
+			"An unexpected error occurred when loading %s",
 			getAbsolutePath("data/dialogs/script.lua")
 		);
 		lua_close(game.resources.dialogLuaScript);
@@ -39,13 +40,13 @@ void	initDialogsScript()
 
 void	initGame(bool debug)
 {
-	Character	player;
-
-	printf("%s: Initializating game\n", INFO_BEG);
 	memset(&game, 0, sizeof(game));
 	srandom((long long)&game);
-	memset(&player, 0, sizeof(player));
 	game.debug = debug;
+
+	loadVersion();
+	startLogger("last.log", LOGGER_INFO + game.debug);
+	logMsg(LOGGER_INFO, "Initializating game version %s", game.version);
 	initDiscordRichPresence();
 	game.settings = loadSettings();
 	game.resources.window = createMainWindow();

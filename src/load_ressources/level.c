@@ -7,6 +7,7 @@
 #include <unistd.h>
 #include <fcntl.h>
 #include <sys/types.h>
+#include <logger.h>
 #include "utils.h"
 #include "structs.h"
 #include "macros.h"
@@ -28,14 +29,18 @@ bool	is_nbr(const char *nbr)
 	return (nbr[i] == 0);
 }
 
-void	showStr(char *str)
+char	*showStr(char *str)
 {
+	static char result[512];
+
+	*result = 0;
 	for (int i = 0; str[i]; i++) {
 		if (str[i] == 127 || str[i] < 32)
-			printf("\\0%o", (unsigned char)str[i]);
+			sprintf(result + strlen(result), "\\0%o", (unsigned char)str[i]);
 		else
-			printf("%c", str[i]);
+			sprintf(result + strlen(result), "%c", str[i]);
 	}
+	return result;
 }
 
 Object	*loadMap(char *path, char **bg)
@@ -48,13 +53,13 @@ Object	*loadMap(char *path, char **bg)
 	int	temp = 0;
 	int	len = 0;
 
-	printf("%s: Loading %s !\n", INFO_BEG, path);
+	logMsg(LOGGER_INFO, "Loading %s !", path);
 	if (!line) {
-		printf("%s: Couldn't allocate 1B\n", FATAL_BEG);
+		logMsg(LOGGER_FATAL, "Couldn't allocate 1B");
 		exit(EXIT_FAILURE);
 	}
 	if (!stream) {
-		printf("%s: Cannot open %s (%s)\n", ERROR_BEG, path, strerror(errno));
+		logMsg(LOGGER_ERROR, "Cannot open %s (%s)", path, strerror(errno));
 		return (NULL);
 	}
 	*line = 0;
@@ -72,21 +77,26 @@ Object	*loadMap(char *path, char **bg)
 			line[strlen(line) - 1] = 0;
 		nbrs = split(line, ' ');
 		if (!nbrs) {
-			printf("%s: Memory allocation error\n", FATAL_BEG);
+			logMsg(LOGGER_FATAL, "Memory allocation error");
 			exit(EXIT_FAILURE);
 		}
 		objs = realloc(objs, sizeof(*objs) * (i + 2));
 		if (!objs) {
-			printf("%s: Couldn't allocate %liB", FATAL_BEG, (long)sizeof(*objs) * (i + 1));
+			logMsg(LOGGER_FATAL, "Couldn't allocate %liB", (long)sizeof(*objs) * (i + 1));
 			exit(EXIT_FAILURE);
 		}
 		memset(&objs[i], 0, sizeof(*objs) * 2);
 		temp = 0;
 		for (len = 0; nbrs[len]; len++);
 		if (len != 9 + DAMAGES_TYPE_NB) {
-			printf("%s: Invalid line %i: \"", ERROR_BEG, i);
-			showStr(line);
-			printf("\". A line should contain %i elements but %i were found\n", 9 + DAMAGES_TYPE_NB, len);
+			logMsg(
+				LOGGER_ERROR,
+				"Invalid line %i: \"%s\". A line should contain %i elements but %i were found",
+				i,
+				showStr(line),
+				9 + DAMAGES_TYPE_NB,
+				len
+			);
 			free(objs);
 			free(line);
 			fclose(stream);
@@ -94,9 +104,7 @@ Object	*loadMap(char *path, char **bg)
 		}
 		for (int j = 0; j < (9 + DAMAGES_TYPE_NB); j++) {
 			if (!is_nbr(nbrs[j])) {
-				printf("%s: Invalid line %i: col %i \"", ERROR_BEG, i + 2, temp);
-				showStr(nbrs[j]);
-				printf("\"\n");
+				logMsg(LOGGER_ERROR, "Invalid line %i: col %i \"%s\"", i + 2, temp, showStr(nbrs[j]));
 				free(objs);
 				free(line);
 				fclose(stream);
@@ -116,9 +124,13 @@ Object	*loadMap(char *path, char **bg)
 		for (int j = 0; j < DAMAGES_TYPE_NB; j++)
 			objs[i].damages[j]	= atoi(nbrs[9 + j]);
 		if (objs[i].layer <= 0) {
-			printf("%s: Invalid line %i: col %i \"", ERROR_BEG, i + 2, (int)(strlen(nbrs[0]) + strlen(nbrs[1]) + strlen(nbrs[2]) + 3));
-			showStr(nbrs[3]);
-			printf("\": Expected value greater than 0\n");
+			logMsg(
+				LOGGER_ERROR,
+				"Invalid line %i: col %i \"%s\": Expected value greater than 0",
+				i + 2,
+				(int)(strlen(nbrs[0]) + strlen(nbrs[1]) + strlen(nbrs[2]) + 3),
+				showStr(nbrs[3])
+			);
 			free(objs);
 			free(line);
 			fclose(stream);
@@ -160,7 +172,7 @@ char	**loadDialogs(char *path)
 	sprintf(buffer, "%s/%s.txt", path, lang);
 	stream = fopen(buffer, "r");
 	if (stream == NULL) {
-		printf("%s: %s: %s\n", ERROR_BEG, buffer, strerror(errno));
+		logMsg(LOGGER_ERROR, "%s: %s", buffer, strerror(errno));
 		buff = concatf("%s: %s\n", buffer, strerror(errno));
 		dispMsg("Error", buff, MB_OK | MB_ICONWARNING);
 		free(buff);
@@ -168,7 +180,7 @@ char	**loadDialogs(char *path)
 	}
 	line = malloc(1);
 	if (!line) {
-		printf("%s: Allocation error\n", ERROR_BEG);
+		logMsg(LOGGER_ERROR, "Allocation error");
 		return (NULL);
 	}
 	for (int i = 1; getline(&line, &n, stream) > 0; i++) {
@@ -241,7 +253,7 @@ Array	loadCharacters(char *path)
 
 	if (setjmp(context.jumpBuffer)) {
 		Parser_destroyData(result.data, result.type);
-		printf("%s: %s: %s\n", ERROR_BEG, path, context.error);
+		logMsg(LOGGER_ERROR, "%s: %s", path, context.error);
 		buffer = concatf(
 			"Error: File '%s' contains invalid data:\nCharacter number %i\n%s\n",
 			path,

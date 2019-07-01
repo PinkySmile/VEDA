@@ -4,6 +4,7 @@
 #include <SFML/Audio.h>
 #include <stdio.h>
 #include <stdbool.h>
+#include <logger.h>
 #include "utils.h"
 #include "menus.h"
 #include "structs.h"
@@ -30,7 +31,7 @@ void	whichButton(sfVector2f pos)
 {
 	for (int i = 0; game.resources.buttons[i].content; i++)
 		if (buttonIsClicked(game.resources.buttons[i], pos)) {
-			printf("%s: Clicked on button %i (%s)\n", INFO_BEG, i, game.resources.buttons[i].content);
+			logMsg(LOGGER_DEBUG, "Clicked on button %i (%s)", i, game.resources.buttons[i].content);
 			game.resources.buttons[i].callback(i);
 			break;
 		}
@@ -56,7 +57,7 @@ void	manageMouseClick(sfMouseButtonEvent event)
 				game.settings.sfxVolume = (pos.x / game.settings.baseScale.x - 140) / 3;
 			if (getSoundEffect(DIRT1 + random() % 4))
 				playSoundEffect(getSoundEffect(DIRT1 + random() % 4));
-			printf("%s: Clicked on sfx volume control\n", INFO_BEG);
+			logMsg(LOGGER_DEBUG, "Clicked on sfx volume control");
 
 		} else if (
 			pos.x >= 140 * game.settings.baseScale.x &&
@@ -71,7 +72,7 @@ void	manageMouseClick(sfMouseButtonEvent event)
 				game.settings.musicVolume = 100;
 			else
 				game.settings.musicVolume = (pos.x / game.settings.baseScale.x - 140) / 3;
-			printf("%s: Clicked on music volume control\n", INFO_BEG);
+			logMsg(LOGGER_DEBUG, "Clicked on music volume control");
 		}
 	} else if (game.state.menu == OPTIONS_MENU) {
 		if (
@@ -87,7 +88,7 @@ void	manageMouseClick(sfMouseButtonEvent event)
 				game.newSize.x = game.state.currentDesktopMode.width;
 			else
 				game.newSize.x = (pos.x / game.settings.baseScale.x - 272) * (game.state.currentDesktopMode.width - 256) / 300 + 256;
-			printf("%s: Clicked on sfx volume control\n", INFO_BEG);
+			logMsg(LOGGER_DEBUG, "Clicked on screen width control");
 
 		} else if (
 			pos.x >= 272 * game.settings.baseScale.x &&
@@ -102,7 +103,7 @@ void	manageMouseClick(sfMouseButtonEvent event)
 				game.newSize.y = game.state.currentDesktopMode.height;
 			else
 				game.newSize.y = (pos.x / game.settings.baseScale.x - 272) * (game.state.currentDesktopMode.height - 144) / 300 + 144;
-			printf("%s: Clicked on music volume control\n", INFO_BEG);
+			logMsg(LOGGER_DEBUG, "Clicked on screen height control");
 		}
 	}
 	if (event.button == sfMouseLeft)

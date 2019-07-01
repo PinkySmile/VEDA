@@ -5,11 +5,6 @@
 #include "enums.h"
 #include "display_messagebox.h"
 
-#define INFO_BEG	"[INFO]   "
-#define ERROR_BEG	"[ERROR]  "
-#define FATAL_BEG	"[FATAL]  "
-#define WARNING_BEG	"[WARNING]"
-
 #define BUFFER_MAX_SIZE	100
 #define MAX_STEPS	6
 

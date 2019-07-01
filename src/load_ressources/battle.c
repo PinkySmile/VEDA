@@ -8,6 +8,7 @@
 #include <battle_lua.h>
 #include <setjmp.h>
 #include <context.h>
+#include <logger.h>
 
 extern	size_t	copySize;
 
@@ -19,11 +20,11 @@ Battle	loadBattleScript(char *path)
 	Context		context;
 
 	memset(&context, 0, sizeof(context));
-	printf("%s: Loading %s as battle infos\n", INFO_BEG, path);
+	logMsg(LOGGER_INFO, "Loading %s as battle infos", path);
 
 	battle.type = BATTLE_ERROR;
 	if (result.error) {
-		printf("%s: %s\n", ERROR_BEG, result.error);
+		logMsg(LOGGER_ERROR, "%s", result.error);
 		result.error = concatf("Error: Couldn't load file '%s':\n%s\n", path, result.error);
 		dispMsg("Battle Error", result.error, MB_OK | MB_ICONERROR);
 		free(result.error);
@@ -31,7 +32,7 @@ Battle	loadBattleScript(char *path)
 	} else if (result.type != ParserObjType) {
 		Parser_destroyData(result.data, result.type);
 		memset(&battle, 0, sizeof(battle));
-		printf("%s: %s: Invalid type found in the file\n", ERROR_BEG, path);
+		logMsg(LOGGER_ERROR, "%s: Invalid type found in the file", path);
 		buffer = concatf("Error: %s: Invalid type found in the file\n", path);
 		dispMsg("Battle Error", buffer, MB_OK | MB_ICONERROR);
 		free(buffer);
@@ -40,7 +41,7 @@ Battle	loadBattleScript(char *path)
 
 	if (setjmp(context.jumpBuffer)) {
 		Parser_destroyData(result.data, result.type);
-		printf("%s: %s: %s\n", ERROR_BEG, path, context.error);
+		logMsg(LOGGER_ERROR, "%s: %s", path, context.error);
 		buffer = concatf(
 			"Error: File '%s' contains invalid battle data:\n%s\n",
 			path,

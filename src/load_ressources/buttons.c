@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <logger.h>
 #include "callbacks.h"
 #include "configs.h"
 #include "structs.h"
@@ -42,10 +43,10 @@ Button	*loadButtons()
 
 	for (; button_config[len].callback; len++);
 	for (; game.resources.languages && game.resources.languages[langs].name; langs++);
-	printf("%s: Loading %i buttons\n", INFO_BEG, len + langs + NB_OF_KEYS);
+	logMsg(LOGGER_DEBUG, "Making %i buttons", len + langs + NB_OF_KEYS);
 	buttons = malloc(sizeof(*buttons) * (len + langs + NB_OF_KEYS + 1));
 	if (!buttons) {
-		printf("%s: Couldn't malloc %liB for buttons\n", FATAL_BEG, (long)sizeof(*buttons) * (len + langs + NB_OF_KEYS + 1));
+		logMsg(LOGGER_FATAL, "Couldn't malloc %liB for buttons", (long)sizeof(*buttons) * (len + langs + NB_OF_KEYS + 1));
 		exit(EXIT_FAILURE);
 	}
 	game.languagesConf.y = langs;
@@ -76,6 +77,6 @@ Button	*loadButtons()
 		buttons[i + len + langs].content = "";
 	}
 	buttons[len + langs + NB_OF_KEYS].content = NULL;
-	printf("%s: Buttons loaded !\n", INFO_BEG);
+	logMsg(LOGGER_DEBUG, "Buttons loaded !");
 	return (buttons);
 }

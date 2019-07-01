@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <stdio.h>
+#include <logger.h>
 #include "utils.h"
 #include "display.h"
 #include "structs.h"
@@ -14,16 +15,16 @@ Array	loadFonts()
 	sfFont	**fonts = NULL;
 
 	for (; fonts_conf[len]; len++);
-	printf("%s: Loading %i fonts\n", INFO_BEG, len);
+	logMsg(LOGGER_INFO, "Loading %i fonts", len);
 	fonts = malloc(sizeof(*fonts) * len);
 	if (!fonts) {
-		printf("%s: Couldn't allocate %liB of memory\n", FATAL_BEG, (long)sizeof(*fonts) * len);
+		logMsg(LOGGER_FATAL, "Couldn't allocate %liB of memory", (long)sizeof(*fonts) * len);
 		exit(EXIT_FAILURE);
 	}
 	array.length = len;
 	array.content = fonts;
 	for (int i = 0; fonts_conf[i]; i++) {
-		printf("%s: Loading file %s\n", INFO_BEG, fonts_conf[i]);
+		logMsg(LOGGER_INFO, "Loading file %s", fonts_conf[i]);
 		fonts[i] = sfFont_createFromFile(fonts_conf[i]);
 		if (i == ARIAL) {
 			if (!fonts[i]) {
@@ -34,8 +35,8 @@ Array	loadFonts()
 		}
 		displayLoadingBar(1, MAX_STEPS, i + 1, len, "Loading fonts");
 		if (!fonts[i])
-			printf("%s: Couldn't load file %s\n", ERROR_BEG, fonts_conf[i]);
+			logMsg(LOGGER_ERROR, "Couldn't load file %s", fonts_conf[i]);
 	}
-	printf("%s: Fonts loaded !\n", INFO_BEG);
+	logMsg(LOGGER_INFO, "Fonts loaded !");
 	return (array);
 }

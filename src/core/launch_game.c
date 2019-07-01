@@ -2,6 +2,7 @@
 #include <time.h>
 #include <stdlib.h>
 #include <string.h>
+#include <logger.h>
 #include "discord_rp.h"
 #include "display.h"
 #include "concatf.h"
@@ -75,7 +76,7 @@ void	displayDebugElements()
 
 void	launchGame()
 {
-	printf("%s: Launching game\n", INFO_BEG);
+	logMsg(LOGGER_INFO, "Launching game");
 	updateDiscordPresence("Main menu", "In Main Menu", 0, false, "icon", "nem", "VEDA", "Main Menu");
 	while (sfRenderWindow_isOpen(game.resources.window)) {
 		sfRenderWindow_clear(game.resources.window, (sfColor){0, 0, 0, 255});

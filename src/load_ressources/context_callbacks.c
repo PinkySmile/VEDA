@@ -8,6 +8,7 @@
 #include <string.h>
 #include <battle_lua.h>
 #include <utils.h>
+#include <logger.h>
 
 size_t	copySize = 32;
 
@@ -22,9 +23,9 @@ bool	getObjectElement(Context *context)
 			if (context->useElement(result, context->data, context->error))
 				return true;
 			else if (context->onUseFail == DISPLAY_WARNING)
-				printf(
-					"%s: The use callback for field \"%s\" failed (%s)\n",
-					WARNING_BEG,
+				logMsg(
+					LOGGER_WARNING,
+					"The use callback for field \"%s\" failed (%s)",
 					context->index,
 					context->error
 				);
@@ -41,7 +42,7 @@ bool	getObjectElement(Context *context)
 				context->callback(context, USAGE_FAILED);
 
 		} else if (context->onInvalidType == DISPLAY_WARNING)
-			printf("%s: Field \"%s\" has an invalid type\n", WARNING_BEG, context->index);
+			logMsg(LOGGER_WARNING, "Field \"%s\" has an invalid type", context->index);
 		else if (context->onInvalidType == LONG_JUMP) {
 			sprintf(
 				context->error,
@@ -54,7 +55,7 @@ bool	getObjectElement(Context *context)
 			context->callback(context, INVALID_TYPE);
 
 	} else if (context->onMissing == DISPLAY_WARNING)
-		printf("%s: Field \"%s\" is missing\n", WARNING_BEG, context->index);
+		logMsg(LOGGER_WARNING, "Field \"%s\" is missing", context->index);
 	else if (context->onMissing == LONG_JUMP) {
 		sprintf(
 			context->error,

@@ -1,5 +1,6 @@
 #include <malloc.h>
 #include <math.h>
+#include <logger.h>
 #include "utils.h"
 #include "structs.h"
 #include "display.h"
@@ -71,13 +72,13 @@ bool	resumeLuaSession(lua_State *thread, lua_State *Lua)
 
 	if (err == LUA_ERRRUN) {
 		buffer = concatf("A runtime error occurred during battle:\n%s", luaL_checkstring(game.state.battle_infos.lua_thread, -1));
-		printf("%s: %s\n", ERROR_BEG, lua_tostring(game.state.battle_infos.lua_thread, -1));
+		logMsg(LOGGER_ERROR, "%s", lua_tostring(game.state.battle_infos.lua_thread, -1));
 	} else if (err == LUA_ERRMEM) {
 		buffer = concatf("A runtime error occurred during battle:\n%s: Out of memory", game.state.battle_infos.script);
-		printf("%s: %s: Out of memory\n", ERROR_BEG, game.state.battle_infos.script);
+		logMsg(LOGGER_ERROR, "%s: Out of memory", game.state.battle_infos.script);
 	} else if (err == LUA_ERRERR) {
 		buffer = concatf("An unexpected error occurred during battle:\n%s", game.state.battle_infos.script);
-		printf("%s: %s: Unknown error\n", ERROR_BEG, game.state.battle_infos.script);
+		logMsg(LOGGER_ERROR, "%s: Unknown error", game.state.battle_infos.script);
 	} else if (!err) {
 		game.state.menu = 1;
 		if (game.state.battle_infos.music)

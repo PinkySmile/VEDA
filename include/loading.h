@@ -14,7 +14,7 @@ Array		loadSfx		();
 Array		loadFonts	();
 Button		*loadButtons	();
 Language	*loadLanguages	();
-char		*getVersion	();
+void loadVersion();
 Array		loadCharacters	(char *path);
 Battle		loadBattleScript(char *path);
 void		loadLevel	(char *path);

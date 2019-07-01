@@ -1,36 +1,37 @@
 #include <stdio.h>
 #include <malloc.h>
+#include <logger.h>
 #include "destructors.h"
 #include "structs.h"
 #include "battle_lua.h"
 
 void	destroyStruct()
 {
-	printf("%s: Destroying sprites\n", INFO_BEG);
+	logMsg(LOGGER_DEBUG, "Destroying sprites");
 	destroySprites();
 
-	printf("%s: Destroying sounds\n", INFO_BEG);
+	logMsg(LOGGER_DEBUG, "Destroying sounds");
 	destroySounds();
 
-	printf("%s: Destroying buttons\n", INFO_BEG);
+	logMsg(LOGGER_DEBUG, "Destroying buttons");
 	destroyButtons();
 
-	printf("%s: Destroying battle instance\n", INFO_BEG);
+	logMsg(LOGGER_DEBUG, "Destroying battle instance");
 	playSound(NULL, true);
 	destroyBattle(game.state.battle_infos);
 
-	printf("%s: Destroying dialog instances\n", INFO_BEG);
+	logMsg(LOGGER_DEBUG, "Destroying dialog instances");
 	destroyDialogs();
 
-	printf("%s: Destroying languages\n", INFO_BEG);
+	logMsg(LOGGER_DEBUG, "Destroying languages");
 	destroyLanguages();
 
-	printf("%s: Destroying characters\n", INFO_BEG);
+	logMsg(LOGGER_DEBUG, "Destroying characters");
 	destroyCharacters();
 
-	printf("%s: Destroying graphic objects\n", INFO_BEG);
+	logMsg(LOGGER_DEBUG, "Destroying graphic objects");
 	destroySfmlObjects();
 
-	printf("%s: Destroying fonts\n", INFO_BEG);
+	logMsg(LOGGER_DEBUG, "Destroying fonts");
 	destroyFonts();
 }

@@ -7,6 +7,7 @@
 #include <malloc.h>
 #include <loading.h>
 #include <context.h>
+#include <logger.h>
 
 Array	loadProjectiles(char *path)
 {
@@ -21,17 +22,17 @@ Array	loadProjectiles(char *path)
 	Context		context;
 
 	memset(&context, 0, sizeof(context));
-	printf("%s: Loading projectiles in file %s\n", INFO_BEG, path);
+	logMsg(LOGGER_INFO, "Loading projectiles in file %s", path);
 
 	if (result.error) {
-		printf("%s: %s\n", ERROR_BEG, result.error);
+		logMsg(LOGGER_ERROR, "%s", result.error);
 		result.error = concatf("Error: Couldn't load file '%s':\n%s\n", path, result.error);
 		dispMsg("Battle Error", result.error, MB_OK | MB_ICONERROR);
 		free(result.error);
 		return (Array){NULL, -1};
 
 	} else if (result.type != ParserArrayType) {
-		printf("%s: %s: Invalid type\n", ERROR_BEG, path);
+		logMsg(LOGGER_ERROR, "%s: Invalid type", path);
 		buffer = concatf("Error: %s: Invalid type found in the file\n", path);
 		dispMsg("Battle Error", buffer, MB_OK | MB_ICONERROR);
 		free(buffer);
@@ -39,7 +40,7 @@ Array	loadProjectiles(char *path)
 		return (Array){NULL, -1};
 
 	} else if (((ParserArray *)result.data)->type != ParserObjType) {
-		printf("%s: %s: Invalid type\n", ERROR_BEG, path);
+		logMsg(LOGGER_ERROR, "%s: Invalid type", path);
 		buffer = concatf("Error: %s: Array contains invalid data\n", path);
 		dispMsg("Battle Error", buffer, MB_OK | MB_ICONERROR);
 		free(buffer);
@@ -49,7 +50,7 @@ Array	loadProjectiles(char *path)
 
 	if (setjmp(context.jumpBuffer)) {
 		Parser_destroyData(result.data, result.type);
-		printf("%s: %s: %s\n", ERROR_BEG, path, context.error);
+		logMsg(LOGGER_ERROR, "%s: %s", path, context.error);
 		buffer = concatf(
 			"Error: File '%s' contains invalid battle data:\nProjectile number %i\n%s\n",
 			path,

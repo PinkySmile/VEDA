@@ -11,6 +11,7 @@
 #include <sys/stat.h>
 #include <setjmp.h>
 #include <menus.h>
+#include <logger.h>
 #include "macros.h"
 #include "creators.h"
 #include "utils.h"
@@ -20,7 +21,7 @@
 
 unsigned	protectedRead(int fd, void *buffer, unsigned size, jmp_buf jump, char *err_buff)
 {
-	if (read(fd, buffer, size) != size) {
+	if ((unsigned)read(fd, buffer, size) != size) {
 		sprintf(err_buff, "Unexpected EOF (End of file)");
 		longjmp(jump, true);
 	}
@@ -85,12 +86,7 @@ Object	*loadSavedMap(char *path, char **bg)
 	char	msg[1024];
 
 	if (setjmp(jump)) {
-		printf(
-			"%s: %s: %s\n",
-			ERROR_BEG,
-			path,
-			msg
-		);
+		logMsg(LOGGER_ERROR, "%s: %s", path, msg);
 		close(fd);
 		return NULL;
 	}
@@ -127,6 +123,7 @@ Object	*loadSavedMap(char *path, char **bg)
 
 bool	loadGame()
 {
+	FILE		*stream;
 	int		fd = -1;
 	char		*buffer;
 	unsigned int	len = 0;
@@ -134,18 +131,19 @@ bool	loadGame()
 	jmp_buf		jump;
 	char		msg[1024];
 
-	printf("%s: Loading game\n", INFO_BEG);
+	logMsg(LOGGER_INFO, "Loading game");
 	if (setjmp(jump)) {
-		printf("%s: Corrupted save file detected: %s\n", ERROR_BEG, msg);
+		logMsg(LOGGER_ERROR, "Corrupted save file detected: %s", msg);
 		close(fd);
 		return dispMsg("Error", CORRUPTED_SAVE_MSG, MB_YESNO | MB_ICONWARNING) != IDYES;
 	}
 
-	fd = open("save/game.dat", O_RDONLY);
-	if (fd < 0) {
-		printf("%s: Cannot open save file (save/game.dat: %s)\n", ERROR_BEG, strerror(errno));
+	stream = fopen("save/game.dat", "rb");
+	if (!stream) {
+		logMsg(LOGGER_ERROR, "Cannot open save file (save/game.dat: %s)", strerror(errno));
 		return false;
 	}
+	fd = fileno(stream);
 	free(game.state.loadedMap.objects);
 	free(game.state.loadedMap.backgroundPath);
 	free(game.state.loadedMap.path);
@@ -153,12 +151,12 @@ bool	loadGame()
 	readMagicNumber(fd, jump, msg);
 	game.state.loadedMap.objects = NULL;
 	if (read(fd, &len, sizeof(len)) != sizeof(len)) {
-		sprintf(msg, "%s: Unexpected <EOF>", ERROR_BEG);
+		sprintf(msg, "Unexpected <EOF>");
 		longjmp(jump, true);
 	}
 	game.state.loadedMap.path = protectedMalloc(len + 1);
 	if ((unsigned)read(fd, game.state.loadedMap.path, len) != len) {
-		sprintf(msg, "%s: Unexpected <EOF>", ERROR_BEG);
+		sprintf(msg, "Unexpected <EOF>");
 		longjmp(jump, true);
 	} else {
 		game.state.loadedMap.path[len] = 0;
@@ -185,6 +183,6 @@ bool	loadGame()
 		free(buffer);
 	}
 	close(fd);
-	printf("%s: Done\n", INFO_BEG);
+	logMsg(LOGGER_INFO, "Save file loaded !");
 	return true;
 }

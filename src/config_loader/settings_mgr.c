@@ -6,6 +6,7 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <io_utils.h>
+#include <logger.h>
 #include "structs.h"
 #include "macros.h"
 #include "utils.h"
@@ -34,7 +35,7 @@ void	saveSettingsToFile(char *path)
 	if (stream)
 		fd = fileno(stream);
 	if (fd < 0) {
-		printf("%s: Couldn't save settings (%s: %s)\n", ERROR_BEG, path, strerror(errno));
+		logMsg(LOGGER_ERROR, "Couldn't save settings (%s: %s)", path, strerror(errno));
 		if (stream)
 			fclose(stream);
 	} else {
@@ -47,9 +48,9 @@ void	saveSettings()
 {
 	struct stat	st;
 
-	printf("%s: Saving settings\n", INFO_BEG);
+	logMsg(LOGGER_INFO, "Saving settings");
 	if (stat("save", &st) == -1) {
-		printf("%s: Creating folder \"save\"\n", INFO_BEG);
+		logMsg(LOGGER_INFO, "Creating folder \"save\"");
 		#ifdef __MINGW32__
 			mkdir("save");
 		#else
@@ -95,13 +96,13 @@ Settings	loadSettingsFromFd(int fd)
 	char		version = readByte(fd);
 
 	if (version <= 100) {
-		printf("%s: Settings are saved with an old format. This might cause some issues.\n", WARNING_BEG);
+		logMsg(LOGGER_WARNING, "Settings are saved with an old format. This might cause some issues.");
 		read(fd, &settings, sizeof(settings));
 	} else if (version == 101) {
-		printf("%s: Settings file version is up to date\n", INFO_BEG);
+		logMsg(LOGGER_INFO, "Settings file version is up to date");
 		readSettingsV1(fd, &settings);
 	} else {
-		printf("%s: Settings file version is invalid (%u)\n", ERROR_BEG, version);
+		logMsg(LOGGER_ERROR, "Settings file version is invalid (%u)", version);
 		return getDefaultSettings();
 	}
 	return settings;
@@ -117,12 +118,7 @@ Settings	loadSettingsFromFile(char *path)
 	if (stream)
 		fd = fileno(stream);
 	if (fd < 0) {
-		printf(
-			"%s: Couldn't load settings (%s: %s)\n",
-			ERROR_BEG,
-			path,
-			strerror(errno)
-		);
+		logMsg(LOGGER_ERROR, "Couldn't load settings (%s: %s)", path, strerror(errno));
 		settings = getDefaultSettings();
 	} else
 		settings = loadSettingsFromFd(fd);
@@ -136,7 +132,7 @@ Settings	loadSettings()
 	Settings	settings;
 	sfVideoMode	mode = sfVideoMode_getDesktopMode();
 
-	printf("%s: Loading settings\n", INFO_BEG);
+	logMsg(LOGGER_INFO, "Loading settings");
 	settings = loadSettingsFromFile("save/settings.dat");
 	if (game.settings.windowMode == FULLSCREEN || game.settings.windowMode == BORDERLESS_WINDOW) {
 		settings.windowSize.x = mode.width;

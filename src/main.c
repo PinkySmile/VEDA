@@ -1,64 +1,26 @@
-#include <SFML/Graphics.h>
-#include <SFML/Audio.h>
-#include <discord_rpc.h>
-#include <signal.h>
-#include <stdlib.h>
-#include <string.h>
-#include <stdio.h>
-#include "utils.h"
-#include "loading.h"
-#include "functions.h"
-#include "destructors.h"
-#if defined _WIN32 || defined __WIN32 || defined __WIN32__
+#if defined _WIN32
 #	include <windows.h>
 #endif
+#include <logger.h>
+#include <signal.h>
+#include <functions.h>
+#include <discord_rpc.h>
+#include <destructors.h>
+#include <loading.h>
+#include <utils.h>
 
 char	*programPath = NULL;
 
-#if defined _WIN32 || defined __WIN32 || defined __WIN32__
-
 void	setSignalHandler()
 {
-	signal(SIGINT,  &sighandler);
-	signal(SIGILL,  &sighandler);
-	signal(SIGABRT, &sighandler);
-	signal(SIGFPE,  &sighandler);
-	signal(SIGSEGV, &sighandler);
-	signal(SIGTERM, &sighandler);
-}
-
-#else
-
-void	setSignalHandler()
-{
-	signal(SIGINT,  &sighandler);
-	signal(SIGQUIT, &sighandler);
-	signal(SIGILL,  &sighandler);
-	signal(SIGABRT, &sighandler);
-	signal(SIGBUS,  &sighandler);
-	signal(SIGFPE,  &sighandler);
-	signal(SIGSEGV, &sighandler);
-	signal(SIGPIPE, &sighandler);
-	signal(SIGTERM, &sighandler);
-}
-
-#endif
-
-void	closeConsole(bool debug)
-{
-#if defined _WIN32 || defined __WIN32 || defined __WIN32__
-
-	if (!debug && !FreeConsole()) //Not in debug: close the console
-		printf("%s: Cannot close main console\n", ERROR_BEG);
-	else if (debug) {
-		AllocConsole(); //In debug: Create a new console
-		freopen("CONOUT$", "w", stdout); //Redirect stdout to the console
-	} else
-		freopen("last.log", "w", stdout);//Redirect stdout to 'last.log'
-
-#else
-	(void)debug;
-#endif
+	signal(2, &sighandler);
+	signal(3, &sighandler);
+	signal(4, &sighandler);
+	signal(6, &sighandler);
+	signal(7, &sighandler);
+	signal(8, &sighandler);
+	signal(11,&sighandler);
+	signal(15,&sighandler);
 }
 
 void	prepareExit()
@@ -66,17 +28,14 @@ void	prepareExit()
 	destroyStruct();
 	Discord_Shutdown();
 	free(programPath);
-	printf("%s: Goodbye !\n", INFO_BEG);
+	logMsg(LOGGER_INFO, "Goodbye !");
 }
 
 int	main(int argc, char **args)
 {
-	bool debug = (argc == 2 && !strcmp("debug", args[1]));
-
-	closeConsole(debug);
 	setSignalHandler();
 	programPath = getParentFolder(args[0]);
-	initGame(debug);
+	initGame(argc == 2 && !strcmp("debug", args[1]));
 	launchGame();
 	prepareExit();
 	return (EXIT_SUCCESS);

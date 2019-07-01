@@ -5,18 +5,19 @@
 #include "display.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <logger.h>
 
 Sprite	createSprite(Sprite_config config)
 {
 	Sprite	sprite = {NULL, NULL, {0, 0}, {0, 0, 0, 0}};
 
-	printf("%s: Loading file %s\n", INFO_BEG, config.path);
+	logMsg(LOGGER_DEBUG, "Loading file %s", config.path);
 	sprite.texture = sfTexture_createFromFile(config.path, NULL);
 	if (sprite.texture) {
 		sprite.sprite = sfSprite_create();
 		if (!sprite.sprite) {
 			sfTexture_destroy(sprite.texture);
-			printf("%s: Couldn't create sprite object for %s\n", ERROR_BEG, config.path);
+			logMsg(LOGGER_ERROR, "Couldn't create sprite object for %s", config.path);
 			return ((Sprite){NULL, NULL, {0, 0}, {0, 0, 0, 0}});
 		}
 		sfSprite_setTexture(sprite.sprite, sprite.texture, sfTrue);
@@ -27,7 +28,7 @@ Sprite	createSprite(Sprite_config config)
 		sprite.size.x = config.size.x;
 		sprite.size.y = config.size.y;
 	} else
-		printf("%s: Couldn't load file %s\n", ERROR_BEG, config.path);
+		logMsg(LOGGER_ERROR, "Couldn't load file %s", config.path);
 	return (sprite);
 }
 
@@ -38,10 +39,10 @@ Array	loadSprites()
 	Sprite	*sprites = NULL;
 
 	for (; sprites_conf[len].path; len++);
-	printf("%s: Loading %i textures\n", INFO_BEG, len);
+	logMsg(LOGGER_INFO, "Loading %i textures", len);
 	sprites = malloc(sizeof(*sprites) * len);
 	if (!sprites) {
-		printf("%s: Couldn't allocate %liB of memory\n", FATAL_BEG, (long)sizeof(*sprites) * len);
+		logMsg(LOGGER_FATAL, "Couldn't allocate %liB of memory", (long)sizeof(*sprites) * len);
 		exit(EXIT_FAILURE);
 	}
 	array.length = len;
@@ -50,6 +51,6 @@ Array	loadSprites()
 		displayLoadingBar(2, MAX_STEPS, i, len, "Loading textures");
 		sprites[i] = createSprite(sprites_conf[i]);
 	}
-	printf("%s: Textures loaded !\n", INFO_BEG);
+	logMsg(LOGGER_INFO, "Textures loaded !");
 	return (array);
 }

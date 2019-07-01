@@ -5,12 +5,13 @@
 #include <stdbool.h>
 #include <discord_rpc.h>
 #include <SFML/Graphics.h>
+#include <logger.h>
 #include "utils.h"
 #include "concatf.h"
 #include "structs.h"
 #include "discord_rp.h"
 
-#if defined _WIN32 || defined __WIN32 || defined __WIN32__
+#ifndef strsignal
 
 char	*strsignal(int signum)
 {
@@ -39,7 +40,7 @@ char	*strsignal(int signum)
 
 void	handleFatalSignals(int signum)
 {
-	printf("%s: Caught signal %i (%s). Aborting !\n", FATAL_BEG, signum, strsignal(signum));
+	logMsg(LOGGER_FATAL, "Caught signal %i (%s). Aborting !", signum, strsignal(signum));
 	updateDiscordPresence("Game crashed", strsignal(signum), 0, false, "icon", "bug", "VEDA", strsignal(signum));
 	dispMsg("Fatal Error", concatf("Fatal: Caught signal %i (%s)\n\n\nClick OK to close the program", signum, strsignal(signum)), MB_OK | MB_ICONERROR);
 	Discord_Shutdown();
@@ -48,7 +49,7 @@ void	handleFatalSignals(int signum)
 
 void	handleSigInt(int signum)
 {
-	printf("%s: Caught signal %i (%s). Exiting.\n", INFO_BEG, signum, strsignal(signum));
+	logMsg(LOGGER_INFO, "Caught signal %i (%s). Exiting.", signum, strsignal(signum));
 	if (game.resources.window && sfRenderWindow_isOpen(game.resources.window))
 		sfRenderWindow_close(game.resources.window);
 	else {

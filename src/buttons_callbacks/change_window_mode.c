@@ -1,5 +1,6 @@
 #include <SFML/Graphics.h>
 #include <stdlib.h>
+#include <logger.h>
 #include "utils.h"
 #include "structs.h"
 #include "loading.h"
@@ -7,7 +8,7 @@
 
 void	changeScreenMode(enum windowMode new, sfVector2u newSize)
 {
-	char		*title = concat("VEDA version ", getVersion(), false, false);
+	char		*title = concat("VEDA version ", game.version, false, false);
 	sfVideoMode	mode = {newSize.x, newSize.y, 32};
 	sfWindowStyle	style;
 	const sfUint8	*icon = NULL;
@@ -16,9 +17,9 @@ void	changeScreenMode(enum windowMode new, sfVector2u newSize)
 	if (game.resources.icon.image)
 		icon = sfImage_getPixelsPtr(game.resources.icon.image);
 	else
-		printf("%s: Couldn't load icon image\n", ERROR_BEG);
+		logMsg(LOGGER_ERROR, "Couldn't load icon image");
 	if (!title) {
-		printf("%s: Couldn't create window title\n", FATAL_BEG);
+		logMsg(LOGGER_FATAL, "Couldn't create window title");
 		dispMsg("Window error", "Couldn't create window title", MB_OK | MB_ICONERROR);
 		exit(EXIT_FAILURE);
 	}
@@ -53,7 +54,7 @@ void	changeScreenMode(enum windowMode new, sfVector2u newSize)
 	sfRenderWindow_destroy(game.resources.window);
 	game.resources.window = sfRenderWindow_create(mode, title, style, NULL);
 	if (!game.resources.window) {
-		printf("%s: Couldn't create window\n", FATAL_BEG);
+		logMsg(LOGGER_FATAL, "Couldn't create window");
 		dispMsg("Window error", "Couldn't create window object", MB_OK | MB_ICONERROR);
 		exit(EXIT_FAILURE);
 	}

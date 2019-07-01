@@ -7,6 +7,7 @@
 #include <errno.h>
 #include <stdlib.h>
 #include <callbacks.h>
+#include <logger.h>
 #include "destructors.h"
 #include "creators.h"
 #include "utils.h"
@@ -26,11 +27,11 @@ void	saveLevel(char *path, Object *objs, char *header, Array characters)
 	char		*buffer;
 	Character	*chars = characters.content;
 
-	printf("%s: Saving to %s\n", INFO_BEG, path);
+	logMsg(LOGGER_INFO, "Saving to %s",  path);
 	stream = fopen(path, "wb");
 	if (!stream) {
-		printf("%s: Cannot open save file (%s: %s)\n", ERROR_BEG, path, strerror(errno));
-		buffer = concatf("Cannot open save file (%s: %s)\n", path, strerror(errno));
+		buffer = concatf("Cannot open save file (%s: %s)", path, strerror(errno));
+		logMsg(LOGGER_ERROR, "%s", buffer);
 		dispMsg("Error", buffer, MB_OK | MB_ICONERROR);
 		free(buffer);
 		return;
@@ -64,17 +65,17 @@ bool	saveGame(bool level)
 	int		len = 0;
 	char		*buffer = NULL;
 
-	printf("%s: Saving game\n", INFO_BEG);
+	logMsg(LOGGER_INFO, "Saving game");
 	if (stat("save", &st) == -1) {
-		printf("%s: Creating folder \"save\"\n", INFO_BEG);
+		logMsg(LOGGER_INFO, "Creating folder \"save\"");
 		#if defined _WIN32 || defined __WIN32 || defined __WIN32__
 			success = (mkdir("save") == 0);
 		#else
 			success = (mkdir("save", 0766) == 0);
 		#endif
 		if (!success) {
-			printf("%s: Couldn't create folder \"save\" (%s)\n", ERROR_BEG, strerror(errno));
 			buffer = concatf("Couldn't create folder \"save\" (%s)", strerror(errno));
+			logMsg(LOGGER_ERROR, "%s", buffer);
 			dispMsg("Error", buffer, MB_YESNO | MB_ICONERROR);
 			free(buffer);
 			return (false);
@@ -84,27 +85,15 @@ bool	saveGame(bool level)
 	rename("save/game.dat", "save/game.dat.old");
 	fd = open("save/game.dat", O_WRONLY | O_CREAT, READ_WRITE_RIGHTS);
 	if (fd < 0) {
-		printf("%s: Cannot open save file (save/game.dat: %s)\n", ERROR_BEG, strerror(errno));
 		buffer = concatf("Cannot open save file (save/game.dat: %s)\n", strerror(errno));
+		logMsg(LOGGER_ERROR, "%s", buffer);
 		dispMsg("Error", buffer, MB_OK | MB_ICONERROR);
 		free(buffer);
 		return (false);
 	}
 	len = game.state.loadedMap.path ? strlen(game.state.loadedMap.path) : 0;
-	if (write(fd, &magic, sizeof(magic)) != sizeof(magic)) {
-		printf("%s: Couldn't write save file\n", ERROR_BEG);
-		close(fd);
-		dispMsg("Error", "Couldn't write to save file\nNo space on disk ?", MB_OK | MB_ICONERROR);
-		return (false);
-	}
-	if (write(fd, &len, sizeof(len)) != sizeof(len)) {
-		printf("%s: Couldn't write save file\n", ERROR_BEG);
-		close(fd);
-		dispMsg("Error", "Couldn't write to save file\nNo space on disk ?", MB_OK | MB_ICONERROR);
-		return (false);
-	}
-	if (write(fd, game.state.loadedMap.path, len) != len) {
-		printf("%s: Couldn't write save file\n", ERROR_BEG);
+	if (write(fd, &magic, sizeof(magic)) != sizeof(magic) || write(fd, &len, sizeof(len)) != sizeof(len) || write(fd, game.state.loadedMap.path, len) != len) {
+		logMsg(LOGGER_ERROR, "Couldn't write save file");
 		close(fd);
 		dispMsg("Error", "Couldn't write to save file\nNo space on disk ?", MB_OK | MB_ICONERROR);
 		return (false);
