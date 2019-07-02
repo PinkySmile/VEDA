@@ -13,20 +13,20 @@
 
 int	playSound(char const *path, bool freeAll)
 {
-	static	sfSound		*musics[16];
-	static	sfSoundBuffer	*buffers[16];
-	static	char		*paths[16];
+	static	sfSound		*musics[SOUNDS_BUFFER_SIZE];
+	static	sfSoundBuffer	*buffers[SOUNDS_BUFFER_SIZE];
+	static	char		*paths[SOUNDS_BUFFER_SIZE];
 	static	bool		first = true;
 
 	if (first) {
 		first = false;
-		memset(buffers, 0, sizeof(musics));
-		for (int i = 0; i < 16; i++)
+		memset(buffers, 0, sizeof(buffers));
+		for (int i = 0; i < SOUNDS_BUFFER_SIZE; i++)
 			musics[i] = sfSound_create();
 		memset(paths, 0, sizeof(paths));
 	}
 	if (freeAll) {
-		for (int i = 0; i < 16; i++) {
+		for (int i = 0; i < SOUNDS_BUFFER_SIZE; i++) {
 			if (paths[i]) {
 				free(paths[i]);
 				sfSoundBuffer_destroy(buffers[i]);
@@ -35,7 +35,7 @@ int	playSound(char const *path, bool freeAll)
 		}
 		return (0);
 	}
-	for (int i = 0; i < 16; i++) {
+	for (int i = 0; i < SOUNDS_BUFFER_SIZE; i++) {
 		if (!paths[i]) {
 			buffers[i] = sfSoundBuffer_createFromFile(path);
 			if (!buffers[i])
@@ -52,7 +52,7 @@ int	playSound(char const *path, bool freeAll)
 			return (0);
 		}
 	}
-	for (int i = 0; i < 16; i++) {
+	for (int i = 0; i < SOUNDS_BUFFER_SIZE; i++) {
 		if(sfSound_getStatus(musics[i]) != sfPlaying) {
 			sfSoundBuffer	*buffer;
 
@@ -79,7 +79,7 @@ int	playSoundLua(lua_State *lua)
 
 	if (lua_isnumber(lua, 1)) {
 		if (!getSoundEffect(arg)) {
-			lua_pushboolean(lua, false);
+			lua_pushnil(lua);
 			lua_pushstring(lua, "index out of range");
 			return (2);
 		} else if (getSoundEffect(arg)) {
@@ -93,15 +93,15 @@ int	playSoundLua(lua_State *lua)
 		lua_pushboolean(lua, true);
 		return (1);
 	} else if (err == 1) {
-		lua_pushboolean(lua, false);
+		lua_pushnil(lua);
 		lua_pushstring(lua, "cannot load file");
 		return (2);
 	} else if (err == 2) {
-		lua_pushboolean(lua, false);
+		lua_pushnil(lua);
 		lua_pushstring(lua, "all voices are used");
 		return (2);
 	}
-	lua_pushboolean(lua, false);
+	lua_pushnil(lua);
 	lua_pushstring(lua, "unknown error");
 	return (2);
 }

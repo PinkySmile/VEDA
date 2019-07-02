@@ -7,22 +7,22 @@
 
 int	playSoundEffect(sfSoundBuffer *buffer)
 {
-	static	sfSound		*sounds[16];
-	static	sfSoundBuffer	*buffers[16];
+	static	sfSound		*sounds[SOUNDS_BUFFER_SIZE];
+	static	sfSoundBuffer	*buffers[SOUNDS_BUFFER_SIZE];
 	static	bool		first = true;
 
 	if (first) {
 		first = false;
 		memset(buffers, 0, sizeof(buffers));
-		for (int i = 0; i < 16; i++)
+		for (int i = 0; i < SOUNDS_BUFFER_SIZE; i++)
 			sounds[i] = createSound();
 	}
 	if (!buffer) {
-		for (int i = 0; i < 16; i++)
+		for (int i = 0; i < SOUNDS_BUFFER_SIZE; i++)
 			sfSound_destroy(sounds[i]);
 		return (0);
 	}
-	for (int i = 0; i < 16; i++) {
+	for (int i = 0; i < SOUNDS_BUFFER_SIZE; i++) {
 		if (!buffers[i]) {
 			buffers[i] = buffer;
 			sfSound_setBuffer(sounds[i], buffers[i]);
@@ -36,7 +36,7 @@ int	playSoundEffect(sfSoundBuffer *buffer)
 			return (0);
 		}
 	}
-	for (int i = 0; i < 16; i++) {
+	for (int i = 0; i < SOUNDS_BUFFER_SIZE; i++) {
 		if(sfSound_getStatus(sounds[i]) != sfPlaying) {
 			sfSound_setBuffer(sounds[i], buffer);
 			sfSound_setVolume(sounds[i], game.settings.sfxVolume);
