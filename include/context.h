@@ -4,7 +4,7 @@
 #include <configParser.h>
 #include <SFML/Audio.h>
 #include <setjmp.h>
-#include "sprite.h"
+#include "data_structures/sprite.h"
 
 #define ERROR_BUFFER_SIZE 4096
 

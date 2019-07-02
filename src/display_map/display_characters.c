@@ -67,8 +67,8 @@ void	displayCharacter(Character *character, int id, sfSprite *sprite)
 		return;
 
 	//Select the good animation
-	rec.top = (character->movement.position / 2 + character->movement.state * 2 + character->movement.animation * 2) * 32;
-	rec.left = (character->movement.position % 2) * 32;
+	rec.top = (character->movement.direction / 2 + character->movement.state * 2 + character->movement.animation * 2) * 32;
+	rec.left = (character->movement.direction % 2) * 32;
 
 	//Display the sprite
 	if (sprite) {
@@ -98,7 +98,7 @@ void	displayCharacters()
 
 	for (int i = 0; i < game.state.characters.length; i++) {
 		buff = &((Character *)game.state.characters.content)[i];
-		if (getSprite(MALE_CHARACTER + buff->texture) && (!buff->invulnerabiltyTime || var % 5 <= 3))
+		if (getSprite(MALE_CHARACTER + buff->texture) && (!buff->invulnerabilityTime || var % 5 <= 3))
 			displayCharacter(buff, i, getSprite(MALE_CHARACTER + buff->texture)->sprite);
 		displayDamagesTakenBy(buff);
 	}

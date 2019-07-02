@@ -5,7 +5,7 @@
 #include <lualib.h>
 #include <lauxlib.h>
 #include "character.h"
-#include "projectile.h"
+#include "data_structures/projectile.h"
 
 //Lua functions
 int	addProjectileLua	(lua_State *Lua);

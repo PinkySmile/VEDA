@@ -124,4 +124,26 @@ enum sfx {
 	MUD4,
 };
 
+enum buttons_names {
+	NONE = -1,
+	PLAY,
+	SETTINGS,
+	QUIT,
+	OPTIONS,
+	AUDIO,
+	BACK,
+	LANGUAGE,
+	CANCEL,
+	SAVE,
+	CONTROLS,
+	YES,
+	NO,
+	FULLSCREEN_BUTTON,
+	BORDERLESS_BUTTON,
+	WINDOWED_BUTTON,
+	DISP_FPS,
+	CONFIRM,
+	APPLY,
+};
+
 #endif

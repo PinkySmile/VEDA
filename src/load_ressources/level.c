@@ -118,7 +118,7 @@ Object	*loadMap(char *path, char **bg)
 		objs[i].layer			= atoi(nbrs[3]);
 		objs[i].solid			= atoi(nbrs[4]);
 		objs[i].action			= atoi(nbrs[5]);
-		objs[i].invulnerabiltyTime	= atof(nbrs[6]);
+		objs[i].invulnerabilityTime	= atof(nbrs[6]);
 		objs[i].footstepSound		= atoi(nbrs[7]);
 		objs[i].footstepVariance	= atoi(nbrs[8]);
 		for (int j = 0; j < DAMAGES_TYPE_NB; j++)

@@ -11,7 +11,7 @@ typedef struct {
 	sfVector2i	pos;
 	int		layer;
 	int		damages[DAMAGES_TYPE_NB];
-	float		invulnerabiltyTime;
+	float		invulnerabilityTime;
 	int		action;
 	enum sfx	footstepSound;
 	int		footstepVariance;

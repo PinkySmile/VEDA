@@ -1,4 +1,4 @@
-#include "object.h"
+#include "data_structures/object.h"
 #include "character.h"
 #include "utils.h"
 
@@ -12,7 +12,7 @@ void	execAction(Object obj, Character *character)
 		character->movement.pos.y + PLAYER_HITBOX_OFFSET.y > obj.pos.y + OBJECT_SIZE.y
 	)) {
 		if (obj.solid) {
-			switch (character->movement.position) {
+			switch (character->movement.direction) {
 			case LEFT:
 				character->movement.pos.x = obj.pos.x - PLAYER_HITBOX_OFFSET.x + OBJECT_SIZE.x + 1;
 				break;
@@ -35,9 +35,9 @@ void	execAction(Object obj, Character *character)
 		switch (obj.action) {
 		case DEAL_DAMAGES:
 			for (int i = 0; i < DAMAGES_TYPE_NB; i++) {
-				if (obj.damages[i] && (character->invulnerabiltyTime <= 0 || obj.damages[i] < 0)) {
+				if (obj.damages[i] && (character->invulnerabilityTime <= 0 || obj.damages[i] < 0)) {
 					dealDamages(character, obj.damages[i], i);
-					character->invulnerabiltyTime = obj.invulnerabiltyTime;
+					character->invulnerabilityTime = obj.invulnerabilityTime;
 				}
 			}
 			break;

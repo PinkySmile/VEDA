@@ -4,13 +4,13 @@
 #include <SFML/Graphics.h>
 #include <lua.h>
 #include "icon.h"
-#include "button.h"
-#include "array.h"
+#include "data_structures/button.h"
+#include "data_structures/array.h"
 #include "language.h"
 #include "settings.h"
 #include "sprite.h"
 #include "object.h"
-#include "battle.h"
+#include "data_structures/battle.h"
 
 typedef struct {
 	char		*displayedText;

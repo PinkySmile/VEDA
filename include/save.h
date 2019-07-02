@@ -1,5 +1,5 @@
 #include <stdbool.h>
-#include "settings.h"
+#include "data_structures/settings.h"
 
 bool		saveGame	(bool level);
 bool		loadGame	();

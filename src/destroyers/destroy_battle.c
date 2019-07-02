@@ -1,8 +1,8 @@
 #include <SFML/Graphics.h>
 #include <lua.h>
 #include <malloc.h>
-#include "battle.h"
-#include "projectile.h"
+#include "data_structures/battle.h"
+#include "data_structures/projectile.h"
 
 void	destroyBattle(Battle battle)
 {

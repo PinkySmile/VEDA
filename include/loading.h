@@ -1,11 +1,11 @@
 #include <stdbool.h>
-#include "array.h"
-#include "battle.h"
-#include "button.h"
-#include "object.h"
-#include "sprite.h"
+#include "data_structures/array.h"
+#include "data_structures/battle.h"
+#include "data_structures/button.h"
+#include "data_structures/object.h"
+#include "data_structures/sprite.h"
 #include "configs.h"
-#include "language.h"
+#include "data_structures/language.h"
 
 void		initGame	(bool debug);
 Array		loadMusics	();
@@ -14,7 +14,7 @@ Array		loadSfx		();
 Array		loadFonts	();
 Button		*loadButtons	();
 Language	*loadLanguages	();
-void loadVersion();
+void		loadVersion();
 Array		loadCharacters	(char *path);
 Battle		loadBattleScript(char *path);
 void		loadLevel	(char *path);

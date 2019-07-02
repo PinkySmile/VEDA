@@ -29,7 +29,7 @@ void	inGame()
 		chara->stepSound = IRON;
 		if (chara->stats.life > 10 * chara->stats.lifeMax)
 			chara->stats.life = 10 * chara->stats.lifeMax;
-		chara->invulnerabiltyTime -= chara->invulnerabiltyTime > 0 ? 1 : 0;
+		chara->invulnerabilityTime -= chara->invulnerabilityTime > 0 ? 1 : 0;
 		moveCharacter(chara, (sfVector2f){0, 0});
 	}
 

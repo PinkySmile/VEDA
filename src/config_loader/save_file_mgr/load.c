@@ -16,8 +16,8 @@
 #include "creators.h"
 #include "utils.h"
 #include "character.h"
-#include "object.h"
-#include "game_struct.h"
+#include "data_structures/object.h"
+#include "data_structures/game_struct.h"
 
 unsigned	protectedRead(int fd, void *buffer, unsigned size, jmp_buf jump, char *err_buff)
 {

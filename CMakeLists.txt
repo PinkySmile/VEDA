@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.12)
+cmake_minimum_required(VERSION 3.13)
 project(VEDA C)
 
 set(CMAKE_C_STANDARD 11)
@@ -6,6 +6,16 @@ set(CMAKE_C_STANDARD 11)
 include_directories(include)
 include_directories(lib/concatf/include)
 include_directories(lib/configParser/include)
+
+if (CMAKE_COMPILER_IS_GNUCC)
+	add_compile_options(-W -Wall -Wextra)
+	if (WIN32)
+		add_link_options(CMAKE_SHARED_LINKER_FLAGS "-mwindows")
+	endif (WIN32)
+endif (CMAKE_COMPILER_IS_GNUCC)
+if (WIN32)
+	set(ICON icon.rc)
+endif (WIN32)
 
 add_library(
 	concatf
@@ -26,7 +36,8 @@ add_library(
 	lib/concatf/sources/str.c
 	lib/concatf/sources/sub_strings.c
 	lib/concatf/sources/uint_to_str.c
-	include/logger.h)
+	include/logger.h
+)
 
 add_library(
 	configParser
@@ -47,43 +58,52 @@ add_library(
 
 add_executable(
 	VEDA
-	icon.rc
-	include/array.h
-	include/battle.h
+	${ICON}
 	include/battle_lua.h
-	include/button.h
-	include/buttons_names.h
 	include/callbacks.h
 	include/character.h
 	include/configs.h
 	include/context.h
 	include/creators.h
+	include/data_structures/array.h
+	include/data_structures/battle.h
+	include/data_structures/button.h
+	include/data_structures/game_struct.h
+	include/data_structures/icon.h
+	include/data_structures/language.h
+	include/data_structures/list.h
+	include/data_structures/object.h
+	include/data_structures/projectile.h
+	include/data_structures/settings.h
+	include/data_structures/sprite.h
 	include/destructors.h
 	include/discord_rp.h
 	include/display.h
+	include/display_messagebox.h
 	include/enums.h
 	include/events.h
 	include/functions.h
-	include/game_struct.h
 	include/globals.h
 	include/graphic.h
-	include/icon.h
-	include/language.h
-	include/list.h
 	include/io_utils.h
 	include/loading.h
 	include/macros.h
 	include/menus.h
-	include/object.h
-	include/projectile.h
 	include/save.h
-	include/settings.h
-	include/sprite.h
 	include/structs.h
 	include/utils.h
 	src/battle/base_functions.c
+	src/battle/characters.c
 	src/battle/lib.c
+	src/battle/projectiles.c
+	src/buttons_callbacks/change_window_mode.c
 	src/buttons_callbacks/menus.c
+	src/buttons_callbacks/options_buttons.c
+	src/buttons_callbacks/settings_menus.c
+	src/character/deal_damages.c
+	src/character/exec_action.c
+	src/character/move.c
+	src/config_loader/save_file_mgr/load.c
 	src/config_loader/save_file_mgr/save.c
 	src/config_loader/settings_mgr.c
 	src/configs/buttons.c
@@ -91,10 +111,8 @@ add_executable(
 	src/configs/menus.c
 	src/configs/sounds.c
 	src/configs/sprites.c
-	src/events/event_mouse_click.c
 	src/core/globals.c
 	src/core/launch_game.c
-	src/events/manage_events.c
 	src/core/sighandlers.c
 	src/destroyers/destroy_battle.c
 	src/destroyers/destroy_buttons.c
@@ -107,22 +125,41 @@ add_executable(
 	src/destroyers/destroy_sounds.c
 	src/destroyers/destroy_sprites.c
 	src/dialogs/commands.c
+	src/dialogs/create_dialog.c
+	src/dialogs/display_dialogs.c
+	src/display_map/display_characters.c
+	src/display_map/display_terrain.c
+	src/events/event_closed.c
+	src/events/event_joystick_button_pressed.c
+	src/events/event_joystick_moved.c
+	src/events/event_key_pressed.c
+	src/events/event_mouse_click.c
+	src/events/event_mouse_moved.c
+	src/events/event_mouse_released.c
+	src/events/event_text_entered.c
+	src/events/manage_events.c
+	src/hud/display_damages.c
 	src/hud/draw_hud.c
 	src/hud/energy_bar.c
 	src/hud/life_bar.c
+	src/load_ressources/battle.c
 	src/load_ressources/buttons.c
+	src/load_ressources/context_callbacks.c
 	src/load_ressources/fonts.c
 	src/load_ressources/init_game.c
 	src/load_ressources/languages.c
 	src/load_ressources/level.c
 	src/load_ressources/loading_bar.c
+	src/load_ressources/projectiles.c
 	src/load_ressources/sounds.c
 	src/load_ressources/sprites.c
+	src/main.c
 	src/menus/battle.c
 	src/menus/change_buffer.c
 	src/menus/in_game.c
 	src/menus/main_menu.c
 	src/menus/settings.c
+	src/objects_creater.c
 	src/utils/discord_rich_presence.c
 	src/utils/disp_msg.c
 	src/utils/display_buttons.c
@@ -131,39 +168,19 @@ add_executable(
 	src/utils/draw_text.c
 	src/utils/get_absolute_path.c
 	src/utils/get_parent_folder.c
-	src/utils/getline.c
-	src/utils/transform_key_to_string.c
-	src/main.c
-	src/objects_creater.c
-	src/utils/unicode_mgr.c
-	src/display_map/display_terrain.c
-	src/display_map/display_characters.c
 	src/utils/get_player.c
-	src/utils/is_key_pressed.c
-	src/dialogs/display_dialogs.c
-	src/character/deal_damages.c
-	src/character/move.c
-	src/buttons_callbacks/change_window_mode.c
-	src/buttons_callbacks/settings_menus.c
-	src/buttons_callbacks/options_buttons.c
-	src/utils/play_sound_effect.c
-	src/events/event_closed.c
-	src/events/event_text_entered.c
-	src/events/event_joystick_moved.c
-	src/events/event_joystick_button_pressed.c
-	src/events/event_key_pressed.c
-	src/events/event_mouse_moved.c
-	src/events/event_mouse_released.c
-	src/load_ressources/projectiles.c
-	src/load_ressources/context_callbacks.c
-	src/load_ressources/battle.c
-	src/battle/projectiles.c
-	src/battle/characters.c
-	src/utils/split.c
-	src/utils/is_folder.c
-	src/character/exec_action.c
+	src/utils/get_text_size.c
+	src/utils/getline.c
+	src/utils/io/read.c
 	src/utils/io/write.c
-	src/utils/io/read.c include/display_messagebox.h src/config_loader/save_file_mgr/load.c src/hud/display_damages.c src/dialogs/create_dialog.c src/utils/get_text_size.c src/utils/logger.c)
+	src/utils/is_folder.c
+	src/utils/is_key_pressed.c
+	src/utils/logger.c
+	src/utils/play_sound_effect.c
+	src/utils/split.c
+	src/utils/transform_key_to_string.c
+	src/utils/unicode_mgr.c
+)
 
 target_link_libraries(
 	${PROJECT_NAME}

@@ -5,7 +5,7 @@
 #include "structs.h"
 #include "macros.h"
 #include "character.h"
-#include "object.h"
+#include "data_structures/object.h"
 #include "utils.h"
 
 void	moveCharacter(Character *character, sfVector2f direction)
@@ -69,7 +69,7 @@ void	moveCharacter(Character *character, sfVector2f direction)
 		}
 		character->movement.speed = 0;
 		if (direction.x > 0) {
-			character->movement.position = RIGHT;
+			character->movement.direction = RIGHT;
 			if (character->movement.blocked.right > PLAYER_HITBOX_SIZE.x + PLAYER_HITBOX_OFFSET.x) {
 				character->movement.pos.x += direction.x;
 				moved = true;
@@ -78,7 +78,7 @@ void	moveCharacter(Character *character, sfVector2f direction)
 			}
 		}
 		if (direction.x < 0) {
-			character->movement.position = LEFT;
+			character->movement.direction = LEFT;
 			if (character->movement.blocked.left > -PLAYER_HITBOX_OFFSET.x + 1) {
 				character->movement.pos.x += direction.x;
 				moved = true;
@@ -87,7 +87,7 @@ void	moveCharacter(Character *character, sfVector2f direction)
 			}
 		}
 		if (direction.y > 0) {
-			character->movement.position = DOWN;
+			character->movement.direction = DOWN;
 			if (character->movement.blocked.down > PLAYER_HITBOX_SIZE.y + PLAYER_HITBOX_OFFSET.y) {
 				character->movement.pos.y += direction.y;
 				moved = true;
@@ -96,7 +96,7 @@ void	moveCharacter(Character *character, sfVector2f direction)
 			}
 		}
 		if (direction.y < 0) {
-			character->movement.position = UP;
+			character->movement.direction = UP;
 			if (character->movement.blocked.up > -PLAYER_HITBOX_OFFSET.y + 1) {
 				character->movement.pos.y += direction.y;
 				moved = true;

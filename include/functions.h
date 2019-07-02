@@ -3,17 +3,15 @@
 
 #include <SFML/Graphics.h>
 #include <stdbool.h>
-#include "game_struct.h"
+#include "data_structures/game_struct.h"
 
 void	sighandler(int signum);
 void	launchGame();
 void	manageEvents();
 void	manageMouseClick(sfMouseButtonEvent event);
 void	changeScreenMode(int new);
-void	movePlayer();
 char	*executeCommand(char *cmd, char **args);
 void	resolveCommand(DialogDisplayed *diag);
 bool	addCharacter(char c, char **str, bool reallocBuffer);
-void	moveCharacter(Character *character, sfVector2f direction);
 
 #endif

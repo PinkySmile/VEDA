@@ -183,7 +183,7 @@ void	battle()
 		});
 		updateProjectiles(&game.state.battle_infos.projectiles);
 		for (int i = 0; i < game.state.characters.length; i++)
-			getCharacter(i)->invulnerabiltyTime -= getCharacter(i)->invulnerabiltyTime > 0 ? 1 : 0;
+			getCharacter(i)->invulnerabilityTime -= getCharacter(i)->invulnerabilityTime > 0 ? 1 : 0;
 	} else {
 		sfRectangleShape_setFillColor(game.resources.rectangle, (sfColor){255, 230, 255, 55});
 		rect(0, 0, 640, 480);

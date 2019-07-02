@@ -4,7 +4,7 @@
 #include <SFML/Graphics.h>
 #include <SFML/Audio.h>
 #include <lua.h>
-#include "array.h"
+#include "data_structures/array.h"
 #include "character.h"
 #include "list.h"
 #include "sprite.h"

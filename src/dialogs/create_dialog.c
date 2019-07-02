@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <logger.h>
-#include "game_struct.h"
+#include "data_structures/game_struct.h"
 
 void	createDialog(char *rawStr, Character *character)
 {

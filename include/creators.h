@@ -7,7 +7,6 @@
 
 sfText			*createText();
 sfSound			*createSound();
-void			loadVersion();
 void			*protectedMalloc(size_t size);
 sfSprite		*createSfSprite(sfTexture *texture);
 sfRenderWindow		*createMainWindow();

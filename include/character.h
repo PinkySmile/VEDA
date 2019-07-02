@@ -7,9 +7,9 @@
 #include <limits.h>
 #include "enums.h"
 #include "macros.h"
-#include "array.h"
-#include "object.h"
-#include "sprite.h"
+#include "data_structures/array.h"
+#include "data_structures/object.h"
+#include "data_structures/sprite.h"
 
 typedef struct {
 	int	dialogId;
@@ -54,7 +54,7 @@ typedef struct {
 	bool		canMove;
 	Directions	blocked;
 	sfVector2f	pos;
-	int		position;
+	int		direction;
 	int		state;
 	int		animation;
 	float		speed;
@@ -71,7 +71,7 @@ typedef struct {
 	Array		inventory;
 	Item		wornItems[5];
 	sfUint8		name[33];
-	float		invulnerabiltyTime;
+	float		invulnerabilityTime;
 	int		damageDisplay[DAMAGES_TYPE_NB];
 	sfClock		*damageClock[DAMAGES_TYPE_NB];
 	Dialog		dialogs;
@@ -85,5 +85,7 @@ typedef struct {
 
 void	dealDamages(Character *character, int damages, int damageType);
 void	execAction(Object obj, Character *character);
+void	movePlayer();
+void	moveCharacter(Character *character, sfVector2f direction);
 
 #endif
