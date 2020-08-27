@@ -12,6 +12,7 @@ int	dispMsg(char *title, char *content, int variate)
 #include <SFML/Graphics.h>
 #include <stdio.h>
 #include "macros.h"
+#include "logger.h"
 
 #define ICON_ERROR_PATH "data/icon/error.png"
 
@@ -32,7 +33,7 @@ int	dispMsg(char *title, char *content, int variate)
 	bool			hasIcon = false;
 
 	if (!font) {
-		printf("%s: Cannot load default font !\nDisplaying the message in the console:\n\n", ERROR_BEG);
+		printf("%s: Cannot load default font !\nDisplaying the message in the console:\n\n", LOGGER_ERROR_BEGIN);
 		printf("%s\n%s\n", title, content);
 	}
 	if (variate & MB_ICONERROR) {
